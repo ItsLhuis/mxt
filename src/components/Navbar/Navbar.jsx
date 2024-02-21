@@ -11,7 +11,6 @@ const Navbar = ({ toggleSidebarSize, toggleSidebarSizeMobile }) => {
       <div className="navbar-content">
         <div className="navbar-content-info-container">
           <div className="navbar-info">
-            {/* <img src={logo} alt="Logo Image" className="logo-image" /> */}
             <h3 className="company-name">Mixtura</h3>
           </div>
           <div className="container-but-menu">
