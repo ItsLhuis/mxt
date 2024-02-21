@@ -1,0 +1,55 @@
+.navbar {
+    position: fixed;
+    width: 100vw;
+    height: 60px;
+    overflow: hidden;
+    background-color: var(--elevation-level1);
+    box-shadow: 0 0 0.625rem var(--box-shadow);
+    z-index: 3;
+}
+
+.navbar-content {
+    display: flex;
+    flex-direction: row;
+    height: 60px;
+}
+
+.navbar-content-info-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.navbar-info {
+    display: flex;
+    order: 1;
+}
+
+.company-name {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: auto;
+    margin-bottom: auto;
+    white-space: nowrap;
+}
+
+.logo-image {
+    margin-top: 0.4rem;
+    margin-left: 1.3rem;
+    width: 50px;
+    height: 50px;
+    user-select: none;
+}
+
+.container-but-menu {
+    display: flex;
+    margin-top: 0.6rem;
+    margin-bottom: auto;
+    order: 2;
+}
+
+.but-menu {
+    border: 0px;
+    cursor: pointer;
+    float: right;
+}

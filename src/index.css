@@ -1,0 +1,179 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Oxygen",
+    "Ubuntu", "Cantarell", "Open Sans", sans-serif !important;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--onSurface);
+}
+
+p {
+  font-size: 13px;
+}
+
+.app {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+.container-main {
+  flex: 1
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-bar);
+  border: 6px solid transparent;
+  border-radius: 8px;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+::-moz-selection {
+  -webkit-text-fill-color: white !important;
+  color: white !important;
+  background: var(--primary);
+}
+
+::selection {
+  -webkit-text-fill-color: white !important;
+  color: white !important;
+  background: var(--primary);
+}
+
+.MenuIcon {
+  color: var(--onSurface);
+}
+
+.MuiButton-root .MuiCircularProgress-root {
+  width: 24px !important;
+  height: 24px !important;
+  color: white !important;
+}
+
+.MuiCircularProgress-root {
+  color: var(--primary) !important;
+}
+
+.MuiFormLabel-root {
+  user-select: none;
+  font-weight: 800 !important;
+}
+
+.MuiPopover-paper {
+  color: var(--onSurface) !important;
+  background-color: var(--primary-color) !important;
+  box-shadow: 0 0 1rem var(--box-shadow) !important;
+}
+
+.MuiPopover-paper .MuiList-root .MuiButtonBase-root {
+  font-size: 13px !important;
+}
+
+.MuiFormLabel-root.MuiInputLabel-root {
+  color: var(--onSurface) !important;
+  font-weight: 550 !important;
+}
+
+.MuiInput-root {
+  font-size: 13px !important;
+  margin-top: 21px !important;
+}
+
+.MuiInputBase-input {
+  padding: 0 !important;
+}
+
+.MuiInput-root::before,
+.MuiInputBase-root::before {
+  border-bottom: 1px solid var(--separator) !important;
+}
+
+.MuiInput-root::after,
+.MuiInputBase-root::after {
+  border-bottom: 2px solid #747ff1 !important;
+}
+
+.MuiInputBase-root .MuiInputAdornment-root {
+  margin-bottom: .6rem;
+}
+
+.MuiInputBase-root input {
+  margin-top: 5px;
+  margin-bottom: 11px;
+}
+
+.MuiInputBase-root.MuiFilledInput-root {
+  height: 60px;
+  background-color: rgba(100, 100, 100, 0.1) !important;
+}
+
+.MuiButtonBase-root.MuiSwitch-switchBase.Mui-checked {
+  color: var(--primary) !important;
+}
+
+.MuiSwitch-track {
+  background-color: var(--primary) !important;
+}
+
+input {
+  color: var(--onSurface);
+  -webkit-text-fill-color: var(--onSurface);
+  caret-color: var(--onSurface);
+}
+
+.Mui-focused {
+  border: red !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px var(--elevation-level2) inset !important;
+}
+
+.MuiDrawer-paper {
+  color: var(--onSurface) !important;
+  background-color: var(--primary-color) !important;
+  width: 336px !important;
+}
+
+.Toastify__toast {
+  border-radius: 5px !important;
+  background-color: var(--primary-color) !important;
+  box-shadow: 0 0 1rem var(--box-shadow) !important;
+  color: var(--onSurface) !important;
+}
+
+.Toastify__toast-body {
+  user-select: none;
+}
+
+.Toastify__toast-icon {
+  margin-inline-end: .8rem !important;
+}
+
+.Toastify__close-button {
+  color: var(--onSurface) !important;
+}
+
+@media screen and (max-width: 480px) {
+  .Toastify__toast {
+    margin: 0.5rem;
+  }
+}

@@ -1,0 +1,21 @@
+.main-content {
+    background: var(--content);
+    margin-left: 280px;
+    z-index: 2;
+}
+
+.all-content {
+    margin-top: 60px;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+    overflow-y: auto;
+    color: var(--font-color);
+}
+
+.__big {
+    margin-left: 80px;
+}
+
+.__content__mobile {
+    margin-left: 0;
+}
