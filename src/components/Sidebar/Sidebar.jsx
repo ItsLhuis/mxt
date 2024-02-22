@@ -4,7 +4,7 @@ import "./styles.css"
 
 import { useLocation, useNavigate } from "react-router-dom"
 
-import { Collapse, ButtonBase, Tooltip, IconButton } from "@mui/material"
+import { Collapse, Typography, ButtonBase, Tooltip, IconButton } from "@mui/material"
 
 import {
   Dashboard,
@@ -58,13 +58,13 @@ const SidebarData = [
         className: ""
       },
       {
-        path: "/tables/intervention",
-        name: "Intervenção",
+        path: "/tables/interventions",
+        name: "Intervenções",
         className: ""
       },
       {
-        path: "/tables/equipment-transfer",
-        name: "Transferência de Equipamento",
+        path: "/tables/equipment-transfers",
+        name: "Transferências de Equipamento",
         className: ""
       },
       {
@@ -93,8 +93,8 @@ const SidebarData = [
             className: "__but__lvlDown"
           },
           {
-            path: "/tables/logs/transfer",
-            name: "Logs de Transferência",
+            path: "/tables/logs/transfers",
+            name: "Logs de Transferências",
             className: "__but__lvlDown"
           },
           {
@@ -230,15 +230,16 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
     }
   }
 
+  const sidebar = sidebarRef.current
+  const sidebarFocused =
+    sidebar && sidebar.classList.contains("__focused") && sidebar.classList.contains("__small")
   const allTitle = document.querySelectorAll(".menu-item-title")
   const allBut = document.querySelectorAll(".but-sidebar")
   const allLinksName = document.querySelectorAll(".links-name-sidebar")
   const allArrows = document.querySelectorAll(".arrow-but")
 
   const handleFocus = () => {
-    const sidebar = sidebarRef.current
-
-    if (sidebar.classList.contains("__focused")) {
+    if (sidebarFocused) {
       sidebar.classList.remove("__small")
 
       allBut.forEach((but) => {
@@ -264,12 +265,16 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
       <div key={index}>
         {item.title && <h3 className="menu-item-title">{item.title}</h3>}
         <ButtonBase
-          className={`but-sidebar ${isActive(`${item.path}`) ? "active" : ""}`}
+          className={`but-sidebar ${isActive(`${item.path}`) ? "active" : ""} ${
+            sidebarFocused && "__small__but"
+          }`}
           onClick={() => handleClick(index)}
           onFocus={() => handleFocus()}
         >
-          <span className="icon-but-sidebar">{item.icon}</span>
-          <p className="links-name-sidebar">{item.name}</p>
+          {item.icon}
+          <Typography variant="p" component="p" className="links-name-sidebar">
+            {item.name}
+          </Typography>
           {item.submenu && (
             <span className={`arrow-but arrow__${index}`}>
               <KeyboardArrowUp />
@@ -286,15 +291,17 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
                   <ButtonBase
                     key={subindex}
                     className={`but-sidebar ${isActive(`${subitem.path}`) ? "active" : ""} ${
-                      subitem.className
-                    }`}
+                      sidebarFocused && "__small__but"
+                    } ${subitem.className}`}
                     onClick={() => {
                       navigate(subitem.path)
                       handleSubmenuClick()
                     }}
                     onFocus={() => handleFocus()}
                   >
-                    <p className="links-name-sidebar __sub">{subitem.name}</p>
+                    <Typography variant="p" component="p" className="links-name-sidebar __sub">
+                      {subitem.name}
+                    </Typography>
                   </ButtonBase>
                 )
               })}
@@ -309,7 +316,9 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
     <div className="sidebar" ref={sidebarRef}>
       <div className="navbar-content-info-container __sidebar-nav">
         <div className="navbar-info">
-          <h3 className="company-name">Mixtura</h3>
+          <Typography variant="h5" component="h5" className="company-name">
+            Mixtura
+          </Typography>
         </div>
         <div className="container-but-menu" style={{ marginRight: "0.6rem" }}>
           <Tooltip title="Fechar" placement="bottom">
@@ -332,15 +341,19 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
             <div key={index}>
               {item.title && <h3 className="menu-item-title">{item.title}</h3>}
               <ButtonBase
-                className={`but-sidebar ${isActive(`${item.path}`) ? "active" : ""}`}
+                className={`but-sidebar ${isActive(`${item.path}`) ? "active" : ""} ${
+                  sidebarFocused && "__small__but"
+                }`}
                 onClick={() => {
                   navigate(item.path)
                   handleSubmenuClick()
                 }}
                 onFocus={() => handleFocus()}
               >
-                <span className="icon-but-sidebar">{item.icon}</span>
-                <p className="links-name-sidebar">{item.name}</p>
+                {item.icon}
+                <Typography variant="p" component="p" className="links-name-sidebar">
+                  {item.name}
+                </Typography>
               </ButtonBase>
             </div>
           )

@@ -27,10 +27,11 @@
 }
 
 .company-name {
-    margin-left: 1rem;
-    margin-right: 1rem;
-    margin-top: auto;
-    margin-bottom: auto;
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+    font-weight: 600 !important;
     white-space: nowrap;
 }
 

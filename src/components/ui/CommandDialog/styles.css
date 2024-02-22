@@ -5,6 +5,12 @@
     border-bottom: 1px solid var(--elevation-level5);
 }
 
+.command-dialog-text-field {
+    margin: 1rem !important;
+    margin-right: 0 !important;
+    width: 100%
+}
+
 .command-dialog-content {
     display: flex;
     flex-direction: column;
@@ -24,6 +30,32 @@
 
 .command-dialog-content-button:hover {
     border: 2px solid var(--primary) !important;
+}
+
+.command-dialog-content-button-wrp {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1rem;
+    width: 100%;
+    gap: 10px;
+}
+
+.command-dialog-content-button-details {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.command-dialog-content-button-tags {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-left: auto;
+    gap: 5px;
 }
 
 .command-dialog-footer {

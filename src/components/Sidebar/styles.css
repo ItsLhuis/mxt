@@ -133,6 +133,18 @@
     transform: translateX(-105%);
 }
 
+.sidebar .navbar-content-info-container.__sidebar-nav .container-but-menu {
+    display: none;
+}
+
+.__sidebar__mobile .navbar-content-info-container.__sidebar-nav {
+    display: none;
+}
+
+.__sidebar__mobile .navbar-content-info-container.__sidebar-nav .container-but-menu {
+    display: flex;
+}
+
 .__sidebar__mobile.__big__ .navbar-content-info-container.__sidebar-nav {
     display: flex;
 }

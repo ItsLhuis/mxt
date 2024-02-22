@@ -79,8 +79,16 @@ p {
 }
 
 .MuiDialog-paper {
+  border-radius: 10px !important;
+  width: 600px;
   background-color: var(--background) !important;
   color: var(--onSurface) !important;
+}
+
+@media screen and (max-width: 900px) {
+  .MuiDialog-paper {
+    border-radius: 0 !important;
+  }
 }
 
 .MuiPopover-paper {
@@ -89,16 +97,18 @@ p {
   box-shadow: 0 0 1rem var(--boxShadow) !important;
 }
 
-.MuiPopover-paper .MuiList-root .MuiButtonBase-root {
-  font-size: 13px !important;
-}
-
 .MuiFormLabel-root.MuiInputLabel-root {
+  font-size: 0.875rem !important;
   color: var(--outline) !important;
   font-weight: 550 !important;
 }
 
+.MuiFormLabel-root.MuiInputLabel-root.MuiInputLabel-shrink {
+  font-size: 1rem !important;
+}
+
 .MuiFormLabel-root.MuiInputLabel-root.Mui-focused {
+  font-size: 1rem !important;
   color: var(--onSurface) !important;
 }
 
@@ -108,10 +118,6 @@ p {
 
 .MuiSwitch-track {
   background-color: var(--primary) !important;
-}
-
-.MuiInputBase-input {
-  padding: 18.5px 14px !important;
 }
 
 .MuiInputBase-root {
@@ -151,6 +157,17 @@ input:-webkit-autofill:active {
   color: var(--onSurface) !important;
   background-color: var(--primary-color) !important;
   width: 336px !important;
+}
+
+.MuiChip-root {
+  background-color: var(--surfaceVariant) !important;
+  color: var(--onSurface) !important;
+  font-size: 0.7125rem !important;
+  font-weight: 700;
+}
+
+.MuiTypography-h6 {
+  font-size: 1rem !important;
 }
 
 .Toastify__toast {

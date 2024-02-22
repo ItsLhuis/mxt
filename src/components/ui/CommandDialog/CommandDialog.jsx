@@ -2,281 +2,268 @@ import React, { useState, useEffect, useRef } from "react"
 
 import "./styles.css"
 
+import { useNavigate } from "react-router-dom"
+
 import { useTheme } from "@mui/material/styles"
 
-import { useMediaQuery, Dialog, IconButton, Tooltip, TextField, ButtonBase } from "@mui/material"
-import { Dashboard, Close } from "@mui/icons-material"
-
-const SearchData = [
-  {
-    section: "DATA",
-    icon: <Dashboard fontSize="small" />,
-    label: "Painel de Controlo",
-    description: "Acesso ao painel de controlo da aplicação",
-    link: "/dashboard",
-    action: () => {
-      console.log("Painel de Controlo")
-    }
-  },
-  {
-    section: "DATA",
-    subSection: "Tabelas",
-    label: "Acessórios",
-    description: "Acesso à tabela de acessórios",
-    action: () => {
-      console.log("Acessórios")
-    }
-  },
-  {
-    section: "DATA",
-    subSection: "Tabelas",
-    label: "Artigos Wintouch",
-    description: "Acesso à tabela de artigos Wintouch",
-    action: () => {
-      console.log("Artigos Wintouch")
-    }
-  },
-  {
-    section: "DATA",
-    subSection: "Tabelas",
-    label: "Tipo de Equipamento",
-    description: "Acesso à tabela de tipo de equipamento",
-    action: () => {
-      console.log("Tipo de Equipamento")
-    }
-  },
-  {
-    section: "DATA",
-    subSection: "Tabelas",
-    label: "Marcas",
-    description: "Acesso à tabela de marcas",
-    action: () => {
-      console.log("Marcas")
-    }
-  },
-  {
-    section: "DATA",
-    subSection: "Tabelas",
-    label: "Avarias",
-    description: "Acesso à tabela de avarias",
-    action: () => {
-      console.log("Avarias")
-    }
-  },
-  {
-    section: "DATA",
-    subSection: "Tabelas",
-    label: "Intervenção",
-    description: "Acesso à tabela de intervenção",
-    action: () => {
-      console.log("Intervenção")
-    }
-  },
-  {
-    section: "DATA",
-    subSection: "Tabelas",
-    label: "Transferência de Equipamento",
-    description: "Acesso à tabela de transferência de equipamento",
-    action: () => {
-      console.log("Transferência de Equipamento")
-    }
-  },
-  {
-    section: "DATA",
-    subSection: "Tabelas",
-    label: "Checklist",
-    description: "Acesso à tabela de checklist",
-    action: () => {
-      console.log("Checklist")
-    }
-  },
-  {
-    section: "DATA",
-    subSection: "Tabelas",
-    label: "Técnicos",
-    description: "Acesso à tabela de técnicos",
-    action: () => {
-      console.log("Técnicos")
-    }
-  },
-  {
-    section: "DATA",
-    subSection: "Tabelas",
-    label: "Perfil",
-    description: "Acesso à tabela de perfil",
-    action: () => {
-      console.log("Perfil")
-    }
-  },
-  {
-    section: "DATA",
-    subSection: "Tabelas",
-    subSubSection: "Logs",
-    label: "Logs de Reparação",
-    description: "Acesso aos logs de reparação",
-    action: () => {
-      console.log("Logs de Reparação")
-    }
-  },
-  {
-    section: "DATA",
-    subSection: "Tabelas",
-    subSubSection: "Logs",
-    label: "Logs de Transferência",
-    description: "Acesso aos logs de transferência",
-    action: () => {
-      console.log("Logs de Transferência")
-    }
-  },
-  {
-    section: "DATA",
-    subSection: "Tabelas",
-    subSubSection: "Logs",
-    label: "Logs de E-mails",
-    description: "Acesso aos logs de e-mails",
-    action: () => {
-      console.log("Logs de E-mails")
-    }
-  },
-  {
-    section: "DATA",
-    subSection: "Tabelas",
-    subSubSection: "Logs",
-    label: "Logs de SMS",
-    description: "Acesso aos logs de SMS",
-    action: () => {
-      console.log("Logs de SMS")
-    }
-  },
-  {
-    section: "DATA",
-    subSection: "Tabelas",
-    label: "Estatísticas por Ano",
-    description: "Acesso às estatísticas por ano",
-    action: () => {
-      console.log("Estatísticas por Ano")
-    }
-  },
-  {
-    title: "MANUTENÇÃO",
-    submenu: [
-      {
-        label: "Clientes",
-        description: "Acesso à seção de clientes",
-        submenu: [
-          {
-            label: "Adicionar",
-            description: "Adicionar novo cliente",
-            action: () => {
-              console.log("Adicionar Cliente")
-            }
-          },
-          {
-            label: "Listar",
-            description: "Listar todos os clientes",
-            action: () => {
-              console.log("Listar Clientes")
-            }
-          }
-        ]
-      }
-    ]
-  },
-  {
-    title: "Equipamentos",
-    submenu: [
-      {
-        label: "Histórico",
-        description: "Acesso ao histórico de equipamentos",
-        action: () => {
-          console.log("Histórico de Equipamentos")
-        }
-      },
-      {
-        label: "Consultar",
-        description: "Consultar equipamentos",
-        action: () => {
-          console.log("Consultar Equipamentos")
-        }
-      },
-      {
-        label: "Etiquetas",
-        description: "Acesso às etiquetas de equipamentos",
-        action: () => {
-          console.log("Etiquetas de Equipamentos")
-        }
-      }
-    ]
-  },
-  {
-    title: "Reparações",
-    submenu: [
-      {
-        label: "Adicionar",
-        description: "Adicionar nova reparação",
-        action: () => {
-          console.log("Adicionar Reparação")
-        }
-      },
-      {
-        label: "Estados",
-        description: "Estados das reparações",
-        submenu: [
-          {
-            label: "Abertos",
-            description: "Reparações em aberto",
-            action: () => {
-              console.log("Reparações Abertas")
-            }
-          },
-          {
-            label: "Reparados",
-            description: "Reparações concluídas",
-            action: () => {
-              console.log("Reparações Reparadas")
-            }
-          },
-          {
-            label: "Fechados",
-            description: "Reparações fechadas",
-            action: () => {
-              console.log("Reparações Fechadas")
-            }
-          },
-          {
-            label: "DC",
-            description: "Reparações DC",
-            action: () => {
-              console.log("Reparações DC")
-            }
-          }
-        ]
-      }
-    ]
-  },
-  {
-    title: "OUTROS",
-    submenu: [
-      {
-        label: "E-mail",
-        description: "Enviar e-mail",
-        action: () => {
-          console.log("Enviar E-mail")
-        }
-      },
-      {
-        label: "SMS",
-        description: "Enviar SMS",
-        action: () => {
-          console.log("Enviar SMS")
-        }
-      }
-    ]
-  }
-]
-
+import {
+  useMediaQuery,
+  Dialog,
+  IconButton,
+  Tooltip,
+  TextField,
+  ButtonBase,
+  Chip,
+  Typography
+} from "@mui/material"
+import {
+  Dashboard,
+  Person,
+  AppsOutlined,
+  Construction,
+  FormatListBulleted,
+  TableChart,
+  Terminal,
+  Email,
+  Sms,
+  Close
+} from "@mui/icons-material"
 
 const CommandDialog = ({ open, handleClose }) => {
+  const navigate = useNavigate()
+
+  const SearchData = [
+    {
+      section: "DATA",
+      icon: <Dashboard fontSize="medium" />,
+      label: "Painel de Controlo",
+      description: "Acesso ao painel de controlo da aplicação",
+      link: "/dashboard"
+    },
+    {
+      section: "DATA",
+      subSection: "Tabelas",
+      icon: <TableChart fontSize="medium" />,
+      label: "Acessórios",
+      description: "Acesso à tabela de acessórios",
+      link: "/tables/accessories"
+    },
+    {
+      section: "DATA",
+      subSection: "Tabelas",
+      icon: <TableChart fontSize="medium" />,
+      label: "Artigos Wintouch",
+      description: "Acesso à tabela de artigos Wintouch",
+      link: "/tables/wintouch-articles"
+    },
+    {
+      section: "DATA",
+      subSection: "Tabelas",
+      icon: <TableChart fontSize="medium" />,
+      label: "Tipo de Equipamento",
+      description: "Acesso à tabela de tipo de equipamento",
+      link: "/tables/equipment-type"
+    },
+    {
+      section: "DATA",
+      subSection: "Tabelas",
+      icon: <TableChart fontSize="medium" />,
+      label: "Marcas",
+      description: "Acesso à tabela de marcas",
+      link: "/tables/brands"
+    },
+    {
+      section: "DATA",
+      subSection: "Tabelas",
+      icon: <TableChart fontSize="medium" />,
+      label: "Avarias",
+      description: "Acesso à tabela de avarias",
+      link: "/tables/damages"
+    },
+    {
+      section: "DATA",
+      subSection: "Tabelas",
+      icon: <TableChart fontSize="medium" />,
+      label: "Intervenções",
+      description: "Acesso à tabela de intervenções",
+      link: "/tables/interventions"
+    },
+    {
+      section: "DATA",
+      subSection: "Tabelas",
+      icon: <TableChart fontSize="medium" />,
+      label: "Transferências de Equipamento",
+      description: "Acesso à tabela de transferências de equipamento",
+      link: "/tables/equipment-transfers"
+    },
+    {
+      section: "DATA",
+      subSection: "Tabelas",
+      icon: <TableChart fontSize="medium" />,
+      label: "Checklist",
+      description: "Acesso à tabela de checklist",
+      link: "/tables/checklist"
+    },
+    {
+      section: "DATA",
+      subSection: "Tabelas",
+      icon: <TableChart fontSize="medium" />,
+      label: "Técnicos",
+      description: "Acesso à tabela de técnicos",
+      link: "/tables/technicians"
+    },
+    {
+      section: "DATA",
+      subSection: "Tabelas",
+      icon: <TableChart fontSize="medium" />,
+      label: "Perfil",
+      description: "Acesso à tabela de perfil",
+      link: "/tables/profile"
+    },
+    {
+      section: "DATA",
+      subSection: "Tabelas",
+      subSubSection: "Logs",
+      icon: <Terminal fontSize="medium" />,
+      label: "Logs de Reparação",
+      description: "Acesso aos logs de reparação",
+      link: "/tables/logs/repair"
+    },
+    {
+      section: "DATA",
+      subSection: "Tabelas",
+      subSubSection: "Logs",
+      icon: <Terminal fontSize="medium" />,
+      label: "Logs de Transferências",
+      description: "Acesso aos logs de transferências",
+      link: "/tables/logs/transfers"
+    },
+    {
+      section: "DATA",
+      subSection: "Tabelas",
+      subSubSection: "Logs",
+      icon: <Terminal fontSize="medium" />,
+      label: "Logs de E-mails",
+      description: "Acesso aos logs de e-mails",
+      link: "/tables/logs/email"
+    },
+    {
+      section: "DATA",
+      subSection: "Tabelas",
+      subSubSection: "Logs",
+      icon: <Terminal fontSize="medium" />,
+      label: "Logs de SMS",
+      description: "Acesso aos logs de SMS",
+      link: "/tables/logs/sms"
+    },
+    {
+      section: "DATA",
+      subSection: "Tabelas",
+      icon: <TableChart fontSize="medium" />,
+      label: "Estatísticas por Ano",
+      description: "Acesso às estatísticas por ano",
+      link: "/tables/statistics-by-year"
+    },
+    {
+      section: "MANUTENÇÃO",
+      subSection: "Clientes",
+      icon: <Person fontSize="medium" />,
+      label: "Adicionar Cliente",
+      description: "Adicionar novo cliente",
+      link: "/clients/add"
+    },
+    {
+      section: "MANUTENÇÃO",
+      subSection: "Clientes",
+      icon: <Person fontSize="medium" />,
+      label: "Listar Clientes",
+      description: "Listar todos os clientes",
+      link: "/clients/list"
+    },
+    {
+      section: "MANUTENÇÃO",
+      subSection: "Equipamentos",
+      icon: <AppsOutlined fontSize="medium" />,
+      label: "Histórico de equipamentos",
+      description: "Acesso ao histórico de equipamentos",
+      link: "/equipments/history"
+    },
+    {
+      section: "MANUTENÇÃO",
+      subSection: "Equipamentos",
+      icon: <AppsOutlined fontSize="medium" />,
+      label: "Consultar equipamentos",
+      description: "Consultar equipamentos",
+      link: "/equipments/consult"
+    },
+    {
+      section: "MANUTENÇÃO",
+      subSection: "Equipamentos",
+      icon: <AppsOutlined fontSize="medium" />,
+      label: "Etiquetas de equipamentos",
+      description: "Acesso às etiquetas de equipamentos",
+      link: "/equipments/tags"
+    },
+    {
+      section: "MANUTENÇÃO",
+      subSection: "Reparações",
+      icon: <Construction fontSize="medium" />,
+      label: "Adicionar Reparação",
+      description: "Adicionar nova reparação",
+      link: "/repairs/add"
+    },
+    {
+      section: "MANUTENÇÃO",
+      subSection: "Reparações",
+      subSubSection: "Estados",
+      icon: <FormatListBulleted fontSize="medium" />,
+      label: "Reparações Abertas",
+      description: "Reparações em aberto",
+      link: "/repairs/states/open"
+    },
+    {
+      section: "MANUTENÇÃO",
+      subSection: "Reparações",
+      subSubSection: "Estados",
+      icon: <FormatListBulleted fontSize="medium" />,
+      label: "Reparações Finalizadas",
+      description: "Reparações concluídas",
+      link: "/repairs/states/repaired"
+    },
+    {
+      section: "MANUTENÇÃO",
+      subSection: "Reparações",
+      subSubSection: "Estados",
+      icon: <FormatListBulleted fontSize="medium" />,
+      label: "Reparações Fechadas",
+      description: "Reparações fechadas",
+      link: "/repairs/states/closed"
+    },
+    {
+      section: "MANUTENÇÃO",
+      subSection: "Reparações",
+      subSubSection: "Estados",
+      icon: <FormatListBulleted fontSize="medium" />,
+      label: "Reparações finalizadas mas não pagas",
+      description: "Reparações DC",
+      link: "/repairs/states/dc"
+    },
+    {
+      section: "OUTROS",
+      icon: <Email fontSize="medium" />,
+      label: "Envio de E-mail",
+      description: "Enviar e-mail",
+      link: "/send-email"
+    },
+    {
+      section: "OUTROS",
+      icon: <Sms fontSize="medium" />,
+      label: "Envio de SMS",
+      description: "Enviar SMS",
+      link: "/send-sms"
+    }
+  ]
+
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"))
 
@@ -285,16 +272,24 @@ const CommandDialog = ({ open, handleClose }) => {
   const inputRef = useRef(null)
   const [text, setText] = useState("")
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" && searchResults.length > 0) {
+      navigate(searchResults[0].link)
+      setTimeout(() => {
+        handleClose()
+      })
+    }
+  }
+
   const handleChange = (event) => {
     const searchText = event.target.value
 
     setText(searchText)
 
-    const results = SearchData.filter(
-      (item) =>
-        item.label &&
-        (item.label.toLowerCase().includes(searchText.toLowerCase()) ||
-          (item.description && item.description.toLowerCase().includes(searchText.toLowerCase())))
+    const results = SearchData.filter((item) =>
+      Object.values(item).some(
+        (value) => value && typeof value === "string" && new RegExp(searchText, "i").test(value)
+      )
     )
 
     setSearchResults(results)
@@ -302,6 +297,8 @@ const CommandDialog = ({ open, handleClose }) => {
 
   useEffect(() => {
     setText("")
+
+    setSearchResults(SearchData)
 
     const timer = setTimeout(() => {
       if (open && inputRef.current) {
@@ -318,9 +315,10 @@ const CommandDialog = ({ open, handleClose }) => {
         <TextField
           inputRef={inputRef}
           label="O que procura?"
-          style={{ margin: "1rem", marginRight: 0, width: "100%" }}
+          className="command-dialog-text-field"
           value={text}
           onChange={handleChange}
+          onKeyDown={handleKeyDown}
         />
         <Tooltip title="Fechar" placement="bottom">
           <IconButton aria-label="close" onClick={handleClose} style={{ margin: "1rem" }}>
@@ -330,11 +328,49 @@ const CommandDialog = ({ open, handleClose }) => {
       </div>
       <div className="command-dialog-content">
         {searchResults.map((item, index) => (
-          <ButtonBase key={index} className="command-dialog-content-button" onClick={item.action}>
-            <div>
-              <p>{item.label}</p>
-              {item.description && <p>{item.description}</p>}
-              {item.link && <p style={{ color: "var(--primary)" }}>{item.link}</p>}
+          <ButtonBase
+            key={index}
+            className="command-dialog-content-button"
+            onClick={() => {
+              navigate(item.link)
+              handleClose()
+            }}
+          >
+            <div className="command-dialog-content-button-wrp">
+              <div className="command-dialog-content-button-details">
+                {item.icon && item.icon}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    alignItems: "flex-start"
+                  }}
+                >
+                  <Typography variant="h6" component="h6" style={{ textAlign: "left" }}>
+                    {item.label}
+                  </Typography>
+                  {item.description && (
+                    <Typography
+                      variant="p"
+                      component="p"
+                      style={{ textAlign: "left", color: "var(--outline)" }}
+                    >
+                      {item.description}
+                    </Typography>
+                  )}
+                </div>
+              </div>
+              {item.link && (
+                <Typography variant="p" component="p" style={{ color: "var(--primary)" }}>
+                  {item.link}
+                </Typography>
+              )}
+              <div className="command-dialog-content-button-tags">
+                {item.section && <Chip label={item.section} />}
+                {item.subSection && <Chip label={item.subSection} />}
+                {item.subSubSection && <Chip label={item.subSubSection} />}
+              </div>
             </div>
           </ButtonBase>
         ))}

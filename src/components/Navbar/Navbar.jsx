@@ -2,7 +2,7 @@ import React, { useState } from "react"
 
 import "./styles.css"
 
-import { Tooltip, IconButton } from "@mui/material"
+import { Typography, Tooltip, IconButton } from "@mui/material"
 import { Menu, Search } from "@mui/icons-material"
 
 import { CommandDialog } from "../ui"
@@ -16,7 +16,9 @@ const Navbar = ({ toggleSidebarSize, toggleSidebarSizeMobile }) => {
         <div className="navbar-content">
           <div className="navbar-content-info-container">
             <div className="navbar-info">
-              <h3 className="company-name">Mixtura</h3>
+              <Typography variant="h5" component="h5" className="company-name">
+                Mixtura
+              </Typography>
             </div>
             <div className="container-but-menu">
               <Tooltip title="Menu" placement="bottom">
