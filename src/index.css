@@ -28,7 +28,7 @@ p {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--scroll-bar);
+  background-color: var(--scrollBar);
   border: 6px solid transparent;
   border-radius: 8px;
   background-clip: padding-box;
@@ -55,14 +55,14 @@ p {
   background: var(--primary);
 }
 
-.MenuIcon {
+.icon {
   color: var(--onSurface);
 }
 
-.MuiButton-root .MuiCircularProgress-root {
-  width: 24px !important;
-  height: 24px !important;
-  color: white !important;
+.MuiTooltip-tooltip {
+  background-color: var(--elevation-level5) !important;
+  color: var(--onSurface) !important;
+  box-shadow: 0 0 0.625rem var(--boxShadow) !important;
 }
 
 .MuiCircularProgress-root {
@@ -74,10 +74,19 @@ p {
   font-weight: 800 !important;
 }
 
+.MuiButtonBase-root:hover {
+  background-color: var(--elevation-level5) !important;
+}
+
+.MuiDialog-paper {
+  background-color: var(--background) !important;
+  color: var(--onSurface) !important;
+}
+
 .MuiPopover-paper {
   color: var(--onSurface) !important;
-  background-color: var(--primary-color) !important;
-  box-shadow: 0 0 1rem var(--box-shadow) !important;
+  background-color: var(--primary) !important;
+  box-shadow: 0 0 1rem var(--boxShadow) !important;
 }
 
 .MuiPopover-paper .MuiList-root .MuiButtonBase-root {
@@ -85,41 +94,12 @@ p {
 }
 
 .MuiFormLabel-root.MuiInputLabel-root {
-  color: var(--onSurface) !important;
+  color: var(--outline) !important;
   font-weight: 550 !important;
 }
 
-.MuiInput-root {
-  font-size: 13px !important;
-  margin-top: 21px !important;
-}
-
-.MuiInputBase-input {
-  padding: 0 !important;
-}
-
-.MuiInput-root::before,
-.MuiInputBase-root::before {
-  border-bottom: 1px solid var(--separator) !important;
-}
-
-.MuiInput-root::after,
-.MuiInputBase-root::after {
-  border-bottom: 2px solid #747ff1 !important;
-}
-
-.MuiInputBase-root .MuiInputAdornment-root {
-  margin-bottom: .6rem;
-}
-
-.MuiInputBase-root input {
-  margin-top: 5px;
-  margin-bottom: 11px;
-}
-
-.MuiInputBase-root.MuiFilledInput-root {
-  height: 60px;
-  background-color: rgba(100, 100, 100, 0.1) !important;
+.MuiFormLabel-root.MuiInputLabel-root.Mui-focused {
+  color: var(--onSurface) !important;
 }
 
 .MuiButtonBase-root.MuiSwitch-switchBase.Mui-checked {
@@ -130,14 +110,34 @@ p {
   background-color: var(--primary) !important;
 }
 
+.MuiInputBase-input {
+  padding: 18.5px 14px !important;
+}
+
+.MuiInputBase-root {
+  border-radius: 8px !important;
+  background-color: transparent;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border: 2px solid var(--elevation-level5) !important;
+  padding: 0;
+}
+
+.MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: var(--outline) !important;
+}
+
+.Mui-focused .MuiOutlinedInput-notchedOutline,
+.Mui-focused:hover .MuiOutlinedInput-notchedOutline {
+  border: 2px solid var(--primary) !important;
+}
+
 input {
+  font-size: 13px !important;
   color: var(--onSurface);
   -webkit-text-fill-color: var(--onSurface);
   caret-color: var(--onSurface);
-}
-
-.Mui-focused {
-  border: red !important;
 }
 
 input:-webkit-autofill,
@@ -156,7 +156,7 @@ input:-webkit-autofill:active {
 .Toastify__toast {
   border-radius: 5px !important;
   background-color: var(--primary-color) !important;
-  box-shadow: 0 0 1rem var(--box-shadow) !important;
+  box-shadow: 0 0 1rem var(--boxShadow) !important;
   color: var(--onSurface) !important;
 }
 

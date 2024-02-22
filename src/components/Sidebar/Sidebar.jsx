@@ -2,10 +2,9 @@ import React, { useState, useRef } from "react"
 
 import "./styles.css"
 
-import { useLocation } from "react-router-dom"
-import { NavLink } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
-import { Collapse } from "@mui/material"
+import { Collapse, ButtonBase, Tooltip, IconButton } from "@mui/material"
 
 import {
   Dashboard,
@@ -17,7 +16,8 @@ import {
   Terminal,
   Email,
   Sms,
-  KeyboardArrowUp
+  KeyboardArrowUp,
+  Close
 } from "@mui/icons-material"
 
 const SidebarData = [
@@ -69,7 +69,7 @@ const SidebarData = [
       },
       {
         path: "/tables/checklist",
-        name: "Lista de Verificação",
+        name: "Checklist",
         className: ""
       },
       {
@@ -78,7 +78,7 @@ const SidebarData = [
         className: ""
       },
       {
-        path: "/tables/profile-edit",
+        path: "/tables/profile",
         name: "Perfil",
         className: ""
       },
@@ -88,22 +88,22 @@ const SidebarData = [
         name: "Logs",
         submenu: [
           {
-            path: "/tables/logs/repair-logs",
+            path: "/tables/logs/repair",
             name: "Logs de Reparação",
             className: "__but__lvlDown"
           },
           {
-            path: "/tables/logs/transfer-logs",
+            path: "/tables/logs/transfer",
             name: "Logs de Transferência",
             className: "__but__lvlDown"
           },
           {
-            path: "/tables/logs/email-logs",
+            path: "/tables/logs/email",
             name: "Logs de E-mails",
             className: "__but__lvlDown"
           },
           {
-            path: "/tables/logs/sms-logs",
+            path: "/tables/logs/sms",
             name: "Logs de SMS",
             className: "__but__lvlDown"
           }
@@ -197,18 +197,20 @@ const SidebarData = [
   },
   {
     title: "OUTROS",
-    path: "/email",
+    path: "/send-email",
     icon: <Email fontSize="small" />,
     name: "E-mail"
   },
   {
-    path: "/sms",
+    path: "/send-sms",
     icon: <Sms fontSize="small" />,
     name: "SMS"
   }
 ]
 
 const Sidebar = ({ toggleSidebarSizeMobile }) => {
+  const navigate = useNavigate()
+
   const location = useLocation()
   const isActive = (menuPath) => location.pathname.includes(menuPath)
 
@@ -261,19 +263,19 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
     return (
       <div key={index}>
         {item.title && <h3 className="menu-item-title">{item.title}</h3>}
-        <button
+        <ButtonBase
           className={`but-sidebar ${isActive(`${item.path}`) ? "active" : ""}`}
           onClick={() => handleClick(index)}
           onFocus={() => handleFocus()}
         >
           <span className="icon-but-sidebar">{item.icon}</span>
-          <span className="links-name-sidebar">{item.name}</span>
+          <p className="links-name-sidebar">{item.name}</p>
           {item.submenu && (
             <span className={`arrow-but arrow__${index}`}>
               <KeyboardArrowUp />
             </span>
           )}
-        </button>
+        </ButtonBase>
         {item.submenu && (
           <Collapse in={open[index]} timeout="auto" unmountOnExit>
             <div className={`sidebar-sub-menu`}>
@@ -281,15 +283,19 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
                 return subitem.submenu ? (
                   renderSubmenu(subitem, `${index}-${subindex}`)
                 ) : (
-                  <NavLink
+                  <ButtonBase
                     key={subindex}
-                    to={subitem.path}
-                    className={`but-sidebar ${subitem.className}`}
-                    onClick={() => handleSubmenuClick()}
+                    className={`but-sidebar ${isActive(`${subitem.path}`) ? "active" : ""} ${
+                      subitem.className
+                    }`}
+                    onClick={() => {
+                      navigate(subitem.path)
+                      handleSubmenuClick()
+                    }}
                     onFocus={() => handleFocus()}
                   >
-                    <span className="links-name-sidebar __sub">{subitem.name}</span>
-                  </NavLink>
+                    <p className="links-name-sidebar __sub">{subitem.name}</p>
+                  </ButtonBase>
                 )
               })}
             </div>
@@ -301,6 +307,23 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
 
   return (
     <div className="sidebar" ref={sidebarRef}>
+      <div className="navbar-content-info-container __sidebar-nav">
+        <div className="navbar-info">
+          <h3 className="company-name">Mixtura</h3>
+        </div>
+        <div className="container-but-menu" style={{ marginRight: "0.6rem" }}>
+          <Tooltip title="Fechar" placement="bottom">
+            <IconButton
+              aria-label="Fechar"
+              size="normal"
+              className="but-menu"
+              onClick={() => toggleSidebarSizeMobile()}
+            >
+              <Close className="icon" />
+            </IconButton>
+          </Tooltip>
+        </div>
+      </div>
       <div className="menu">
         {SidebarData.map((item, index) => {
           return item.submenu ? (
@@ -308,15 +331,17 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
           ) : (
             <div key={index}>
               {item.title && <h3 className="menu-item-title">{item.title}</h3>}
-              <NavLink
-                to={item.path}
-                className="but-sidebar"
-                onClick={() => handleSubmenuClick()}
+              <ButtonBase
+                className={`but-sidebar ${isActive(`${item.path}`) ? "active" : ""}`}
+                onClick={() => {
+                  navigate(item.path)
+                  handleSubmenuClick()
+                }}
                 onFocus={() => handleFocus()}
               >
                 <span className="icon-but-sidebar">{item.icon}</span>
-                <span className="links-name-sidebar">{item.name}</span>
-              </NavLink>
+                <p className="links-name-sidebar">{item.name}</p>
+              </ButtonBase>
             </div>
           )
         })}

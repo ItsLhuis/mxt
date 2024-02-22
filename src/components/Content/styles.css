@@ -1,5 +1,5 @@
 .main-content {
-    background: var(--content);
+    background: var(--background);
     margin-left: 280px;
     z-index: 2;
 }
@@ -9,7 +9,7 @@
     height: calc(100vh - 60px);
     overflow: hidden;
     overflow-y: auto;
-    color: var(--font-color);
+    color: var(--onSurface);
 }
 
 .__big {
