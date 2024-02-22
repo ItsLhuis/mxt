@@ -184,7 +184,7 @@ const CommandDialog = ({ open, handleClose }) => {
       section: "MANUTENÇÃO",
       subSection: "Equipamentos",
       icon: <AppsOutlined fontSize="medium" />,
-      label: "Histórico de equipamentos",
+      label: "Histórico de Equipamentos",
       description: "Acesso ao histórico de equipamentos",
       link: "/equipments/history"
     },
@@ -192,7 +192,7 @@ const CommandDialog = ({ open, handleClose }) => {
       section: "MANUTENÇÃO",
       subSection: "Equipamentos",
       icon: <AppsOutlined fontSize="medium" />,
-      label: "Consultar equipamentos",
+      label: "Consultar Equipamentos",
       description: "Consultar equipamentos",
       link: "/equipments/consult"
     },
@@ -200,7 +200,7 @@ const CommandDialog = ({ open, handleClose }) => {
       section: "MANUTENÇÃO",
       subSection: "Equipamentos",
       icon: <AppsOutlined fontSize="medium" />,
-      label: "Etiquetas de equipamentos",
+      label: "Etiquetas de Equipamentos",
       description: "Acesso às etiquetas de equipamentos",
       link: "/equipments/tags"
     },
@@ -244,7 +244,7 @@ const CommandDialog = ({ open, handleClose }) => {
       subSection: "Reparações",
       subSubSection: "Estados",
       icon: <FormatListBulleted fontSize="medium" />,
-      label: "Reparações finalizadas mas não pagas",
+      label: "Reparações Finalizadas Mas Não Pagas",
       description: "Reparações DC",
       link: "/repairs/states/dc"
     },
