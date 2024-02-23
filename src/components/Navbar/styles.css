@@ -1,7 +1,7 @@
 .navbar {
     position: fixed;
     width: 100vw;
-    height: 60px;
+    height: 64px;
     overflow: hidden;
     background-color: var(--elevation-level1);
     box-shadow: 0 0 0.625rem var(--boxShadow);
@@ -11,11 +11,12 @@
 .navbar-content {
     display: flex;
     flex-direction: row;
-    height: 60px;
+    justify-content: space-between;
+    height: 64px;
 }
 
 .navbar-content-info-container {
-    height: 60px;
+    height: 64px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -43,7 +44,8 @@
     user-select: none;
 }
 
-.container-but-menu {
+.container-but-menu,
+.container-but-settings {
     display: flex;
     margin-top: 0.6rem;
     margin-bottom: auto;
@@ -54,4 +56,30 @@
     border: 0px;
     cursor: pointer;
     float: right;
+}
+
+.navbar-user-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-right: 1rem;
+}
+
+.navbar-user-container-profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar-user-container-profile-details {
+    max-width: 140px;
+    overflow: hidden;
+}
+
+.navbar-user-container-profile-details .MuiTypography-root {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

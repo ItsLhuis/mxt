@@ -19,7 +19,7 @@
 }
 
 .menu {
-    height: calc(100vh - 60px);
+    height: calc(100vh - 64px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -28,7 +28,7 @@
     overflow-y: auto;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    padding-bottom: calc(60px + 1rem);
+    padding-bottom: calc(64px + 1rem);
 }
 
 .menu-item-title {

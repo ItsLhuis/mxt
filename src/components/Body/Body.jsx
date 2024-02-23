@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 
 import "./styles.css"
 
-import { Navbar, Sidebar, Content } from ".."
+import { Navbar, Sidebar, Content } from "@components"
 
 const Body = ({
   toggleSidebarSize,

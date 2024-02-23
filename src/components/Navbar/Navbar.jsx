@@ -2,13 +2,17 @@ import React, { useState } from "react"
 
 import "./styles.css"
 
-import { Typography, Tooltip, IconButton } from "@mui/material"
-import { Menu, Search } from "@mui/icons-material"
+import { useNavigate } from "react-router-dom"
 
-import { CommandDialog } from "../ui"
+import { Typography, Tooltip, IconButton, Avatar, Divider } from "@mui/material"
+import { Menu, Search, Settings } from "@mui/icons-material"
+
+import { CommandDialog } from "@components/ui"
 
 const Navbar = ({ toggleSidebarSize, toggleSidebarSizeMobile }) => {
-  const [dialogOpen, setDialogOpen] = useState(false)
+  const navigate = useNavigate()
+
+  const [commandDialogOpen, setCommandDialogOpen] = useState(false)
 
   return (
     <>
@@ -16,7 +20,7 @@ const Navbar = ({ toggleSidebarSize, toggleSidebarSizeMobile }) => {
         <div className="navbar-content">
           <div className="navbar-content-info-container">
             <div className="navbar-info">
-              <Typography variant="h5" component="h5" className="company-name">
+              <Typography variant="h3" component="h3" className="company-name">
                 Mixtura
               </Typography>
             </div>
@@ -43,16 +47,54 @@ const Navbar = ({ toggleSidebarSize, toggleSidebarSizeMobile }) => {
                   aria-label="Pesquisar"
                   size="normal"
                   className="but-menu"
-                  onClick={() => setDialogOpen(true)}
+                  onClick={() => setCommandDialogOpen(true)}
                 >
                   <Search className="icon" />
                 </IconButton>
               </Tooltip>
             </div>
           </div>
+          <div className="navbar-user-container">
+            <div className="navbar-user-container-profile">
+              {/* <Avatar alt="Luis Rodrigues" src="https://picsum.photos/700" /> */}
+              <Avatar alt="Luis Rodrigues" />
+              <div className="navbar-user-container-profile-details">
+                <Typography variant="h6" component="h6" style={{ fontWeight: 600 }}>
+                  Luis Rodrigues
+                </Typography>
+                <Typography
+                  variant="p"
+                  component="p"
+                  style={{ color: "var(--outline)", fontWeight: 500 }}
+                >
+                  Administrador
+                </Typography>
+              </div>
+            </div>
+            <Divider
+              orientation="vertical"
+              style={{
+                borderColor: "var(--elevation-level5)",
+                borderWidth: 1,
+                height: "70%"
+              }}
+            />
+            <div className="container-but-settings">
+              <Tooltip title="Definições" placement="bottom">
+                <IconButton
+                  aria-label="Definições"
+                  size="normal"
+                  className="but-settings"
+                  onClick={() => navigate("/settings")}
+                >
+                  <Settings className="icon" />
+                </IconButton>
+              </Tooltip>
+            </div>
+          </div>
         </div>
       </div>
-      <CommandDialog open={dialogOpen} handleClose={() => setDialogOpen(false)} />
+      <CommandDialog open={commandDialogOpen} handleClose={() => setCommandDialogOpen(false)} />
     </>
   )
 }

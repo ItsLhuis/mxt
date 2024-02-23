@@ -285,6 +285,11 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
   }
 
   useEffect(() => {
+    const arrowElements = document.querySelectorAll(".arrow-but")
+    arrowElements.forEach((element) => {
+      element.classList.remove("__arrow-but__rotate")
+    })
+
     setOpen({})
   }, [location])
 

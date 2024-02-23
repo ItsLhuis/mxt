@@ -27,6 +27,14 @@ p {
   flex: 1
 }
 
+.page-main {
+  padding: 30px;
+}
+
+.MuiContainer-root {
+  padding: 0 !important;
+}
+
 ::-webkit-scrollbar-thumb {
   background-color: var(--scrollBar);
   border: 6px solid transparent;
@@ -166,8 +174,29 @@ input:-webkit-autofill:active {
   font-weight: 700;
 }
 
+.MuiTypography-h3 {
+  font-size: 1.6rem !important;
+}
+
+.MuiTypography-h4 {
+  font-size: 1.4rem !important;
+  font-weight: 600 !important;
+}
+
 .MuiTypography-h6 {
   font-size: 1rem !important;
+}
+
+.MuiAvatar-root {
+  background-color: var(--surfaceVariant) !important;
+}
+
+.MuiAvatar-root .MuiSvgIcon-root {
+  color: var(--onSurface);
+}
+
+.MuiLinearProgress-bar {
+  background-color: var(--primary) !important;
 }
 
 .Toastify__toast {

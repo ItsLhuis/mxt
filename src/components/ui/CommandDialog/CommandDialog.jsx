@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
 
-import "./styles.css"
-
 import { useNavigate } from "react-router-dom"
 
 import { useTheme } from "@mui/material/styles"
@@ -14,7 +12,9 @@ import {
   TextField,
   ButtonBase,
   Chip,
-  Typography
+  Typography,
+  Container,
+  Box
 } from "@mui/material"
 import {
   Dashboard,
@@ -26,6 +26,7 @@ import {
   Terminal,
   Email,
   Sms,
+  Settings,
   Close
 } from "@mui/icons-material"
 
@@ -261,6 +262,13 @@ const CommandDialog = ({ open, handleClose }) => {
       label: "Envio de SMS",
       description: "Enviar SMS",
       link: "/send-sms"
+    },
+    {
+      section: "DEFINIÇÕES",
+      icon: <Settings fontSize="medium" />,
+      label: "Definições de utilizador",
+      description: "Acesso às suas definições",
+      link: "/settings"
     }
   ]
 
@@ -311,63 +319,87 @@ const CommandDialog = ({ open, handleClose }) => {
 
   return (
     <Dialog onClose={handleClose} open={open} fullScreen={fullScreen}>
-      <div className="command-dialog-header">
-        <TextField
-          inputRef={inputRef}
-          label="O que procura?"
-          className="command-dialog-text-field"
-          value={text}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-        />
-        <Tooltip title="Fechar" placement="bottom">
-          <IconButton aria-label="close" onClick={handleClose} style={{ margin: "1rem" }}>
-            <Close className="icon" />
-          </IconButton>
-        </Tooltip>
-      </div>
-      <div className="command-dialog-content">
+      <Container disableGutters>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          borderBottom={1}
+          borderColor="var(--elevation-level5)"
+        >
+          <TextField
+            inputRef={inputRef}
+            label="O que procura?"
+            sx={{ margin: "1rem", marginRight: 0, width: "100%" }}
+            value={text}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+          />
+          <Tooltip title="Fechar" placement="bottom">
+            <IconButton aria-label="close" onClick={handleClose} sx={{ margin: "1rem" }}>
+              <Close className="icon" />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Container>
+      <Box overflow="auto" sx={{ padding: "1rem" }}>
         {searchResults.map((item, index) => (
           <ButtonBase
             key={index}
-            className="command-dialog-content-button"
             onClick={() => {
               navigate(item.link)
               handleClose()
             }}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "flex-start",
+              padding: 2,
+              width: "100%",
+              bgcolor: "var(--elevation-level1)",
+              border: 2,
+              borderColor: "var(--elevation-level1)",
+              borderRadius: 2,
+              marginTop: index === 0 ? 0 : 1,
+              "&:hover": {
+                borderColor: "var(--primary)"
+              }
+            }}
           >
-            <div className="command-dialog-content-button-wrp">
-              <div className="command-dialog-content-button-details">
-                {item.icon && item.icon}
-                <div className="command-dialog-content-button-description">
-                  <Typography variant="h6" component="h6" style={{ textAlign: "left" }}>
-                    {item.label}
-                  </Typography>
-                  {item.description && (
-                    <Typography
-                      variant="p"
-                      component="p"
-                      style={{ textAlign: "left", color: "var(--outline)" }}
-                    >
-                      {item.description}
-                    </Typography>
-                  )}
-                </div>
-              </div>
-              {item.link && (
-                <Typography variant="p" component="p" style={{ color: "var(--primary)" }}>
-                  {item.link}
+            <Box display="flex" alignItems="center" gap={1}>
+              {item.icon}
+              <Box display="flex" flexDirection="column" sx={{ marginBottom: 1 }}>
+                <Typography variant="h6" textAlign="left">
+                  {item.label}
                 </Typography>
-              )}
-              <div className="command-dialog-content-button-tags">
-                {item.section && <Chip label={item.section} />}
-                {item.subSection && <Chip label={item.subSection} />}
-                {item.subSubSection && <Chip label={item.subSubSection} />}
-              </div>
-            </div>
+                {item.description && (
+                  <Typography variant="body2" textAlign="left" color="var(--outline)">
+                    {item.description}
+                  </Typography>
+                )}
+              </Box>
+            </Box>
+            {item.link && (
+              <Typography variant="body2" color="var(--primary)">
+                {item.link}
+              </Typography>
+            )}
+            <Box
+              display="flex"
+              flexWrap="wrap"
+              justifyContent="flex-start"
+              marginLeft="auto"
+              marginTop={1}
+              gap={0.5}
+            >
+              {item.section && <Chip label={item.section} />}
+              {item.subSection && <Chip label={item.subSection} />}
+              {item.subSubSection && <Chip label={item.subSubSection} />}
+            </Box>
           </ButtonBase>
         ))}
-      </div>
+      </Box>
     </Dialog>
   )
 }
