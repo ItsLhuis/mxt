@@ -339,14 +339,7 @@ const CommandDialog = ({ open, handleClose }) => {
             <div className="command-dialog-content-button-wrp">
               <div className="command-dialog-content-button-details">
                 {item.icon && item.icon}
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start"
-                  }}
-                >
+                <div className="command-dialog-content-button-description">
                   <Typography variant="h6" component="h6" style={{ textAlign: "left" }}>
                     {item.label}
                   </Typography>

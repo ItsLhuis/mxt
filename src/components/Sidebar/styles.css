@@ -80,15 +80,11 @@
 }
 
 .sidebar.__small .sidebar-sub-menu {
-    width: 0;
-    height: 30px;
-    overflow: hidden;
+    display: none;
 }
 
 .sidebar.__small.__big__ .sidebar-sub-menu {
-    width: auto;
-    height: auto;
-    overflow: auto;
+    display: block;
 }
 
 .sidebar-sub-menu .but-sidebar {

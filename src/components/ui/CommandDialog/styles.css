@@ -49,6 +49,13 @@
     gap: 10px;
 }
 
+.command-dialog-content-button-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
 .command-dialog-content-button-tags {
     display: flex;
     flex-wrap: wrap;

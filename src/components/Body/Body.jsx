@@ -22,22 +22,20 @@ const Body = ({
     const allArrows = document.querySelectorAll(".arrow-but")
 
     const butSidebar = () => {
-      setTimeout(() => {
-        allBut.forEach((but) => {
-          but.classList.toggle("__small__but", sidebarSize === "small")
-        })
+      allBut.forEach((but) => {
+        but.classList.toggle("__small__but", sidebarSize === "small")
+      })
 
-        allLinksName.forEach((links) => {
-          links.classList.toggle("__small__but__link", sidebarSize === "small")
-        })
+      allLinksName.forEach((links) => {
+        links.classList.toggle("__small__but__link", sidebarSize === "small")
+      })
 
-        allArrows.forEach((arrow) => {
-          arrow.classList.toggle("__small__but__link", sidebarSize === "small")
-        })
+      allArrows.forEach((arrow) => {
+        arrow.classList.toggle("__small__but__link", sidebarSize === "small")
+      })
 
-        allTitle.forEach((title) => {
-          title.classList.toggle("__small__header", sidebarSize === "small")
-        })
+      allTitle.forEach((title) => {
+        title.classList.toggle("__small__header", sidebarSize === "small")
       })
     }
 
@@ -80,48 +78,44 @@ const Body = ({
       if (sidebar.classList.contains("__focused")) {
         const handleMouseEnter = () => {
           if (sidebarSize === "small") {
-            setTimeout(() => {
-              sidebar.classList.remove("__small")
+            sidebar.classList.remove("__small")
 
-              allBut.forEach((but) => {
-                but.classList.remove("__small__but")
-              })
+            allBut.forEach((but) => {
+              but.classList.remove("__small__but")
+            })
 
-              allLinksName.forEach((links) => {
-                links.classList.remove("__small__but__link")
-              })
+            allLinksName.forEach((links) => {
+              links.classList.remove("__small__but__link")
+            })
 
-              allArrows.forEach((arrow) => {
-                arrow.classList.remove("__small__but__link")
-              })
+            allArrows.forEach((arrow) => {
+              arrow.classList.remove("__small__but__link")
+            })
 
-              allTitle.forEach((title) => {
-                title.classList.remove("__small__header")
-              })
+            allTitle.forEach((title) => {
+              title.classList.remove("__small__header")
             })
           }
         }
 
         const handleMouseLeave = () => {
           if (sidebarSize === "small") {
-            setTimeout(() => {
-              sidebar.classList.add("__small")
+            sidebar.classList.add("__small")
 
-              allBut.forEach((but) => {
-                but.classList.add("__small__but")
-              })
+            allBut.forEach((but) => {
+              but.classList.add("__small__but")
+            })
 
-              allLinksName.forEach((links) => {
-                links.classList.add("__small__but__link")
-              })
+            allLinksName.forEach((links) => {
+              links.classList.add("__small__but__link")
+            })
 
-              allArrows.forEach((arrow) => {
-                arrow.classList.add("__small__but__link")
-              })
+            allArrows.forEach((arrow) => {
+              arrow.classList.add("__small__but__link")
+            })
 
-              allTitle.forEach((title) => {
-                title.classList.add("__small__header")
-              })
+            allTitle.forEach((title) => {
+              title.classList.add("__small__header")
             })
           }
         }
@@ -167,7 +161,11 @@ const Body = ({
         toggleSidebarSize={toggleSidebarSize}
         toggleSidebarSizeMobile={toggleSidebarSizeMobile}
       />
-      <Sidebar toggleSidebarSizeMobile={toggleSidebarSizeMobile} />
+      <Sidebar
+        sidebarSize={sidebarSize}
+        toggleSidebarSize={toggleSidebarSize}
+        toggleSidebarSizeMobile={toggleSidebarSizeMobile}
+      />
       <div
         className="sidebar-mobile-overlay"
         onClick={() => {

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 
 import "./styles.css"
 
@@ -233,32 +233,6 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
   const sidebar = sidebarRef.current
   const sidebarFocused =
     sidebar && sidebar.classList.contains("__focused") && sidebar.classList.contains("__small")
-  const allTitle = document.querySelectorAll(".menu-item-title")
-  const allBut = document.querySelectorAll(".but-sidebar")
-  const allLinksName = document.querySelectorAll(".links-name-sidebar")
-  const allArrows = document.querySelectorAll(".arrow-but")
-
-  const handleFocus = () => {
-    if (sidebarFocused) {
-      sidebar.classList.remove("__small")
-
-      allBut.forEach((but) => {
-        but.classList.remove("__small__but")
-      })
-
-      allLinksName.forEach((links) => {
-        links.classList.remove("__small__but__link")
-      })
-
-      allArrows.forEach((arrow) => {
-        arrow.classList.remove("__small__but__link")
-      })
-
-      allTitle.forEach((title) => {
-        title.classList.remove("__small__header")
-      })
-    }
-  }
 
   const renderSubmenu = (item, index) => {
     return (
@@ -269,7 +243,6 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
             sidebarFocused && "__small__but"
           }`}
           onClick={() => handleClick(index)}
-          onFocus={() => handleFocus()}
         >
           {item.icon}
           <Typography variant="p" component="p" className="links-name-sidebar">
@@ -297,7 +270,6 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
                       navigate(subitem.path)
                       handleSubmenuClick()
                     }}
-                    onFocus={() => handleFocus()}
                   >
                     <Typography variant="p" component="p" className="links-name-sidebar __sub">
                       {subitem.name}
@@ -311,6 +283,10 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
       </div>
     )
   }
+
+  useEffect(() => {
+    setOpen({})
+  }, [location])
 
   return (
     <div className="sidebar" ref={sidebarRef}>
@@ -348,7 +324,6 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
                   navigate(item.path)
                   handleSubmenuClick()
                 }}
-                onFocus={() => handleFocus()}
               >
                 {item.icon}
                 <Typography variant="p" component="p" className="links-name-sidebar">
