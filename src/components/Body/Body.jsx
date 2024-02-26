@@ -1,20 +1,13 @@
-import React, { useEffect } from "react"
-
-import "./styles.css"
+import React, { useState, useEffect } from "react"
 
 import { Navbar, Sidebar, Content } from "@components"
 
-const Body = ({
-  toggleSidebarSize,
-  sidebarSize,
-  toggleSidebarSizeMobile,
-  sidebarSizeMobile,
-  setSidebarSizeMobile
-}) => {
+const Body = ({ toggleSidebarSize, sidebarSize }) => {
+  const [drawerOpen, setDrawerOpen] = useState(false)
+
   useEffect(() => {
     const content = document.querySelector(".main-content")
     const sidebar = document.querySelector(".sidebar")
-    const overlay = document.querySelector(".sidebar-mobile-overlay")
     const butMenu = document.querySelector(".container-but-menu")
     const allTitle = document.querySelectorAll(".menu-item-title")
     const allBut = document.querySelectorAll(".but-sidebar")
@@ -42,20 +35,19 @@ const Body = ({
     const handleResize = () => {
       const screenWidth = window.innerWidth
 
-      if (screenWidth < 710) {
+      if (screenWidth < 600) {
         content.classList.add("__content__mobile")
         sidebar.classList.add("__sidebar__mobile")
         butMenu.classList.add("__menu__mobile")
       } else {
         butSidebar()
 
-        setSidebarSizeMobile("close")
+        setDrawerOpen(false)
 
         content.classList.remove("__content__mobile")
         sidebar.classList.remove("__sidebar__mobile")
         butMenu.classList.remove("__menu__mobile")
         sidebar.classList.remove("__big__")
-        overlay.classList.remove("__visible__")
       }
     }
 
@@ -129,49 +121,19 @@ const Body = ({
         }
       }
     } else {
-      allBut.forEach((but) => {
-        but.classList.remove("__small__but")
-      })
-
-      allLinksName.forEach((links) => {
-        links.classList.remove("__small__but__link")
-      })
-
-      allArrows.forEach((arrow) => {
-        arrow.classList.remove("__small__but__link")
-      })
-
-      allTitle.forEach((title) => {
-        title.classList.remove("__small__header")
-      })
-
-      if (sidebarSizeMobile === "open") {
-        sidebar.classList.add("__big__")
-        overlay.classList.add("__visible__")
-      } else {
-        sidebar.classList.remove("__big__")
-        overlay.classList.remove("__visible__")
-      }
+      setDrawerOpen(true)
     }
-  }, [sidebarSize, sidebarSizeMobile])
+  }, [sidebarSize])
 
   return (
     <>
-      <Navbar
-        toggleSidebarSize={toggleSidebarSize}
-        toggleSidebarSizeMobile={toggleSidebarSizeMobile}
-      />
+      <Navbar toggleSidebarSize={toggleSidebarSize} setDrawerOpen={setDrawerOpen} />
       <Sidebar
         sidebarSize={sidebarSize}
         toggleSidebarSize={toggleSidebarSize}
-        toggleSidebarSizeMobile={toggleSidebarSizeMobile}
+        drawerOpen={drawerOpen}
+        setDrawerOpen={setDrawerOpen}
       />
-      <div
-        className="sidebar-mobile-overlay"
-        onClick={() => {
-          toggleSidebarSizeMobile()
-        }}
-      ></div>
       <Content />
     </>
   )

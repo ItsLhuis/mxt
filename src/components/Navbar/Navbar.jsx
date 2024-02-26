@@ -9,7 +9,7 @@ import { Menu, Search, Settings } from "@mui/icons-material"
 
 import { CommandDialog } from "@components/ui"
 
-const Navbar = ({ toggleSidebarSize, toggleSidebarSizeMobile }) => {
+const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
   const navigate = useNavigate()
 
   const [commandDialogOpen, setCommandDialogOpen] = useState(false)
@@ -33,7 +33,7 @@ const Navbar = ({ toggleSidebarSize, toggleSidebarSizeMobile }) => {
                   onClick={() => {
                     const classValue = document.querySelector(".container-but-menu")
                     if (classValue.classList.contains("__menu__mobile")) {
-                      toggleSidebarSizeMobile()
+                      setDrawerOpen(true)
                     } else {
                       toggleSidebarSize()
                     }

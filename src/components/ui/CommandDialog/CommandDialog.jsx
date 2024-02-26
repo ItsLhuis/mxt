@@ -13,7 +13,6 @@ import {
   ButtonBase,
   Chip,
   Typography,
-  Container,
   Box
 } from "@mui/material"
 import {
@@ -319,7 +318,7 @@ const CommandDialog = ({ open, handleClose }) => {
 
   return (
     <Dialog onClose={handleClose} open={open} fullScreen={fullScreen}>
-      <Container disableGutters>
+      <Box>
         <Box
           display="flex"
           justifyContent="space-between"
@@ -341,7 +340,7 @@ const CommandDialog = ({ open, handleClose }) => {
             </IconButton>
           </Tooltip>
         </Box>
-      </Container>
+      </Box>
       <Box overflow="auto" sx={{ padding: "1rem" }}>
         {searchResults.map((item, index) => (
           <ButtonBase

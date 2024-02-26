@@ -28,11 +28,18 @@ p {
 }
 
 .page-main {
-  padding: 30px;
+  padding-top: 24px;
 }
 
-.MuiContainer-root {
-  padding: 0 !important;
+@media screen and (min-width: 600px) {
+  .page-main {
+    padding-top: 40px;
+  }
+
+  .MuiContainer-root {
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
 }
 
 ::-webkit-scrollbar-thumb {
@@ -82,21 +89,21 @@ p {
   font-weight: 800 !important;
 }
 
+.MuiButtonBase-root {
+  color: var(--onSurface) !important;
+  transition: background-color 0.3s ease !important;
+
+}
+
 .MuiButtonBase-root:hover {
   background-color: var(--elevation-level5) !important;
 }
 
 .MuiDialog-paper {
-  border-radius: 10px !important;
+  border-radius: 12px !important;
   width: 600px;
   background-color: var(--background) !important;
   color: var(--onSurface) !important;
-}
-
-@media screen and (max-width: 900px) {
-  .MuiDialog-paper {
-    border-radius: 0 !important;
-  }
 }
 
 .MuiPopover-paper {
@@ -164,7 +171,7 @@ input:-webkit-autofill:active {
 .MuiDrawer-paper {
   color: var(--onSurface) !important;
   background-color: var(--primary-color) !important;
-  width: 336px !important;
+  width: 280px !important;
 }
 
 .MuiChip-root {
@@ -196,6 +203,70 @@ input:-webkit-autofill:active {
 }
 
 .MuiLinearProgress-bar {
+  background-color: var(--primary) !important;
+}
+
+.MuiPaper-root {
+  color: var(--onSurface) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 0 0.465rem var(--boxShadow) !important;
+}
+
+@media screen and (max-width: 900px) {
+  .MuiPaper-root {
+    border-radius: 0px !important;
+  }
+}
+
+.MuiPaper-elevation1 {
+  background-color: var(--elevation-level1) !important;
+}
+
+.MuiPaper-elevation2 {
+  background-color: var(--elevation-level2) !important;
+}
+
+.MuiPaper-elevation3 {
+  background-color: var(--elevation-level3) !important;
+}
+
+.MuiPaper-elevation4 {
+  background-color: var(--elevation-level4) !important;
+}
+
+.MuiPaper-elevation5 {
+  background-color: var(--elevation-level5) !important;
+}
+
+.MuiTabs-root {
+  border-bottom: none;
+}
+
+.MuiButtonBase-root.MuiTab-root {
+  color: var(--outline) !important;
+  min-height: 48px;
+  flex-direction: row !important;
+  gap: 10px !important;
+  justify-content: center !important;
+  text-transform: none !important;
+  transition: color 0.3s ease !important;
+}
+
+.MuiButtonBase-root.MuiTab-root:hover {
+  color: var(--onSurface) !important;
+  background-color: transparent !important;
+}
+
+.MuiButtonBase-root.MuiTab-root>.MuiTab-iconWrapper {
+  margin-bottom: 0 !important;
+}
+
+.MuiButtonBase-root.MuiTab-root.Mui-selected {
+  color: var(--onSurface) !important;
+}
+
+.MuiTabs-indicator {
+  border-radius: 10px;
   background-color: var(--primary) !important;
 }
 

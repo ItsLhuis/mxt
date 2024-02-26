@@ -13,23 +13,11 @@ function App() {
     localStorage.setItem("sidebarSize", newSize)
   }
 
-  const [sidebarSizeMobile, setSidebarSizeMobile] = useState("close")
-
-  const toggleSidebarSizeMobile = () => {
-    setSidebarSizeMobile(sidebarSizeMobile === "close" ? "open" : "close")
-  }
-
   return (
     <>
       <div className="app">
         <div className="container-main">
-          <Body
-            toggleSidebarSize={toggleSidebarSize}
-            sidebarSize={sidebarSize}
-            toggleSidebarSizeMobile={toggleSidebarSizeMobile}
-            sidebarSizeMobile={sidebarSizeMobile}
-            setSidebarSizeMobile={setSidebarSizeMobile}
-          />
+          <Body toggleSidebarSize={toggleSidebarSize} sidebarSize={sidebarSize} />
         </div>
       </div>
       <ToastContainer></ToastContainer>

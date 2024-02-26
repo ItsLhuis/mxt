@@ -47,7 +47,7 @@
 .container-but-menu,
 .container-but-settings {
     display: flex;
-    margin-top: 0.6rem;
+    margin-top: auto;
     margin-bottom: auto;
     order: 2;
 }

@@ -4,7 +4,7 @@ import "./styles.css"
 
 import { useLocation, useNavigate } from "react-router-dom"
 
-import { Collapse, Typography, ButtonBase, Tooltip, IconButton } from "@mui/material"
+import { Collapse, Typography, ButtonBase, Drawer, Tooltip, IconButton } from "@mui/material"
 
 import {
   Dashboard,
@@ -208,7 +208,7 @@ const SidebarData = [
   }
 ]
 
-const Sidebar = ({ toggleSidebarSizeMobile }) => {
+const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
   const navigate = useNavigate()
 
   const location = useLocation()
@@ -226,7 +226,7 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
 
   const handleSubmenuClick = () => {
     if (document.querySelector(".sidebar").classList.contains("__sidebar__mobile")) {
-      toggleSidebarSizeMobile()
+      setDrawerOpen(false)
     }
   }
 
@@ -284,6 +284,54 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
     )
   }
 
+  const renderDrawerSubmenu = (item, index) => {
+    return (
+      <div key={index}>
+        {item.title && <h3 className="menu-item-title">{item.title}</h3>}
+        <ButtonBase
+          className={`but-sidebar ${isActive(`${item.path}`) ? "active" : ""}`}
+          onClick={() => handleClick(index)}
+        >
+          {item.icon}
+          <Typography variant="p" component="p" className="links-name-sidebar">
+            {item.name}
+          </Typography>
+          {item.submenu && (
+            <span className={`arrow-but arrow__${index}`}>
+              <KeyboardArrowUp />
+            </span>
+          )}
+        </ButtonBase>
+        {item.submenu && (
+          <Collapse in={open[index]} timeout="auto" unmountOnExit>
+            <div className={`sidebar-sub-menu`}>
+              {item.submenu.map((subitem, subindex) => {
+                return subitem.submenu ? (
+                  renderDrawerSubmenu(subitem, `${index}-${subindex}`)
+                ) : (
+                  <ButtonBase
+                    key={subindex}
+                    className={`but-sidebar ${isActive(`${subitem.path}`) ? "active" : ""} ${
+                      subitem.className
+                    }`}
+                    onClick={() => {
+                      navigate(subitem.path)
+                      handleSubmenuClick()
+                    }}
+                  >
+                    <Typography variant="p" component="p" className="links-name-sidebar __sub">
+                      {subitem.name}
+                    </Typography>
+                  </ButtonBase>
+                )
+              })}
+            </div>
+          </Collapse>
+        )}
+      </div>
+    )
+  }
+
   useEffect(() => {
     const arrowElements = document.querySelectorAll(".arrow-but")
     arrowElements.forEach((element) => {
@@ -294,52 +342,81 @@ const Sidebar = ({ toggleSidebarSizeMobile }) => {
   }, [location])
 
   return (
-    <div className="sidebar" ref={sidebarRef}>
-      <div className="navbar-content-info-container __sidebar-nav">
-        <div className="navbar-info">
-          <Typography variant="h5" component="h5" className="company-name">
-            Mixtura
-          </Typography>
-        </div>
-        <div className="container-but-menu" style={{ marginRight: "0.6rem" }}>
-          <Tooltip title="Fechar" placement="bottom">
-            <IconButton
-              aria-label="Fechar"
-              size="normal"
-              className="but-menu"
-              onClick={() => toggleSidebarSizeMobile()}
-            >
-              <Close className="icon" />
-            </IconButton>
-          </Tooltip>
-        </div>
-      </div>
-      <div className="menu">
-        {SidebarData.map((item, index) => {
-          return item.submenu ? (
-            renderSubmenu(item, index)
-          ) : (
-            <div key={index}>
-              {item.title && <h3 className="menu-item-title">{item.title}</h3>}
-              <ButtonBase
-                className={`but-sidebar ${isActive(`${item.path}`) ? "active" : ""} ${
-                  sidebarFocused && "__small__but"
-                }`}
-                onClick={() => {
-                  navigate(item.path)
-                  handleSubmenuClick()
-                }}
-              >
-                {item.icon}
-                <Typography variant="p" component="p" className="links-name-sidebar">
-                  {item.name}
-                </Typography>
-              </ButtonBase>
+    <>
+      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} sx={{ width: "280px" }}>
+        <div className="sidebar __drawer">
+          <div className="navbar-content-info-container __sidebar-nav">
+            <div className="navbar-info">
+              <Typography variant="h3" component="h3" className="company-name">
+                Mixtura
+              </Typography>
             </div>
-          )
-        })}
+            <div className="container-but-menu" style={{ marginRight: "0.6rem" }}>
+              <Tooltip title="Fechar" placement="bottom">
+                <IconButton
+                  aria-label="Fechar"
+                  size="normal"
+                  className="but-menu"
+                  onClick={() => setDrawerOpen(false)}
+                >
+                  <Close className="icon" />
+                </IconButton>
+              </Tooltip>
+            </div>
+          </div>
+          <div className="menu">
+            {SidebarData.map((item, index) => {
+              return item.submenu ? (
+                renderDrawerSubmenu(item, index)
+              ) : (
+                <div key={index}>
+                  {item.title && <h3 className="menu-item-title">{item.title}</h3>}
+                  <ButtonBase
+                    className={`but-sidebar ${isActive(`${item.path}`) ? "active" : ""}`}
+                    onClick={() => {
+                      navigate(item.path)
+                      handleSubmenuClick()
+                    }}
+                  >
+                    {item.icon}
+                    <Typography variant="p" component="p" className="links-name-sidebar">
+                      {item.name}
+                    </Typography>
+                  </ButtonBase>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </Drawer>
+      <div className="sidebar" ref={sidebarRef}>
+        <div className="menu">
+          {SidebarData.map((item, index) => {
+            return item.submenu ? (
+              renderSubmenu(item, index)
+            ) : (
+              <div key={index}>
+                {item.title && <h3 className="menu-item-title">{item.title}</h3>}
+                <ButtonBase
+                  className={`but-sidebar ${isActive(`${item.path}`) ? "active" : ""} ${
+                    sidebarFocused && "__small__but"
+                  }`}
+                  onClick={() => {
+                    navigate(item.path)
+                    handleSubmenuClick()
+                  }}
+                >
+                  {item.icon}
+                  <Typography variant="p" component="p" className="links-name-sidebar">
+                    {item.name}
+                  </Typography>
+                </ButtonBase>
+              </div>
+            )
+          })}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

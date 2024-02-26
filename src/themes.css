@@ -37,7 +37,7 @@
     --surfaceDisabled: rgba(27, 27, 31, 0.12);
     --onSurfaceDisabled: rgba(27, 27, 31, 0.38);
     --backdrop: rgba(48, 48, 56, 0.4);
-    --boxShadow: rgba(100, 100, 111, 0.302);
+    --boxShadow: rgba(140, 140, 140, 0.302);
     --scrollBar: rgb(111, 109, 109);
 }
 
@@ -80,7 +80,7 @@
     --surfaceDisabled: rgba(228, 225, 230, 0.12);
     --onSurfaceDisabled: rgba(228, 225, 230, 0.38);
     --backdrop: rgba(48, 48, 56, 0.4);
-    --boxShadow: rgba(24, 24, 24, 0.627);
+    --boxShadow: rgba(30, 30, 30, 0.627);
     --scrollBar: rgb(110, 107, 107);
 }
 
@@ -123,6 +123,6 @@
     --surfaceDisabled: rgba(27, 27, 31, 0.12);
     --onSurfaceDisabled: rgba(27, 27, 31, 0.38);
     --backdrop: rgba(48, 48, 56, 0.4);
-    --boxShadow: rgba(100, 100, 111, 0.302);
+    --boxShadow: rgba(140, 140, 140, 0.302);
     --scrollBar: rgb(111, 109, 109);
 }
