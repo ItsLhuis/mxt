@@ -31,8 +31,8 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                   size="normal"
                   className="but-menu"
                   onClick={() => {
-                    const classValue = document.querySelector(".container-but-menu")
-                    if (classValue.classList.contains("__menu__mobile")) {
+                    const screenWidth = window.innerWidth
+                    if (screenWidth < 600) {
                       setDrawerOpen(true)
                     } else {
                       toggleSidebarSize()

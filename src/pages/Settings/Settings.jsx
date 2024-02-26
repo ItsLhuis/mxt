@@ -69,7 +69,7 @@ const Settings = () => {
               <Tabs
                 value={value}
                 onChange={handleChange}
-                aria-label="basic tabs example"
+                aria-label="settings-tab"
                 variant="scrollable"
                 scrollButtons="auto"
               >

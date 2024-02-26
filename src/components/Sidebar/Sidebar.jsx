@@ -339,7 +339,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
     })
 
     setOpen({})
-  }, [location])
+  }, [location, drawerOpen])
 
   return (
     <>
