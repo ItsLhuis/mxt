@@ -1,5 +1,6 @@
 :root {
     --primary: rgb(88, 101, 242);
+    --primaryHover: rgb(71, 82, 196);
     --onPrimary: rgb(255, 255, 255);
     --primaryContainer: rgb(224, 224, 255);
     --onPrimaryContainer: rgb(0, 6, 104);
@@ -43,6 +44,7 @@
 
 [data-theme='dark'] {
     --primary: rgb(88, 101, 242);
+    --primaryHover: rgb(71, 82, 196);
     --onPrimary: rgb(255, 255, 255);
     --primaryContainer: rgb(45, 56, 169);
     --onPrimaryContainer: rgb(224, 224, 255);
@@ -86,6 +88,7 @@
 
 [data-theme='light'] {
     --primary: rgb(88, 101, 242);
+    --primaryHover: rgb(71, 82, 196);
     --onPrimary: rgb(255, 255, 255);
     --primaryContainer: rgb(224, 224, 255);
     --onPrimaryContainer: rgb(0, 6, 104);

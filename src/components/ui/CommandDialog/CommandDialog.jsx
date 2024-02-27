@@ -342,62 +342,96 @@ const CommandDialog = ({ open, handleClose }) => {
         </Box>
       </Box>
       <Box overflow="auto" sx={{ padding: "1rem" }}>
-        {searchResults.map((item, index) => (
-          <ButtonBase
-            key={index}
-            onClick={() => {
-              navigate(item.link)
-              handleClose()
-            }}
+        {searchResults.length === 0 ? (
+          <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "flex-start",
-              padding: 2,
-              width: "100%",
-              bgcolor: "var(--elevation-level1)",
-              border: 2,
-              borderColor: "var(--elevation-level1)",
-              borderRadius: 2,
-              marginTop: index === 0 ? 0 : 1,
-              "&:hover": {
-                borderColor: "var(--primary)"
-              }
+              marginTop: "2rem",
+              textAlign: "center",
+              gap: "16px",
+              height: "200px"
             }}
           >
-            <Box display="flex" alignItems="center" gap={1}>
-              {item.icon}
-              <Box display="flex" flexDirection="column" sx={{ marginBottom: 1 }}>
-                <Typography variant="h6" textAlign="left">
-                  {item.label}
-                </Typography>
-                {item.description && (
-                  <Typography variant="body2" textAlign="left" color="var(--outline)">
-                    {item.description}
-                  </Typography>
-                )}
-              </Box>
-            </Box>
-            {item.link && (
-              <Typography variant="body2" color="var(--primary)">
-                {item.link}
-              </Typography>
-            )}
+            <Typography variant="h4" component="h4" sx={{ marginBottom: "16px" }}>
+              Nada Econtrado!
+            </Typography>
             <Box
-              display="flex"
-              flexWrap="wrap"
-              justifyContent="flex-start"
-              marginLeft="auto"
-              marginTop={1}
-              gap={0.5}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "8px"
+              }}
             >
-              {item.section && <Chip label={item.section} />}
-              {item.subSection && <Chip label={item.subSection} />}
-              {item.subSubSection && <Chip label={item.subSubSection} />}
+              <Box sx={{ display: "flex", flexDirection: "row" }}>
+                <Typography variant="p" component="p" sx={{ wordWrap: "break-word" }}>
+                  {"Não foram encontrados resultados para"} &nbsp;"{<strong>{text}</strong>}"
+                </Typography>
+              </Box>
+              <Typography variant="p" component="p">
+                Tente verificar erros de digitação ou usar palavras completas.
+              </Typography>
             </Box>
-          </ButtonBase>
-        ))}
+          </Box>
+        ) : (
+          searchResults.map((item, index) => (
+            <ButtonBase
+              key={index}
+              onClick={() => {
+                navigate(item.link)
+                handleClose()
+              }}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "flex-start",
+                padding: 2,
+                width: "100%",
+                bgcolor: "var(--elevation-level1)",
+                border: 2,
+                borderColor: "var(--elevation-level1)",
+                borderRadius: 2,
+                marginTop: index === 0 ? 0 : 1,
+                "&:hover": {
+                  bgcolor: "var(--elevation-level4)",
+                  borderColor: "var(--primary)"
+                }
+              }}
+            >
+              <Box display="flex" alignItems="center" gap={1}>
+                {item.icon}
+                <Box display="flex" flexDirection="column" sx={{ marginBottom: 1 }}>
+                  <Typography variant="h6" textAlign="left">
+                    {item.label}
+                  </Typography>
+                  {item.description && (
+                    <Typography variant="body2" textAlign="left" color="var(--outline)">
+                      {item.description}
+                    </Typography>
+                  )}
+                </Box>
+              </Box>
+              {item.link && (
+                <Typography variant="body2" color="var(--primary)">
+                  {item.link}
+                </Typography>
+              )}
+              <Box
+                display="flex"
+                flexWrap="wrap"
+                justifyContent="flex-start"
+                marginLeft="auto"
+                marginTop={1}
+                gap={0.5}
+              >
+                {item.section && <Chip label={item.section} />}
+                {item.subSection && <Chip label={item.subSection} />}
+                {item.subSubSection && <Chip label={item.subSubSection} />}
+              </Box>
+            </ButtonBase>
+          ))
+        )}
       </Box>
     </Dialog>
   )

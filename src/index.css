@@ -29,17 +29,33 @@ p {
 
 .page-main {
   padding-top: 24px;
+  padding-bottom: 24px;
 }
 
 @media screen and (min-width: 600px) {
   .page-main {
     padding-top: 40px;
+    padding-bottom: 40px;
   }
 
   .MuiContainer-root {
     padding-left: 40px !important;
     padding-right: 40px !important;
   }
+}
+
+.arrow-but,
+.arrow-but-drop-down {
+  display: flex;
+  margin-left: auto;
+  margin-right: 1rem;
+  transform: rotate(180deg);
+  transition: transform 0.3s ease !important;
+}
+
+.arrow-but.__arrow-but__rotate,
+.arrow-but-drop-down.__arrow-but-drop-down__rotate {
+  transform: rotateX(0deg);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -59,14 +75,14 @@ p {
 }
 
 ::-moz-selection {
-  -webkit-text-fill-color: white !important;
-  color: white !important;
+  -webkit-text-fill-color: rgb(228, 225, 230) !important;
+  color: rgb(228, 225, 230) !important;
   background: var(--primary);
 }
 
 ::selection {
-  -webkit-text-fill-color: white !important;
-  color: white !important;
+  -webkit-text-fill-color: rgb(228, 225, 230) !important;
+  color: rgb(228, 225, 230) !important;
   background: var(--primary);
 }
 
@@ -80,23 +96,65 @@ p {
   box-shadow: 0 0 0.625rem var(--boxShadow) !important;
 }
 
-.MuiCircularProgress-root {
-  color: var(--primary) !important;
-}
-
 .MuiFormLabel-root {
   user-select: none;
   font-weight: 800 !important;
 }
 
-.MuiButtonBase-root {
-  color: var(--onSurface) !important;
-  transition: background-color 0.3s ease !important;
-
+.MuiListItemButton-root {
+  padding: 6px 14px !important;
 }
 
-.MuiButtonBase-root:hover {
+.MuiListItemButton-root:hover {
   background-color: var(--elevation-level5) !important;
+}
+
+.MuiListItemButton-root .MuiListItemText-primary {
+  font-size: 13px !important;
+}
+
+.MuiButton-root.MuiButton-contained {
+  border-radius: 8px !important;
+}
+
+.MuiButton-root.MuiButton-contained {
+  color: rgb(228, 225, 230) !important;
+}
+
+.MuiButton-contained.MuiLoadingButton-loading {
+  color: transparent !important;
+  background-color: var(--primary) !important;
+}
+
+.MuiLoadingButton-loadingIndicator {
+  color: rgb(228, 225, 230) !important;
+}
+
+.MuiButton-containedPrimary {
+  box-shadow: 0 0 0.625rem var(--boxShadow) !important;
+  color: rgb(228, 225, 230) !important;
+}
+
+.MuiButton-root.MuiButton-contained:hover {
+  background-color: var(--primaryHover) !important;
+}
+
+.MuiButtonBase-root {
+  text-transform: none !important;
+}
+
+.MuiIconButton-root:hover {
+  background-color: var(--elevation-level5) !important;
+}
+
+.MuiIconButton-root.primary {
+  background-color: var(--primary) !important;
+  box-shadow: 0 0 0.625rem var(--boxShadow) !important;
+  color: rgb(228, 225, 230) !important;
+}
+
+.MuiIconButton-root.primary:hover {
+  background-color: var(--primaryHover) !important;
 }
 
 .MuiDialog-paper {
@@ -107,15 +165,9 @@ p {
 }
 
 .MuiPopover-paper {
+  background-color: var(--elevation-level2) !important;
   color: var(--onSurface) !important;
-  background-color: var(--primary) !important;
   box-shadow: 0 0 1rem var(--boxShadow) !important;
-}
-
-.MuiFormLabel-root.MuiInputLabel-root {
-  font-size: 0.875rem !important;
-  color: var(--outline) !important;
-  font-weight: 550 !important;
 }
 
 .MuiFormLabel-root.MuiInputLabel-root.MuiInputLabel-shrink {
@@ -127,34 +179,8 @@ p {
   color: var(--onSurface) !important;
 }
 
-.MuiButtonBase-root.MuiSwitch-switchBase.Mui-checked {
-  color: var(--primary) !important;
-}
-
-.MuiSwitch-track {
-  background-color: var(--primary) !important;
-}
-
-.MuiInputBase-root {
-  border-radius: 8px !important;
-  background-color: transparent;
-}
-
-.MuiOutlinedInput-notchedOutline {
-  border: 2px solid var(--elevation-level5) !important;
-  padding: 0;
-}
-
-.MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline {
-  border-color: var(--outline) !important;
-}
-
-.Mui-focused .MuiOutlinedInput-notchedOutline,
-.Mui-focused:hover .MuiOutlinedInput-notchedOutline {
-  border: 2px solid var(--primary) !important;
-}
-
-input {
+input,
+textarea {
   font-size: 13px !important;
   color: var(--onSurface);
   -webkit-text-fill-color: var(--onSurface);
@@ -164,14 +190,19 @@ input {
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0px 1000px var(--elevation-level2) inset !important;
+  border-radius: 12px !important;
 }
 
 .MuiDrawer-paper {
   color: var(--onSurface) !important;
-  background-color: var(--primary-color) !important;
   width: 280px !important;
+  overflow: hidden !important;
 }
 
 .MuiChip-root {
@@ -202,10 +233,6 @@ input:-webkit-autofill:active {
   color: var(--onSurface);
 }
 
-.MuiLinearProgress-bar {
-  background-color: var(--primary) !important;
-}
-
 .MuiPaper-root {
   color: var(--onSurface) !important;
   border-radius: 12px !important;
@@ -213,7 +240,7 @@ input:-webkit-autofill:active {
 }
 
 @media screen and (max-width: 900px) {
-  .MuiPaper-root {
+  .MuiDialog-paper {
     border-radius: 0px !important;
   }
 }
@@ -239,7 +266,25 @@ input:-webkit-autofill:active {
 }
 
 .MuiTabs-root {
-  border-bottom: none;
+  border-bottom: 2px solid var(--elevation-level5);
+}
+
+.MuiTabs-scrollButtons {
+  border-radius: 50% !important;
+  width: 40px;
+  height: 40px;
+}
+
+.MuiTabs-scrollButtons.Mui-disabled {
+  opacity: 0.2 !important;
+}
+
+.MuiGrid-root {
+  margin-top: 0 !important;
+}
+
+.MuiButtonBase-root {
+  transition: background-color 0.3s ease !important;
 }
 
 .MuiButtonBase-root.MuiTab-root {
@@ -266,31 +311,11 @@ input:-webkit-autofill:active {
 }
 
 .MuiTabs-indicator {
+  height: 3px !important;
   border-radius: 10px;
-  background-color: var(--primary) !important;
 }
 
-.Toastify__toast {
-  border-radius: 5px !important;
-  background-color: var(--primary-color) !important;
-  box-shadow: 0 0 1rem var(--boxShadow) !important;
-  color: var(--onSurface) !important;
-}
-
-.Toastify__toast-body {
-  user-select: none;
-}
-
-.Toastify__toast-icon {
-  margin-inline-end: .8rem !important;
-}
-
-.Toastify__close-button {
-  color: var(--onSurface) !important;
-}
-
-@media screen and (max-width: 480px) {
-  .Toastify__toast {
-    margin: 0.5rem;
-  }
+.MuiFormHelperText-root {
+  font-weight: 500 !important;
+  margin-bottom: 8px !important;
 }

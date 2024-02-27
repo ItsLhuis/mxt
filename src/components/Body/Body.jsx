@@ -34,7 +34,7 @@ const Body = ({ toggleSidebarSize, sidebarSize }) => {
     const handleResize = () => {
       const screenWidth = window.innerWidth
 
-      if (screenWidth < 600) {
+      if (screenWidth < 900) {
         content.classList.add("__content__mobile")
         sidebar.classList.add("__sidebar__mobile")
       } else {
@@ -46,7 +46,7 @@ const Body = ({ toggleSidebarSize, sidebarSize }) => {
         sidebar.classList.remove("__sidebar__mobile")
         sidebar.classList.remove("__big__")
 
-        if (sidebarSize === "small") {
+        if (sidebarSize === "small" && sidebar.classList.contains("__sidebar__mobile")) {
           content.classList.add("__big")
 
           sidebar.classList.add("__small")

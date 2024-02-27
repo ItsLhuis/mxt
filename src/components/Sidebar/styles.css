@@ -44,7 +44,7 @@
 
 .menu-item-title {
     color: var(--primary);
-    font-size: 14px;
+    font-size: .785rem;
     padding-bottom: 0.6rem;
     margin-top: 1.1rem;
 }
@@ -68,18 +68,6 @@
     text-decoration: none;
     opacity: 1;
     cursor: pointer;
-}
-
-.but-sidebar .arrow-but {
-    display: flex;
-    margin-left: auto;
-    margin-right: 1rem;
-    transform: rotate(180deg);
-    transition: transform 0.3s ease;
-}
-
-.but-sidebar .arrow-but.__arrow-but__rotate {
-    transform: rotateX(0deg);
 }
 
 .sidebar-sub-menu {

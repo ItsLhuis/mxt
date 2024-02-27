@@ -243,6 +243,11 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
             sidebarFocused && "__small__but"
           }`}
           onClick={() => handleClick(index)}
+          sx={{
+            "&:hover": {
+              bgcolor: "var(--elevation-level5)"
+            }
+          }}
         >
           {item.icon}
           <Typography variant="p" component="p" className="links-name-sidebar">
@@ -270,6 +275,11 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
                       navigate(subitem.path)
                       handleSubmenuClick()
                     }}
+                    sx={{
+                      "&:hover": {
+                        bgcolor: "var(--elevation-level5)"
+                      }
+                    }}
                   >
                     <Typography variant="p" component="p" className="links-name-sidebar __sub">
                       {subitem.name}
@@ -291,6 +301,11 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
         <ButtonBase
           className={`but-sidebar ${isActive(`${item.path}`) ? "active" : ""}`}
           onClick={() => handleClick(index)}
+          sx={{
+            "&:hover": {
+              bgcolor: "var(--elevation-level5)"
+            }
+          }}
         >
           {item.icon}
           <Typography variant="p" component="p" className="links-name-sidebar">
@@ -317,6 +332,11 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
                     onClick={() => {
                       navigate(subitem.path)
                       handleSubmenuClick()
+                    }}
+                    sx={{
+                      "&:hover": {
+                        bgcolor: "var(--elevation-level5)"
+                      }
                     }}
                   >
                     <Typography variant="p" component="p" className="links-name-sidebar __sub">
@@ -348,7 +368,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
           <div className="navbar-content-info-container __sidebar-nav">
             <div className="navbar-info">
               <Typography variant="h3" component="h3" className="company-name">
-                Mixtura
+                MixTech
               </Typography>
             </div>
             <div className="container-but-menu" style={{ marginRight: "0.6rem" }}>
@@ -377,6 +397,11 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
                       navigate(item.path)
                       handleSubmenuClick()
                     }}
+                    sx={{
+                      "&:hover": {
+                        bgcolor: "var(--elevation-level5)"
+                      }
+                    }}
                   >
                     {item.icon}
                     <Typography variant="p" component="p" className="links-name-sidebar">
@@ -404,6 +429,11 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
                   onClick={() => {
                     navigate(item.path)
                     handleSubmenuClick()
+                  }}
+                  sx={{
+                    "&:hover": {
+                      bgcolor: "var(--elevation-level5)"
+                    }
                   }}
                 >
                   {item.icon}

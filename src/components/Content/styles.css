@@ -7,6 +7,7 @@
 .all-content {
     margin-top: 60px;
     height: calc(100vh - 60px);
+    width: calc(100vw - 280px);
     overflow: hidden;
     overflow-y: auto;
     color: var(--onSurface);
@@ -18,4 +19,12 @@
 
 .__content__mobile {
     margin-left: 0;
+}
+
+.main-content.__big .all-content {
+    width: calc(100vw - 80px) !important;
+}
+
+.main-content.__content__mobile .all-content {
+    width: 100vw !important;
 }

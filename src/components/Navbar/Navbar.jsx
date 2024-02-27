@@ -4,13 +4,24 @@ import "./styles.css"
 
 import { useNavigate } from "react-router-dom"
 
-import { Typography, Tooltip, IconButton, Avatar, Divider } from "@mui/material"
+import {
+  Typography,
+  Tooltip,
+  IconButton,
+  Avatar,
+  Divider,
+  useTheme,
+  useMediaQuery
+} from "@mui/material"
 import { Menu, Search, Settings } from "@mui/icons-material"
 
 import { CommandDialog } from "@components/ui"
 
 const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
   const navigate = useNavigate()
+
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"))
 
   const [commandDialogOpen, setCommandDialogOpen] = useState(false)
 
@@ -21,7 +32,7 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
           <div className="navbar-content-info-container">
             <div className="navbar-info">
               <Typography variant="h3" component="h3" className="company-name">
-                Mixtura
+                MixTech
               </Typography>
             </div>
             <div className="container-but-menu">
@@ -32,7 +43,7 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                   className="but-menu"
                   onClick={() => {
                     const screenWidth = window.innerWidth
-                    if (screenWidth < 600) {
+                    if (screenWidth < 900) {
                       setDrawerOpen(true)
                     } else {
                       toggleSidebarSize()
@@ -55,30 +66,34 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
             </div>
           </div>
           <div className="navbar-user-container">
-            <div className="navbar-user-container-profile">
-              {/* <Avatar alt="Luis Rodrigues" src="https://picsum.photos/700" /> */}
-              <Avatar alt="Luis Rodrigues" />
-              <div className="navbar-user-container-profile-details">
-                <Typography variant="h6" component="h6" style={{ fontWeight: 600 }}>
-                  Luis Rodrigues
-                </Typography>
-                <Typography
-                  variant="p"
-                  component="p"
-                  style={{ color: "var(--outline)", fontWeight: 500 }}
-                >
-                  Administrador
-                </Typography>
-              </div>
-            </div>
-            <Divider
-              orientation="vertical"
-              style={{
-                borderColor: "var(--elevation-level5)",
-                borderWidth: 1,
-                height: "70%"
-              }}
-            />
+            {!isSmallScreen && (
+              <>
+                <div className="navbar-user-container-profile">
+                  {/* <Avatar alt="Luis Rodrigues" src="https://picsum.photos/700" /> */}
+                  <Avatar alt="Luis Rodrigues" />
+                  <div className="navbar-user-container-profile-details">
+                    <Typography variant="h6" component="h6" sx={{ fontWeight: 600 }}>
+                      Luis Rodrigues
+                    </Typography>
+                    <Typography
+                      variant="p"
+                      component="p"
+                      sx={{ color: "var(--outline)", fontWeight: 600 }}
+                    >
+                      Administrador
+                    </Typography>
+                  </div>
+                </div>
+                <Divider
+                  orientation="vertical"
+                  sx={{
+                    borderColor: "var(--elevation-level5)",
+                    borderWidth: 1,
+                    height: "70%"
+                  }}
+                />
+              </>
+            )}
             <div className="container-but-settings">
               <Tooltip title="Definições" placement="bottom">
                 <IconButton

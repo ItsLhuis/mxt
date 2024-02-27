@@ -10,6 +10,12 @@ export function ThemeProvider({
 }) {
   const [theme, setTheme] = useState(() => localStorage.getItem(storageKey) || defaultTheme)
 
+  const updateTheme = (newTheme) => {
+    setTheme(newTheme)
+    localStorage.setItem(storageKey, newTheme)
+    document.documentElement.setAttribute("data-theme", newTheme)
+  }
+
   useEffect(() => {
     if (!localStorage.getItem(storageKey)) {
       localStorage.setItem(storageKey, theme)
@@ -21,7 +27,6 @@ export function ThemeProvider({
       const handleSystemThemeChange = (event) => {
         const systemTheme = event.matches ? "dark" : "light"
         document.documentElement.setAttribute("data-theme", systemTheme)
-        setTheme(systemTheme)
       }
 
       const systemMediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
@@ -33,13 +38,11 @@ export function ThemeProvider({
         systemMediaQuery.removeEventListener("change", handleSystemThemeChange)
       }
     }
-  }, [theme])
+  }, [theme, updateTheme])
 
   const value = {
     theme,
-    setTheme: (theme) => {
-      setTheme(theme)
-    }
+    updateTheme
   }
 
   return (
