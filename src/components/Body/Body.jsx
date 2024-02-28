@@ -46,7 +46,7 @@ const Body = ({ toggleSidebarSize, sidebarSize }) => {
         sidebar.classList.remove("__sidebar__mobile")
         sidebar.classList.remove("__big__")
 
-        if (sidebarSize === "small" && sidebar.classList.contains("__sidebar__mobile")) {
+        if (sidebarSize === "small") {
           content.classList.add("__big")
 
           sidebar.classList.add("__small")

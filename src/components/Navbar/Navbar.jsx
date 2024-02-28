@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 
 import "./styles.css"
 
@@ -10,6 +10,8 @@ import {
   IconButton,
   Avatar,
   Divider,
+  Box,
+  Chip,
   useTheme,
   useMediaQuery
 } from "@mui/material"
@@ -24,6 +26,20 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"))
 
   const [commandDialogOpen, setCommandDialogOpen] = useState(false)
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.altKey && event.key === "p") {
+        setCommandDialogOpen(true)
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyPress)
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress)
+    }
+  }, [])
 
   return (
     <>
@@ -53,23 +69,35 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                   <Menu className="icon" />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Pesquisar" placement="bottom">
-                <IconButton
-                  aria-label="Pesquisar"
-                  size="normal"
-                  className="but-menu"
-                  onClick={() => setCommandDialogOpen(true)}
-                >
-                  <Search className="icon" />
-                </IconButton>
-              </Tooltip>
+              <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <Tooltip title="Pesquisar" placement="bottom">
+                  <IconButton
+                    aria-label="Pesquisar"
+                    size="normal"
+                    className="but-menu"
+                    onClick={() => setCommandDialogOpen(true)}
+                  >
+                    <Search className="icon" />
+                  </IconButton>
+                </Tooltip>
+                {!isSmallScreen && <Chip label="Alt + p" />}
+              </Box>
             </div>
           </div>
           <div className="navbar-user-container">
+            <Tooltip title="Definições" placement="bottom">
+              <IconButton
+                aria-label="Definições"
+                size="normal"
+                className="but-settings"
+                onClick={() => navigate("/settings")}
+              >
+                <Settings className="icon" />
+              </IconButton>
+            </Tooltip>
             {!isSmallScreen && (
               <>
                 <div className="navbar-user-container-profile">
-                  {/* <Avatar alt="Luis Rodrigues" src="https://picsum.photos/700" /> */}
                   <Avatar alt="Luis Rodrigues" />
                   <div className="navbar-user-container-profile-details">
                     <Typography variant="h6" component="h6" sx={{ fontWeight: 600 }}>

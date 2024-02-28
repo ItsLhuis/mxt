@@ -53,9 +53,12 @@ function App() {
       MuiInputLabel: {
         styleOverrides: {
           root: {
-            fontSize: "0.875rem",
+            fontSize: ".775rem",
             color: "var(--outline)",
             fontWeight: 550
+          },
+          shrink: {
+            fontSize: "1rem"
           }
         }
       }
@@ -75,7 +78,7 @@ function App() {
           inset: "24px"
         }}
         toastOptions={{
-          duration: 4000,
+          duration: 3000,
           style: {
             background: "var(--elevation-level5)",
             color: "var(--onSurface)",

@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"
+
 import React, { useState, useEffect, useRef } from "react"
 
 import { useNavigate } from "react-router-dom"
@@ -435,6 +437,11 @@ const CommandDialog = ({ open, handleClose }) => {
       </Box>
     </Dialog>
   )
+}
+
+CommandDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired
 }
 
 export default CommandDialog

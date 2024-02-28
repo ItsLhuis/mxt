@@ -53,6 +53,10 @@ p {
   transition: transform 0.3s ease !important;
 }
 
+.arrow-but-drop-down {
+  margin-right: 0;
+}
+
 .arrow-but.__arrow-but__rotate,
 .arrow-but-drop-down.__arrow-but-drop-down__rotate {
   transform: rotateX(0deg);
@@ -96,17 +100,12 @@ p {
   box-shadow: 0 0 0.625rem var(--boxShadow) !important;
 }
 
-.MuiFormLabel-root {
-  user-select: none;
-  font-weight: 800 !important;
-}
-
 .MuiListItemButton-root {
   padding: 6px 14px !important;
 }
 
 .MuiListItemButton-root:hover {
-  background-color: var(--elevation-level5) !important;
+  background-color: var(--surfaceVariant) !important;
 }
 
 .MuiListItemButton-root .MuiListItemText-primary {
@@ -135,10 +134,6 @@ p {
   color: rgb(228, 225, 230) !important;
 }
 
-.MuiButton-root.MuiButton-contained:hover {
-  background-color: var(--primaryHover) !important;
-}
-
 .MuiButtonBase-root {
   text-transform: none !important;
 }
@@ -164,14 +159,19 @@ p {
   color: var(--onSurface) !important;
 }
 
+.MuiAutocomplete-root .MuiIconButton-root {
+  color: var(--onSurface) !important;
+}
+
 .MuiPopover-paper {
   background-color: var(--elevation-level2) !important;
   color: var(--onSurface) !important;
   box-shadow: 0 0 1rem var(--boxShadow) !important;
 }
 
-.MuiFormLabel-root.MuiInputLabel-root.MuiInputLabel-shrink {
-  font-size: 1rem !important;
+.MuiPopover-paper .MuiListItem-root .MuiButtonBase-root {
+  border-radius: 10px;
+  margin: 0 8px;
 }
 
 .MuiFormLabel-root.MuiInputLabel-root.Mui-focused {
@@ -181,7 +181,7 @@ p {
 
 input,
 textarea {
-  font-size: 13px !important;
+  font-size: .775rem !important;
   color: var(--onSurface);
   -webkit-text-fill-color: var(--onSurface);
   caret-color: var(--onSurface);

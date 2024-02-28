@@ -1,10 +1,10 @@
 import React, { useState } from "react"
 
-import { Box, Container, Typography, Stack, ListItemText, Tabs, Tab } from "@mui/material"
+import { Box, Container, Tabs, Tab } from "@mui/material"
 import { Person, Notifications, Security } from "@mui/icons-material"
 import SettingsIcon from "@mui/icons-material/Settings"
 
-import { ImagePicker } from "@components/ui"
+import { HeaderPage } from "@components/ui"
 import { Account, AppSettings } from "./components"
 
 import { motion } from "framer-motion"
@@ -40,51 +40,12 @@ const Settings = () => {
     setValue(newValue)
   }
 
-  const [image, setImage] = useState("")
-
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
       <Box component="main" className="page-main">
         <Container maxWidth={false}>
-          <Stack
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center"
-            }}
-          >
-            <ImagePicker image={image} setImage={setImage} alt="Luis Rodrigues" />
-            <ListItemText
-              sx={{
-                marginLeft: 2,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis"
-              }}
-            >
-              <Typography
-                variant="h4"
-                component="h4"
-                sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
-              >
-                Luis Rodrigues
-              </Typography>
-              <Typography
-                variant="p"
-                component="p"
-                sx={{
-                  color: "var(--outline)",
-                  fontWeight: 600,
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis"
-                }}
-              >
-                Administrador
-              </Typography>
-            </ListItemText>
-          </Stack>
-          <Box sx={{ width: "100%", marginTop: 3 }}>
+          <HeaderPage title="Definições" breadcrumbs={[{ name: "Definições" }]} />
+          <Box sx={{ width: "100%", marginTop: 2 }}>
             <Tabs
               value={value}
               onChange={handleChange}

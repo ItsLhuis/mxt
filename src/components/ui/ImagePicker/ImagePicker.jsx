@@ -1,19 +1,41 @@
-import React from "react"
+import PropTypes from "prop-types"
+
+import React, { useState } from "react"
 
 import { Box, Avatar, Typography, IconButton } from "@mui/material"
 import { PhotoCamera } from "@mui/icons-material"
 
-const ImagePicker = ({ image, setImage, alt, sx }) => {
+const ImagePicker = ({ image, setImage, alt, size = [120, 120], sx }) => {
+  const [avatarWidth, avatarHeight] = size
+
+  const [error, setError] = useState(false)
+
   const handleChange = (e) => {
-    setImage(e.target.files[0])
+    const selectedFile = e.target.files[0]
+    if (selectedFile) {
+      if (selectedFile.type.startsWith("image/")) {
+        if (selectedFile.size <= 3 * 1024 * 1024) {
+          setImage(selectedFile)
+          setError(false)
+        } else {
+          setError(true)
+        }
+      } else {
+        setError(true)
+      }
+    }
   }
 
   const handleClick = () => {
     document.getElementById("image-input").click()
   }
 
+  const isURL = (image) => {
+    return typeof image === "string" && image.startsWith("http")
+  }
+
   return (
-    <div style={{ height: 120, width: 120 }}>
+    <Box>
       <input
         type="file"
         id="image-input"
@@ -27,19 +49,31 @@ const ImagePicker = ({ image, setImage, alt, sx }) => {
         sx={{
           position: "relative",
           display: "inline-block",
-          "&:hover > .hover-upload-image": { opacity: 1 }
+          "&:hover > .hover-upload-image": { opacity: 1 },
+          cursor: "pointer"
         }}
       >
-        <Avatar
-          alt={alt}
-          src={image ? URL.createObjectURL(image) : null}
+        <Box
           sx={{
-            height: 120,
-            width: 120,
-            cursor: "pointer",
-            ...sx
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: "50%",
+            border: error ? "2px dashed rgb(211, 47, 47)" : "2px dashed var(--surfaceVariant)",
+            padding: 1
           }}
-        />
+        >
+          <Avatar
+            alt={alt}
+            src={isURL(image) ? image : image ? URL.createObjectURL(image) : null}
+            sx={{
+              width: avatarWidth,
+              height: avatarHeight,
+              cursor: "pointer",
+              ...sx
+            }}
+          />
+        </Box>
         <Box
           className="hover-upload-image"
           sx={{
@@ -48,7 +82,7 @@ const ImagePicker = ({ image, setImage, alt, sx }) => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backgroundColor: "rgba(20, 20, 20, 0.5)",
             opacity: 0,
             display: "flex",
             flexDirection: "column",
@@ -58,7 +92,8 @@ const ImagePicker = ({ image, setImage, alt, sx }) => {
             color: "white",
             borderRadius: "50%",
             cursor: "pointer",
-            transition: "opacity 0.3s ease"
+            margin: 1,
+            transition: "opacity 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
           }}
         >
           <PhotoCamera fontSize="large" />
@@ -74,16 +109,37 @@ const ImagePicker = ({ image, setImage, alt, sx }) => {
           className="primary"
           sx={{
             position: "absolute",
-            right: "0px",
-            bottom: "0px"
+            right: 0,
+            bottom: 0
           }}
           onClick={handleClick}
         >
           <PhotoCamera fontSize="small" />
         </IconButton>
       </Box>
-    </div>
+      <Typography
+        variant="p"
+        component="p"
+        sx={{
+          marginLeft: 3,
+          marginRight: 3,
+          marginTop: 2,
+          color: error ? "rgb(211, 47, 47)" : "var(--outline)",
+          fontSize: "0.70rem"
+        }}
+      >
+        Permitido *.jpeg, *.jpg, *.png, *.gif e *.ico <br></br> Tamanho máximo de 3 Mb
+      </Typography>
+    </Box>
   )
+}
+
+ImagePicker.propTypes = {
+  image: PropTypes.any,
+  setImage: PropTypes.func.isRequired,
+  alt: PropTypes.string.isRequired,
+  size: PropTypes.arrayOf(PropTypes.number),
+  sx: PropTypes.object
 }
 
 export default ImagePicker

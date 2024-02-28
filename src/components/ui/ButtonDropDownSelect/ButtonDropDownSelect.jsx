@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"
+
 import React, { useState } from "react"
 
 import { ButtonBase, Box, Typography, Popover } from "@mui/material"
@@ -91,6 +93,13 @@ const ButtonDropDownSelect = ({ title, subTitle, description, children }) => {
       </Popover>
     </>
   )
+}
+
+ButtonDropDownSelect.propTypes = {
+  title: PropTypes.string.isRequired,
+  subTitle: PropTypes.string,
+  description: PropTypes.string,
+  children: PropTypes.node.isRequired
 }
 
 export default ButtonDropDownSelect
