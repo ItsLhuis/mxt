@@ -1,1 +1,1 @@
-# MXT - Manutenção e Administraçãp de Reparações
+# MXT - Manutenção e Administração de Reparações
