@@ -15,7 +15,7 @@ import {
   useTheme,
   useMediaQuery
 } from "@mui/material"
-import { Menu, Search, Settings } from "@mui/icons-material"
+import { Menu, Search, Settings, Notifications } from "@mui/icons-material"
 
 import { CommandDialog } from "@components/ui"
 
@@ -85,14 +85,13 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
             </div>
           </div>
           <div className="navbar-user-container">
-            <Tooltip title="Definições" placement="bottom">
+            <Tooltip title="Notificações" placement="bottom">
               <IconButton
-                aria-label="Definições"
+                aria-label="Notificações"
                 size="normal"
-                className="but-settings"
                 onClick={() => navigate("/settings")}
               >
-                <Settings className="icon" />
+                <Notifications className="icon" />
               </IconButton>
             </Tooltip>
             {!isSmallScreen && (
