@@ -113,6 +113,8 @@ p {
 }
 
 .MuiButton-root.MuiButton-contained {
+  min-height: 45px !important;
+  padding: 8px 16px !important;
   border-radius: 8px !important;
 }
 
@@ -214,6 +216,7 @@ textarea:-webkit-autofill:active {
 
 .MuiTypography-h3 {
   font-size: 1.6rem !important;
+  font-weight: 600 !important;
 }
 
 .MuiTypography-h4 {
@@ -263,10 +266,6 @@ textarea:-webkit-autofill:active {
 
 .MuiPaper-elevation5 {
   background-color: var(--elevation-level5) !important;
-}
-
-.MuiTabs-root {
-  border-bottom: 2px solid var(--elevation-level5);
 }
 
 .MuiTabs-scrollButtons {
