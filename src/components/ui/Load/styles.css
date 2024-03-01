@@ -1,0 +1,28 @@
+.box {
+    position: absolute;
+    border-radius: 20px;
+    border: 5px solid;
+    pointer-events: none
+}
+
+.box._1,
+.box._3 {
+    border-width: 4px;
+    border-color: var(--surfaceVariant);
+}
+
+.box._1 {
+    width: 80px;
+    height: 80px;
+}
+
+.box._2 {
+    width: 90px;
+    height: 90px;
+    border-color: var(--primary);
+}
+
+.box._3 {
+    width: 100px;
+    height: 100px;
+}
