@@ -1,5 +1,9 @@
 import React, { useState } from "react"
 
+import { useNavigate } from "react-router-dom"
+
+import { useLoader } from "@contexts/loaderContext"
+
 import { LoadingButton } from "@mui/lab"
 import {
   Paper,
@@ -18,10 +22,12 @@ import { ImagePicker } from "@components/ui"
 import toast from "react-hot-toast"
 
 const Account = () => {
+  const navigate = useNavigate()
+
+  const { showLoader, hideLoader } = useLoader()
+
   const [load, setLoad] = useState(false)
-
   const [image, setImage] = useState("")
-
   const [formData, setFormData] = useState({
     image: image,
     username: "Luis Rodrigues",
@@ -33,7 +39,6 @@ const Account = () => {
     about:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu enim finibus, pretium mauris eu, finibus lorem. In tincidunt leo nisl, quis vehicula mauris vestibulum scelerisque. Nunc tempor placerat libero a efficitur. Nam aliquam, ipsum ut scelerisque aliquam, nunc tellus ultricies sem, a vulputate mi sem quis sapien. Nullam a justo mattis, feugiat tortor at, accumsan nisi. In mollis, dolor eu aliquam auctor, orci sem interdum eros, et gravida libero purus vitae nibh. Mauris vestibulum posuere neque non pulvinar. Duis varius orci nunc, ut imperdiet urna vestibulum consectetur. Ut at fermentum arcu. Aenean in urna a diam scelerisque finibus vel at quam. Sed ut volutpat purus, vitae suscipit magna. Donec in orci scelerisque, sodales massa eget, lobortis magna. In nibh mauris, venenatis eget lacinia quis, auctor quis augue."
   })
-
   const [errors, setErrors] = useState({})
 
   const handleChange = (e) => {
@@ -123,7 +128,19 @@ const Account = () => {
                 Administrador
               </Typography>
             </ListItemText>
-            <Button variant="contained" color="error">
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => {
+                showLoader()
+
+                setTimeout(() => {
+                  navigate("/auth")
+
+                  hideLoader()
+                }, 1000)
+              }}
+            >
               Terminar Sessão
             </Button>
           </Stack>

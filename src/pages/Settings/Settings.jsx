@@ -1,13 +1,24 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
+
+import { useLocation } from "react-router-dom"
 
 import { Box, Container, Tabs, Tab } from "@mui/material"
-import { Person, Notifications, Security } from "@mui/icons-material"
+import { Person } from "@mui/icons-material"
+import NotificationsIcon from "@mui/icons-material/Notifications"
 import SettingsIcon from "@mui/icons-material/Settings"
+import SecurityIcon from "@mui/icons-material/Security"
 
 import { HeaderPage } from "@components/ui"
-import { Account, AppSettings } from "./components"
+import { Account, AppSettings, Notifications, Security } from "./components"
 
 import { motion } from "framer-motion"
+
+const tabsInfo = [
+  { id: 0, name: "Conta", icon: <Person />, component: <Account /> },
+  { id: 1, name: "Definições", icon: <SettingsIcon />, component: <AppSettings /> },
+  { id: 2, name: "Notificações", icon: <NotificationsIcon />, component: <Notifications /> },
+  { id: 3, name: "Segurança", icon: <SecurityIcon />, component: <Security /> }
+]
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -34,11 +45,37 @@ const tabProps = (index) => {
 }
 
 const Settings = () => {
+  const location = useLocation()
+
   const [value, setValue] = useState(0)
+
+  const setNewUrl = (value) => {
+    const searchParams = new URLSearchParams(location.search)
+    searchParams.set("tab", tabsInfo[value].name)
+
+    const newUrl = `${location.pathname}?${searchParams.toString()}`
+    window.history.pushState({}, "", newUrl)
+  }
 
   const handleChange = (_, newValue) => {
     setValue(newValue)
+
+    setNewUrl(newValue)
   }
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search)
+    const tabParam = searchParams.get("tab")
+
+    if (tabParam) {
+      const tabIndex = tabsInfo.findIndex((tab) => tab.name === tabParam)
+      if (tabIndex !== -1) {
+        setValue(tabIndex)
+      }
+    } else {
+      setNewUrl(0)
+    }
+  }, [location.search, tabsInfo])
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
@@ -53,18 +90,23 @@ const Settings = () => {
               variant="scrollable"
               scrollButtons="auto"
               allowScrollButtonsMobile
+              sx={{ borderBottom: "2px solid var(--elevation-level5)" }}
             >
-              <Tab icon={<Person />} label="Conta" {...tabProps(0)} disableRipple />
-              <Tab icon={<SettingsIcon />} label="Definições" {...tabProps(1)} disableRipple />
-              <Tab icon={<Notifications />} label="Notificações" {...tabProps(2)} disableRipple />
-              <Tab icon={<Security />} label="Segurança" {...tabProps(3)} disableRipple />
+              {tabsInfo.map((tab) => (
+                <Tab
+                  key={tab.id}
+                  label={tab.name}
+                  {...tabProps(tab.name)}
+                  icon={tab.icon}
+                  disableRipple
+                />
+              ))}
             </Tabs>
-            <TabPanel value={value} index={0}>
-              <Account />
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-              <AppSettings />
-            </TabPanel>
+            {tabsInfo.map((tab) => (
+              <TabPanel key={tab.id} value={value} index={tab.id}>
+                {tab.component}
+              </TabPanel>
+            ))}
           </Box>
         </Container>
       </Box>
