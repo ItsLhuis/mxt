@@ -1,12 +1,25 @@
 import React, { useState } from "react"
 
+import { useLocation } from "react-router-dom"
+
+import { useLoader } from "@contexts/loaderContext"
+
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 
 import { Toaster } from "react-hot-toast"
 
 import Body from "@components/Body/Body"
+import { Auth } from "@pages"
+
+import { Loader } from "@components/ui"
+
+import { AnimatePresence } from "framer-motion"
 
 function App() {
+  const location = useLocation()
+
+  const { loader } = useLoader()
+
   const [sidebarSize, setSidebarSize] = useState(localStorage.getItem("sidebarSize") || "large")
 
   const toggleSidebarSize = () => {
@@ -66,29 +79,40 @@ function App() {
   })
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className="app">
-        <div className="container-main">
-          <Body toggleSidebarSize={toggleSidebarSize} sidebarSize={sidebarSize} />
-        </div>
-      </div>
-      <Toaster
-        position="top-right"
-        containerStyle={{
-          inset: "24px"
-        }}
-        toastOptions={{
-          duration: 3000,
-          style: {
-            background: "var(--elevation-level5)",
-            color: "var(--onSurface)",
-            fontWeight: 600,
-            fontSize: ".875rem",
-            padding: "16px"
-          }
-        }}
-      />
-    </ThemeProvider>
+    <AnimatePresence>
+      <ThemeProvider theme={theme}>
+        <>
+          <Loader visible={loader} />
+          {location.pathname.includes("/auth") ? (
+            <Auth />
+          ) : (
+            <>
+              <div className="app">
+                <div className="container-main">
+                  <Body toggleSidebarSize={toggleSidebarSize} sidebarSize={sidebarSize} />
+                </div>
+              </div>
+              <Toaster
+                position="top-right"
+                containerStyle={{
+                  inset: "24px"
+                }}
+                toastOptions={{
+                  duration: 3000,
+                  style: {
+                    background: "var(--elevation-level5)",
+                    color: "var(--onSurface)",
+                    fontWeight: 600,
+                    fontSize: ".875rem",
+                    padding: "16px"
+                  }
+                }}
+              />
+            </>
+          )}
+        </>
+      </ThemeProvider>
+    </AnimatePresence>
   )
 }
 
