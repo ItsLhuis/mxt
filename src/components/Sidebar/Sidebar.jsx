@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react"
 
 import "./styles.css"
 
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 
 import { Collapse, Typography, ButtonBase, Drawer, Tooltip, IconButton } from "@mui/material"
 
