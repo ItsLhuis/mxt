@@ -27,6 +27,7 @@ import {
   Terminal,
   Email,
   Sms,
+  Notifications,
   Settings,
   Close
 } from "@mui/icons-material"
@@ -263,6 +264,13 @@ const CommandDialog = ({ open, handleClose }) => {
       label: "Envio de SMS",
       description: "Enviar SMS",
       link: "/send-sms"
+    },
+    {
+      section: "NOTIFICAÇÕES",
+      icon: <Notifications fontSize="medium" />,
+      label: "Notificações",
+      description: "Acesso às suas notificações",
+      link: "/notifications"
     },
     {
       section: "DEFINIÇÕES",
