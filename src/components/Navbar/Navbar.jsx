@@ -23,6 +23,7 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
   const navigate = useNavigate()
 
   const theme = useTheme()
+  const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"))
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"))
 
   const [commandDialogOpen, setCommandDialogOpen] = useState(false)
@@ -84,17 +85,17 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
               </Box>
             </div>
           </div>
-          <div className="navbar-user-container">
+          <div className="navbar-user-container" style={{ gap: isMediumScreen ? 0 : "1rem" }}>
             <Tooltip title="Notificações" placement="bottom">
               <IconButton
                 aria-label="Notificações"
                 size="normal"
-                onClick={() => navigate("/settings")}
+                onClick={() => navigate("/notifications")}
               >
                 <Notifications className="icon" />
               </IconButton>
             </Tooltip>
-            {!isSmallScreen && (
+            {!isMediumScreen && (
               <>
                 <div className="navbar-user-container-profile">
                   <Avatar alt="Luis Rodrigues" />
