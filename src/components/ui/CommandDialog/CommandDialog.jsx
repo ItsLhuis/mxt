@@ -4,10 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 
 import { useNavigate } from "react-router-dom"
 
-import { useTheme } from "@mui/material/styles"
-
 import {
-  useMediaQuery,
   Dialog,
   IconButton,
   Tooltip,
@@ -15,7 +12,9 @@ import {
   ButtonBase,
   Chip,
   Typography,
-  Box
+  Box,
+  useTheme,
+  useMediaQuery
 } from "@mui/material"
 import {
   Dashboard,
