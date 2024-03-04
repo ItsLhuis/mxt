@@ -21,7 +21,7 @@ const AppSettings = () => {
         <Typography variant="h4" component="h4">
           Definições
         </Typography>
-        <Box sx={{ flexGrow: 1, marginTop: 2 }}>
+        <Box sx={{ marginTop: 2 }}>
           <ButtonDropDownSelect
             title="Tema"
             subTitle="Mudar tema da aplicação"
