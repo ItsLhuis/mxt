@@ -7,6 +7,8 @@ import { useLoader } from "@contexts/loaderContext"
 import { LoadingButton } from "@mui/lab"
 import {
   Stack,
+  Box,
+  ListItemText,
   Typography,
   TextField,
   FormControl,
@@ -15,13 +17,27 @@ import {
   useMediaQuery
 } from "@mui/material"
 
+import { TypeAnimation } from "react-type-animation"
+
+const phrases = [
+  "Otimize a gestão dos seus equipamentos informáticos com a nossa plataforma",
+  "Gerencie de forma eficiente e intuitiva o estado dos seus dispositivos tecnológicos",
+  "Solução completa para o controlo de ativos informáticos empresariais",
+  "Aumente a produtividade da sua equipa de TI com a nossa ferramenta especializada",
+  "Tenha o controlo total sobre os seus equipamentos informáticos e as suas operações",
+  "Maximize a eficiência dos seus processos de manutenção de sistemas informáticos",
+  "Gerencie o seu inventário de hardware e software de forma inteligente e simplificada",
+  "Facilite a localização e monitorização dos seus ativos tecnológicos",
+  "Impulsione o crescimento do seu negócio com a nossa plataforma de gestão de TI",
+  "Garanta o sucesso da sua empresa com uma gestão de ativos informáticos eficaz"
+]
+
 const Login = () => {
   const navigate = useNavigate()
 
   const { showLoader } = useLoader()
 
   const isLargeScreen = useMediaQuery(useTheme().breakpoints.down("lg"))
-  const isSmallScreen = useMediaQuery(useTheme().breakpoints.down("sm"))
 
   const [load, setLoad] = useState(false)
   const [formData, setFormData] = useState({
@@ -64,7 +80,6 @@ const Login = () => {
   return (
     <Stack
       component="main"
-      flexDirection="row"
       sx={{
         height: "100vh",
         display: "grid",
@@ -78,13 +93,17 @@ const Login = () => {
       }}
     >
       {!isLargeScreen && (
-        <Stack
-          sx={{
-            margin: "auto",
-            alignItems: "center",
-            gap: 5
-          }}
-        ></Stack>
+        <Box sx={{ padding: 10, margin: "auto", marginLeft: 0 }}>
+          <TypeAnimation
+            sequence={phrases.flatMap((phrase, index) => [
+              phrase,
+              index < phrases.length - 1 ? 1000 : null
+            ])}
+            speed={1}
+            style={{ fontSize: "3rem", fontWeight: 600, display: "inline-block" }}
+            repeat={Infinity}
+          />
+        </Box>
       )}
       <Stack sx={{ background: "var(--background)" }}>
         <Stack
@@ -92,31 +111,31 @@ const Login = () => {
             width: "100%",
             maxWidth: "530px",
             margin: "auto",
-            padding: isLargeScreen ? 3 : 7
+            padding: isLargeScreen ? 3 : 8
           }}
         >
+          <Typography
+            variant="h3"
+            component="h3"
+            sx={{ marginBottom: 4, fontSize: "2.5rem !important" }}
+          >
+            MixTech
+          </Typography>
           <Stack sx={{ gap: 2, marginBottom: 4 }}>
-            <Typography variant="h3" component="h3">
-              Iniciar Sessão
-            </Typography>
-            <Stack
+            <ListItemText
               sx={{
-                flexDirection: isSmallScreen ? "column" : "row",
-                alignItems: isSmallScreen ? "flex-start " : "center"
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis"
               }}
             >
-              <Typography variant="p" component="p">
-                Ainda não tem conta?&nbsp;
+              <Typography variant="h4" component="h4">
+                Iniciar Sessão
               </Typography>
-              <Link
-                sx={{
-                  fontSize: "13px",
-                  textDecorationColor: "inherit"
-                }}
-              >
-                Crie agora!
-              </Link>
-            </Stack>
+              <Typography variant="p" component="p">
+                Bem vindo de volta!
+              </Typography>
+            </ListItemText>
           </Stack>
           <form onSubmit={handleSubmit}>
             <Stack sx={{ gap: 2 }}>
@@ -153,11 +172,7 @@ const Login = () => {
               >
                 Esqueceu a sua senha?
               </Link>
-              <LoadingButton
-                loading={load}
-                type="submit"
-                variant="contained"
-              >
+              <LoadingButton loading={load} type="submit" variant="contained">
                 Iniciar Sessão
               </LoadingButton>
             </Stack>
