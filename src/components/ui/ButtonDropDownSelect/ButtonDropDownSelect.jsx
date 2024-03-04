@@ -2,7 +2,7 @@ import PropTypes from "prop-types"
 
 import React, { useState } from "react"
 
-import { ButtonBase, Box, Typography, Popover } from "@mui/material"
+import { ButtonBase, Box, ListItemText, Typography, Popover } from "@mui/material"
 import { KeyboardArrowUp } from "@mui/icons-material"
 
 const ButtonDropDownSelect = ({ title, subTitle, description, children }) => {
@@ -41,13 +41,15 @@ const ButtonDropDownSelect = ({ title, subTitle, description, children }) => {
         onClick={handleClick}
       >
         <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="space-between"
-          width="100%"
-          gap="1rem"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+            gap: 2
+          }}
         >
-          <Box>
+          <ListItemText>
             <Typography variant="h6" component="h6" textAlign="left">
               {title}
             </Typography>
@@ -62,7 +64,7 @@ const ButtonDropDownSelect = ({ title, subTitle, description, children }) => {
                 {subTitle}
               </Typography>
             )}
-          </Box>
+          </ListItemText>
           <Box display="flex" alignItems="center" gap="8px">
             {description && (
               <Typography variant="body3" textAlign="left" color="var(--outline)" fontWeight={500}>
