@@ -9,7 +9,6 @@ import {
   Tooltip,
   IconButton,
   Avatar,
-  Divider,
   Box,
   Chip,
   useTheme,
@@ -112,14 +111,6 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                     </Typography>
                   </div>
                 </div>
-                <Divider
-                  orientation="vertical"
-                  sx={{
-                    borderColor: "var(--elevation-level5)",
-                    borderWidth: 1,
-                    height: "70%"
-                  }}
-                />
               </>
             )}
             <div className="container-but-settings">
