@@ -101,6 +101,7 @@ const Account = () => {
             <ImagePicker image={image} setImage={setImage} alt="Luis Rodrigues" />
             <ListItemText
               sx={{
+                width: "100%",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis"
