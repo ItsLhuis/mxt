@@ -346,6 +346,7 @@ const CommandDialog = ({ open, handleClose }) => {
       <Divider
         orientation="vertical"
         sx={{
+          height: "auto",
           borderColor: "var(--elevation-level5)",
           borderWidth: 1
         }}
