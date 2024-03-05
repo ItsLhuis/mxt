@@ -13,6 +13,7 @@ import {
   Chip,
   Typography,
   Box,
+  Divider,
   useTheme,
   useMediaQuery
 } from "@mui/material"
@@ -327,29 +328,28 @@ const CommandDialog = ({ open, handleClose }) => {
 
   return (
     <Dialog onClose={handleClose} open={open} fullScreen={fullScreen}>
-      <Box>
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          borderBottom={1}
-          borderColor="var(--elevation-level5)"
-        >
-          <TextField
-            inputRef={inputRef}
-            label="O que procura?"
-            sx={{ margin: "1rem", marginRight: 0, width: "100%" }}
-            value={text}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-          />
-          <Tooltip title="Fechar" placement="bottom">
-            <IconButton aria-label="close" onClick={handleClose} sx={{ margin: "1rem" }}>
-              <Close className="icon" />
-            </IconButton>
-          </Tooltip>
-        </Box>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <TextField
+          inputRef={inputRef}
+          label="O que procura?"
+          sx={{ margin: "1rem", marginRight: 0, width: "100%" }}
+          value={text}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+        />
+        <Tooltip title="Fechar" placement="bottom">
+          <IconButton aria-label="close" onClick={handleClose} sx={{ margin: "1rem" }}>
+            <Close className="icon" />
+          </IconButton>
+        </Tooltip>
       </Box>
+      <Divider
+        orientation="vertical"
+        sx={{
+          borderColor: "var(--elevation-level5)",
+          borderWidth: 1
+        }}
+      />
       <Box overflow="auto" sx={{ padding: "1rem", height: "100%" }}>
         {searchResults.length === 0 ? (
           <Box
