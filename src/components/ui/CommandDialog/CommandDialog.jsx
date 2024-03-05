@@ -350,7 +350,7 @@ const CommandDialog = ({ open, handleClose }) => {
           </Tooltip>
         </Box>
       </Box>
-      <Box overflow="auto" sx={{ padding: "1rem" }}>
+      <Box overflow="auto" sx={{ padding: "1rem", height: "100%" }}>
         {searchResults.length === 0 ? (
           <Box
             sx={{
@@ -377,7 +377,7 @@ const CommandDialog = ({ open, handleClose }) => {
                   {"Não foram encontrados resultados para"} &nbsp;"{<strong>{text}</strong>}"
                 </Typography>
               </Box>
-              <Typography variant="p" component="p">
+              <Typography variant="p" component="p" marginBottom="2rem">
                 Tente verificar erros de digitação ou usar palavras completas.
               </Typography>
             </Box>
