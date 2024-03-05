@@ -128,7 +128,7 @@ const ImagePicker = ({ image, setImage, alt, size = [120, 120], sx }) => {
           fontSize: "0.70rem"
         }}
       >
-        Permitido *.jpeg, *.jpg, *.png, *.gif e *.ico <br></br> Tamanho máximo de 3 Mb
+        Permitido *.jpeg, *.jpg, *.png e *.ico <br></br> Tamanho máximo de 3 Mb
       </Typography>
     </Box>
   )
