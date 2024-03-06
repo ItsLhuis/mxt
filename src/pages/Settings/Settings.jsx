@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { Suspense, useState, useEffect } from "react"
 
 import { useLocation } from "react-router-dom"
 
@@ -8,7 +8,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications"
 import SettingsIcon from "@mui/icons-material/Settings"
 import SecurityIcon from "@mui/icons-material/Security"
 
-import { HeaderPage } from "@components/ui"
+import { PageLoader, HeaderPage } from "@components/ui"
 import { Account, AppSettings, Notifications, Security } from "./components"
 
 import { motion } from "framer-motion"
@@ -73,44 +73,46 @@ const Settings = () => {
         setValue(tabIndex)
       }
     } else {
-      setNewUrl(0)
+      setValue(0)
     }
   }, [location.search, tabsInfo])
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
-      <Box component="main" className="page-main">
-        <Container maxWidth={false}>
-          <HeaderPage title="Definições" breadcrumbs={[{ name: "Definições" }]} />
-          <Box sx={{ width: "100%", marginTop: 2 }}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="settings-tabs"
-              variant="scrollable"
-              scrollButtons="auto"
-              allowScrollButtonsMobile
-              sx={{ borderBottom: "2px solid var(--elevation-level5)" }}
-            >
+    <Suspense fallback={<PageLoader />}>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
+        <Box component="main" className="page-main">
+          <Container maxWidth={false}>
+            <HeaderPage title="Definições" breadcrumbs={[{ name: "Definições" }]} />
+            <Box sx={{ width: "100%", marginTop: 2 }}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                aria-label="settings-tabs"
+                variant="scrollable"
+                scrollButtons="auto"
+                allowScrollButtonsMobile
+                sx={{ borderBottom: "2px solid var(--elevation-level5)" }}
+              >
+                {tabsInfo.map((tab) => (
+                  <Tab
+                    key={tab.id}
+                    label={tab.name}
+                    {...tabProps(tab.name)}
+                    icon={tab.icon}
+                    disableRipple
+                  />
+                ))}
+              </Tabs>
               {tabsInfo.map((tab) => (
-                <Tab
-                  key={tab.id}
-                  label={tab.name}
-                  {...tabProps(tab.name)}
-                  icon={tab.icon}
-                  disableRipple
-                />
+                <TabPanel key={tab.id} value={value} index={tab.id}>
+                  {tab.component}
+                </TabPanel>
               ))}
-            </Tabs>
-            {tabsInfo.map((tab) => (
-              <TabPanel key={tab.id} value={value} index={tab.id}>
-                {tab.component}
-              </TabPanel>
-            ))}
-          </Box>
-        </Container>
-      </Box>
-    </motion.div>
+            </Box>
+          </Container>
+        </Box>
+      </motion.div>
+    </Suspense>
   )
 }
 
