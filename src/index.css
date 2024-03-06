@@ -105,11 +105,20 @@ p {
 }
 
 .MuiListItemButton-root:hover {
-  background-color: var(--surfaceVariant) !important;
+  background-color: var(--secondaryContainer) !important;
 }
 
 .MuiListItemButton-root .MuiListItemText-primary {
   font-size: 13px !important;
+}
+
+.MuiButton-root.MuiButton-contained.secundary {
+  color: var(--onSurface) !important;
+  background-color: var(--secondaryContainer);
+}
+
+.MuiButton-root.MuiButton-contained.secundary:hover {
+  background-color: var(--elevation-level4);
 }
 
 .MuiButton-root.MuiButton-contained {
@@ -154,11 +163,17 @@ p {
   background-color: var(--primaryHover) !important;
 }
 
-.MuiDialog-paper {
+.MuiDialog-container .MuiDialog-paper {
   border-radius: 12px !important;
   width: 600px;
   background-color: var(--background) !important;
   color: var(--onSurface) !important;
+}
+
+@media screen and (max-width: 600px) {
+  .MuiDialog-container .MuiDialog-paper {
+    border-radius: 0px !important;
+  }
 }
 
 .MuiAutocomplete-root .MuiIconButton-root {
@@ -236,16 +251,14 @@ textarea:-webkit-autofill:active {
   color: var(--onSurface);
 }
 
+.MuiDrawer-root .MuiPaper-root {
+  border-radius: 0px !important;
+}
+
 .MuiPaper-root {
   color: var(--onSurface) !important;
   border-radius: 12px !important;
   box-shadow: 0 0 0.465rem var(--boxShadow) !important;
-}
-
-@media screen and (max-width: 900px) {
-  .MuiDialog-paper {
-    border-radius: 0px !important;
-  }
 }
 
 .MuiPaper-elevation1 {
