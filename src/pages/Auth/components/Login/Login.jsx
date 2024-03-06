@@ -142,7 +142,7 @@ const Login = () => {
               <FormControl sx={{ width: "100%" }}>
                 <TextField
                   name="username"
-                  type={"text"}
+                  type="text"
                   value={formData.username}
                   onChange={handleChange}
                   label="Nome de utilizador"
@@ -153,7 +153,7 @@ const Login = () => {
               <FormControl sx={{ width: "100%" }}>
                 <TextField
                   name="password"
-                  type={"password"}
+                  type="password"
                   value={formData.password}
                   onChange={handleChange}
                   label="Senha"
