@@ -31,6 +31,10 @@
     overflow-y: auto;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    padding-bottom: 1rem;
+}
+
+.menu.drawer {
     padding-bottom: calc(64px + 1rem);
 }
 

@@ -384,7 +384,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
               </Tooltip>
             </div>
           </div>
-          <div className="menu">
+          <div className="menu drawer">
             {SidebarData.map((item, index) => {
               return item.submenu ? (
                 renderDrawerSubmenu(item, index)
