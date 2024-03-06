@@ -12,8 +12,11 @@ export function ThemeProvider({
 
   const updateTheme = (newTheme) => {
     setTheme(newTheme)
-    localStorage.setItem(storageKey, newTheme)
-    document.documentElement.setAttribute("data-theme", newTheme)
+
+    if (newTheme !== "system") {
+      localStorage.setItem(storageKey, newTheme)
+      document.documentElement.setAttribute("data-theme", newTheme)
+    }
   }
 
   useEffect(() => {
@@ -23,7 +26,7 @@ export function ThemeProvider({
 
     document.documentElement.setAttribute("data-theme", theme)
 
-    if (localStorage.getItem(storageKey) === "system") {
+    if (theme === "system") {
       const handleSystemThemeChange = (event) => {
         const systemTheme = event.matches ? "dark" : "light"
         document.documentElement.setAttribute("data-theme", systemTheme)
