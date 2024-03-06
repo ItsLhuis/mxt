@@ -13,8 +13,9 @@ export function ThemeProvider({
   const updateTheme = (newTheme) => {
     setTheme(newTheme)
 
+    localStorage.setItem(storageKey, newTheme)
+
     if (newTheme !== "system") {
-      localStorage.setItem(storageKey, newTheme)
       document.documentElement.setAttribute("data-theme", newTheme)
     }
   }
