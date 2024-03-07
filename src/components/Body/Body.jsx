@@ -66,6 +66,26 @@ const Body = ({ toggleSidebarSize, sidebarSize }) => {
           allTitle.forEach((title) => {
             title.classList.add("__small__header")
           })
+        } else {
+          content.classList.remove("__big")
+
+          sidebar.classList.remove("__small")
+
+          allBut.forEach((but) => {
+            but.classList.remove("__small__but")
+          })
+
+          allLinksName.forEach((links) => {
+            links.classList.remove("__small__but__link")
+          })
+
+          allArrows.forEach((arrow) => {
+            arrow.classList.remove("__small__but__link")
+          })
+
+          allTitle.forEach((title) => {
+            title.classList.remove("__small__header")
+          })
         }
       }
     }
