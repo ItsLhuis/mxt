@@ -223,10 +223,13 @@ textarea:-webkit-autofill:active {
 }
 
 .MuiChip-root {
-  background-color: var(--surfaceVariant) !important;
-  color: var(--onSurface) !important;
   font-size: 0.7125rem !important;
   font-weight: 700;
+}
+
+.MuiChip-colorDefault {
+  background-color: var(--surfaceVariant) !important;
+  color: var(--onSurface) !important;
 }
 
 .MuiTypography-h3 {
@@ -330,4 +333,24 @@ textarea:-webkit-autofill:active {
 .MuiFormHelperText-root {
   font-weight: 500 !important;
   margin-bottom: 8px !important;
+}
+
+.apexcharts-xaxistooltip-bottom {
+  display: none;
+}
+
+.apexcharts-tooltip {
+  border: 0 !important;
+  color: var(--onSurface) !important;
+  background-color: var(--elevation-level4) !important;
+  box-shadow: 0 0 0.625rem var(--boxShadow) !important;
+}
+
+.apexcharts-tooltip .apexcharts-tooltip-title {
+  padding: .4rem .8rem;
+  font-size: 0.845rem !important;
+  font-weight: 600 !important;
+  text-align: center;
+  background-color: var(--elevation-level2) !important;
+  border-bottom: none !important;
 }
