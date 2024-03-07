@@ -34,7 +34,7 @@ function App() {
         main: "rgb(88, 101, 242)"
       },
       error: {
-        main: "#d32f2f"
+        main: "rgb(211, 47, 47)"
       }
     },
     components: {
