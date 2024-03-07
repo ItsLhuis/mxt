@@ -58,6 +58,8 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                   size="normal"
                   className="but-menu"
                   onClick={() => {
+                    window.dispatchEvent(new Event("resize"))
+
                     const screenWidth = window.innerWidth
                     if (screenWidth < 900) {
                       setDrawerOpen(true)
