@@ -113,6 +113,10 @@
     width: calc(250px - 6.5rem) !important;
 }
 
+.but-sidebar.active:hover {
+    background-color: var(--primaryHover) !important;
+}
+
 .links-name-sidebar.__sub {
     margin-left: 0;
 }
