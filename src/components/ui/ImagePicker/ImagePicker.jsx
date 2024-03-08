@@ -59,7 +59,7 @@ const ImagePicker = ({ image, setImage, alt, size = [120, 120], sx }) => {
             justifyContent: "center",
             alignItems: "center",
             borderRadius: "50%",
-            border: error ? "2px dashed rgb(211, 47, 47)" : "2px dashed var(--surfaceVariant)",
+            border: error ? "2px dashed rgb(211, 47, 47)" : "2px dashed var(--outline)",
             padding: 1
           }}
         >
