@@ -2,9 +2,9 @@ import React from "react"
 
 import { useTheme } from "@contexts/themeContext"
 
-import { Paper, Box, Typography, List, ListItem, ListItemButton, ListItemText } from "@mui/material"
+import { Paper, Box, Typography } from "@mui/material"
 
-import { ButtonDropDownSelect } from "@components/ui"
+import { ButtonDropDownSelect, ListButton } from "@components/ui"
 
 const themeLabel = {
   system: "Sistema",
@@ -23,27 +23,18 @@ const AppSettings = () => {
         </Typography>
         <Box sx={{ marginTop: 2 }}>
           <ButtonDropDownSelect
+            mode="advanced"
             title="Tema"
             subTitle="Mudar tema da aplicação"
             description={themeLabel[theme]}
           >
-            <List sx={{ minWidth: "100px" }}>
-              <ListItem disablePadding>
-                <ListItemButton onClick={() => updateTheme("system")}>
-                  <ListItemText primary="Sistema" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton onClick={() => updateTheme("dark")}>
-                  <ListItemText primary="Escuro" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton onClick={() => updateTheme("light")}>
-                  <ListItemText primary="Claro" />
-                </ListItemButton>
-              </ListItem>
-            </List>
+            <ListButton
+              buttons={[
+                { title: "Sistema", action: () => updateTheme("system") },
+                { title: "Escuro", action: () => updateTheme("dark") },
+                { title: "Claro", action: () => updateTheme("light") }
+              ]}
+            />
           </ButtonDropDownSelect>
         </Box>
       </Box>
