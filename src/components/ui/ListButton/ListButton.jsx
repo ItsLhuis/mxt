@@ -1,4 +1,7 @@
+import PropTypes from "prop-types"
+
 import React from "react"
+
 import { List, ListItem, ListItemButton, ListItemText } from "@mui/material"
 
 const ListButton = ({ buttons }) => {
@@ -13,6 +16,15 @@ const ListButton = ({ buttons }) => {
       ))}
     </List>
   )
+}
+
+ListButton.propTypes = {
+  buttons: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      action: PropTypes.func.isRequired
+    })
+  ).isRequired
 }
 
 export default ListButton
