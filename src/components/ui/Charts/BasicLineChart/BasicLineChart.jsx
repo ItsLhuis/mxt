@@ -49,8 +49,7 @@ const BasicLineChart = ({ xData, yData, colorLine = "var(--secondaryContainer)" 
     },
     colors: [colorLine],
     tooltip: {
-      followCursor: true,
-      theme: "dark"
+      followCursor: true
     }
   }
 
