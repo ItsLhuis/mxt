@@ -335,15 +335,22 @@ textarea:-webkit-autofill:active {
   margin-bottom: 8px !important;
 }
 
-.apexcharts-xaxistooltip-bottom {
-  display: none;
+.apexcharts-xaxistooltip-bottom::before,
+.apexcharts-xaxistooltip-bottom::after {
+  border: none !important;
 }
 
-.apexcharts-tooltip {
+.apexcharts-tooltip,
+.apexcharts-xaxistooltip-bottom {
   border: 0 !important;
   color: var(--onSurface) !important;
-  background-color: var(--elevation-level4) !important;
+  background-color: var(--elevation-level5) !important;
   box-shadow: 0 0 0.625rem var(--boxShadow) !important;
+  border-radius: 10px !important;
+}
+
+.apexcharts-tooltip-series-group {
+  background-color: var(--elevation-level5) !important;
 }
 
 .apexcharts-tooltip .apexcharts-tooltip-title {
@@ -353,4 +360,19 @@ textarea:-webkit-autofill:active {
   text-align: center;
   background-color: var(--elevation-level2) !important;
   border-bottom: none !important;
+}
+
+.apexcharts-legend-series {
+  display: flex !important;
+  gap: 4px !important;
+}
+
+.apexcharts-legend {
+  gap: 8px;
+}
+
+.apexcharts-legend .apexcharts-legend-text {
+  font-size: 13px !important;
+  color: var(--onSurface) !important;
+  font-weight: 500 !important;
 }
