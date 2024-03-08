@@ -94,7 +94,7 @@ const Summary = () => {
                 </Typography>
                 <Chip label={item.change} color={item.color} sx={{ marginTop: "auto" }} />
               </Box>
-              <Box sx={{ width: "100%", height: 180, marginRight: 3, marginBottom: 3 }}>
+              <Box sx={{ width: "100%", height: 180, marginRight: 3 }}>
                 <BasicLineChart
                   colorLine={item.colorLine}
                   xData={item.xData}
