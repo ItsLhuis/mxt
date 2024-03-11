@@ -49,6 +49,7 @@ const ImagePicker = ({ image, setImage, alt, size = [120, 120], sx }) => {
         sx={{
           position: "relative",
           display: "inline-block",
+          borderRadius: "50%",
           "&:hover > .hover-upload-image": { opacity: 1 },
           cursor: "pointer"
         }}
