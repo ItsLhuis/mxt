@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"
+
 import React from "react"
 
 import Chart from "react-apexcharts"
@@ -25,6 +27,9 @@ const BasicLineChart = ({ xData, yData, colorLine = "var(--secondaryContainer)" 
       },
       crosshairs: {
         show: false
+      },
+      tooltip: {
+        enabled: false
       }
     },
     yaxis: {
@@ -54,6 +59,12 @@ const BasicLineChart = ({ xData, yData, colorLine = "var(--secondaryContainer)" 
   }
 
   return <Chart options={chartOptions} series={yData} type="line" width={"100%"} height={"100%"} />
+}
+
+BasicLineChart.propTypes = {
+  xData: PropTypes.array.isRequired,
+  yData: PropTypes.array.isRequired,
+  colorLine: PropTypes.string
 }
 
 export default BasicLineChart
