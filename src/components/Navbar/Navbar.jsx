@@ -86,7 +86,7 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
               </Box>
             </div>
           </div>
-          <div className="navbar-user-container" style={{ gap: isMediumScreen ? 0 : "1rem" }}>
+          <div className="navbar-user-container" style={{ gap: isMediumScreen ? 0 : "16px" }}>
             <Tooltip title="Notificações" placement="bottom">
               <IconButton
                 aria-label="Notificações"
