@@ -150,7 +150,7 @@ const Account = () => {
       <Grid item xs={12} md={12} lg={8}>
         <Paper elevation={1} sx={{ marginTop: { xs: 3, md: 3, lg: 0 } }}>
           <Box sx={{ padding: 3 }}>
-            <Typography variant="h4" component="h4" sx={{ marginBottom: 1 }}>
+            <Typography variant="h5" component="h5" sx={{ marginBottom: 1 }}>
               Conta
             </Typography>
             <Box sx={{ flexGrow: 1 }}>

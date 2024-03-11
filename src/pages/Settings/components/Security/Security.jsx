@@ -28,7 +28,7 @@ const Security = () => {
     <>
       <Paper elevation={1}>
         <Box sx={{ padding: 3 }}>
-          <Typography variant="h4" component="h4">
+          <Typography variant="h5" component="h5">
             Segurança
           </Typography>
           <Box sx={{ marginTop: 2 }}>
