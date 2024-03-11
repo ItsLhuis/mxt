@@ -19,6 +19,7 @@ const BarChart = ({ data, categories, colors }) => {
         enabled: true
       }
     },
+    forceNiceScale: true,
     legend: {
       position: "top",
       horizontalAlign: "right"
