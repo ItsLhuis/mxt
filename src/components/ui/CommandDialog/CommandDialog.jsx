@@ -416,14 +416,14 @@ const CommandDialog = ({ open, handleClose }) => {
                     {item.label}
                   </Typography>
                   {item.description && (
-                    <Typography variant="body2" textAlign="left" color="var(--outline)">
+                    <Typography variant="p" component="p" textAlign="left" color="var(--outline)">
                       {item.description}
                     </Typography>
                   )}
                 </Box>
               </Box>
               {item.link && (
-                <Typography variant="body2" color="var(--primary)">
+                <Typography variant="body2" component="p" color="var(--primary)">
                   {item.link}
                 </Typography>
               )}
