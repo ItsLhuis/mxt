@@ -1,40 +1,50 @@
 import React from "react"
 
-import { Grid, Paper, Box, Typography, Chip } from "@mui/material"
+import { Grid, Paper, Box, Typography, Chip, Stack } from "@mui/material"
 import { Person, AppsOutlined, Construction } from "@mui/icons-material"
 
+import { Caption } from "@components/ui"
 import { BasicLineChart } from "@components/ui/Charts"
 
+import { formatMonth } from "@utils/format/date"
+
 const Summary = () => {
+  const getLatestEightDates = () => {
+    const today = new Date()
+    const dates = [today]
+
+    for (let i = 1; i < 8; i++) {
+      const date = new Date(today.getFullYear(), today.getMonth() - i, today.getDate())
+      dates.push(date)
+    }
+
+    dates.sort((a, b) => a - b)
+
+    const formattedDates = dates.map((date) => formatMonth(date))
+
+    return formattedDates
+  }
+
   const data = [
     {
       icon: <Person />,
       title: "Clientes",
-      value: 203,
+      value: 503,
       change: "+ 27,11%",
       color: "success",
       colorLine: "rgb(248, 112, 96)",
-      xData: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024],
-      yData: [50, 40, 75, 60, 49, 30, 50, 61]
+      xData: getLatestEightDates(),
+      yData: Array.from({ length: 8 }, () => Math.floor(Math.random() * 100))
     },
     {
       icon: <AppsOutlined />,
       title: "Equipamentos",
-      value: 135,
+      value: 735,
       change: "- 2,43%",
       color: "error",
       colorLine: "rgb(165, 170, 82)",
-      xData: [
-        "Agosto 2023",
-        "Setembro 2023",
-        "Outubro 2023",
-        "Novembro 2023",
-        "Dezembro 2023",
-        "Janeiro",
-        "Fevereiro",
-        "Março"
-      ],
-      yData: [20, 55, 50, 15, 40, 55, 70, 15]
+      xData: getLatestEightDates(),
+      yData: Array.from({ length: 8 }, () => Math.floor(Math.random() * 300))
     },
     {
       icon: <Construction />,
@@ -43,17 +53,8 @@ const Summary = () => {
       change: "+ 4,78%",
       color: "success",
       colorLine: "rgb(124, 152, 179)",
-      xData: [
-        "27 Fevereiro",
-        "28 Fevereiro",
-        "29 Fevereiro",
-        "2 Março",
-        "3 Março",
-        "4 Março",
-        "Ontem",
-        "Hoje"
-      ],
-      yData: [10, 30, 25, 35, 40, 60, 55, 65]
+      xData: getLatestEightDates(),
+      yData: Array.from({ length: 8 }, () => Math.floor(Math.random() * 1000))
     }
   ]
 
@@ -81,7 +82,7 @@ const Summary = () => {
                     alignItems: "center",
                     padding: 1.5,
                     borderRadius: 2,
-                    backgroundColor: "var(--elevation-level5)"
+                    backgroundColor: "var(--elevation-level3)"
                   }}
                 >
                   {item.icon}
@@ -92,7 +93,10 @@ const Summary = () => {
                 <Typography variant="h3" component="h3">
                   {item.value}
                 </Typography>
-                <Chip label={item.change} color={item.color} sx={{ marginTop: "auto" }} />
+                <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+                  <Chip label={item.change} color={item.color} sx={{ marginTop: "auto" }} />
+                  <Caption title="Em comparação com o mês anterior" />
+                </Stack>
               </Box>
               <Box sx={{ width: "100%", height: 180, marginRight: 3 }}>
                 <BasicLineChart
