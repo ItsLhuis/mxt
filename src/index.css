@@ -242,6 +242,11 @@ textarea:-webkit-autofill:active {
   font-weight: 600 !important;
 }
 
+.MuiTypography-h5 {
+  font-size: 1.125rem !important;
+  font-weight: 600 !important;
+}
+
 .MuiTypography-h6 {
   font-size: 1rem !important;
 }
@@ -354,7 +359,7 @@ textarea:-webkit-autofill:active {
 }
 
 .apexcharts-tooltip .apexcharts-tooltip-title {
-  padding: .4rem .8rem;
+  padding: 8px 16px;
   font-size: 0.845rem !important;
   font-weight: 600 !important;
   text-align: center;
@@ -375,4 +380,12 @@ textarea:-webkit-autofill:active {
   font-size: 13px !important;
   color: var(--onSurface) !important;
   font-weight: 500 !important;
+}
+
+.apexcharts-legend-marker {
+  border-radius: 50% !important;
+}
+
+.apexcharts-xcrosshairs {
+  fill: var(--secondaryContainer);
 }
