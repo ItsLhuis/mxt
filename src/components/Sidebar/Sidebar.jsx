@@ -239,6 +239,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
       <div key={index}>
         {item.title && <h3 className="menu-item-title">{item.title}</h3>}
         <ButtonBase
+          tabIndex={-1}
           className={`but-sidebar ${isActive(`${item.path}`) ? "active" : ""} ${
             sidebarFocused && "__small__but"
           }`}
@@ -267,6 +268,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
                   renderSubmenu(subitem, `${index}-${subindex}`)
                 ) : (
                   <ButtonBase
+                    tabIndex={-1}
                     key={subindex}
                     className={`but-sidebar ${isActive(`${subitem.path}`) ? "active" : ""} ${
                       sidebarFocused && "__small__but"
@@ -423,6 +425,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
               <div key={index}>
                 {item.title && <h3 className="menu-item-title">{item.title}</h3>}
                 <ButtonBase
+                  tabIndex={-1}
                   className={`but-sidebar ${isActive(`${item.path}`) ? "active" : ""} ${
                     sidebarFocused && "__small__but"
                   }`}
