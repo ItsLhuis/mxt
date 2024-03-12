@@ -1,4 +1,5 @@
 export { default as ButtonDropDownSelect } from "./ButtonDropDownSelect/ButtonDropDownSelect"
+export { default as Caption } from "./Caption/Caption"
 export { default as CommandDialog } from "./CommandDialog/CommandDialog"
 export { default as HeaderPage } from "./HeaderPage/HeaderPage"
 export { default as ImagePicker } from "./ImagePicker/ImagePicker"
