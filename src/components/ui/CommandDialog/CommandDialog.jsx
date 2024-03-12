@@ -344,9 +344,7 @@ const CommandDialog = ({ open, handleClose }) => {
         </Tooltip>
       </Box>
       <Divider
-        orientation="vertical"
         sx={{
-          height: "auto",
           borderColor: "var(--elevation-level5)",
           borderWidth: 1
         }}

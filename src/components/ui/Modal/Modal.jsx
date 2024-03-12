@@ -52,9 +52,7 @@ const Modal = ({
           </Tooltip>
         </Box>
         <Divider
-          orientation="vertical"
           sx={{
-            height: "auto",
             borderColor: "var(--elevation-level5)",
             borderWidth: 1
           }}
@@ -115,9 +113,7 @@ const Modal = ({
           </Tooltip>
         </Box>
         <Divider
-          orientation="vertical"
           sx={{
-            height: "auto",
             borderColor: "var(--elevation-level5)",
             borderWidth: 1
           }}
@@ -126,9 +122,7 @@ const Modal = ({
           <form onSubmit={handleSubmit}>{children}</form>
         </Box>
         <Divider
-          orientation="vertical"
           sx={{
-            height: "auto",
             borderColor: "var(--elevation-level5)",
             borderWidth: 1
           }}
