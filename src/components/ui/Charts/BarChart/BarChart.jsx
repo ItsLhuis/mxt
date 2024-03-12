@@ -6,6 +6,8 @@ import { useTheme, useMediaQuery } from "@mui/material"
 
 import Chart from "react-apexcharts"
 
+import { formatMonthDateByAbbreviation } from "@utils/format/date"
+
 const BarChart = ({ data, categories, colors }) => {
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"))
@@ -91,7 +93,17 @@ const BarChart = ({ data, categories, colors }) => {
     },
     colors: colors,
     tooltip: {
-      followCursor: true
+      followCursor: true,
+      x: {
+        formatter: function (value) {
+          return formatMonthDateByAbbreviation(value)
+        }
+      },
+      y: {
+        formatter: function (value) {
+          return value + " €"
+        }
+      }
     }
   }
 

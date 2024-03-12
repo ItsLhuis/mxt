@@ -4,6 +4,8 @@ import React from "react"
 
 import Chart from "react-apexcharts"
 
+import { formatMonthDateByNumber } from "@utils/format/date"
+
 const LineChart = ({ data, categories, limits, colors }) => {
   const chartOptions = {
     chart: {
@@ -66,7 +68,12 @@ const LineChart = ({ data, categories, limits, colors }) => {
     },
     colors: colors,
     tooltip: {
-      followCursor: true
+      followCursor: true,
+      x: {
+        formatter: function (value) {
+          return formatMonthDateByNumber(value)
+        }
+      }
     }
   }
 
