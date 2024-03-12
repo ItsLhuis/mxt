@@ -97,7 +97,7 @@ p {
 .MuiTooltip-tooltip {
   background-color: var(--elevation-level5) !important;
   color: var(--onSurface) !important;
-  box-shadow: 0 0 0.625rem var(--boxShadow) !important;
+  box-shadow: 0 0 0.465rem var(--boxShadow) !important;
 }
 
 .MuiListItemButton-root {
@@ -350,7 +350,7 @@ textarea:-webkit-autofill:active {
   border: 0 !important;
   color: var(--onSurface) !important;
   background-color: var(--elevation-level5) !important;
-  box-shadow: 0 0 0.625rem var(--boxShadow) !important;
+  box-shadow: 0 0 0.465rem var(--boxShadow) !important;
   border-radius: 10px !important;
 }
 
