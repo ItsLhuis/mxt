@@ -98,7 +98,7 @@ const Summary = () => {
                   <Caption title="Em comparação com o mês anterior" />
                 </Stack>
               </Box>
-              <Box sx={{ width: "100%", height: 180, marginRight: 3 }}>
+              <Box sx={{ width: "100%", height: 180, marginRight: 3, overflow: "hidden" }}>
                 <BasicLineChart
                   colorLine={item.colorLine}
                   xData={item.xData}
