@@ -6,6 +6,7 @@ import { useTheme, useMediaQuery } from "@mui/material"
 
 import Chart from "react-apexcharts"
 
+import { formatValueToEuro } from "@utils/format/currency"
 import { formatMonthDateByAbbreviation } from "@utils/format/date"
 
 const BarChart = ({ data, categories, colors }) => {
@@ -101,7 +102,7 @@ const BarChart = ({ data, categories, colors }) => {
       },
       y: {
         formatter: function (value) {
-          return value + " €"
+          return formatValueToEuro(value)
         }
       }
     }
