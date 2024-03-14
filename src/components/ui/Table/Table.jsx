@@ -72,7 +72,7 @@ const Table = ({ columns, data }) => {
         sx={{
           minWidth: 650,
           color: "var(--onSurface)",
-          "& .MuiTableSortLabel-root": {
+          "& .MuiTableCell-head": {
             color: "var(--outline)"
           },
           "& .MuiTableCell-root": {
@@ -114,7 +114,6 @@ const Table = ({ columns, data }) => {
           {sortedData.map((row, index) => (
             <React.Fragment key={row.id}>
               <TableRow
-                onClick={() => handleRowClick(row.id)}
                 sx={{
                   transition: "background-color 0.3s ease",
                   "&:hover": {
@@ -126,7 +125,7 @@ const Table = ({ columns, data }) => {
                   <>
                     {row.expandableContent ? (
                       <TableCell sx={{ width: 0 }}>
-                        <IconButton size="small">
+                        <IconButton size="small" onClick={() => handleRowClick(row.id)}>
                           <KeyboardArrowUp
                             className={`arrow-but-drop-down icon ${
                               openRows.includes(row.id) && "__arrow-but-drop-down__rotate"
@@ -180,7 +179,7 @@ Table.propTypes = {
   columns: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
+      label: PropTypes.string,
       align: PropTypes.oneOf(["left", "right", "center"]),
       disablePadding: PropTypes.bool,
       sortable: PropTypes.bool,
