@@ -49,7 +49,7 @@ p {
   display: flex;
   margin-left: auto;
   margin-right: 1rem;
-  transform: rotate(180deg);
+  transform: rotate(-180deg);
   transition: transform 0.3s ease !important;
 }
 
@@ -98,6 +98,8 @@ p {
   background-color: var(--elevation-level5) !important;
   color: var(--onSurface) !important;
   box-shadow: 0 0 0.465rem var(--boxShadow) !important;
+  padding: 8px 12px !important;
+  border-radius: 10px !important;
 }
 
 .MuiListItemButton-root {
@@ -338,6 +340,27 @@ textarea:-webkit-autofill:active {
 .MuiFormHelperText-root {
   font-weight: 500 !important;
   margin-bottom: 8px !important;
+}
+
+.MuiTableSortLabel-root {
+  gap: 8px
+}
+
+.MuiTableSortLabel-root:hover,
+.MuiTableSortLabel-root:focus {
+  color: var(--onSurface) !important;
+}
+
+.MuiTableSortLabel-root.Mui-active {
+  color: var(--onSurface) !important;
+}
+
+.MuiTableSortLabel-icon {
+  color: var(--onSurface) !important;
+}
+
+.apexcharts-xaxistooltip-bottom {
+  padding: 8px 12px !important;
 }
 
 .apexcharts-xaxistooltip-bottom::before,
