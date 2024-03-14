@@ -20,7 +20,7 @@ import {
 import { TypeAnimation } from "react-type-animation"
 
 const phrases = [
-  "Otimize a gestão dos seus equipamentos informáticos com a nossa plataforma",
+  "Otimize a gestão dos seus equipamentos informáticos",
   "Gerencie de forma eficiente e intuitiva o estado dos seus dispositivos tecnológicos",
   "Solução completa para o controlo de ativos informáticos empresariais",
   "Aumente a produtividade da sua equipa de TI com a nossa ferramenta especializada",
@@ -28,7 +28,7 @@ const phrases = [
   "Maximize a eficiência dos seus processos de manutenção de sistemas informáticos",
   "Gerencie o seu inventário de hardware e software de forma inteligente e simplificada",
   "Facilite a localização e monitorização dos seus ativos tecnológicos",
-  "Impulsione o crescimento do seu negócio com a nossa plataforma de gestão de TI",
+  "Impulsione o crescimento do seu negócio de gestão de TI",
   "Garanta o sucesso da sua empresa com uma gestão de ativos informáticos eficaz"
 ]
 
