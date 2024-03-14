@@ -94,3 +94,9 @@ export const formatDate = (value) => {
 
   return format(date, "d 'de' MMMM", { locale: ptBR })
 }
+
+export const formatTime = (value) => {
+  const date = new Date(value)
+  const formattedTime = format(date, "HH:mm")
+  return formattedTime
+}
