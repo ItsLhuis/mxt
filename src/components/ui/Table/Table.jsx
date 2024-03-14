@@ -76,7 +76,11 @@ const Table = ({ columns, data }) => {
             color: "var(--outline)"
           },
           "& .MuiTableCell-root": {
-            borderColor: "var(--elevation-level5)"
+            borderColor: "var(--elevation-level5)",
+            fontWeight: 500
+          },
+          "& .MuiTableBody-root > .MuiTableRow-root:last-child > .MuiTableCell-root": {
+            border: "none"
           }
         }}
         aria-label="table"
@@ -109,7 +113,15 @@ const Table = ({ columns, data }) => {
         <TableBody>
           {sortedData.map((row, index) => (
             <React.Fragment key={row.id}>
-              <TableRow onClick={() => handleRowClick(row.id)}>
+              <TableRow
+                onClick={() => handleRowClick(row.id)}
+                sx={{
+                  transition: "background-color 0.3s ease",
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.1)"
+                  }
+                }}
+              >
                 {hasExpandableContent && (
                   <>
                     {row.expandableContent ? (
