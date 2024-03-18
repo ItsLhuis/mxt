@@ -115,7 +115,7 @@ const ImagePicker = ({ image, setImage, alt, size = [120, 120], sx }) => {
           }}
           onClick={handleClick}
         >
-          <PhotoCamera fontSize="small" />
+          <PhotoCamera fontSize="small" sx={{ color: "rgb(228, 225, 230)" }} />
         </IconButton>
       </Box>
       <Typography
