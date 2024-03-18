@@ -339,7 +339,7 @@ const CommandDialog = ({ open, handleClose }) => {
         />
         <Tooltip title="Fechar" placement="bottom">
           <IconButton aria-label="close" onClick={handleClose} sx={{ margin: "1rem" }}>
-            <Close className="icon" />
+            <Close />
           </IconButton>
         </Tooltip>
       </Box>
