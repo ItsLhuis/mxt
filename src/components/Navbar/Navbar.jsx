@@ -68,7 +68,7 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                     }
                   }}
                 >
-                  <Menu className="icon" />
+                  <Menu />
                 </IconButton>
               </Tooltip>
               <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -79,7 +79,7 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                     className="but-menu"
                     onClick={() => setCommandDialogOpen(true)}
                   >
-                    <Search className="icon" />
+                    <Search />
                   </IconButton>
                 </Tooltip>
                 {!isSmallScreen && <Chip label="Alt + p" />}
@@ -93,7 +93,7 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                 size="normal"
                 onClick={() => navigate("/notifications")}
               >
-                <Notifications className="icon" />
+                <Notifications />
               </IconButton>
             </Tooltip>
             {!isMediumScreen && (
@@ -123,7 +123,7 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                   className="but-settings"
                   onClick={() => navigate("/settings")}
                 >
-                  <Settings className="icon" />
+                  <Settings />
                 </IconButton>
               </Tooltip>
             </div>
