@@ -198,7 +198,7 @@ const Table = ({ columns, data, mode }) => {
                       <TableCell sx={{ width: 0 }}>
                         <IconButton size="small" onClick={() => handleRowClick(row.id)}>
                           <KeyboardArrowUp
-                            className={`arrow-but-drop-down icon ${
+                            className={`arrow-but-drop-down ${
                               openRows.includes(row.id) && "__arrow-but-drop-down__rotate"
                             }`}
                           />
