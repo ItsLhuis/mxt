@@ -95,6 +95,10 @@
     color: rgb(228, 225, 230) !important;
 }
 
+.menu .but-sidebar.active .MuiSvgIcon-root {
+    color: rgb(228, 225, 230) !important;
+}
+
 .sidebar .icon-but-sidebar {
     display: flex;
 }

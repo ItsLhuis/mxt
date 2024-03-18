@@ -4,7 +4,7 @@ import "./styles.css"
 
 import { useNavigate, useLocation } from "react-router-dom"
 
-import { Collapse, Typography, ButtonBase, Drawer, Tooltip, IconButton } from "@mui/material"
+import { Collapse, Typography, ButtonBase, Drawer, Tooltip, IconButton, Box } from "@mui/material"
 
 import {
   Dashboard,
@@ -14,13 +14,14 @@ import {
   FormatListBulleted,
   TableChart,
   Terminal,
+  ReceiptLongOutlined,
   Email,
   Sms,
   KeyboardArrowUp,
   Close
 } from "@mui/icons-material"
 
-const SidebarData = [
+const sidebarData = [
   {
     title: "DATA",
     icon: <Dashboard fontSize="small" />,
@@ -29,106 +30,101 @@ const SidebarData = [
   },
   {
     icon: <TableChart fontSize="small" />,
-    path: "/tables/",
-    name: "Tabelas",
+    path: "/table/",
+    name: "Tabela",
     submenu: [
       {
-        path: "/tables/accessories",
-        name: "Acessórios",
+        path: "/table/accessory",
+        name: "Acessório",
         className: ""
       },
       {
-        path: "/tables/wintouch-articles",
-        name: "Artigos Wintouch",
+        path: "/table/wintouch-article",
+        name: "Artigo Wintouch",
         className: ""
       },
       {
-        path: "/tables/equipment-type",
+        path: "/table/equipment-type",
         name: "Tipo de Equipamento",
         className: ""
       },
       {
-        path: "/tables/brands",
-        name: "Marcas",
+        path: "/table/brand",
+        name: "Marca",
         className: ""
       },
       {
-        path: "/tables/damages",
-        name: "Avarias",
+        path: "/table/damage",
+        name: "Avaria",
         className: ""
       },
       {
-        path: "/tables/interventions",
-        name: "Intervenções",
+        path: "/table/intervention",
+        name: "Intervenção",
         className: ""
       },
       {
-        path: "/tables/equipment-transfers",
-        name: "Transferências de Equipamento",
+        path: "/table/equipment-transfer",
+        name: "Transferência de Equipamento",
         className: ""
       },
       {
-        path: "/tables/checklist",
+        path: "/table/checklist",
         name: "Checklist",
         className: ""
       },
       {
-        path: "/tables/technicians",
-        name: "Técnicos",
+        path: "/table/technician",
+        name: "Técnico",
         className: ""
       },
       {
-        path: "/tables/profile",
+        path: "/table/profile",
         name: "Perfil",
         className: ""
       },
       {
         icon: <Terminal fontSize="small" />,
-        path: "/tables/logs/",
-        name: "Logs",
+        path: "/table/log/",
+        name: "Log",
         submenu: [
           {
-            path: "/tables/logs/repair",
-            name: "Logs de Reparação",
+            path: "/table/log/repair",
+            name: "Log de Reparação",
             className: "__but__lvlDown"
           },
           {
-            path: "/tables/logs/transfers",
-            name: "Logs de Transferências",
+            path: "/table/log/transfer",
+            name: "Log de Transferência",
             className: "__but__lvlDown"
           },
           {
-            path: "/tables/logs/email",
-            name: "Logs de E-mails",
+            path: "/table/log/email",
+            name: "Log de E-mail",
             className: "__but__lvlDown"
           },
           {
-            path: "/tables/logs/sms",
-            name: "Logs de SMS",
+            path: "/table/log/sms",
+            name: "Log de SMS",
             className: "__but__lvlDown"
           }
         ]
-      },
-      {
-        path: "/tables/statistics-by-year",
-        name: "Estatísticas por Ano",
-        className: ""
       }
     ]
   },
   {
     title: "MANUTENÇÃO",
     icon: <Person fontSize="small" />,
-    path: "/clients/",
-    name: "Clientes",
+    path: "/client/",
+    name: "Cliente",
     submenu: [
       {
-        path: "/clients/add",
+        path: "/client/add",
         name: "Adicionar",
         className: ""
       },
       {
-        path: "/clients/list",
+        path: "/client/list",
         name: "Listar",
         className: ""
       }
@@ -136,58 +132,58 @@ const SidebarData = [
   },
   {
     icon: <AppsOutlined fontSize="small" />,
-    path: "/equipments/",
-    name: "Equipamentos",
+    path: "/equipment/",
+    name: "Equipamento",
     submenu: [
       {
-        path: "/equipments/history",
+        path: "/equipment/history",
         name: "Histórico",
         className: ""
       },
       {
-        path: "/equipments/consult",
+        path: "/equipment/consult",
         name: "Consultar",
         className: ""
       },
       {
-        path: "/equipments/tags",
-        name: "Etiquetas",
+        path: "/equipment/tag",
+        name: "Etiqueta",
         className: ""
       }
     ]
   },
   {
     icon: <Construction fontSize="small" />,
-    path: "/repairs/",
-    name: "Reparções",
+    path: "/repair/",
+    name: "Reparação",
     submenu: [
       {
-        path: "/repairs/add",
+        path: "/repair/add",
         name: "Adicionar",
         className: ""
       },
       {
         icon: <FormatListBulleted fontSize="small" />,
-        path: "/repairs/states",
-        name: "Estados",
+        path: "/repair/state",
+        name: "Estado",
         submenu: [
           {
-            path: "/repairs/states/open",
-            name: "Abertos",
+            path: "/repair/state/open",
+            name: "Aberto",
             className: "__but__lvlDown"
           },
           {
-            path: "/repairs/states/repaired",
-            name: "Reparados",
+            path: "/repair/state/repaired",
+            name: "Reparado",
             className: "__but__lvlDown"
           },
           {
-            path: "/repairs/states/closed",
-            name: "Fechados",
+            path: "/repair/state/closed",
+            name: "Fechado",
             className: "__but__lvlDown"
           },
           {
-            path: "/repairs/states/dc",
+            path: "/repair/state/dc",
             name: "DC",
             className: "__but__lvlDown"
           }
@@ -196,7 +192,24 @@ const SidebarData = [
     ]
   },
   {
-    title: "OUTROS",
+    icon: <ReceiptLongOutlined fontSize="small" />,
+    path: "/invoice/",
+    name: "Faturação",
+    submenu: [
+      {
+        path: "/invoice/list",
+        name: "Lista",
+        className: ""
+      },
+      {
+        path: "/invoice/add",
+        name: "Criar",
+        className: ""
+      }
+    ]
+  },
+  {
+    title: "OUTRO",
     path: "/send-email",
     icon: <Email fontSize="small" />,
     name: "E-mail"
@@ -246,7 +259,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
           onClick={() => handleClick(index)}
           sx={{
             "&:hover": {
-              bgcolor: "var(--elevation-level5)"
+              backgroundColor: "var(--secondaryContainer)"
             }
           }}
         >
@@ -279,7 +292,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
                     }}
                     sx={{
                       "&:hover": {
-                        bgcolor: "var(--elevation-level5)"
+                        backgroundColor: "var(--secondaryContainer)"
                       }
                     }}
                   >
@@ -305,7 +318,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
           onClick={() => handleClick(index)}
           sx={{
             "&:hover": {
-              bgcolor: "var(--elevation-level5)"
+              backgroundColor: "var(--secondaryContainer)"
             }
           }}
         >
@@ -337,7 +350,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
                     }}
                     sx={{
                       "&:hover": {
-                        bgcolor: "var(--elevation-level5)"
+                        backgroundColor: "var(--secondaryContainer)"
                       }
                     }}
                   >
@@ -381,13 +394,13 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
                   className="but-menu"
                   onClick={() => setDrawerOpen(false)}
                 >
-                  <Close className="icon" />
+                  <Close />
                 </IconButton>
               </Tooltip>
             </div>
           </div>
           <div className="menu drawer">
-            {SidebarData.map((item, index) => {
+            {sidebarData.map((item, index) => {
               return item.submenu ? (
                 renderDrawerSubmenu(item, index)
               ) : (
@@ -401,7 +414,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
                     }}
                     sx={{
                       "&:hover": {
-                        bgcolor: "var(--elevation-level5)"
+                        backgroundColor: "var(--secondaryContainer)"
                       }
                     }}
                   >
@@ -418,7 +431,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
       </Drawer>
       <div className="sidebar" ref={sidebarRef}>
         <div className="menu">
-          {SidebarData.map((item, index) => {
+          {sidebarData.map((item, index) => {
             return item.submenu ? (
               renderSubmenu(item, index)
             ) : (
@@ -435,7 +448,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
                   }}
                   sx={{
                     "&:hover": {
-                      bgcolor: "var(--elevation-level5)"
+                      backgroundColor: "var(--secondaryContainer)"
                     }
                   }}
                 >
