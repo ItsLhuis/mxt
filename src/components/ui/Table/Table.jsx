@@ -12,9 +12,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TableSortLabel
+  TableSortLabel,
+  TablePagination,
+  Checkbox
 } from "@mui/material"
-
 import { KeyboardArrowUp } from "@mui/icons-material"
 
 function descendingComparator(a, b, orderBy) {
@@ -43,10 +44,15 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0])
 }
 
-const Table = ({ columns, data }) => {
+const Table = ({ columns, data, mode }) => {
   const [order, setOrder] = useState("asc")
   const [orderBy, setOrderBy] = useState("")
+
   const [openRows, setOpenRows] = useState([])
+
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [selected, setSelected] = useState([])
 
   const handleSort = (columnId) => {
     const isAsc = orderBy === columnId && order === "asc"
@@ -62,14 +68,53 @@ const Table = ({ columns, data }) => {
     )
   }
 
-  const sortedData = stableSort(data, getComparator(order, orderBy))
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage)
+  }
 
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelected = data.map((n) => n.id)
+      setSelected(newSelected)
+      return
+    }
+    setSelected([])
+  }
+
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id)
+    let newSelected = []
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id)
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1))
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1))
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      )
+    }
+    setSelected(newSelected)
+  }
+
+  const isSelected = (id) => selected.indexOf(id) !== -1
+
+  const sortedData = stableSort(data, getComparator(order, orderBy))
   const hasExpandableContent = data.some((item) => item.expandableContent)
 
   return (
     <TableContainer component={Box}>
       <MuiTable
         sx={{
+          width: "100%",
           minWidth: 650,
           color: "var(--onSurface)",
           "& .MuiTableCell-head": {
@@ -87,6 +132,16 @@ const Table = ({ columns, data }) => {
       >
         <TableHead sx={{ backgroundColor: "var(--elevation-level3)" }}>
           <TableRow>
+            {mode === "datatable" && (
+              <TableCell padding="checkbox">
+                <Checkbox
+                  color="primary"
+                  indeterminate={selected.length > 0 && selected.length < data.length}
+                  checked={data.length > 0 && selected.length === data.length}
+                  onChange={handleSelectAllClick}
+                />
+              </TableCell>
+            )}
             {hasExpandableContent && <TableCell sx={{ width: 0 }} />}
             {columns.map((column) => (
               <TableCell
@@ -111,7 +166,10 @@ const Table = ({ columns, data }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {sortedData.map((row, index) => (
+          {(mode === "datatable"
+            ? sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : sortedData
+          ).map((row, index) => (
             <React.Fragment key={row.id}>
               <TableRow
                 sx={{
@@ -120,7 +178,20 @@ const Table = ({ columns, data }) => {
                     backgroundColor: "rgba(0, 0, 0, 0.1)"
                   }
                 }}
+                role={mode === "datatable" ? "checkbox" : "row"}
+                aria-checked={mode === "datatable" && isSelected(row.id)}
+                tabIndex={mode === "datatable" ? -1 : undefined}
+                selected={mode === "datatable" && isSelected(row.id)}
               >
+                {mode === "datatable" && (
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      color="primary"
+                      checked={isSelected(row.id)}
+                      onChange={(event) => handleClick(event, row.id)}
+                    />
+                  </TableCell>
+                )}
                 {hasExpandableContent && (
                   <>
                     {row.expandableContent ? (
@@ -158,7 +229,10 @@ const Table = ({ columns, data }) => {
               </TableRow>
               {row.expandableContent && (
                 <TableRow>
-                  <TableCell colSpan={columns.length + 1} sx={{ padding: 0, border: "none" }}>
+                  <TableCell
+                    colSpan={mode === "normal" ? columns.length + 1 : columns.length + 2}
+                    sx={{ padding: 0, border: "none" }}
+                  >
                     <Collapse in={openRows.includes(row.id)} timeout="auto" unmountOnExit>
                       <Box sx={{ borderBottom: "1px solid var(--elevation-level5)" }}>
                         {row.expandableContent()}
@@ -171,6 +245,18 @@ const Table = ({ columns, data }) => {
           ))}
         </TableBody>
       </MuiTable>
+      {mode === "datatable" && (
+        <TablePagination
+          labelRowsPerPage="Linhas por página"
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      )}
     </TableContainer>
   )
 }
@@ -192,7 +278,8 @@ Table.propTypes = {
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       expandableContent: PropTypes.func
     })
-  ).isRequired
+  ).isRequired,
+  mode: PropTypes.oneOf(["normal", "datatable"])
 }
 
 export default Table
