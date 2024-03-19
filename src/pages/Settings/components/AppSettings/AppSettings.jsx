@@ -30,9 +30,9 @@ const AppSettings = () => {
           >
             <ListButton
               buttons={[
-                { title: "Sistema", action: () => updateTheme("system") },
-                { title: "Escuro", action: () => updateTheme("dark") },
-                { title: "Claro", action: () => updateTheme("light") }
+                { label: "Sistema", onClick: () => updateTheme("system") },
+                { label: "Escuro", onClick: () => updateTheme("dark") },
+                { label: "Claro", onClick: () => updateTheme("light") }
               ]}
             />
           </ButtonDropDownSelect>
