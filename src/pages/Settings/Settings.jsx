@@ -91,7 +91,7 @@ const Settings = () => {
                 variant="scrollable"
                 scrollButtons="auto"
                 allowScrollButtonsMobile
-                sx={{ borderBottom: "2px solid var(--elevation-level5)" }}
+                sx={{ borderBottom: "1px solid var(--elevation-level5)" }}
               >
                 {tabsInfo.map((tab) => (
                   <Tab
