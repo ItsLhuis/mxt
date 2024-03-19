@@ -41,6 +41,7 @@ function App() {
       MuiOutlinedInput: {
         styleOverrides: {
           root: {
+            color: "var(--onSurface)",
             borderRadius: "8px",
             "& .MuiOutlinedInput-notchedOutline": {
               border: "2px solid var(--elevation-level5)"
@@ -60,18 +61,28 @@ function App() {
             "&.Mui-error.Mui-focused .MuiOutlinedInput-notchedOutline": {
               border: "2px solid #d32f2f"
             }
+          },
+          shrink: {
+            fontSize: "13px"
           }
         }
       },
       MuiInputLabel: {
         styleOverrides: {
           root: {
-            fontSize: ".775rem",
+            fontSize: "13px",
             color: "var(--outline)",
             fontWeight: 550
           },
           shrink: {
             fontSize: "1rem"
+          }
+        }
+      },
+      MuiSvgIcon: {
+        styleOverrides: {
+          root: {
+            color: "var(--onSurface)"
           }
         }
       }
