@@ -50,7 +50,6 @@ p {
   margin-left: auto;
   margin-right: 1rem;
   transform: rotate(-180deg);
-  transition: transform 0.3s ease !important;
 }
 
 .arrow-but-drop-down {
@@ -88,10 +87,6 @@ p {
   -webkit-text-fill-color: rgb(228, 225, 230) !important;
   color: rgb(228, 225, 230) !important;
   background: var(--primary);
-}
-
-.icon {
-  color: var(--onSurface);
 }
 
 .MuiTooltip-tooltip {
@@ -147,12 +142,16 @@ p {
   color: rgb(228, 225, 230) !important;
 }
 
+.MuiButton-containedPrimary .MuiSvgIcon-root {
+  color: rgb(228, 225, 230) !important;
+}
+
 .MuiButtonBase-root {
   text-transform: none !important;
 }
 
 .MuiIconButton-root:hover {
-  background-color: var(--elevation-level5) !important;
+  background-color: var(--secondaryContainer) !important;
 }
 
 .MuiIconButton-root.primary {
@@ -166,16 +165,10 @@ p {
 }
 
 .MuiDialog-container .MuiDialog-paper {
-  border-radius: 12px !important;
+  border-radius: 10px !important;
   width: 600px;
   background-color: var(--background) !important;
   color: var(--onSurface) !important;
-}
-
-@media screen and (max-width: 600px) {
-  .MuiDialog-container .MuiDialog-paper {
-    border-radius: 0px !important;
-  }
 }
 
 .MuiAutocomplete-root .MuiIconButton-root {
@@ -188,19 +181,17 @@ p {
   box-shadow: 0 0 1rem var(--boxShadow) !important;
 }
 
-.MuiPopover-paper .MuiListItem-root .MuiButtonBase-root {
-  border-radius: 10px;
-  margin: 0 8px;
+.MuiListItem-root .MuiButtonBase-root {
+  border-radius: 10px
 }
 
 .MuiFormLabel-root.MuiInputLabel-root.Mui-focused {
-  font-size: 1rem !important;
   color: var(--onSurface) !important;
 }
 
 input,
 textarea {
-  font-size: .775rem !important;
+  font-size: 13px !important;
   color: var(--onSurface);
   -webkit-text-fill-color: var(--onSurface);
   caret-color: var(--onSurface);
@@ -215,7 +206,7 @@ textarea:-webkit-autofill:hover,
 textarea:-webkit-autofill:focus,
 textarea:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0px 1000px var(--elevation-level2) inset !important;
-  border-radius: 12px !important;
+  border-radius: 10px !important;
 }
 
 .MuiDrawer-paper {
@@ -227,6 +218,7 @@ textarea:-webkit-autofill:active {
 .MuiChip-root {
   font-size: 0.7125rem !important;
   font-weight: 700;
+  border-radius: 8px !important;
 }
 
 .MuiChip-colorDefault {
@@ -267,7 +259,7 @@ textarea:-webkit-autofill:active {
 
 .MuiPaper-root {
   color: var(--onSurface) !important;
-  border-radius: 12px !important;
+  border-radius: 10px !important;
   box-shadow: 0 0 0.465rem var(--boxShadow) !important;
 }
 
@@ -289,6 +281,11 @@ textarea:-webkit-autofill:active {
 
 .MuiPaper-elevation5 {
   background-color: var(--elevation-level5) !important;
+}
+
+.MuiTabs-root {
+  display: flex;
+  align-items: center;
 }
 
 .MuiTabs-scrollButtons {
@@ -334,6 +331,7 @@ textarea:-webkit-autofill:active {
 
 .MuiTabs-indicator {
   height: 3px !important;
+  background-color: var(--onSurface) !important;
   border-radius: 10px;
 }
 
@@ -351,12 +349,52 @@ textarea:-webkit-autofill:active {
   color: var(--onSurface) !important;
 }
 
-.MuiTableSortLabel-root.Mui-active {
+.MuiTableSortLabel-root.Mui-active,
+.MuiTableSortLabel-icon,
+.MuiTablePagination-root {
   color: var(--onSurface) !important;
 }
 
-.MuiTableSortLabel-icon {
+.MuiCheckbox-root .MuiSvgIcon-root {
+  fill: var(--onSurface) !important;
+}
+
+.MuiPickersToolbar-root .MuiTypography-root {
+  color: var(--onSurface);
+  text-transform: none;
+  font-weight: 600;
+}
+
+.MuiPickersToolbar-root {
+  background-color: var(--elevation-level2);
+}
+
+.MuiDayCalendar-header .MuiTypography-root,
+.MuiDayCalendar-monthContainer .MuiDayCalendar-weekContainer .MuiPickersDay-root:not(.Mui-selected) {
   color: var(--onSurface) !important;
+}
+
+.MuiDialogContent-root {
+  border-radius: 10px;
+}
+
+.MuiDayCalendar-monthContainer .MuiPickersDay-root:not(.Mui-selected) {
+  border-color: var(--outline);
+}
+
+.MuiDialogContent-root::-webkit-scrollbar {
+  background-color: var(--elevation-level2);
+}
+
+.MuiDialogActions-root {
+  padding: 24px !important;
+}
+
+.MuiPickersLayout-root,
+.MuiPickersLayout-contentWrapper,
+.MuiPickersLayout-actionBar {
+  background-color: var(--elevation-level2);
+  border-radius: 8px;
 }
 
 .apexcharts-xaxistooltip-bottom {
