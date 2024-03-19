@@ -341,6 +341,7 @@ const CommandDialog = ({ open, handleClose }) => {
           value={text}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
+          autoComplete="off"
         />
         <Tooltip title="Fechar" placement="bottom">
           <IconButton aria-label="close" onClick={handleClose} sx={{ margin: "1rem" }}>
