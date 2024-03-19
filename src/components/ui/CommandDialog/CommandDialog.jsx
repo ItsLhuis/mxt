@@ -327,7 +327,12 @@ const CommandDialog = ({ open, handleClose }) => {
   }, [open])
 
   return (
-    <Dialog onClose={handleClose} open={open} fullScreen={fullScreen}>
+    <Dialog
+      onClose={handleClose}
+      open={open}
+      fullScreen={fullScreen}
+      sx={{ "& .MuiPaper-root": { borderRadius: fullScreen && "0 !important" } }}
+    >
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <TextField
           inputRef={inputRef}
