@@ -58,8 +58,8 @@ const HeaderPage = ({ title, breadcrumbs, button }) => {
         <Button
           variant="contained"
           color="primary"
-          startIcon={button.leftIcon}
-          onClick={button.action}
+          startIcon={button.startIcon}
+          onClick={button.onClick}
         >
           {button.title}
         </Button>
@@ -77,9 +77,9 @@ HeaderPage.propTypes = {
     })
   ).isRequired,
   button: PropTypes.shape({
-    leftIcon: PropTypes.element.isRequired,
+    startIcon: PropTypes.element.isRequired,
     title: PropTypes.string.isRequired,
-    action: PropTypes.func.isRequired
+    onClick: PropTypes.func.isRequired
   })
 }
 
