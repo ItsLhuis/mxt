@@ -261,7 +261,7 @@ const FinancialStatistics = () => {
       amount: 1,
       value: 119900,
       total: 119900,
-      type: "Rendimento (Por pagar)",
+      type: "Rendimento (Pendente)",
       info: "ola",
       expandableContent: () =>
         getExpandableContent("Rendimento", [
@@ -446,13 +446,13 @@ const FinancialStatistics = () => {
             <ButtonDropDownSelect title="2024">
               <ListButton
                 buttons={[
-                  { title: "Todos os anos", action: () => console.log() },
-                  { title: "2024", action: () => console.log() },
-                  { title: "2023", action: () => console.log() },
-                  { title: "2022", action: () => console.log() },
-                  { title: "2021", action: () => console.log() },
-                  { title: "2020", action: () => console.log() },
-                  { title: "2019", action: () => console.log() }
+                  { label: "Todos os anos", onClick: () => console.log() },
+                  { label: "2024", onClick: () => console.log() },
+                  { label: "2023", onClick: () => console.log() },
+                  { label: "2022", onClick: () => console.log() },
+                  { label: "2021", onClick: () => console.log() },
+                  { label: "2020", onClick: () => console.log() },
+                  { label: "2019", onClick: () => console.log() }
                 ]}
               />
             </ButtonDropDownSelect>
