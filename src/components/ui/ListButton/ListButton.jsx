@@ -9,8 +9,11 @@ const ListButton = ({ buttons }) => {
     <List sx={{ minWidth: "90px" }}>
       {buttons.map((button, index) => (
         <ListItem key={index} disablePadding>
-          <ListItemButton onClick={button.action}>
-            <ListItemText primary={button.title} />
+          <ListItemButton
+            onClick={button.onClick}
+            sx={{ margin: "0 8px", marginBottom: index !== buttons.length - 1 && "4px" }}
+          >
+            <ListItemText primary={button.label} />
           </ListItemButton>
         </ListItem>
       ))}
@@ -21,8 +24,8 @@ const ListButton = ({ buttons }) => {
 ListButton.propTypes = {
   buttons: PropTypes.arrayOf(
     PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      action: PropTypes.func.isRequired
+      label: PropTypes.string.isRequired,
+      onClick: PropTypes.func.isRequired
     })
   ).isRequired
 }
