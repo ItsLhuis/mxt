@@ -31,7 +31,12 @@ const Modal = ({
 
   if (mode === "normal") {
     return (
-      <Dialog onClose={onClose} open={open} fullScreen={fullScreen}>
+      <Dialog
+        onClose={onClose}
+        open={open}
+        fullScreen={fullScreen}
+        sx={{ "& .MuiPaper-root": { borderRadius: fullScreen && "0 !important" } }}
+      >
         <Box
           sx={{
             width: "100%",
@@ -47,7 +52,7 @@ const Modal = ({
           </Typography>
           <Tooltip title="Fechar" placement="bottom">
             <IconButton aria-label="close" onClick={onClose}>
-              <Close className="icon" />
+              <Close />
             </IconButton>
           </Tooltip>
         </Box>
@@ -92,7 +97,13 @@ const Modal = ({
     }
 
     return (
-      <Dialog onClose={handleClose} open={open} fullScreen={fullScreen} disableEscapeKeyDown={load}>
+      <Dialog
+        onClose={handleClose}
+        open={open}
+        fullScreen={fullScreen}
+        disableEscapeKeyDown={load}
+        sx={{ "& .MuiPaper-root": { borderRadius: fullScreen && "0 !important" } }}
+      >
         <Box
           sx={{
             width: "100%",
@@ -108,7 +119,7 @@ const Modal = ({
           </Typography>
           <Tooltip title="Fechar" placement="bottom">
             <IconButton aria-label="close" onClick={handleClose}>
-              <Close className="icon" />
+              <Close />
             </IconButton>
           </Tooltip>
         </Box>
