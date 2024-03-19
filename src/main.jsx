@@ -3,10 +3,10 @@ import ReactDOM from "react-dom/client"
 
 import { LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3"
+import { pt } from "date-fns/locale/pt"
 
 import { ThemeProvider } from "@contexts/themeContext"
 import { LoaderProvider } from "@contexts/loaderContext"
-import { pt } from "date-fns/locale/pt"
 
 import { BrowserRouter } from "react-router-dom"
 
