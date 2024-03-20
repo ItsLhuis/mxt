@@ -1,4 +1,4 @@
-import React, { Suspense } from "react"
+import React, { Suspense, useEffect, useRef } from "react"
 
 import "./styles.css"
 
@@ -11,9 +11,17 @@ import { Dashboard, InvoiceList, CreateInvoice, Settings } from "@pages"
 const Content = () => {
   const location = useLocation()
 
+  const allContentRef = useRef(null)
+
+  useEffect(() => {
+    if (allContentRef.current) {
+      allContentRef.current.scrollTo(0, 0)
+    }
+  }, [location])
+
   return (
     <div className="main-content">
-      <div className="all-content">
+      <div className="all-content" ref={allContentRef}>
         <Suspense fallback={<PageProgress />}>
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Navigate replace to="/dashboard" />} />
