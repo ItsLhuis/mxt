@@ -1,5 +1,7 @@
 import React from "react"
 
+import { useNavigate } from "react-router-dom"
+
 import {
   Paper,
   Typography,
@@ -24,6 +26,8 @@ import { formatDate, formatTime } from "@utils/format/date"
 import { formatPhoneNumber } from "@utils/format/phone"
 
 const FinancialStatistics = () => {
+  const navigate = useNavigate()
+
   const chartData = [
     {
       name: "Rendimentos",
@@ -246,7 +250,7 @@ const FinancialStatistics = () => {
       renderComponent: ({ data }) => (
         <Tooltip title="Info" placement="bottom">
           <IconButton onClick={() => console.log(data)}>
-            <Info sx={{ color: "var(--outline)" }} fontSize="inherit" />
+            <Info fontSize="inherit" />
           </IconButton>
         </Tooltip>
       )
@@ -516,7 +520,11 @@ const FinancialStatistics = () => {
         </Stack>
         <Table columns={tableColumns} data={tableData} />
         <Box sx={{ width: "100%", display: "flex", justifyContent: "flex-end", padding: 3 }}>
-          <Button variant="contained" endIcon={<KeyboardArrowRightOutlined />}>
+          <Button
+            variant="contained"
+            endIcon={<KeyboardArrowRightOutlined />}
+            onClick={() => navigate("/invoice/list")}
+          >
             Ver Tudo
           </Button>
         </Box>
