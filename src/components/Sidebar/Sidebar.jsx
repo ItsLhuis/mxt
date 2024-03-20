@@ -4,10 +4,11 @@ import "./styles.css"
 
 import { useNavigate, useLocation } from "react-router-dom"
 
-import { Collapse, Typography, ButtonBase, Drawer, Tooltip, IconButton, Box } from "@mui/material"
+import { Collapse, Typography, ButtonBase, Drawer, Tooltip, IconButton } from "@mui/material"
 
 import {
   Dashboard,
+  Inventory,
   Person,
   AppsOutlined,
   Construction,
@@ -114,18 +115,35 @@ const sidebarData = [
   },
   {
     title: "MANUTENÇÃO",
+    icon: <Inventory fontSize="small" />,
+    path: "/stock/",
+    name: "Stock",
+    submenu: [
+      {
+        path: "/stock/list",
+        name: "Lista",
+        className: ""
+      },
+      {
+        path: "/stock/add",
+        name: "Adicionar",
+        className: ""
+      }
+    ]
+  },
+  {
     icon: <Person fontSize="small" />,
     path: "/client/",
     name: "Cliente",
     submenu: [
       {
-        path: "/client/add",
-        name: "Adicionar",
+        path: "/client/list",
+        name: "Lista",
         className: ""
       },
       {
-        path: "/client/list",
-        name: "Listar",
+        path: "/client/add",
+        name: "Adicionar",
         className: ""
       }
     ]
@@ -136,13 +154,8 @@ const sidebarData = [
     name: "Equipamento",
     submenu: [
       {
-        path: "/equipment/history",
-        name: "Histórico",
-        className: ""
-      },
-      {
-        path: "/equipment/consult",
-        name: "Consultar",
+        path: "/repair/list",
+        name: "Lista",
         className: ""
       },
       {
@@ -157,6 +170,11 @@ const sidebarData = [
     path: "/repair/",
     name: "Reparação",
     submenu: [
+      {
+        path: "/repair/list",
+        name: "Lista",
+        className: ""
+      },
       {
         path: "/repair/add",
         name: "Adicionar",
