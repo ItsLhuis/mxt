@@ -16,7 +16,7 @@ import {
   TablePagination,
   Checkbox
 } from "@mui/material"
-import { KeyboardArrowUp } from "@mui/icons-material"
+import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material"
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -133,7 +133,7 @@ const Table = ({ columns, data, mode }) => {
         <TableHead sx={{ backgroundColor: "var(--elevation-level3)" }}>
           <TableRow>
             {mode === "datatable" && (
-              <TableCell padding="checkbox">
+              <TableCell padding="checkbox" sx={{ paddingLeft: 2 }}>
                 <Checkbox
                   color="primary"
                   indeterminate={selected.length > 0 && selected.length < data.length}
@@ -142,7 +142,7 @@ const Table = ({ columns, data, mode }) => {
                 />
               </TableCell>
             )}
-            {hasExpandableContent && <TableCell sx={{ width: 0 }} />}
+            {hasExpandableContent && <TableCell padding="checkbox" />}
             {columns.map((column) => (
               <TableCell
                 key={column.id}
@@ -184,7 +184,7 @@ const Table = ({ columns, data, mode }) => {
                 selected={mode === "datatable" && isSelected(row.id)}
               >
                 {mode === "datatable" && (
-                  <TableCell padding="checkbox">
+                  <TableCell padding="checkbox" sx={{ paddingLeft: 2 }}>
                     <Checkbox
                       color="primary"
                       checked={isSelected(row.id)}
@@ -255,6 +255,32 @@ const Table = ({ columns, data, mode }) => {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          sx={{ margin: 2 }}
+          slotProps={{
+            select: {
+              IconComponent: KeyboardArrowDown,
+              MenuProps: {
+                sx: {
+                  "& .MuiPaper-root": {
+                    padding: "8px"
+                  },
+                  "& .MuiPaper-root .MuiList-root": {
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "4px",
+                    padding: 0
+                  },
+                  "& .MuiPaper-root .MuiList-root .MuiButtonBase-root": {
+                    borderRadius: 2,
+                    fontSize: 13
+                  },
+                  "& .MuiPaper-root .MuiList-root .MuiButtonBase-root:hover": {
+                    bgcolor: "var(--elevation-level5)"
+                  }
+                }
+              }
+            }
+          }}
         />
       )}
     </TableContainer>
