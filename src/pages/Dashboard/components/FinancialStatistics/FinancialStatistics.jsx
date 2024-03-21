@@ -15,7 +15,7 @@ import {
   IconButton,
   Tooltip
 } from "@mui/material"
-import { KeyboardArrowRightOutlined, Info } from "@mui/icons-material"
+import { KeyboardArrowRightOutlined, MoreVert } from "@mui/icons-material"
 
 import { ButtonDropDownSelect, ListButton, Table } from "@components/ui"
 import { BarChart } from "@components/ui/Charts"
@@ -248,9 +248,9 @@ const FinancialStatistics = () => {
       align: "center",
       sortable: false,
       renderComponent: ({ data }) => (
-        <Tooltip title="Info" placement="bottom">
+        <Tooltip title="Info" placement="bottom" sx={{ margin: -1 }}>
           <IconButton onClick={() => console.log(data)}>
-            <Info fontSize="inherit" />
+            <MoreVert fontSize="inherit" />
           </IconButton>
         </Tooltip>
       )
@@ -519,7 +519,15 @@ const FinancialStatistics = () => {
           </Box>
         </Stack>
         <Table columns={tableColumns} data={tableData} />
-        <Box sx={{ width: "100%", display: "flex", justifyContent: "flex-end", padding: 3 }}>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            padding: 3,
+            borderTop: "1px solid var(--elevation-level5)"
+          }}
+        >
           <Button
             variant="contained"
             endIcon={<KeyboardArrowRightOutlined />}
