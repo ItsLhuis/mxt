@@ -151,7 +151,7 @@ ButtonDropDownSelect.propTypes = {
   customButton: function (props, propName, componentName) {
     if (props.mode === "custom" && !props[propName]) {
       return new Error(
-        `The prop '${propName}' is marked as required in '${componentName}' but its value is 'undefined'.`
+        `Invalid prop ${propName} supplied to ${componentName}. customButton can only be provided when mode is 'custom'.`
       )
     }
     return null
