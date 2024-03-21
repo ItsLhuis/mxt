@@ -1,6 +1,6 @@
 import { debounce } from "./debounce"
 import { getContrastColor } from "./getContrastColor"
 import { getStringColor } from "./getStringColor"
-import { getStringObject } from "./getStringObject"
+import { getStringObjectColor } from "./getStringObjectColor"
 
-export { debounce, getContrastColor, getStringColor, getStringObject }
+export { debounce, getContrastColor, getStringColor, getStringObjectColor }

@@ -1,4 +1,4 @@
-export const getStringObject = (rgbString) => {
+export const getStringObjectColor = (rgbString) => {
   const regex = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/
   const match = rgbString.match(regex)
 
