@@ -173,7 +173,7 @@ Modal.propTypes = {
       (props[propName] === undefined || typeof props[propName] !== "function")
     ) {
       return new Error(
-        `The prop '${propName}' is marked as required in '${componentName}' but its value is 'undefined'.`
+        `Invalid prop ${propName} supplied to ${componentName}. onSubmit can only be provided when mode is 'form'.`
       )
     }
   },
