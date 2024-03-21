@@ -41,7 +41,7 @@ const MultipleSelectCheckmarks = ({ label, data, selectedItems, onChange }) => {
   }
 
   return (
-    <FormControl sx={{ width: "100%" }}>
+    <FormControl fullWidth>
       <InputLabel id="multiple-checkbox-label">{label}</InputLabel>
       <Select
         labelId="multiple-checkbox-label"

@@ -139,7 +139,7 @@ const Login = () => {
           </Stack>
           <form onSubmit={handleSubmit}>
             <Stack sx={{ gap: 2 }}>
-              <FormControl sx={{ width: "100%" }}>
+              <FormControl fullWidth>
                 <TextField
                   name="username"
                   type="text"
@@ -150,7 +150,7 @@ const Login = () => {
                   helperText={errors.username}
                 />
               </FormControl>
-              <FormControl sx={{ width: "100%" }}>
+              <FormControl fullWidth>
                 <TextField
                   name="password"
                   type="password"
