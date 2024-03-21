@@ -72,13 +72,13 @@ const Security = () => {
         }}
       >
         <Stack sx={{ padding: 3, gap: 2 }}>
-          <FormControl sx={{ width: "100%" }}>
+          <FormControl fullWidth>
             <TextField name="currentPassword" type="password" label="Senha atual" />
           </FormControl>
-          <FormControl sx={{ width: "100%" }}>
+          <FormControl fullWidth>
             <TextField name="newPassword" type="password" label="Nova senha" />
           </FormControl>
-          <FormControl sx={{ width: "100%" }}>
+          <FormControl fullWidth>
             <TextField name="confirmNewPassword" type="password" label="Confirmar nova senha" />
           </FormControl>
         </Stack>

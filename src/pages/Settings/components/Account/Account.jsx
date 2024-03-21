@@ -157,7 +157,7 @@ const Account = () => {
               <form onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} md={6}>
-                    <FormControl sx={{ width: "100%" }}>
+                    <FormControl fullWidth>
                       <TextField
                         name="username"
                         value={formData.username}
@@ -169,7 +169,7 @@ const Account = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <FormControl sx={{ width: "100%" }}>
+                    <FormControl fullWidth>
                       <TextField
                         name="name"
                         value={formData.name}
@@ -181,7 +181,7 @@ const Account = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <FormControl sx={{ width: "100%" }}>
+                    <FormControl fullWidth>
                       <TextField
                         name="email"
                         value={formData.email}
@@ -193,7 +193,7 @@ const Account = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <FormControl sx={{ width: "100%" }}>
+                    <FormControl fullWidth>
                       <TextField
                         name="phone"
                         value={formData.phone}
@@ -205,7 +205,7 @@ const Account = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <FormControl sx={{ width: "100%" }}>
+                    <FormControl fullWidth>
                       <TextField
                         name="country"
                         value={formData.country}
@@ -217,7 +217,7 @@ const Account = () => {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <FormControl sx={{ width: "100%" }}>
+                    <FormControl fullWidth>
                       <TextField
                         name="address"
                         value={formData.address}
@@ -230,7 +230,7 @@ const Account = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <Stack spacing={3} sx={{ alignItems: "flex-end" }}>
-                      <FormControl sx={{ width: "100%" }}>
+                      <FormControl fullWidth>
                         <TextField
                           name="about"
                           value={formData.about}

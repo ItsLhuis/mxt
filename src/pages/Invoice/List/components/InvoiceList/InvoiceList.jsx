@@ -612,7 +612,7 @@ const InvoiceList = () => {
               />
             </Grid>
             <Grid item xs={12} md={12} lg={2}>
-              <FormControl sx={{ width: "100%" }}>
+              <FormControl fullWidth>
                 <DatePicker
                   label="Data inicial"
                   value={startDate}
@@ -621,12 +621,12 @@ const InvoiceList = () => {
               </FormControl>
             </Grid>
             <Grid item xs={12} md={12} lg={2}>
-              <FormControl sx={{ width: "100%" }}>
+              <FormControl fullWidth>
                 <DatePicker label="Data final" value={endDate} onChange={handleEndDateChange} />
               </FormControl>
             </Grid>
             <Grid item xs={12} md={12} lg={6}>
-              <FormControl sx={{ width: "100%" }}>
+              <FormControl fullWidth>
                 <TextField
                   name="search"
                   label="Pesquisar"
