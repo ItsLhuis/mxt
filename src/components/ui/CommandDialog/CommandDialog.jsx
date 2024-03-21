@@ -38,7 +38,7 @@ const CommandDialog = ({ open, handleClose }) => {
   const SearchData = [
     {
       section: "DATA",
-      icon: <Dashboard fontSize="medium" />,
+      icon: <Dashboard />,
       label: "Painel de Controlo",
       description: "Acesso ao painel de controlo da aplicação",
       link: "/dashboard"
@@ -46,7 +46,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "DATA",
       subSection: "Tabelas",
-      icon: <TableChart fontSize="medium" />,
+      icon: <TableChart />,
       label: "Acessórios",
       description: "Acesso à tabela de acessórios",
       link: "/tables/accessories"
@@ -54,7 +54,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "DATA",
       subSection: "Tabelas",
-      icon: <TableChart fontSize="medium" />,
+      icon: <TableChart />,
       label: "Artigos Wintouch",
       description: "Acesso à tabela de artigos Wintouch",
       link: "/tables/wintouch-articles"
@@ -62,7 +62,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "DATA",
       subSection: "Tabelas",
-      icon: <TableChart fontSize="medium" />,
+      icon: <TableChart />,
       label: "Tipo de Equipamento",
       description: "Acesso à tabela de tipo de equipamento",
       link: "/tables/equipment-type"
@@ -70,7 +70,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "DATA",
       subSection: "Tabelas",
-      icon: <TableChart fontSize="medium" />,
+      icon: <TableChart />,
       label: "Marcas",
       description: "Acesso à tabela de marcas",
       link: "/tables/brands"
@@ -78,7 +78,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "DATA",
       subSection: "Tabelas",
-      icon: <TableChart fontSize="medium" />,
+      icon: <TableChart />,
       label: "Avarias",
       description: "Acesso à tabela de avarias",
       link: "/tables/damages"
@@ -86,7 +86,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "DATA",
       subSection: "Tabelas",
-      icon: <TableChart fontSize="medium" />,
+      icon: <TableChart />,
       label: "Intervenções",
       description: "Acesso à tabela de intervenções",
       link: "/tables/interventions"
@@ -94,7 +94,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "DATA",
       subSection: "Tabelas",
-      icon: <TableChart fontSize="medium" />,
+      icon: <TableChart />,
       label: "Transferências de Equipamento",
       description: "Acesso à tabela de transferências de equipamento",
       link: "/tables/equipment-transfers"
@@ -102,7 +102,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "DATA",
       subSection: "Tabelas",
-      icon: <TableChart fontSize="medium" />,
+      icon: <TableChart />,
       label: "Checklist",
       description: "Acesso à tabela de checklist",
       link: "/tables/checklist"
@@ -110,7 +110,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "DATA",
       subSection: "Tabelas",
-      icon: <TableChart fontSize="medium" />,
+      icon: <TableChart />,
       label: "Técnicos",
       description: "Acesso à tabela de técnicos",
       link: "/tables/technicians"
@@ -118,7 +118,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "DATA",
       subSection: "Tabelas",
-      icon: <TableChart fontSize="medium" />,
+      icon: <TableChart />,
       label: "Perfil",
       description: "Acesso à tabela de perfil",
       link: "/tables/profile"
@@ -127,7 +127,7 @@ const CommandDialog = ({ open, handleClose }) => {
       section: "DATA",
       subSection: "Tabelas",
       subSubSection: "Logs",
-      icon: <Terminal fontSize="medium" />,
+      icon: <Terminal />,
       label: "Logs de Reparação",
       description: "Acesso aos logs de reparação",
       link: "/tables/logs/repair"
@@ -136,7 +136,7 @@ const CommandDialog = ({ open, handleClose }) => {
       section: "DATA",
       subSection: "Tabelas",
       subSubSection: "Logs",
-      icon: <Terminal fontSize="medium" />,
+      icon: <Terminal />,
       label: "Logs de Transferências",
       description: "Acesso aos logs de transferências",
       link: "/tables/logs/transfers"
@@ -145,7 +145,7 @@ const CommandDialog = ({ open, handleClose }) => {
       section: "DATA",
       subSection: "Tabelas",
       subSubSection: "Logs",
-      icon: <Terminal fontSize="medium" />,
+      icon: <Terminal />,
       label: "Logs de E-mails",
       description: "Acesso aos logs de e-mails",
       link: "/tables/logs/email"
@@ -154,7 +154,7 @@ const CommandDialog = ({ open, handleClose }) => {
       section: "DATA",
       subSection: "Tabelas",
       subSubSection: "Logs",
-      icon: <Terminal fontSize="medium" />,
+      icon: <Terminal />,
       label: "Logs de SMS",
       description: "Acesso aos logs de SMS",
       link: "/tables/logs/sms"
@@ -162,7 +162,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "DATA",
       subSection: "Tabelas",
-      icon: <TableChart fontSize="medium" />,
+      icon: <TableChart />,
       label: "Estatísticas por Ano",
       description: "Acesso às estatísticas por ano",
       link: "/tables/statistics-by-year"
@@ -170,7 +170,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "MANUTENÇÃO",
       subSection: "Clientes",
-      icon: <Person fontSize="medium" />,
+      icon: <Person />,
       label: "Adicionar Cliente",
       description: "Adicionar novo cliente",
       link: "/clients/add"
@@ -178,7 +178,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "MANUTENÇÃO",
       subSection: "Clientes",
-      icon: <Person fontSize="medium" />,
+      icon: <Person />,
       label: "Listar Clientes",
       description: "Listar todos os clientes",
       link: "/clients/list"
@@ -186,7 +186,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "MANUTENÇÃO",
       subSection: "Equipamentos",
-      icon: <AppsOutlined fontSize="medium" />,
+      icon: <AppsOutlined />,
       label: "Histórico de Equipamentos",
       description: "Acesso ao histórico de equipamentos",
       link: "/equipments/history"
@@ -194,7 +194,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "MANUTENÇÃO",
       subSection: "Equipamentos",
-      icon: <AppsOutlined fontSize="medium" />,
+      icon: <AppsOutlined />,
       label: "Consultar Equipamentos",
       description: "Consultar equipamentos",
       link: "/equipments/consult"
@@ -202,7 +202,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "MANUTENÇÃO",
       subSection: "Equipamentos",
-      icon: <AppsOutlined fontSize="medium" />,
+      icon: <AppsOutlined />,
       label: "Etiquetas de Equipamentos",
       description: "Acesso às etiquetas de equipamentos",
       link: "/equipments/tags"
@@ -210,7 +210,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "MANUTENÇÃO",
       subSection: "Reparações",
-      icon: <Construction fontSize="medium" />,
+      icon: <Construction />,
       label: "Adicionar Reparação",
       description: "Adicionar nova reparação",
       link: "/repairs/add"
@@ -219,7 +219,7 @@ const CommandDialog = ({ open, handleClose }) => {
       section: "MANUTENÇÃO",
       subSection: "Reparações",
       subSubSection: "Estados",
-      icon: <FormatListBulleted fontSize="medium" />,
+      icon: <FormatListBulleted />,
       label: "Reparações Abertas",
       description: "Reparações em aberto",
       link: "/repairs/states/open"
@@ -228,7 +228,7 @@ const CommandDialog = ({ open, handleClose }) => {
       section: "MANUTENÇÃO",
       subSection: "Reparações",
       subSubSection: "Estados",
-      icon: <FormatListBulleted fontSize="medium" />,
+      icon: <FormatListBulleted />,
       label: "Reparações Finalizadas",
       description: "Reparações concluídas",
       link: "/repairs/states/repaired"
@@ -237,7 +237,7 @@ const CommandDialog = ({ open, handleClose }) => {
       section: "MANUTENÇÃO",
       subSection: "Reparações",
       subSubSection: "Estados",
-      icon: <FormatListBulleted fontSize="medium" />,
+      icon: <FormatListBulleted />,
       label: "Reparações Fechadas",
       description: "Reparações fechadas",
       link: "/repairs/states/closed"
@@ -246,35 +246,35 @@ const CommandDialog = ({ open, handleClose }) => {
       section: "MANUTENÇÃO",
       subSection: "Reparações",
       subSubSection: "Estados",
-      icon: <FormatListBulleted fontSize="medium" />,
+      icon: <FormatListBulleted />,
       label: "Reparações Finalizadas Mas Não Pagas",
       description: "Reparações DC",
       link: "/repairs/states/dc"
     },
     {
       section: "OUTROS",
-      icon: <Email fontSize="medium" />,
+      icon: <Email />,
       label: "Envio de E-mail",
       description: "Enviar e-mail",
       link: "/send-email"
     },
     {
       section: "OUTROS",
-      icon: <Sms fontSize="medium" />,
+      icon: <Sms />,
       label: "Envio de SMS",
       description: "Enviar SMS",
       link: "/send-sms"
     },
     {
       section: "NOTIFICAÇÕES",
-      icon: <Notifications fontSize="medium" />,
+      icon: <Notifications />,
       label: "Notificações",
       description: "Acesso às suas notificações",
       link: "/notifications"
     },
     {
       section: "DEFINIÇÕES",
-      icon: <Settings fontSize="medium" />,
+      icon: <Settings />,
       label: "Definições de utilizador",
       description: "Acesso às suas definições",
       link: "/settings"
