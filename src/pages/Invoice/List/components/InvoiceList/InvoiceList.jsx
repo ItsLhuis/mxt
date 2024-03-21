@@ -18,7 +18,7 @@ import {
   IconButton,
   Avatar
 } from "@mui/material"
-import { Search, DeleteOutline, Info } from "@mui/icons-material"
+import { Search, DeleteOutline, MoreVert } from "@mui/icons-material"
 
 import { MultipleSelectCheckmarks, DatePicker, Table } from "@components/ui"
 
@@ -381,12 +381,12 @@ const InvoiceList = () => {
     },
     {
       id: "info",
-      align: "center",
+      align: "right",
       sortable: false,
       renderComponent: ({ data }) => (
-        <Tooltip title="Info" placement="bottom">
+        <Tooltip title="Info" placement="bottom" sx={{ margin: -1 }}>
           <IconButton onClick={() => console.log(data)}>
-            <Info fontSize="inherit" />
+            <MoreVert fontSize="inherit" />
           </IconButton>
         </Tooltip>
       )
@@ -645,9 +645,6 @@ const InvoiceList = () => {
               </FormControl>
             </Grid>
           </Grid>
-          <Typography variant="p" component="p" sx={{ marginTop: 2 }}>
-            <b>13</b> resultados encontrados
-          </Typography>
           {hasFiltersApplied() && (
             <Stack sx={{ marginTop: 2, display: "flex", flexDirection: "column", gap: 2 }}>
               <Stack sx={{ display: "flex", flexFlow: "wrap", alignItems: "center", gap: 1 }}>
@@ -674,7 +671,12 @@ const InvoiceList = () => {
             </Stack>
           )}
         </Box>
-        <Table columns={tableColumns} data={tableData} mode="datatable" />
+        <Table
+          columns={tableColumns}
+          data={tableData}
+          mode="datatable"
+          actions={[{ icon: <DeleteOutline />, tooltip: "Eliminar", onClick: () => console.log() }]}
+        />
       </Box>
     </Paper>
   )
