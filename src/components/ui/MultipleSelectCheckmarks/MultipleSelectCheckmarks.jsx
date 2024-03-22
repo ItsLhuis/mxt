@@ -58,9 +58,10 @@ const MultipleSelectCheckmarks = ({ label, data, selectedItems, onChange }) => {
             key={item}
             value={item}
             sx={{
+              padding: "4px 14px",
               margin: "0 8px",
               marginBottom: index !== data.length - 1 && "4px",
-              borderRadius: "10px",
+              borderRadius: "8px",
               "&:hover": {
                 backgroundColor: "var(--secondaryContainer)"
               }
