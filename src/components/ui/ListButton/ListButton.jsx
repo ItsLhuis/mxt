@@ -11,7 +11,14 @@ const ListButton = ({ buttons }) => {
         <ListItem key={index} disablePadding>
           <ListItemButton
             onClick={button.onClick}
-            sx={{ margin: "0 8px", marginBottom: index !== buttons.length - 1 && "4px" }}
+            sx={{
+              margin: "0 8px",
+              marginBottom: index !== buttons.length - 1 && "4px",
+              backgroundColor: button.selected && "rgba(88, 101, 242, 0.08)",
+              "&:hover": {
+                backgroundColor: button.selected && "rgba(88, 101, 242, 0.12) !important"
+              }
+            }}
           >
             <ListItemText primary={button.label} />
           </ListItemButton>
@@ -25,7 +32,8 @@ ListButton.propTypes = {
   buttons: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
-      onClick: PropTypes.func.isRequired
+      onClick: PropTypes.func.isRequired,
+      selected: PropTypes.bool
     })
   ).isRequired
 }
