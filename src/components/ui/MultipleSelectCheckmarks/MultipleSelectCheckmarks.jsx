@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 
-import React, { useState } from "react"
+import React from "react"
 
 import {
   OutlinedInput,
@@ -23,21 +23,11 @@ const MenuProps = {
 }
 
 const MultipleSelectCheckmarks = ({ label, data, selectedItems, onChange }) => {
-  const [open, setOpen] = useState(false)
-
   const handleChange = (event) => {
     const {
       target: { value }
     } = event
     onChange(value)
-  }
-
-  const handleOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
   }
 
   return (
@@ -47,9 +37,6 @@ const MultipleSelectCheckmarks = ({ label, data, selectedItems, onChange }) => {
         labelId="multiple-checkbox-label"
         id="multiple-checkbox"
         multiple
-        open={open}
-        onClose={handleClose}
-        onOpen={handleOpen}
         value={selectedItems}
         onChange={handleChange}
         input={
