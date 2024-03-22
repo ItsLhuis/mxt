@@ -54,7 +54,7 @@ const MultipleSelectCheckmarks = ({ label, data, selectedItems, onChange }) => {
         onChange={handleChange}
         input={
           <OutlinedInput
-            label={label}
+            label={label + "o"}
             sx={{
               fontSize: "13px"
             }}
