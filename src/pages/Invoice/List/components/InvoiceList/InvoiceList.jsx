@@ -27,135 +27,118 @@ import { formatValueToEuro } from "@utils/format/currency"
 import { formatDate, formatTime } from "@utils/format/date"
 import { formatPhoneNumber } from "@utils/format/phone"
 
-const renderFilterChips = (filterName, values, handleDelete) => {
-  if (Array.isArray(values)) {
-    if (values.length > 0) {
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 1,
-            border: "1px solid var(--elevation-level5)",
-            borderRadius: 2,
-            padding: 1
-          }}
-        >
-          <Typography variant="p" component="p" fontWeight={600}>
-            {filterName}:
-          </Typography>
-          <Stack sx={{ display: "flex", flexFlow: "wrap", gap: 1 }}>
-            {values.map((value, index) => (
-              <Chip
-                key={index}
-                label={value}
-                onDelete={() => handleDelete(index)}
-                sx={{
-                  "& .MuiChip-label": { whiteSpace: "normal", padding: "8px 14px" },
-                  height: "auto"
-                }}
-              />
-            ))}
-          </Stack>
-        </Box>
-      )
-    }
-  } else {
-    if (values !== null && values !== "") {
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 1,
-            border: "1px solid var(--elevation-level5)",
-            borderRadius: 2,
-            padding: 1
-          }}
-        >
-          <Typography variant="p" component="p" fontWeight={600}>
-            {filterName}:
-          </Typography>
-          <Chip
-            label={values}
-            onDelete={handleDelete}
-            sx={{
-              "& .MuiChip-label": { whiteSpace: "normal", padding: "8px 14px" },
-              height: "auto"
-            }}
-          />
-        </Box>
-      )
-    }
+const renderFilterChips = (filterName, values, handleRemoveFilter) => {
+  if (!values || (Array.isArray(values) && values.length === 0)) {
+    return null
   }
-  return null
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 1,
+        border: "1px solid var(--elevation-level5)",
+        borderRadius: 2,
+        padding: 1
+      }}
+    >
+      <Typography variant="p" component="p" fontWeight={600}>
+        {filterName}:
+      </Typography>
+      {Array.isArray(values) ? (
+        <Stack sx={{ display: "flex", flexFlow: "wrap", gap: 1 }}>
+          {values.map((value, index) => (
+            <Chip
+              key={index}
+              label={value}
+              onDelete={() => handleRemoveFilter(filterName)}
+              sx={{
+                "& .MuiChip-label": { whiteSpace: "normal", padding: "8px 14px" },
+                height: "auto"
+              }}
+            />
+          ))}
+        </Stack>
+      ) : (
+        <Chip
+          label={values}
+          onDelete={() => handleRemoveFilter(filterName)}
+          sx={{
+            "& .MuiChip-label": { whiteSpace: "normal", padding: "8px 14px" },
+            height: "auto"
+          }}
+        />
+      )}
+    </Box>
+  )
 }
 
 const InvoiceList = () => {
-  const [selectedTab, setSelectedTab] = useState(0)
-  const [selectedServiceItems, setSelectedServiceItems] = useState([])
-  const [startDate, setStartDate] = useState(null)
-  const [endDate, setEndDate] = useState(null)
-  const [searchValue, setSearchValue] = useState("")
+  const [filters, setFilters] = useState({
+    selectedTab: 0,
+    selectedServiceItems: [],
+    startDate: null,
+    endDate: null,
+    searchValue: ""
+  })
 
   const handleResetSelectedTab = () => {
-    setSelectedTab(0)
+    setFilters({ ...filters, selectedTab: 0 })
   }
   const handleTabChange = (_, value) => {
-    setSelectedTab(value)
+    setFilters({ ...filters, selectedTab: value })
   }
 
   const handleRemoveService = (index) => {
-    const updatedServices = [...selectedServiceItems]
+    const updatedServices = [...filters.selectedServiceItems]
     updatedServices.splice(index, 1)
-    setSelectedServiceItems(updatedServices)
+    setFilters({ ...filters, selectedServiceItems: updatedServices })
   }
   const handleSelectedServiceItemsChange = (value) => {
-    setSelectedServiceItems(value)
+    setFilters({ ...filters, selectedServiceItems: value })
   }
 
   const handleRemoveDate = () => {
-    setStartDate(null)
-    setEndDate(null)
+    setFilters({ ...filters, startDate: null, endDate: null })
   }
   const handleStartDateChange = (date) => {
-    setStartDate(date)
+    setFilters({ ...filters, startDate: date })
   }
   const handleEndDateChange = (date) => {
-    setEndDate(date)
+    setFilters({ ...filters, endDate: date })
   }
 
   const handleRemoveSearchInpuValue = () => {
-    setSearchValue("")
+    setFilters({ ...filters, searchValue: "" })
   }
   const handleDebouncedSearchInputChange = debounce((value) => {
-    setSearchValue(value)
+    setFilters({ ...filters, searchValue: value })
   })
   const handleSearchInputChange = (event) => {
     handleDebouncedSearchInputChange(event.target.value)
   }
 
-  const handleRemoveFilters = () => {
-    setSelectedTab(0)
-    setSelectedServiceItems([])
-    setStartDate(null)
-    setEndDate(null)
-    setSearchValue("")
+  const handleClearFilters = () => {
+    setFilters({
+      selectedTab: 0,
+      selectedServiceItems: [],
+      startDate: null,
+      endDate: null,
+      searchValue: ""
+    })
   }
 
   const hasFiltersApplied = () => {
-    if (
+    const { selectedTab, selectedServiceItems, startDate, endDate, searchValue } = filters
+
+    return (
       selectedTab !== 0 ||
       selectedServiceItems.length > 0 ||
       (startDate && endDate && endDate >= startDate) ||
       searchValue.trim() !== ""
-    ) {
-      return true
-    } else {
-      return false
-    }
+    )
   }
 
   const tabsInfo = [
@@ -571,7 +554,7 @@ const InvoiceList = () => {
     <Paper elevation={1}>
       <Box sx={{ marginTop: 3 }}>
         <Tabs
-          value={selectedTab}
+          value={filters.selectedTab}
           onChange={handleTabChange}
           aria-label="settings-tabs"
           variant="scrollable"
@@ -607,7 +590,7 @@ const InvoiceList = () => {
               <MultipleSelectCheckmarks
                 label="Serviço"
                 data={services}
-                selectedItems={selectedServiceItems}
+                selectedItems={filters.selectedServiceItems}
                 onChange={handleSelectedServiceItemsChange}
               />
             </Grid>
@@ -615,14 +598,18 @@ const InvoiceList = () => {
               <FormControl fullWidth>
                 <DatePicker
                   label="Data inicial"
-                  value={startDate}
+                  value={filters.startDate}
                   onChange={handleStartDateChange}
                 />
               </FormControl>
             </Grid>
             <Grid item xs={12} md={12} lg={2}>
               <FormControl fullWidth>
-                <DatePicker label="Data final" value={endDate} onChange={handleEndDateChange} />
+                <DatePicker
+                  label="Data final"
+                  value={filters.endDate}
+                  onChange={handleEndDateChange}
+                />
               </FormControl>
             </Grid>
             <Grid item xs={12} md={12} lg={6}>
@@ -630,7 +617,7 @@ const InvoiceList = () => {
                 <TextField
                   name="search"
                   label="Pesquisar"
-                  value={searchValue}
+                  value={filters.searchValue}
                   onChange={handleSearchInputChange}
                   autoComplete="off"
                   placeholder="Pesquise o nome do cliente ou número da fatura..."
@@ -648,22 +635,26 @@ const InvoiceList = () => {
           {hasFiltersApplied() && (
             <Stack sx={{ marginTop: 2, display: "flex", flexDirection: "column", gap: 2 }}>
               <Stack sx={{ display: "flex", flexFlow: "wrap", alignItems: "center", gap: 1 }}>
-                {selectedTab !== 0 &&
-                  renderFilterChips("Estado", tabsInfo[selectedTab].name, handleResetSelectedTab)}
-                {renderFilterChips("Serviço", selectedServiceItems, handleRemoveService)}
-                {startDate &&
-                  endDate &&
+                {filters.selectedTab !== 0 &&
+                  renderFilterChips(
+                    "Estado",
+                    tabsInfo[filters.selectedTab].name,
+                    handleResetSelectedTab
+                  )}
+                {renderFilterChips("Serviço", filters.selectedServiceItems, handleRemoveService)}
+                {filters.startDate &&
+                  filters.endDate &&
                   renderFilterChips(
                     "Data",
-                    formatDate(startDate) + " - " + formatDate(endDate),
+                    formatDate(filters.startDate) + " - " + formatDate(filters.endDate),
                     handleRemoveDate
                   )}
-                {searchValue.trim() !== "" &&
-                  renderFilterChips("Pesquisar", searchValue, handleRemoveSearchInpuValue)}
+                {filters.searchValue.trim() !== "" &&
+                  renderFilterChips("Pesquisar", filters.searchValue, handleRemoveSearchInpuValue)}
                 <Button
                   startIcon={<DeleteOutline sx={{ color: "rgb(211, 47, 47)" }} />}
                   color="error"
-                  onClick={handleRemoveFilters}
+                  onClick={handleClearFilters}
                 >
                   Limpar
                 </Button>
