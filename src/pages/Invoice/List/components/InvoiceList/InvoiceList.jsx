@@ -666,7 +666,13 @@ const InvoiceList = () => {
           columns={tableColumns}
           data={tableData}
           mode="datatable"
-          actions={[{ icon: <DeleteOutline />, tooltip: "Eliminar", onClick: () => console.log() }]}
+          actions={[
+            {
+              icon: <DeleteOutline sx={{ color: "rgb(228, 225, 230)" }} />,
+              tooltip: "Eliminar",
+              onClick: () => console.log()
+            }
+          ]}
         />
       </Box>
     </Paper>
