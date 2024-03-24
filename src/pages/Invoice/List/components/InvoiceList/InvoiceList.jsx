@@ -23,12 +23,7 @@ import { formatValueToEuro } from "@utils/format/currency"
 import { formatDate, formatTime } from "@utils/format/date"
 import { formatPhoneNumber } from "@utils/format/phone"
 
-let count = 0
-
 const InvoiceList = () => {
-  count++
-  console.log("component render number: ", count)
-
   const [filters, setFilters] = useState({
     selectedTab: 0,
     selectedServiceItems: [],

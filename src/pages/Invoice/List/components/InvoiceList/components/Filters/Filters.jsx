@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect, useRef } from "react"
 
 import {
   Box,
@@ -15,7 +15,6 @@ import { Search, DeleteOutline } from "@mui/icons-material"
 
 import { MultipleSelectCheckmarks, DatePicker } from "@components/ui"
 
-import { debounce } from "@utils/shared/debounce"
 import { formatDate } from "@utils/format/date"
 
 const renderFilterChips = (filterName, values, handleRemoveFilter) => {
@@ -46,7 +45,11 @@ const renderFilterChips = (filterName, values, handleRemoveFilter) => {
               label={value}
               onDelete={() => handleRemoveFilter(filterName)}
               sx={{
-                "& .MuiChip-label": { whiteSpace: "normal", padding: "8px 14px" },
+                "& .MuiChip-label": {
+                  whiteSpace: "normal",
+                  wordBreak: "break-all",
+                  padding: "8px 14px"
+                },
                 height: "auto"
               }}
             />
@@ -81,15 +84,18 @@ const Filters = ({
 }) => {
   const [searchInput, setSearchInput] = useState("")
 
-  const debouncedHandleSearchInputChange = debounce((value) => {
-    handleSearchInputChange(value)
-  }, 2000)
-
   const handleInputChange = (event) => {
     const value = event.target.value
     setSearchInput(value)
-    debouncedHandleSearchInputChange(value)
   }
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      handleSearchInputChange(searchInput)
+    }, 500)
+
+    return () => clearTimeout(timeoutId)
+  }, [searchInput])
 
   const services = [
     "Reparação",
