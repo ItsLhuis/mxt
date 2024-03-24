@@ -9,6 +9,7 @@ export function ThemeProvider({
   ...props
 }) {
   const [theme, setTheme] = useState(() => localStorage.getItem(storageKey) || defaultTheme)
+  const [dataTheme, setDataTheme] = useState(null)
 
   const updateTheme = (newTheme) => {
     setTheme(newTheme)
@@ -27,26 +28,31 @@ export function ThemeProvider({
 
     document.documentElement.setAttribute("data-theme", theme)
 
-    if (theme === "system") {
-      const handleSystemThemeChange = (event) => {
-        const systemTheme = event.matches ? "dark" : "light"
-        document.documentElement.setAttribute("data-theme", systemTheme)
-      }
+    if (theme !== "system") {
+      setDataTheme(theme)
+      return
+    }
 
-      const systemMediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
-      systemMediaQuery.addEventListener("change", handleSystemThemeChange)
+    const handleSystemThemeChange = (event) => {
+      const systemTheme = event.matches ? "dark" : "light"
+      document.documentElement.setAttribute("data-theme", systemTheme)
+      setDataTheme(systemTheme)
+    }
 
-      handleSystemThemeChange(systemMediaQuery)
+    const systemMediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
+    systemMediaQuery.addEventListener("change", handleSystemThemeChange)
 
-      return () => {
-        systemMediaQuery.removeEventListener("change", handleSystemThemeChange)
-      }
+    handleSystemThemeChange(systemMediaQuery)
+
+    return () => {
+      systemMediaQuery.removeEventListener("change", handleSystemThemeChange)
     }
   }, [theme, updateTheme])
 
   const value = {
     theme,
-    updateTheme
+    updateTheme,
+    dataTheme
   }
 
   return (
