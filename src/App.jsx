@@ -4,6 +4,8 @@ import { useLocation } from "react-router-dom"
 
 import { useLoader } from "@contexts/loaderContext"
 
+import { useTheme } from "@contexts/themeContext"
+
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 
 import { Toaster } from "react-hot-toast"
@@ -20,6 +22,8 @@ function App() {
 
   const { loader } = useLoader()
 
+  const { dataTheme } = useTheme()
+
   const [sidebarSize, setSidebarSize] = useState(localStorage.getItem("sidebarSize") || "large")
 
   const toggleSidebarSize = () => {
@@ -28,16 +32,29 @@ function App() {
     localStorage.setItem("sidebarSize", newSize)
   }
 
+  const secondaryButtonBackgroundColor =
+    dataTheme === "dark" ? "rgb(68, 69, 89)" : "rgb(225, 224, 249)"
+
   const theme = createTheme({
     palette: {
       primary: {
         main: "rgb(88, 101, 242)"
+      },
+      secondary: {
+        main: secondaryButtonBackgroundColor
       },
       error: {
         main: "rgb(211, 47, 47)"
       }
     },
     components: {
+      MuiButton: {
+        styleOverrides: {
+          containedPrimary: {
+            color: "color: rgb(228, 225, 230)"
+          }
+        }
+      },
       MuiOutlinedInput: {
         styleOverrides: {
           root: {
@@ -60,6 +77,15 @@ function App() {
             },
             "&.Mui-error.Mui-focused .MuiOutlinedInput-notchedOutline": {
               border: "2px solid #d32f2f"
+            },
+            "&.Mui-disabled": {
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "var(--elevation-level5)"
+              },
+              "& .MuiInputBase-input": {
+                WebkitTextFillColor: "var(--outline)",
+                cursor: "not-allowed"
+              }
             }
           },
           shrink: {
