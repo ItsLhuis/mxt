@@ -172,7 +172,16 @@ const Filters = ({
       </Grid>
       {hasFiltersApplied() && (
         <Stack sx={{ marginTop: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-          <Stack sx={{ display: "flex", flexFlow: "wrap", alignItems: "center", gap: 1 }}>
+          <Stack
+            sx={{
+              display: "flex",
+              flexFlow: "wrap",
+              alignItems: "center",
+              gap: 1,
+              overflow: "hidden",
+              overflowX: "auto"
+            }}
+          >
             {filters.selectedTab !== 0 &&
               renderFilterChips(
                 "Estado",
