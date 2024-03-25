@@ -148,7 +148,7 @@ const Modal = ({
             gap: 1
           }}
         >
-          <Button variant="contained secundary" onClick={handleClose}>
+          <Button variant="contained" color="secondary" onClick={handleClose}>
             {cancelButtonText}
           </Button>
           <LoadingButton loading={load} type="submit" onClick={handleSubmit} variant="contained">
