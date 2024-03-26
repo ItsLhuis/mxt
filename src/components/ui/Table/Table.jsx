@@ -21,6 +21,8 @@ import {
 } from "@mui/material"
 import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material"
 
+import { NoData } from "../"
+
 const descendingComparator = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {
     return -1
@@ -227,7 +229,7 @@ const Table = ({ columns, data, mode, actions }) => {
         >
           <TableHead sx={{ backgroundColor: "var(--elevation-level3)" }}>
             <TableRow>
-              {mode === "datatable" && (
+              {mode === "datatable" && data.length !== 0 && (
                 <TableCell padding="checkbox" sx={{ paddingLeft: 2 }}>
                   <Checkbox
                     indeterminate={selected.length > 0 && selected.length < data.length}
@@ -260,101 +262,116 @@ const Table = ({ columns, data, mode, actions }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {(mode === "datatable"
-              ? sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : sortedData
-            ).map((row, index) => (
-              <React.Fragment key={row.id}>
-                <TableRow
-                  sx={{
-                    transition: "background-color 0.3s ease",
-                    "&:hover": {
-                      backgroundColor: "rgba(0, 0, 0, 0.1)"
-                    },
-                    "& .MuiTableCell-root": {
-                      border: sortedData.length - 1 === index && "none"
-                    }
-                  }}
-                  role={mode === "datatable" ? "checkbox" : "row"}
-                  aria-checked={mode === "datatable" && isSelected(row.id)}
-                  tabIndex={mode === "datatable" ? -1 : undefined}
-                  selected={mode === "datatable" && isSelected(row.id)}
-                >
-                  {mode === "datatable" && (
-                    <TableCell padding="checkbox" sx={{ paddingLeft: 2 }}>
-                      <Checkbox
-                        color="primary"
-                        checked={isSelected(row.id)}
-                        onChange={(event) => handleClick(event, row.id)}
-                      />
-                    </TableCell>
-                  )}
-                  {hasExpandableContent && (
-                    <>
-                      {row.expandableContent ? (
-                        <TableCell sx={{ width: 0 }}>
-                          <IconButton size="small" onClick={() => handleRowClick(row.id)}>
-                            <KeyboardArrowUp
-                              className={`arrow-but-drop-down ${
-                                openRows.includes(row.id) && "__arrow-but-drop-down__rotate"
-                              }`}
-                            />
-                          </IconButton>
-                        </TableCell>
-                      ) : (
-                        <TableCell />
-                      )}
-                    </>
-                  )}
-                  {columns.map((column, index) => (
-                    <TableCell
-                      key={column.id}
-                      align={column.align}
+            {data.length !== 0 ? (
+              <>
+                {(mode === "datatable"
+                  ? sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  : sortedData
+                ).map((row, index) => (
+                  <React.Fragment key={row.id}>
+                    <TableRow
                       sx={{
-                        color: "var(--onSurface)",
-                        padding: "16px 24px",
-                        fontSize: 13
+                        transition: "background-color 0.3s ease",
+                        "&:hover": {
+                          backgroundColor: "rgba(0, 0, 0, 0.1)"
+                        },
+                        "& .MuiTableCell-root": {
+                          border: sortedData.length - 1 === index && "none"
+                        }
                       }}
+                      role={mode === "datatable" ? "checkbox" : "row"}
+                      aria-checked={mode === "datatable" && isSelected(row.id)}
+                      tabIndex={mode === "datatable" ? -1 : undefined}
+                      selected={mode === "datatable" && isSelected(row.id)}
                     >
-                      {column.renderComponent ? (
-                        <column.renderComponent data={row[column.id]} />
-                      ) : (
-                        <>{column.formatter ? column.formatter(row[column.id]) : row[column.id]}</>
+                      {mode === "datatable" && (
+                        <TableCell padding="checkbox" sx={{ paddingLeft: 2 }}>
+                          <Checkbox
+                            color="primary"
+                            checked={isSelected(row.id)}
+                            onChange={(event) => handleClick(event, row.id)}
+                          />
+                        </TableCell>
                       )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-                {row.expandableContent && (
-                  <TableRow>
-                    <TableCell
-                      colSpan={mode === "normal" ? columns.length + 1 : columns.length + 2}
-                      sx={{ padding: 0, border: "none" }}
-                    >
-                      <Collapse in={openRows.includes(row.id)} timeout="auto" unmountOnExit>
-                        <Box
+                      {hasExpandableContent && (
+                        <>
+                          {row.expandableContent ? (
+                            <TableCell sx={{ width: 0 }}>
+                              <IconButton size="small" onClick={() => handleRowClick(row.id)}>
+                                <KeyboardArrowUp
+                                  className={`arrow-but-drop-down ${
+                                    openRows.includes(row.id) && "__arrow-but-drop-down__rotate"
+                                  }`}
+                                />
+                              </IconButton>
+                            </TableCell>
+                          ) : (
+                            <TableCell />
+                          )}
+                        </>
+                      )}
+                      {columns.map((column, index) => (
+                        <TableCell
+                          key={column.id}
+                          align={column.align}
                           sx={{
-                            borderBottom:
-                              sortedData.length - 1 === index
-                                ? "none"
-                                : "1px solid var(--elevation-level5)",
-                            borderTop:
-                              sortedData.length - 1 !== index
-                                ? "none"
-                                : "1px solid var(--elevation-level5)"
+                            color: "var(--onSurface)",
+                            padding: "16px 24px",
+                            fontSize: 13
                           }}
                         >
-                          {row.expandableContent()}
-                        </Box>
-                      </Collapse>
-                    </TableCell>
-                  </TableRow>
-                )}
-              </React.Fragment>
-            ))}
+                          {column.renderComponent ? (
+                            <column.renderComponent data={row[column.id]} />
+                          ) : (
+                            <>
+                              {column.formatter ? column.formatter(row[column.id]) : row[column.id]}
+                            </>
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                    {row.expandableContent && (
+                      <TableRow>
+                        <TableCell
+                          colSpan={mode === "normal" ? columns.length + 1 : columns.length + 2}
+                          sx={{ padding: 0, border: "none" }}
+                        >
+                          <Collapse in={openRows.includes(row.id)} timeout="auto" unmountOnExit>
+                            <Box
+                              sx={{
+                                borderBottom:
+                                  sortedData.length - 1 === index
+                                    ? "none"
+                                    : "1px solid var(--elevation-level5)",
+                                borderTop:
+                                  sortedData.length - 1 !== index
+                                    ? "none"
+                                    : "1px solid var(--elevation-level5)"
+                              }}
+                            >
+                              {row.expandableContent()}
+                            </Box>
+                          </Collapse>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </React.Fragment>
+                ))}
+              </>
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={mode === "normal" ? columns.length + 1 : columns.length + 2}
+                  sx={{ padding: 3, paddingBottom: 0 }}
+                >
+                  <NoData />
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </MuiTable>
       </TableContainer>
-      {mode === "datatable" && (
+      {mode === "datatable" && data.length !== 0 && (
         <Box sx={{ padding: 2, borderTop: "1px solid var(--elevation-level5)" }}>
           <TablePagination
             labelRowsPerPage="Linhas por página"
