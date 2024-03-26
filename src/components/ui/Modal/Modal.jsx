@@ -12,7 +12,8 @@ import {
   Typography,
   Button,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  Stack
 } from "@mui/material"
 import { Close } from "@mui/icons-material"
 
@@ -110,7 +111,7 @@ const Modal = ({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            padding: "1rem",
+            padding: 2,
             paddingLeft: 3
           }}
         >
@@ -130,30 +131,41 @@ const Modal = ({
           }}
         />
         <Box sx={{ overflow: "auto", height: fullScreen ? "100%" : "auto", minHeight: 64 }}>
-          <form onSubmit={handleSubmit}>{children}</form>
-        </Box>
-        <Divider
-          sx={{
-            borderColor: "var(--elevation-level5)",
-            borderWidth: 1
-          }}
-        />
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            padding: 3,
-            gap: 1
-          }}
-        >
-          <Button variant="contained" color="secondary" onClick={handleClose}>
-            {cancelButtonText}
-          </Button>
-          <LoadingButton loading={load} type="submit" onClick={handleSubmit} variant="contained">
-            {submitButtonText}
-          </LoadingButton>
+          <form onSubmit={handleSubmit} style={{ height: "100%" }}>
+            <Stack sx={{ height: "100%", justifyContent: "space-between" }}>
+              {children}
+              <Box>
+                <Divider
+                  sx={{
+                    borderColor: "var(--elevation-level5)",
+                    borderWidth: 1
+                  }}
+                />
+                <Box
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    padding: 3,
+                    gap: 1
+                  }}
+                >
+                  <Button variant="contained" color="secondary" onClick={handleClose}>
+                    {cancelButtonText}
+                  </Button>
+                  <LoadingButton
+                    loading={load}
+                    type="submit"
+                    onClick={handleSubmit}
+                    variant="contained"
+                  >
+                    {submitButtonText}
+                  </LoadingButton>
+                </Box>
+              </Box>
+            </Stack>
+          </form>
         </Box>
       </Dialog>
     )
