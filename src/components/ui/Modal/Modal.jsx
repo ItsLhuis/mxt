@@ -89,8 +89,6 @@ const Modal = ({
 
         if (result) {
           onClose()
-        } else {
-          setLoad(false)
         }
       } catch (error) {
         setLoad(false)
