@@ -31,20 +31,20 @@ const FinancialStatistics = () => {
   const chartData = [
     {
       name: "Rendimentos",
-      data: Array.from({ length: 12 }, () => Math.floor(Math.random() * 7000))
+      data: Array.from({ length: 12 }, () => Math.floor(Math.random() * 700))
     },
     {
       name: "Despesas",
-      data: Array.from({ length: 12 }, () => Math.floor(Math.random() * 4000))
+      data: Array.from({ length: 12 }, () => Math.floor(Math.random() * 400))
     }
   ]
 
   const colors = ["rgb(54, 200, 140)", "rgb(238, 108, 93)"]
 
   const financialData = [
-    { title: "Rendimentos", amount: formatValueToEuro(15298300) },
-    { title: "Despesas", amount: formatValueToEuro(2481300) },
-    { title: "Total", amount: formatValueToEuro(12817000) }
+    { title: "Rendimentos", amount: formatValueToEuro(152983.0) },
+    { title: "Despesas", amount: formatValueToEuro(24813.0) },
+    { title: "Total", amount: formatValueToEuro(128170.0) }
   ]
 
   const mdSize = financialData.length % 2 === 0 ? 6 : 12
@@ -263,8 +263,8 @@ const FinancialStatistics = () => {
       description: "Smartphone Samsung Galaxy S22 Ultra",
       date: new Date("Tue Mar 05 2024 09:24:24 GMT+0000 (Hora padrão da Europa Ocidental)"),
       amount: 1,
-      value: 119900,
-      total: 119900,
+      value: 1199,
+      total: 1199,
       type: "Rendimento (Pendente)",
       info: "ola",
       expandableContent: () =>
@@ -291,8 +291,8 @@ const FinancialStatistics = () => {
       description: "Laptop Apple MacBook Pro 14 M1 Pro",
       date: new Date(),
       amount: 1,
-      value: 199900,
-      total: 199900,
+      value: 1999,
+      total: 1999,
       type: "Despesa",
       info: "ola",
       expandableContent: () =>
@@ -324,8 +324,8 @@ const FinancialStatistics = () => {
       description: "Smartwatch Apple Watch Series 7",
       date: new Date(),
       amount: 1,
-      value: 39900,
-      total: 39900,
+      value: 399,
+      total: 399,
       type: "Despesa",
       info: "ola",
       info: "ola",
@@ -348,8 +348,8 @@ const FinancialStatistics = () => {
       description: "Formatação Apple MacBook Pro 14 M1 Pro",
       date: new Date(),
       amount: 1,
-      value: 4900,
-      total: 4900,
+      value: 49,
+      total: 49,
       type: "Rendimento",
       info: "ola",
       expandableContent: () =>
@@ -391,8 +391,8 @@ const FinancialStatistics = () => {
       description: "Câmera digital Sony Alpha 7 IV",
       date: new Date(),
       amount: 1,
-      value: 249900,
-      total: 249900,
+      value: 2499,
+      total: 2499,
       type: "Rendimento",
       info: "ola",
       expandableContent: () =>

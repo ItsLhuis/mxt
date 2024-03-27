@@ -16,7 +16,7 @@ const InvoiceStatus = () => {
     {
       title: "Total",
       totalInvoices: 100,
-      totalAmount: 1203456,
+      totalAmount: 12034.56,
       icon: (
         <ReceiptOutlined sx={{ fontSize: 27, color: "var(--primary)", position: "absolute" }} />
       ),
@@ -25,7 +25,7 @@ const InvoiceStatus = () => {
     {
       title: "Pago",
       totalInvoices: 65,
-      totalAmount: 850032,
+      totalAmount: 8500.32,
       icon: (
         <PlaylistAddCheck sx={{ fontSize: 27, color: "rgb(46, 125, 50)", position: "absolute" }} />
       ),
@@ -34,14 +34,14 @@ const InvoiceStatus = () => {
     {
       title: "Pendente",
       totalInvoices: 20,
-      totalAmount: 280050,
+      totalAmount: 2800.5,
       icon: <Alarm sx={{ fontSize: 27, color: "rgb(237, 108, 2)", position: "absolute" }} />,
       color: "rgb(237, 108, 2)"
     },
     {
       title: "Atrasado",
       totalInvoices: 10,
-      totalAmount: 150075,
+      totalAmount: 1500.75,
       icon: (
         <NotificationsActive
           sx={{ fontSize: 27, color: "rgb(211, 47, 47)", position: "absolute" }}
@@ -52,7 +52,7 @@ const InvoiceStatus = () => {
     {
       title: "Rascunho",
       totalInvoices: 5,
-      totalAmount: 22720,
+      totalAmount: 227.2,
       icon: <Description sx={{ fontSize: 27, color: "var(--outline)", position: "absolute" }} />,
       color: "var(--outline)"
     }
