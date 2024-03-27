@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from "react"
+import PropTypes from "prop-types"
+
+import React, { useState, useEffect } from "react"
 
 import {
   Box,
@@ -216,6 +218,25 @@ const Filters = ({
       )}
     </Box>
   )
+}
+
+Filters.propTypes = {
+  filters: PropTypes.shape({
+    selectedTab: PropTypes.number.isRequired,
+    selectedServiceItems: PropTypes.array.isRequired,
+    startDate: PropTypes.instanceOf(Date),
+    endDate: PropTypes.instanceOf(Date)
+  }),
+  tabsInfo: PropTypes.array.isRequired,
+  handleResetSelectedTab: PropTypes.func.isRequired,
+  handleRemoveService: PropTypes.func.isRequired,
+  handleSelectedServiceItemsChange: PropTypes.func.isRequired,
+  handleRemoveDate: PropTypes.func.isRequired,
+  handleStartDateChange: PropTypes.func.isRequired,
+  handleEndDateChange: PropTypes.func.isRequired,
+  handleRemoveSearchInpuValue: PropTypes.func.isRequired,
+  handleSearchInputChange: PropTypes.func.isRequired,
+  handleClearFilters: PropTypes.func.isRequired
 }
 
 export default Filters
