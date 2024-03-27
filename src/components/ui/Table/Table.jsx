@@ -79,6 +79,14 @@ const Table = ({ columns, data, mode, actions }) => {
     }
   }
 
+  const getDataCountText = (count) => {
+    if (count === 1) {
+      return "resultado encontrado"
+    } else {
+      return "resultados encontrados"
+    }
+  }
+
   const handleSort = (columnId) => {
     const isAsc = orderBy === columnId && order === "asc"
     setOrder(isAsc ? "desc" : "asc")
@@ -140,7 +148,7 @@ const Table = ({ columns, data, mode, actions }) => {
     <Box sx={{ position: "relative" }}>
       {mode === "datatable" && (
         <Typography variant="p" component="p" sx={{ marginLeft: 3, marginBottom: 3 }}>
-          <b>{data.length}</b> resultados encontrados
+          <b>{data.length}</b> {getDataCountText(data.length)}
         </Typography>
       )}
       {hasSelectedRows && (
@@ -168,7 +176,7 @@ const Table = ({ columns, data, mode, actions }) => {
               }}
             />
           </Box>
-          <Box sx={{ border: "none", paddingLeft: 4 }}>
+          <Box sx={{ border: "none", paddingLeft: 3 }}>
             <Typography
               variant="body2"
               component="p"
