@@ -1,6 +1,4 @@
-import React, { Suspense, useState, useEffect } from "react"
-
-import { useLocation } from "react-router-dom"
+import React, { Suspense, useState } from "react"
 
 import { Box, Container, Tabs, Tab } from "@mui/material"
 import { Person } from "@mui/icons-material"
@@ -45,37 +43,11 @@ const tabProps = (index) => {
 }
 
 const Settings = () => {
-  const location = useLocation()
-
   const [value, setValue] = useState(0)
-
-  const setNewUrl = (value) => {
-    const searchParams = new URLSearchParams(location.search)
-    searchParams.set("tab", tabsInfo[value].name)
-
-    const newUrl = `${location.pathname}?${searchParams.toString()}`
-    window.history.pushState({}, "", newUrl)
-  }
 
   const handleChange = (_, newValue) => {
     setValue(newValue)
-
-    setNewUrl(newValue)
   }
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search)
-    const tabParam = searchParams.get("tab")
-
-    if (tabParam) {
-      const tabIndex = tabsInfo.findIndex((tab) => tab.name === tabParam)
-      if (tabIndex !== -1) {
-        setValue(tabIndex)
-      }
-    } else {
-      setValue(0)
-    }
-  }, [location.search, tabsInfo])
 
   return (
     <Suspense fallback={<PageLoader />}>
