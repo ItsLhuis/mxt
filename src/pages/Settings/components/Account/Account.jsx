@@ -1,4 +1,8 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
+
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
 
 import { useNavigate } from "react-router-dom"
 
@@ -21,65 +25,63 @@ import { ImagePicker } from "@components/ui"
 
 import toast from "react-hot-toast"
 
+import { formatPhoneNumber } from "@utils/format/phone"
+
+const schema = z.object({
+  username: z.string().trim().min(1, { message: "O nome de utilizador é obrigatório" }),
+  name: z.string().trim().min(1, { message: "O nome é obrigatório" }),
+  email: z
+    .string()
+    .trim()
+    .min(1, { message: "O e-mail é obrigatório" })
+    .email({ message: "O e-mail é inválido" }),
+  phone: z.string().trim().min(1, { message: "O telefone é obrigatório" }),
+  country: z.string().trim().min(1, { message: "O país é obrigatório" }),
+  address: z.string().trim().min(1, { message: "A morada é obrigatória" })
+})
+
 const Account = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue
+  } = useForm({
+    resolver: zodResolver(schema)
+  })
+
   const navigate = useNavigate()
 
   const { showLoader, hideLoader } = useLoader()
 
   const [load, setLoad] = useState(false)
   const [image, setImage] = useState("")
-  const [formData, setFormData] = useState({
-    image: image,
-    username: "Luis Rodrigues",
-    name: "Luis Rodrigues",
-    email: "luisrodrigues@gmail.com",
-    phone: "921 034 943",
-    country: "Portugal",
-    address: "Rua Joaquim António de Aguiar 168 4049-005 Porto",
-    about:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu enim finibus, pretium mauris eu, finibus lorem. In tincidunt leo nisl, quis vehicula mauris vestibulum scelerisque. Nunc tempor placerat libero a efficitur. Nam aliquam, ipsum ut scelerisque aliquam, nunc tellus ultricies sem, a vulputate mi sem quis sapien. Nullam a justo mattis, feugiat tortor at, accumsan nisi. In mollis, dolor eu aliquam auctor, orci sem interdum eros, et gravida libero purus vitae nibh. Mauris vestibulum posuere neque non pulvinar. Duis varius orci nunc, ut imperdiet urna vestibulum consectetur. Ut at fermentum arcu. Aenean in urna a diam scelerisque finibus vel at quam. Sed ut volutpat purus, vitae suscipit magna. Donec in orci scelerisque, sodales massa eget, lobortis magna. In nibh mauris, venenatis eget lacinia quis, auctor quis augue."
-  })
-  const [errors, setErrors] = useState({})
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+  useEffect(() => {
+    const initialValues = {
+      image: image,
+      username: "Luis82716",
+      name: "Luis Rodrigues",
+      email: "luisrodrigues@gmail.com",
+      phone: formatPhoneNumber("921034943"),
+      country: "Portugal",
+      address: "Rua Joaquim António de Aguiar 168 4049-005 Porto",
+      about:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu enim finibus, pretium mauris eu, finibus lorem. In tincidunt leo nisl, quis vehicula mauris vestibulum scelerisque. Nunc tempor placerat libero a efficitur. Nam aliquam, ipsum ut scelerisque aliquam, nunc tellus ultricies sem, a vulputate mi sem quis sapien. Nullam a justo mattis, feugiat tortor at, accumsan nisi. In mollis, dolor eu aliquam auctor, orci sem interdum eros, et gravida libero purus vitae nibh. Mauris vestibulum posuere neque non pulvinar. Duis varius orci nunc, ut imperdiet urna vestibulum consectetur. Ut at fermentum arcu. Aenean in urna a diam scelerisque finibus vel at quam. Sed ut volutpat purus, vitae suscipit magna. Donec in orci scelerisque, sodales massa eget, lobortis magna. In nibh mauris, venenatis eget lacinia quis, auctor quis augue."
+    }
 
-  const notify = () => toast.success("Salvo com sucesso!")
+    Object.keys(initialValues).forEach((key) => setValue(key, initialValues[key]))
+  }, [])
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const onSubmit = (data) => {
+    const newData = { ...data, image: image }
 
     setLoad(true)
-
     setTimeout(() => {
-      const newErrors = {}
-
-      if (!formData.username) {
-        newErrors.username = "O nome de utilizador é obrigatório"
+      console.log(newData)
+      if (Object.keys(errors).length === 0) {
+        toast.success("Salvo com sucesso!")
       }
-      if (!formData.name) {
-        newErrors.name = "O nome é obrigatório"
-      }
-      if (!formData.email) {
-        newErrors.email = "O e-mail é obrigatório"
-      }
-      if (!formData.phone) {
-        newErrors.phone = "O telefone é obrigatório"
-      }
-      if (!formData.country) {
-        newErrors.name = "O país é obrigatório"
-      }
-      if (!formData.address) {
-        newErrors.address = "A morada é obrigatória"
-      }
-
-      setErrors(newErrors)
-
-      if (Object.keys(newErrors).length === 0) {
-        notify()
-      }
-
       setLoad(false)
     }, 1000)
   }
@@ -154,91 +156,72 @@ const Account = () => {
               Conta
             </Typography>
             <Box sx={{ flexGrow: 1 }}>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
                       <TextField
-                        name="username"
-                        value={formData.username}
-                        onChange={handleChange}
+                        {...register("username")}
                         label="Nome de utilizador"
                         error={!!errors.username}
-                        helperText={errors.username}
+                        helperText={errors.username?.message}
                       />
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
                       <TextField
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
+                        {...register("name")}
                         label="Nome"
                         error={!!errors.name}
-                        helperText={errors.name}
+                        helperText={errors.name?.message}
                       />
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
                       <TextField
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
+                        {...register("email")}
                         label="E-mail"
                         error={!!errors.email}
-                        helperText={errors.email}
+                        helperText={errors.email?.message}
                       />
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
                       <TextField
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
+                        {...register("phone")}
                         label="Telemóvel"
                         error={!!errors.phone}
-                        helperText={errors.phone}
+                        helperText={errors.phone?.message}
                       />
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
                       <TextField
-                        name="country"
-                        value={formData.country}
-                        onChange={handleChange}
+                        {...register("country")}
                         label="País"
                         error={!!errors.country}
-                        helperText={errors.country}
+                        helperText={errors.country?.message}
                       />
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
                       <TextField
-                        name="address"
-                        value={formData.address}
-                        onChange={handleChange}
+                        {...register("address")}
                         label="Morada"
                         error={!!errors.address}
-                        helperText={errors.address}
+                        helperText={errors.address?.message}
                       />
                     </FormControl>
                   </Grid>
                   <Grid item xs={12}>
                     <Stack spacing={3} sx={{ alignItems: "flex-end" }}>
                       <FormControl fullWidth>
-                        <TextField
-                          name="about"
-                          value={formData.about}
-                          onChange={handleChange}
-                          label="Sobre"
-                          multiline
-                          rows={5}
-                        />
+                        <TextField {...register("about")} label="Sobre" multiline rows={5} />
                       </FormControl>
                       <LoadingButton loading={load} type="submit" variant="contained">
                         Salvar Alterações

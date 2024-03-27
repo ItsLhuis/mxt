@@ -1,5 +1,9 @@
 import React, { useState } from "react"
 
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+
 import { useNavigate } from "react-router-dom"
 
 import { useLoader } from "@contexts/loaderContext"
@@ -32,7 +36,20 @@ const phrases = [
   "Garanta o sucesso da sua empresa com uma gestão de ativos informáticos eficaz"
 ]
 
+const schema = z.object({
+  username: z.string().trim().min(1, { message: "O nome de utilizador é obrigatório" }),
+  password: z.string().trim().min(1, { message: "A senha é obrigatória" })
+})
+
 const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    resolver: zodResolver(schema)
+  })
+
   const navigate = useNavigate()
 
   const { showLoader } = useLoader()
@@ -40,39 +57,17 @@ const Login = () => {
   const isLargeScreen = useMediaQuery(useTheme().breakpoints.down("lg"))
 
   const [load, setLoad] = useState(false)
-  const [formData, setFormData] = useState({
-    username: "",
-    password: ""
-  })
-  const [errors, setErrors] = useState({})
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-
+  const onSubmit = (data) => {
     setLoad(true)
 
     setTimeout(() => {
-      const newErrors = {}
-      if (!formData.username) {
-        newErrors.username = "O nome de utilizador é obrigatório"
-      }
-      if (!formData.password) {
-        newErrors.password = "A senha é obrigatória"
-      }
-      setErrors(newErrors)
-
-      if (Object.keys(newErrors).length === 0) {
+      if (Object.keys(errors).length === 0) {
         showLoader()
-
         setTimeout(() => {
           navigate("/")
         }, 300)
       }
-
       setLoad(false)
     }, 1000)
   }
@@ -137,28 +132,23 @@ const Login = () => {
               </Typography>
             </ListItemText>
           </Stack>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Stack sx={{ gap: 2 }}>
               <FormControl fullWidth>
                 <TextField
-                  name="username"
-                  type="text"
-                  value={formData.username}
-                  onChange={handleChange}
+                  {...register("username")}
                   label="Nome de utilizador"
                   error={!!errors.username}
-                  helperText={errors.username}
+                  helperText={errors.username?.message}
                 />
               </FormControl>
               <FormControl fullWidth>
                 <TextField
-                  name="password"
+                  {...register("password")}
                   type="password"
-                  value={formData.password}
-                  onChange={handleChange}
                   label="Senha"
                   error={!!errors.password}
-                  helperText={errors.password}
+                  helperText={errors.password?.message}
                 />
               </FormControl>
               <Link
