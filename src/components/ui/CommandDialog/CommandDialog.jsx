@@ -9,10 +9,11 @@ import {
   IconButton,
   Tooltip,
   TextField,
-  ButtonBase,
+  Button,
   Chip,
   Typography,
   Box,
+  Stack,
   Divider,
   useTheme,
   useMediaQuery
@@ -388,63 +389,67 @@ const CommandDialog = ({ open, handleClose }) => {
             </Box>
           </Box>
         ) : (
-          searchResults.map((item, index) => (
-            <ButtonBase
-              key={index}
-              onClick={() => {
-                navigate(item.link)
-                handleClose()
-              }}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "flex-start",
-                padding: 2,
-                width: "100%",
-                bgcolor: "var(--elevation-level1)",
-                border: 2,
-                borderColor: "var(--elevation-level1)",
-                borderRadius: 2,
-                marginTop: index === 0 ? 0 : 1,
-                "&:hover": {
-                  bgcolor: "var(--elevation-level4)",
-                  borderColor: "var(--primary)"
-                }
-              }}
-            >
-              <Box display="flex" alignItems="center" gap={1}>
-                {item.icon}
-                <Box display="flex" flexDirection="column" sx={{ marginBottom: 1 }}>
-                  <Typography variant="h6" textAlign="left">
-                    {item.label}
-                  </Typography>
-                  {item.description && (
-                    <Typography variant="p" component="p" textAlign="left" color="var(--outline)">
-                      {item.description}
-                    </Typography>
-                  )}
-                </Box>
-              </Box>
-              {item.link && (
-                <Typography variant="body2" component="p" color="var(--primary)">
-                  {item.link}
-                </Typography>
-              )}
-              <Box
-                display="flex"
-                flexWrap="wrap"
-                justifyContent="flex-start"
-                marginLeft="auto"
-                marginTop={1}
-                gap={0.5}
+          <Stack sx={{ gap: 1 }}>
+            {searchResults.map((item, index) => (
+              <Button
+                key={index}
+                onClick={() => {
+                  navigate(item.link)
+                  handleClose()
+                }}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "flex-start",
+                  padding: "16px !important",
+                  width: "100%",
+                  backgroundColor: "var(--elevation-level1)",
+                  border: 2,
+                  borderColor: "var(--elevation-level1)",
+                  borderRadius: 2,
+                  color: "var(--onSurface)",
+                  lineHeight: 1.5,
+                  fontWeight: 400,
+                  "&:hover": {
+                    backgroundColor: "var(--elevation-level4)",
+                    borderColor: "var(--primary)"
+                  }
+                }}
               >
-                {item.section && <Chip label={item.section} />}
-                {item.subSection && <Chip label={item.subSection} />}
-                {item.subSubSection && <Chip label={item.subSubSection} />}
-              </Box>
-            </ButtonBase>
-          ))
+                <Box display="flex" alignItems="center" gap={1}>
+                  {item.icon}
+                  <Box display="flex" flexDirection="column" sx={{ marginBottom: 1 }}>
+                    <Typography variant="h6" textAlign="left">
+                      {item.label}
+                    </Typography>
+                    {item.description && (
+                      <Typography variant="p" component="p" textAlign="left" color="var(--outline)">
+                        {item.description}
+                      </Typography>
+                    )}
+                  </Box>
+                </Box>
+                {item.link && (
+                  <Typography variant="body2" component="p" color="var(--primary)">
+                    {item.link}
+                  </Typography>
+                )}
+                <Box
+                  display="flex"
+                  flexWrap="wrap"
+                  justifyContent="flex-start"
+                  marginLeft="auto"
+                  marginTop={1}
+                  gap={0.5}
+                >
+                  {item.section && <Chip label={item.section} />}
+                  {item.subSection && <Chip label={item.subSection} />}
+                  {item.subSubSection && <Chip label={item.subSubSection} />}
+                </Box>
+              </Button>
+            ))}
+          </Stack>
         )}
       </Box>
     </Dialog>
