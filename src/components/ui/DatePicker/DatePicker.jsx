@@ -5,8 +5,17 @@ import { KeyboardArrowDown } from "@mui/icons-material"
 
 const DatePicker = (props) => {
   const { minDate, maxDate, value } = props
-  const isBeforeMinDate = minDate && value && value < minDate
-  const isAfterMaxDate = maxDate && value && value > maxDate
+
+  const stripTime = (date) => {
+    return date ? new Date(date.getFullYear(), date.getMonth(), date.getDate()) : null
+  }
+
+  const strippedValue = stripTime(value)
+  const strippedMinDate = stripTime(minDate)
+  const strippedMaxDate = stripTime(maxDate)
+
+  const isBeforeMinDate = strippedMinDate && strippedValue && strippedValue < strippedMinDate
+  const isAfterMaxDate = strippedMaxDate && strippedValue && strippedValue > strippedMaxDate
 
   return (
     <>
