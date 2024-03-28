@@ -13,7 +13,7 @@ const LottieAnimation = {
   light: LottieAnimationLight
 }
 
-const NoData = () => {
+const NoData = ({ error }) => {
   const { dataTheme } = useTheme()
 
   return (
@@ -21,6 +21,8 @@ const NoData = () => {
       sx={{
         justifyContent: "center",
         alignItems: "center",
+        border: 2,
+        borderColor: error ? "rgb(211, 47, 47) !important" : "var(--elevation-level2)",
         backgroundColor: "var(--elevation-level2)",
         borderRadius: 2,
         padding: 3,
