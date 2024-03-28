@@ -5,6 +5,7 @@ import React, { useState, useEffect, memo } from "react"
 import {
   Box,
   Typography,
+  FormHelperText,
   Collapse,
   IconButton,
   Table as MuiTable,
@@ -49,7 +50,7 @@ const stableSort = (array, comparator) => {
   return stabilizedThis.map((el) => el[0])
 }
 
-const Table = ({ columns, data, mode, actions }) => {
+const Table = ({ columns, data, mode, actions, error, helperText }) => {
   const [order, setOrder] = useState("asc")
   const [orderBy, setOrderBy] = useState("")
 
@@ -199,14 +200,14 @@ const Table = ({ columns, data, mode, actions }) => {
               }}
             >
               {actions.map((action, index) => (
-                <Tooltip key={index} title={action.tooltip} placement="bottom">
+                <Tooltip key={index} title={action.tooltip}>
                   <IconButton
-                    onClick={() => action.onClick()}
-                    sx={{
-                      "&:hover": {
-                        backgroundColor: "transparent !important"
-                      }
+                    onClick={() => {
+                      const selectedRows = data.filter((row) => selected.includes(row.id))
+                      action.onClick(selectedRows)
+                      setSelected([])
                     }}
+                    sx={{ color: "white" }}
                   >
                     {action.icon}
                   </IconButton>
@@ -372,7 +373,7 @@ const Table = ({ columns, data, mode, actions }) => {
                   colSpan={mode === "normal" ? columns.length + 1 : columns.length + 2}
                   sx={{ padding: 3, paddingBottom: 0 }}
                 >
-                  <NoData />
+                  <NoData error={error}/>
                 </TableCell>
               </TableRow>
             )}
@@ -420,6 +421,11 @@ const Table = ({ columns, data, mode, actions }) => {
             }}
           />
         </Box>
+      )}
+      {error && (
+        <FormHelperText sx={{ marginLeft: 3, marginTop: 1, color: error && "rgb(211, 47, 47)" }}>
+          {helperText}
+        </FormHelperText>
       )}
     </Box>
   )
