@@ -2,7 +2,7 @@ import PropTypes from "prop-types"
 
 import React, { useState } from "react"
 
-import { ButtonBase, Box, ListItemText, Typography, Popover } from "@mui/material"
+import { Button, Box, ListItemText, Typography, Popover } from "@mui/material"
 import { KeyboardArrowUp } from "@mui/icons-material"
 
 const ButtonDropDownSelect = ({
@@ -29,19 +29,20 @@ const ButtonDropDownSelect = ({
   return (
     <>
       {mode === "normal" ? (
-        <ButtonBase
+        <Button
           sx={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "flex-start",
-            padding: "8px 14px",
-            paddingRight: "8px",
+            padding: "8px 14px !important",
+            paddingRight: "8px !important",
             width: "100%",
-            bgcolor: "var(--elevation-level3)",
+            backgroundColor: "var(--elevation-level3)",
             borderRadius: 2,
+            color: "var(--onSurface)",
             "&:hover": {
-              bgcolor: "var(--elevation-level5)"
+              backgroundColor: "var(--elevation-level5)"
             }
           }}
           onClick={handleClick}
@@ -56,22 +57,22 @@ const ButtonDropDownSelect = ({
               className={`arrow-but-drop-down ${open && "__arrow-but-drop-down__rotate"}`}
             />
           </Box>
-        </ButtonBase>
+        </Button>
       ) : (
         <>
           {mode === "advanced" ? (
-            <ButtonBase
+            <Button
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "flex-start",
-                padding: 2,
                 width: "100%",
-                bgcolor: "var(--elevation-level3)",
+                backgroundColor: "var(--elevation-level3)",
                 borderRadius: 2,
+                color: "var(--onSurface)",
                 "&:hover": {
-                  bgcolor: "var(--elevation-level5)"
+                  backgroundColor: "var(--elevation-level5)"
                 }
               }}
               onClick={handleClick}
@@ -82,7 +83,8 @@ const ButtonDropDownSelect = ({
                   alignItems: "center",
                   justifyContent: "space-between",
                   width: "100%",
-                  gap: 2
+                  gap: 2,
+                  padding: 1
                 }}
               >
                 <ListItemText>
@@ -105,9 +107,7 @@ const ButtonDropDownSelect = ({
                   {description && (
                     <Typography
                       variant="body3"
-                      textAlign="left"
-                      color="var(--outline)"
-                      fontWeight={500}
+                      sx={{ textAlign: "left", color: "var(--outline)", fontWeight: 500 }}
                     >
                       {description}
                     </Typography>
@@ -117,7 +117,7 @@ const ButtonDropDownSelect = ({
                   />
                 </Box>
               </Box>
-            </ButtonBase>
+            </Button>
           ) : (
             <>{mode === "custom" && <Box onClick={handleClick}>{customButton}</Box>}</>
           )}

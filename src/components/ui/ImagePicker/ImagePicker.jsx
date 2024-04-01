@@ -97,7 +97,7 @@ const ImagePicker = ({ image, setImage, alt, size = [120, 120], sx }) => {
             transition: "opacity 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
           }}
         >
-          <PhotoCamera fontSize="large" />
+          <PhotoCamera fontSize="large" sx={{ color: "rgb(228, 225, 230)" }} />
           <Typography
             variant="p"
             component="p"
