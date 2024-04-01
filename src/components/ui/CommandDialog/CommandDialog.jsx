@@ -9,6 +9,7 @@ import {
   IconButton,
   Tooltip,
   TextField,
+  InputAdornment,
   Button,
   Chip,
   Typography,
@@ -19,6 +20,7 @@ import {
   useMediaQuery
 } from "@mui/material"
 import {
+  Search,
   Dashboard,
   Person,
   AppsOutlined,
@@ -32,6 +34,8 @@ import {
   Settings,
   Close
 } from "@mui/icons-material"
+
+import { NoData } from ".."
 
 const CommandDialog = ({ open, handleClose }) => {
   const navigate = useNavigate()
@@ -334,18 +338,26 @@ const CommandDialog = ({ open, handleClose }) => {
       fullScreen={fullScreen}
       sx={{ "& .MuiPaper-root": { borderRadius: fullScreen && "0 !important" } }}
     >
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <TextField
           inputRef={inputRef}
-          label="O que procura?"
-          sx={{ margin: "1rem", marginRight: 0, width: "100%" }}
+          label="Pesquisar"
+          placeholder="O que procura?"
+          sx={{ margin: 2, marginRight: 0, width: "100%" }}
           value={text}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           autoComplete="off"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search />
+              </InputAdornment>
+            )
+          }}
         />
         <Tooltip title="Fechar" placement="bottom">
-          <IconButton aria-label="close" onClick={handleClose} sx={{ margin: "1rem" }}>
+          <IconButton aria-label="close" onClick={handleClose} sx={{ margin: 2, marginRight: 3 }}>
             <Close />
           </IconButton>
         </Tooltip>
@@ -356,17 +368,16 @@ const CommandDialog = ({ open, handleClose }) => {
           borderWidth: 1
         }}
       />
-      <Box overflow="auto" sx={{ padding: "1rem", height: "100%" }}>
+      <Box overflow="auto" sx={{ padding: 2, height: "100%" }}>
         {searchResults.length === 0 ? (
           <Box
             sx={{
-              marginTop: "2rem",
-              textAlign: "center",
-              gap: "16px",
-              height: "200px"
+              marginTop: 1,
+              textAlign: "center"
             }}
           >
-            <Typography variant="h4" component="h4" sx={{ marginBottom: "16px" }}>
+            <NoData onlyLottie />
+            <Typography variant="h4" component="h4" sx={{ marginBottom: 3 }}>
               Nada Econtrado!
             </Typography>
             <Box
@@ -375,7 +386,7 @@ const CommandDialog = ({ open, handleClose }) => {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                gap: "8px"
+                gap: 1
               }}
             >
               <Box sx={{ display: "flex", flexDirection: "row" }}>
@@ -383,7 +394,7 @@ const CommandDialog = ({ open, handleClose }) => {
                   {"Não foram encontrados resultados para"} &nbsp;"{<strong>{text}</strong>}"
                 </Typography>
               </Box>
-              <Typography variant="p" component="p" marginBottom="2rem">
+              <Typography variant="p" component="p" sx={{ marginBottom: 4 }}>
                 Tente verificar erros de digitação ou usar palavras completas.
               </Typography>
             </Box>
@@ -417,9 +428,9 @@ const CommandDialog = ({ open, handleClose }) => {
                   }
                 }}
               >
-                <Box display="flex" alignItems="center" gap={1}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   {item.icon}
-                  <Box display="flex" flexDirection="column" sx={{ marginBottom: 1 }}>
+                  <Box sx={{ display: "flex", flexDirection: "column", marginBottom: 1 }}>
                     <Typography variant="h6" textAlign="left">
                       {item.label}
                     </Typography>
@@ -436,12 +447,14 @@ const CommandDialog = ({ open, handleClose }) => {
                   </Typography>
                 )}
                 <Box
-                  display="flex"
-                  flexWrap="wrap"
-                  justifyContent="flex-start"
-                  marginLeft="auto"
-                  marginTop={1}
-                  gap={0.5}
+                  sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "flex-start",
+                    marginLeft: "auto",
+                    marginTop: 1,
+                    gap: 0.5
+                  }}
                 >
                   {item.section && <Chip label={item.section} />}
                   {item.subSection && <Chip label={item.subSection} />}
