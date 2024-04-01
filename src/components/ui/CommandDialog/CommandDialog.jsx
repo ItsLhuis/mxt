@@ -368,7 +368,7 @@ const CommandDialog = ({ open, handleClose }) => {
           borderWidth: 1
         }}
       />
-      <Box overflow="auto" sx={{ padding: 2, height: "100%" }}>
+      <Box sx={{ overflow: "auto", padding: 2, height: "100%" }}>
         {searchResults.length === 0 ? (
           <Box
             sx={{
