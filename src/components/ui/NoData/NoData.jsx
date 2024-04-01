@@ -13,30 +13,41 @@ const LottieAnimation = {
   light: LottieAnimationLight
 }
 
-const NoData = ({ error }) => {
+const NoData = ({ error, onlyLottie }) => {
   const { dataTheme } = useTheme()
 
   return (
-    <Stack
-      sx={{
-        justifyContent: "center",
-        alignItems: "center",
-        border: 2,
-        borderColor: error ? "rgb(211, 47, 47) !important" : "var(--elevation-level2)",
-        backgroundColor: "var(--elevation-level2)",
-        borderRadius: 2,
-        padding: 3,
-        paddingBottom: 5,
-        color: "var(--outline)",
-        textTransform: "uppercase"
-      }}
-    >
-      <Lottie animationData={LottieAnimation[dataTheme]} style={{ height: 300 }} />
-      <Typography variant="h6" component="h6" fontWeight={600}>
-        Oops! Nenhuma informação encontrada!
-      </Typography>
-    </Stack>
+    <>
+      {onlyLottie ? (
+        <Lottie animationData={LottieAnimation[dataTheme]} style={{ height: 100 }} />
+      ) : (
+        <Stack
+          sx={{
+            justifyContent: "center",
+            alignItems: "center",
+            border: 2,
+            borderColor: error ? "rgb(211, 47, 47) !important" : "var(--elevation-level2)",
+            backgroundColor: "var(--elevation-level2)",
+            borderRadius: 2,
+            padding: 3,
+            paddingBottom: 5,
+            color: "var(--outline)",
+            textTransform: "uppercase"
+          }}
+        >
+          <Lottie animationData={LottieAnimation[dataTheme]} style={{ height: 200 }} />
+          <Typography variant="h6" component="h6" fontWeight={600}>
+            Oops! Nenhuma informação encontrada!
+          </Typography>
+        </Stack>
+      )}
+    </>
   )
+}
+
+NoData.propTypes = {
+  error: PropTypes.bool,
+  onlyLottie: PropTypes.bool
 }
 
 export default NoData
