@@ -343,7 +343,7 @@ const CommandDialog = ({ open, handleClose }) => {
           inputRef={inputRef}
           label="Pesquisar"
           placeholder="O que procura?"
-          sx={{ margin: 2, marginRight: 0, width: "100%" }}
+          sx={{ margin: 3, marginRight: 0, width: "100%" }}
           value={text}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
@@ -368,7 +368,7 @@ const CommandDialog = ({ open, handleClose }) => {
           borderWidth: 1
         }}
       />
-      <Box sx={{ overflow: "auto", padding: 2, height: "100%" }}>
+      <Box sx={{ overflow: "auto", padding: 3, height: "100%" }}>
         {searchResults.length === 0 ? (
           <Box
             sx={{
