@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"
+
 import React from "react"
 
 import { Tooltip, tooltipClasses } from "@mui/material"
@@ -22,6 +24,10 @@ const Caption = ({ title }) => {
       <Info sx={{ color: "var(--outline)" }} fontSize="inherit" />
     </Tooltip>
   )
+}
+
+Caption.propTypes = {
+  title: PropTypes.string.isRequired
 }
 
 export default Caption
