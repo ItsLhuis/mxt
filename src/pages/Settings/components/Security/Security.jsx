@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect, useRef } from "react"
 
 import {
   Paper,
@@ -18,11 +18,17 @@ import toast from "react-hot-toast"
 const Security = () => {
   const [open, setOpen] = useState(false)
 
-  const handleClose = () => {
-    setOpen(false)
-  }
+  const currentPasswordRef = useRef(null)
 
-  const notify = () => toast.success("Senha alterada com sucesso!")
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (open && currentPasswordRef.current) {
+        currentPasswordRef.current.focus()
+      }
+    }, 100)
+
+    return () => clearTimeout(timer)
+  }, [open])
 
   return (
     <>
@@ -58,14 +64,14 @@ const Security = () => {
       </Paper>
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={() => setOpen(false)}
         mode="form"
         title="Alterar Senha"
         submitButtonText="Alterar Senha"
         onSubmit={() => {
           return new Promise((resolve, reject) => {
             setTimeout(() => {
-              notify()
+              toast.success("Senha alterada com sucesso!")
               resolve(true)
             }, 1000)
           })
@@ -73,7 +79,12 @@ const Security = () => {
       >
         <Stack sx={{ padding: 3, gap: 2 }}>
           <FormControl fullWidth>
-            <TextField name="currentPassword" type="password" label="Senha atual" />
+            <TextField
+              inputRef={currentPasswordRef}
+              name="currentPassword"
+              type="password"
+              label="Senha atual"
+            />
           </FormControl>
           <FormControl fullWidth>
             <TextField name="newPassword" type="password" label="Nova senha" />
