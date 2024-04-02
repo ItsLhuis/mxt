@@ -204,10 +204,14 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
                   <IconButton
                     onClick={() => {
                       const selectedRows = data.filter((row) => selected.includes(row.id))
-                      action.onClick(selectedRows)
-                      setSelected([])
+                      action.onClick(selectedRows, () => setSelected([]))
                     }}
-                    sx={{ color: "white" }}
+                    sx={{
+                      color: "white",
+                      "&:hover": {
+                        backgroundColor: "transparent !important"
+                      }
+                    }}
                   >
                     {action.icon}
                   </IconButton>
@@ -236,7 +240,14 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
           }}
           aria-label="table"
         >
-          <TableHead sx={{ backgroundColor: "var(--elevation-level3)" }}>
+          <TableHead
+            sx={{
+              backgroundColor: "var(--elevation-level3)",
+              "& .MuiTableCell-root": {
+                border: "none"
+              }
+            }}
+          >
             <TableRow>
               {mode === "datatable" && data.length !== 0 && (
                 <TableCell padding="checkbox" sx={{ paddingLeft: 2 }}>
@@ -373,7 +384,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
                   colSpan={mode === "normal" ? columns.length + 1 : columns.length + 2}
                   sx={{ padding: 3, paddingBottom: 0 }}
                 >
-                  <NoData error={error}/>
+                  <NoData error={error} />
                 </TableCell>
               </TableRow>
             )}
