@@ -50,8 +50,10 @@ const Modal = ({
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoad(true)
+
     try {
       const result = await onSubmit()
+
       setLoad(false)
       if (result) {
         onClose()
@@ -89,7 +91,7 @@ const Modal = ({
               {!title ? "Eliminar" : title}
             </Typography>
             <Tooltip title="Fechar" placement="bottom">
-              <IconButton aria-label="close" onClick={onClose}>
+              <IconButton aria-label="close" onClick={handleClose}>
                 <Close />
               </IconButton>
             </Tooltip>
@@ -277,7 +279,7 @@ const Modal = ({
                 {title}
               </Typography>
               <Tooltip title="Fechar" placement="bottom">
-                <IconButton aria-label="close" onClick={onClose}>
+                <IconButton aria-label="close" onClick={handleClose}>
                   <Close />
                 </IconButton>
               </Tooltip>
@@ -373,7 +375,7 @@ const Modal = ({
               {title}
             </Typography>
             <Tooltip title="Fechar" placement="bottom">
-              <IconButton aria-label="close" onClick={onClose}>
+              <IconButton aria-label="close" onClick={handleClose}>
                 <Close />
               </IconButton>
             </Tooltip>
@@ -392,7 +394,7 @@ const Modal = ({
 
   return (
     <Dialog
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       fullScreen={fullScreen}
       disableEscapeKeyDown={load}
