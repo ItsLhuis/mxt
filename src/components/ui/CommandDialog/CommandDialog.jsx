@@ -390,7 +390,11 @@ const CommandDialog = ({ open, handleClose }) => {
               }}
             >
               <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Typography variant="p" component="p" sx={{ wordWrap: "break-word" }}>
+                <Typography
+                  variant="p"
+                  component="p"
+                  sx={{ wordWrap: "break-word", overflowWrap: "anywhere" }}
+                >
                   {"Não foram encontrados resultados para"} &nbsp;"{<strong>{text}</strong>}"
                 </Typography>
               </Box>
