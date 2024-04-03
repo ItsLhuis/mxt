@@ -64,9 +64,21 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
   useEffect(() => {
     const defaultOptions = [5, 10, 15, 25, 50, 100]
 
+    let newRowsPerPage = rowsPerPage
+
     if (data.length <= defaultOptions[defaultOptions.length - 1]) {
       const filteredOptions = defaultOptions.filter((option) => option <= data.length)
       setRowsPerPageOptions(filteredOptions)
+
+      if (filteredOptions.length === 0) {
+        setRowsPerPage(5)
+        return
+      }
+
+      if (!filteredOptions.includes(rowsPerPage)) {
+        newRowsPerPage = filteredOptions[filteredOptions.length - 1]
+        setRowsPerPage(newRowsPerPage)
+      }
     } else {
       setRowsPerPageOptions(defaultOptions)
     }
@@ -113,34 +125,35 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = data.map((n) => n.id)
+      const newSelected = [...data]
       setSelected(newSelected)
       return
     }
     setSelected([])
   }
 
-  const handleClick = (event, id) => {
-    const selectedIndex = selected.indexOf(id)
+  const handleClick = (event, row) => {
+    const selectedIndex = selected.findIndex((item) => item.id === row.id)
     let newSelected = []
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id)
+      newSelected = [...selected, row]
     } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1))
+      newSelected = selected.slice(1)
     } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1))
+      newSelected = selected.slice(0, -1)
     } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      )
+      newSelected = [...selected.slice(0, selectedIndex), ...selected.slice(selectedIndex + 1)]
     }
     setSelected(newSelected)
   }
 
+  const handleActionClick = (action) => {
+    action.onClick(selected, () => setSelected([]))
+  }
+
   const hasSelectedRows = selected.length > 0
-  const isSelected = (id) => selected.indexOf(id) !== -1
+  const isSelected = (id) => selected.some((item) => item.id === id)
 
   const sortedData = stableSort(data, getComparator(order, orderBy))
   const hasExpandableContent = data.some((item) => item.expandableContent)
@@ -202,10 +215,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
               {actions.map((action, index) => (
                 <Tooltip key={index} title={action.tooltip}>
                   <IconButton
-                    onClick={() => {
-                      const selectedRows = data.filter((row) => selected.includes(row.id))
-                      action.onClick(selectedRows, () => setSelected([]))
-                    }}
+                    onClick={() => handleActionClick(action)}
                     sx={{
                       color: "white",
                       "&:hover": {
@@ -309,7 +319,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
                           <Checkbox
                             color="primary"
                             checked={isSelected(row.id)}
-                            onChange={(event) => handleClick(event, row.id)}
+                            onChange={(event) => handleClick(event, row)}
                           />
                         </TableCell>
                       )}
@@ -392,7 +402,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
         </MuiTable>
       </TableContainer>
       {mode === "datatable" && data.length !== 0 && (
-        <Box sx={{ padding: 2, borderTop: "1px solid var(--elevation-level5)" }}>
+        <Box sx={{ padding: 2, paddingBottom: 0, borderTop: "1px solid var(--elevation-level5)" }}>
           <TablePagination
             labelRowsPerPage="Linhas por página"
             labelDisplayedRows={({ from, to, count }) => {
@@ -405,6 +415,8 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
+            showLastButton
+            showFirstButton
             slotProps={{
               select: {
                 IconComponent: KeyboardArrowDown,
