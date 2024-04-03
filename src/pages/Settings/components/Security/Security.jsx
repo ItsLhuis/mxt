@@ -13,7 +13,7 @@ import {
 
 import { Modal } from "@components/ui"
 
-import toast from "react-hot-toast"
+import { showSuccessToast } from "@config/toast"
 
 const Security = () => {
   const [open, setOpen] = useState(false)
@@ -71,7 +71,7 @@ const Security = () => {
         onSubmit={() => {
           return new Promise((resolve, reject) => {
             setTimeout(() => {
-              toast.success("Senha alterada com sucesso!")
+              showSuccessToast("Senha alterada com sucesso!")
               resolve(true)
             }, 1000)
           })
