@@ -141,7 +141,9 @@ function App() {
                     color: "var(--onSurface)",
                     fontWeight: 600,
                     fontSize: ".875rem",
-                    padding: "16px"
+                    padding: 0,
+                    paddingLeft: 20,
+                    paddingBlock: 8
                   }
                 }}
               />
