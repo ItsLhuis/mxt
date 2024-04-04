@@ -59,7 +59,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [rowsPerPageOptions, setRowsPerPageOptions] = useState([])
-  const [selected, setSelected] = useState([])
+  const [selected, setSelected] = useState(new Set())
 
   useEffect(() => {
     const defaultOptions = [5, 10, 15, 25, 50, 100]
@@ -84,20 +84,12 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
     }
   }, [data])
 
-  const getSelectedText = (selected) => {
-    if (selected === 1) {
-      return "item selecionado"
-    } else {
-      return "itens selecionados"
-    }
+  const getSelectedText = (selectedSize) => {
+    return selectedSize === 1 ? "item selecionado" : "itens selecionados"
   }
 
-  const getDataCountText = (count) => {
-    if (count === 1) {
-      return "resultado encontrado"
-    } else {
-      return "resultados encontrados"
-    }
+  const getDataCountText = (dataSize) => {
+    return dataSize === 1 ? "resultado encontrado" : "resultados encontrados"
   }
 
   const handleSort = (columnId) => {
@@ -125,35 +117,29 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = [...data]
+      const newSelected = new Set(data.map((item) => item.id))
       setSelected(newSelected)
       return
     }
-    setSelected([])
+    setSelected(new Set())
   }
 
   const handleClick = (event, row) => {
-    const selectedIndex = selected.findIndex((item) => item.id === row.id)
-    let newSelected = []
-
-    if (selectedIndex === -1) {
-      newSelected = [...selected, row]
-    } else if (selectedIndex === 0) {
-      newSelected = selected.slice(1)
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = selected.slice(0, -1)
-    } else if (selectedIndex > 0) {
-      newSelected = [...selected.slice(0, selectedIndex), ...selected.slice(selectedIndex + 1)]
+    const newSelected = new Set(selected)
+    if (selected.has(row.id)) {
+      newSelected.delete(row.id)
+    } else {
+      newSelected.add(row.id)
     }
     setSelected(newSelected)
   }
 
   const handleActionClick = (action) => {
-    action.onClick(selected, () => setSelected([]))
+    action.onClick(Array.from(selected), () => setSelected(new Set()))
   }
 
-  const hasSelectedRows = selected.length > 0
-  const isSelected = (id) => selected.some((item) => item.id === id)
+  const hasSelectedRows = selected.size > 0
+  const isSelected = (id) => selected.has(id)
 
   const sortedData = stableSort(data, getComparator(order, orderBy))
   const hasExpandableContent = data.some((item) => item.expandableContent)
@@ -172,7 +158,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
             flexDirection: "row",
             alignItems: "center",
             backgroundColor: "var(--primary)",
-            height: 57,
+            height: 56,
             width: "100%",
             position: "absolute",
             zIndex: 1
@@ -180,8 +166,8 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
         >
           <Box padding="checkbox" sx={{ paddingLeft: 2, border: "none" }}>
             <Checkbox
-              indeterminate={selected.length > 0 && selected.length < data.length}
-              checked={data.length > 0 && selected.length === data.length}
+              indeterminate={selected.size > 0 && selected.size < data.length}
+              checked={data.length > 0 && selected.size === data.length}
               onChange={handleSelectAllClick}
               sx={{
                 "& .MuiSvgIcon-root": {
@@ -196,7 +182,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
               component="p"
               sx={{ fontWeight: 600, color: "rgb(228, 225, 230)" }}
             >
-              {selected.length} {getSelectedText(selected.length)}
+              {selected.size} {getSelectedText(selected.size)}
             </Typography>
           </Box>
           {actions && (
@@ -262,8 +248,8 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
               {mode === "datatable" && data.length !== 0 && (
                 <TableCell padding="checkbox" sx={{ paddingLeft: 2 }}>
                   <Checkbox
-                    indeterminate={selected.length > 0 && selected.length < data.length}
-                    checked={data.length > 0 && selected.length === data.length}
+                    indeterminate={selected.size > 0 && selected.size < data.length}
+                    checked={data.length > 0 && selected.size === data.length}
                     onChange={handleSelectAllClick}
                   />
                 </TableCell>
