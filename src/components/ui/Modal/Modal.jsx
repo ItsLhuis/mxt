@@ -15,12 +15,15 @@ import {
   Typography,
   Button,
   Pagination,
+  PaginationItem,
   useTheme,
   useMediaQuery
 } from "@mui/material"
 import { Close, Search } from "@mui/icons-material"
 
 import { NoData } from ".."
+
+import { formatNumber } from "@utils/format/number"
 
 const Modal = ({
   open,
@@ -63,12 +66,8 @@ const Modal = ({
     }
   }
 
-  const getDataCountText = (count) => {
-    if (count === 1) {
-      return "resultado encontrado"
-    } else {
-      return "resultados encontrados"
-    }
+  const getDataCountText = (dataSize) => {
+    return dataSize === 1 ? "resultado encontrado" : "resultados encontrados"
   }
 
   let content
@@ -255,7 +254,7 @@ const Modal = ({
 
       useEffect(() => {
         filterData()
-      }, [text, currentPage])
+      }, [open, text, currentPage])
 
       const totalPages = Math.ceil(filteredData.length / pageSize)
       const startIndex = (currentPage - 1) * pageSize
@@ -303,7 +302,7 @@ const Modal = ({
                 }}
               />
               <Typography variant="p" component="p" sx={{ marginTop: 2 }}>
-                <b>{filteredData.length}</b> {getDataCountText(filteredData.length)}
+                <b>{formatNumber(filteredData.length)}</b> {getDataCountText(filteredData.length)}
               </Typography>
             </Stack>
           </Stack>
@@ -351,6 +350,9 @@ const Modal = ({
                   showFirstButton={!fullScreen}
                   showLastButton={!fullScreen}
                   siblingCount={fullScreen ? 0 : undefined}
+                  renderItem={(props) => (
+                    <PaginationItem {...props} page={formatNumber(props.page)} />
+                  )}
                 />
               </Box>
             </>
