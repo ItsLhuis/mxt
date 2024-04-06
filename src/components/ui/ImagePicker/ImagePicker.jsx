@@ -90,7 +90,7 @@ const ImagePicker = ({ image, setImage, alt, size = [120, 120], sx }) => {
             justifyContent: "center",
             alignItems: "center",
             textAlign: "center",
-            color: "white",
+            color: "rgb(228, 225, 230)",
             borderRadius: "50%",
             cursor: "pointer",
             margin: 1,
