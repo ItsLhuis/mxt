@@ -1,6 +1,8 @@
 import PropTypes from "prop-types"
 
-import React, { useState, useEffect, memo } from "react"
+import React, { useState, useEffect } from "react"
+
+import { produce } from "immer"
 
 import {
   Box,
@@ -23,6 +25,8 @@ import {
 import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material"
 
 import { NoData } from "../"
+
+import { formatNumber } from "@utils/format/number"
 
 const descendingComparator = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {
@@ -50,105 +54,151 @@ const stableSort = (array, comparator) => {
   return stabilizedThis.map((el) => el[0])
 }
 
+const getSelectedText = (selectedSize) => {
+  return selectedSize === 1 ? "item selecionado" : "itens selecionados"
+}
+
+const getDataCountText = (dataSize) => {
+  return dataSize === 1 ? "resultado encontrado" : "resultados encontrados"
+}
+
 const Table = ({ columns, data, mode, actions, error, helperText }) => {
-  const [order, setOrder] = useState("asc")
-  const [orderBy, setOrderBy] = useState("")
-
-  const [openRows, setOpenRows] = useState([])
-
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(5)
-  const [rowsPerPageOptions, setRowsPerPageOptions] = useState([])
-  const [selected, setSelected] = useState(new Set())
+  const [state, setState] = useState({
+    order: "asc",
+    orderBy: "",
+    openRows: new Set(),
+    page: 0,
+    rowsPerPage: 5,
+    rowsPerPageOptions: [],
+    selected: new Set()
+  })
 
   useEffect(() => {
-    const defaultOptions = [5, 10, 15, 25, 50, 100]
+    const defaultOptions = [5, 10, 15, 25, 50]
 
-    let newRowsPerPage = rowsPerPage
+    let newRowsPerPage = state.rowsPerPage
 
     if (data.length <= defaultOptions[defaultOptions.length - 1]) {
       const filteredOptions = defaultOptions.filter((option) => option <= data.length)
-      setRowsPerPageOptions(filteredOptions)
+      setState(
+        produce((draft) => {
+          draft.rowsPerPageOptions = filteredOptions
 
-      if (filteredOptions.length === 0) {
-        setRowsPerPage(5)
-        return
-      }
+          if (filteredOptions.length === 0) {
+            draft.rowsPerPage = 5
+            return
+          }
 
-      if (!filteredOptions.includes(rowsPerPage)) {
-        newRowsPerPage = filteredOptions[filteredOptions.length - 1]
-        setRowsPerPage(newRowsPerPage)
-      }
+          if (!filteredOptions.includes(state.rowsPerPage)) {
+            newRowsPerPage = filteredOptions[filteredOptions.length - 1]
+            draft.rowsPerPage = newRowsPerPage
+          }
+        })
+      )
     } else {
-      setRowsPerPageOptions(defaultOptions)
+      setState(
+        produce((draft) => {
+          draft.rowsPerPageOptions = defaultOptions
+        })
+      )
     }
   }, [data])
 
-  const getSelectedText = (selectedSize) => {
-    return selectedSize === 1 ? "item selecionado" : "itens selecionados"
-  }
-
-  const getDataCountText = (dataSize) => {
-    return dataSize === 1 ? "resultado encontrado" : "resultados encontrados"
-  }
-
   const handleSort = (columnId) => {
-    const isAsc = orderBy === columnId && order === "asc"
-    setOrder(isAsc ? "desc" : "asc")
-    setOrderBy(columnId)
+    setState(
+      produce((draft) => {
+        const isAsc = draft.orderBy === columnId && draft.order === "asc"
+        draft.order = isAsc ? "desc" : "asc"
+        draft.orderBy = columnId
+      })
+    )
   }
 
   const handleRowClick = (rowId) => {
-    setOpenRows((prevOpenRows) =>
-      prevOpenRows.includes(rowId)
-        ? prevOpenRows.filter((id) => id !== rowId)
-        : [...prevOpenRows, rowId]
+    setState(
+      produce((draft) => {
+        if (draft.openRows.has(rowId)) {
+          draft.openRows.delete(rowId)
+        } else {
+          draft.openRows.add(rowId)
+        }
+      })
     )
   }
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage)
+    setState(
+      produce((draft) => {
+        draft.page = newPage
+      })
+    )
   }
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
+    const rowsPerPage = parseInt(event.target.value, 10)
+    setState(
+      produce((draft) => {
+        draft.rowsPerPage = rowsPerPage
+        draft.page = 0
+      })
+    )
   }
 
   const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelected = new Set(data.map((item) => item.id))
-      setSelected(newSelected)
-      return
-    }
-    setSelected(new Set())
+    const newSelected = event.target.checked ? new Set(data.map((item) => item.id)) : new Set()
+    setState(
+      produce((draft) => {
+        draft.selected = newSelected
+      })
+    )
   }
 
   const handleClick = (event, row) => {
-    const newSelected = new Set(selected)
-    if (selected.has(row.id)) {
+    const newSelected = new Set(state.selected)
+    if (state.selected.has(row.id)) {
       newSelected.delete(row.id)
     } else {
       newSelected.add(row.id)
     }
-    setSelected(newSelected)
+    setState(
+      produce((draft) => {
+        draft.selected = newSelected
+      })
+    )
   }
 
   const handleActionClick = (action) => {
-    action.onClick(Array.from(selected), () => setSelected(new Set()))
+    action.onClick(Array.from(state.selected), () =>
+      setState(
+        produce((draft) => {
+          draft.selected = new Set()
+        })
+      )
+    )
   }
 
-  const hasSelectedRows = selected.size > 0
-  const isSelected = (id) => selected.has(id)
+  const hasSelectedRows = state.selected.size > 0
+  const isSelected = (id) => state.selected.has(id)
 
-  const sortedData = stableSort(data, getComparator(order, orderBy))
+  const sortedData = stableSort(data, getComparator(state.order, state.orderBy))
+  const slicedData =
+    mode === "datatable"
+      ? sortedData.slice(
+          state.page * state.rowsPerPage,
+          state.page * state.rowsPerPage + state.rowsPerPage
+        )
+      : sortedData
   const hasExpandableContent = data.some((item) => item.expandableContent)
 
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box
+      sx={{
+        position: "relative"
+      }}
+    >
       {mode === "datatable" && (
         <Typography variant="p" component="p" sx={{ marginLeft: 3, marginBottom: 3 }}>
-          <b>{data.length}</b> {getDataCountText(data.length)}
+          <b>{formatNumber(data.length)}</b> {getDataCountText(data.length)}
         </Typography>
       )}
       {hasSelectedRows && (
@@ -157,17 +207,17 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            backgroundColor: "var(--primary)",
+            backgroundColor: "var(--elevation-level3)",
             height: 56,
-            width: "100%",
+            width: "calc(100% - 16px)",
             position: "absolute",
-            zIndex: 1
+            zIndex: 3
           }}
         >
           <Box padding="checkbox" sx={{ paddingLeft: 2, border: "none" }}>
             <Checkbox
-              indeterminate={selected.size > 0 && selected.size < data.length}
-              checked={data.length > 0 && selected.size === data.length}
+              indeterminate={state.selected.size > 0 && state.selected.size < data.length}
+              checked={data.length > 0 && state.selected.size === data.length}
               onChange={handleSelectAllClick}
               sx={{
                 "& .MuiSvgIcon-root": {
@@ -182,7 +232,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
               component="p"
               sx={{ fontWeight: 600, color: "rgb(228, 225, 230)" }}
             >
-              {selected.size} {getSelectedText(selected.size)}
+              {formatNumber(state.selected.size)} {getSelectedText(state.selected.size)}
             </Typography>
           </Box>
           {actions && (
@@ -194,23 +244,12 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
                 justifyContent: "center",
                 gap: 1,
                 border: "none",
-                marginLeft: "auto",
-                marginRight: 2
+                marginLeft: "auto"
               }}
             >
               {actions.map((action, index) => (
-                <Tooltip key={index} title={action.tooltip}>
-                  <IconButton
-                    onClick={() => handleActionClick(action)}
-                    sx={{
-                      color: "white",
-                      "&:hover": {
-                        backgroundColor: "transparent !important"
-                      }
-                    }}
-                  >
-                    {action.icon}
-                  </IconButton>
+                <Tooltip key={index} title={action.title}>
+                  <IconButton onClick={() => handleActionClick(action)}>{action.icon}</IconButton>
                 </Tooltip>
               ))}
             </Box>
@@ -224,7 +263,8 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
             minWidth: 650,
             color: "var(--onSurface)",
             "& .MuiTableCell-head": {
-              color: "var(--outline)"
+              color: "var(--outline)",
+              backgroundColor: "var(--elevation-level3) !important"
             },
             "& .MuiTableCell-root": {
               borderColor: "var(--elevation-level5)",
@@ -238,7 +278,6 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
         >
           <TableHead
             sx={{
-              backgroundColor: "var(--elevation-level3)",
               "& .MuiTableCell-root": {
                 border: "none"
               }
@@ -248,8 +287,8 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
               {mode === "datatable" && data.length !== 0 && (
                 <TableCell padding="checkbox" sx={{ paddingLeft: 2 }}>
                   <Checkbox
-                    indeterminate={selected.size > 0 && selected.size < data.length}
-                    checked={data.length > 0 && selected.size === data.length}
+                    indeterminate={state.selected.size > 0 && state.selected.size < data.length}
+                    checked={data.length > 0 && state.selected.size === data.length}
                     onChange={handleSelectAllClick}
                   />
                 </TableCell>
@@ -259,13 +298,13 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  sortDirection={orderBy === column.id ? order : false}
+                  sortDirection={state.orderBy === column.id ? state.order : false}
                   sx={{ padding: "16px 24px", fontSize: 13 }}
                 >
                   {column.sortable ? (
                     <TableSortLabel
-                      active={orderBy === column.id}
-                      direction={orderBy === column.id ? order : "asc"}
+                      active={state.orderBy === column.id}
+                      direction={state.orderBy === column.id ? state.order : "asc"}
                       onClick={() => handleSort(column.id)}
                     >
                       {column.label}
@@ -280,10 +319,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
           <TableBody>
             {data.length !== 0 ? (
               <>
-                {(mode === "datatable"
-                  ? sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  : sortedData
-                ).map((row, index) => (
+                {slicedData.map((row, index) => (
                   <React.Fragment key={row.id}>
                     <TableRow
                       sx={{
@@ -316,7 +352,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
                               <IconButton size="small" onClick={() => handleRowClick(row.id)}>
                                 <KeyboardArrowUp
                                   className={`arrow-but-drop-down ${
-                                    openRows.includes(row.id) && "__arrow-but-drop-down__rotate"
+                                    state.openRows.has(row.id) && "__arrow-but-drop-down__rotate"
                                   }`}
                                 />
                               </IconButton>
@@ -352,7 +388,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
                           colSpan={mode === "normal" ? columns.length + 1 : columns.length + 2}
                           sx={{ padding: 0, border: "none" }}
                         >
-                          <Collapse in={openRows.includes(row.id)} timeout="auto" unmountOnExit>
+                          <Collapse in={state.openRows.has(row.id)} timeout="auto" unmountOnExit>
                             <Box
                               sx={{
                                 borderBottom:
@@ -378,7 +414,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
               <TableRow>
                 <TableCell
                   colSpan={mode === "normal" ? columns.length + 1 : columns.length + 2}
-                  sx={{ padding: 3, paddingBottom: 0 }}
+                  sx={{ padding: 3 }}
                 >
                   <NoData error={error} />
                 </TableCell>
@@ -388,17 +424,19 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
         </MuiTable>
       </TableContainer>
       {mode === "datatable" && data.length !== 0 && (
-        <Box sx={{ padding: 2, paddingBottom: 0, borderTop: "1px solid var(--elevation-level5)" }}>
+        <Box sx={{ padding: 2, borderTop: "1px solid var(--elevation-level5)" }}>
           <TablePagination
-            labelRowsPerPage="Linhas por página"
+            labelRowsPerPage="Itens por página"
             labelDisplayedRows={({ from, to, count }) => {
-              return `${from}–${to} de ${count !== -1 ? count : `mais do que ${to}`}`
+              return `${formatNumber(from)}–${formatNumber(to)} de ${
+                count !== -1 ? formatNumber(count) : `mais do que ${formatNumber(to)}`
+              }`
             }}
-            rowsPerPageOptions={rowsPerPageOptions}
+            rowsPerPageOptions={state.rowsPerPageOptions}
             component="div"
             count={data.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
+            rowsPerPage={state.rowsPerPage}
+            page={state.page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             showLastButton
@@ -432,7 +470,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
         </Box>
       )}
       {error && (
-        <FormHelperText sx={{ marginLeft: 3, marginTop: 1, color: error && "rgb(211, 47, 47)" }}>
+        <FormHelperText sx={{ marginLeft: 3, marginTop: -2, color: error && "rgb(211, 47, 47)" }}>
           {helperText}
         </FormHelperText>
       )}
@@ -470,13 +508,13 @@ Table.propTypes = {
         if (
           !action.icon ||
           typeof action.icon !== "object" ||
-          !action.tooltip ||
-          typeof action.tooltip !== "string" ||
+          !action.title ||
+          typeof action.title !== "string" ||
           !action.onClick ||
           typeof action.onClick !== "function"
         ) {
           return new Error(
-            `Invalid action object supplied to ${componentName}. Each action object must have keys 'icon' (a React element), 'tooltip' (a string), and 'onClick' (a function).`
+            `Invalid action object supplied to ${componentName}. Each action object must have keys 'icon' (a React element), 'title' (a string), and 'onClick' (a function).`
           )
         }
       }
@@ -484,4 +522,4 @@ Table.propTypes = {
   }
 }
 
-export default memo(Table)
+export default Table
