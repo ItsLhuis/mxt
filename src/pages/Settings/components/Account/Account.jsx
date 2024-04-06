@@ -23,7 +23,7 @@ import {
 
 import { ImagePicker } from "@components/ui"
 
-import toast from "react-hot-toast"
+import { showSuccessToast } from "@config/toast"
 
 import { formatPhoneNumber } from "@utils/format/phone"
 
@@ -80,7 +80,7 @@ const Account = () => {
     setTimeout(() => {
       console.log(newData)
       if (Object.keys(errors).length === 0) {
-        toast.success("Salvo com sucesso!")
+        showSuccessToast("Salvo com sucesso!")
       }
       setLoad(false)
     }, 1000)
