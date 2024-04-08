@@ -209,7 +209,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
             alignItems: "center",
             backgroundColor: "var(--elevation-level3)",
             height: 56,
-            width: "calc(100% - 16px)",
+            width: "100%",
             position: "absolute",
             zIndex: 3
           }}
@@ -244,7 +244,8 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
                 justifyContent: "center",
                 gap: 1,
                 border: "none",
-                marginLeft: "auto"
+                marginLeft: "auto",
+                marginRight: 2
               }}
             >
               {actions.map((action, index) => (
@@ -414,7 +415,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
               <TableRow>
                 <TableCell
                   colSpan={mode === "normal" ? columns.length + 1 : columns.length + 2}
-                  sx={{ padding: 3 }}
+                  sx={{ padding: 3, borderBottom: "1px solid var(--elevation-level5) !important" }}
                 >
                   <NoData error={error} />
                 </TableCell>
@@ -470,7 +471,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
         </Box>
       )}
       {error && (
-        <FormHelperText sx={{ marginLeft: 3, marginTop: -2, color: error && "rgb(211, 47, 47)" }}>
+        <FormHelperText sx={{ marginLeft: 3, marginTop: 1, color: error && "rgb(211, 47, 47)" }}>
           {helperText}
         </FormHelperText>
       )}
