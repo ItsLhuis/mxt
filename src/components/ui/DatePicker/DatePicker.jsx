@@ -1,5 +1,7 @@
 import React from "react"
 
+import { startOfDay, isBefore, isAfter } from "date-fns"
+
 import { DatePicker as MuiDatePicker } from "@mui/x-date-pickers"
 import { DialogActions, Button, FormHelperText } from "@mui/material"
 import { KeyboardArrowDown } from "@mui/icons-material"
@@ -27,15 +29,16 @@ const DatePicker = (props) => {
   const { minDate, maxDate, value } = props
 
   const stripTime = (date) => {
-    return date ? new Date(date.getFullYear(), date.getMonth(), date.getDate()) : null
+    return date ? startOfDay(date) : null
   }
 
   const strippedValue = stripTime(value)
   const strippedMinDate = stripTime(minDate)
   const strippedMaxDate = stripTime(maxDate)
 
-  const isBeforeMinDate = strippedMinDate && strippedValue && strippedValue < strippedMinDate
-  const isAfterMaxDate = strippedMaxDate && strippedValue && strippedValue > strippedMaxDate
+  const isBeforeMinDate =
+    strippedMinDate && strippedValue && isBefore(strippedValue, strippedMinDate)
+  const isAfterMaxDate = strippedMaxDate && strippedValue && isAfter(strippedValue, strippedMaxDate)
 
   const hasHelperText = isBeforeMinDate || isAfterMaxDate || props.helperText
 
