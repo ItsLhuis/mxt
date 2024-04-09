@@ -66,6 +66,15 @@ function App() {
             "&:hover .MuiOutlinedInput-notchedOutline": {
               borderColor: "var(--outline)"
             },
+            "&.Mui-disabled": {
+              "& .MuiOutlinedInput-notchedOutline": {
+                border: "2px solid var(--elevation-level5)"
+              },
+              "& .MuiInputBase-input": {
+                WebkitTextFillColor: "var(--outline)",
+                cursor: "not-allowed"
+              }
+            },
             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
               border: "2px solid var(--primary)"
             },
@@ -77,15 +86,6 @@ function App() {
             },
             "&.Mui-error.Mui-focused .MuiOutlinedInput-notchedOutline": {
               border: "2px solid #d32f2f"
-            },
-            "&.Mui-disabled": {
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "var(--elevation-level5)"
-              },
-              "& .MuiInputBase-input": {
-                WebkitTextFillColor: "var(--outline)",
-                cursor: "not-allowed"
-              }
             }
           },
           shrink: {
