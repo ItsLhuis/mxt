@@ -244,11 +244,11 @@ const FinancialStatistics = () => {
       )
     },
     {
-      id: "info",
+      id: "moreOptions",
       align: "center",
       sortable: false,
       renderComponent: ({ data }) => (
-        <Tooltip title="Info" placement="bottom" sx={{ margin: -1 }}>
+        <Tooltip title="Mais Opções" placement="bottom" sx={{ margin: -1 }}>
           <IconButton onClick={() => console.log(data)}>
             <MoreVert fontSize="inherit" />
           </IconButton>
@@ -266,7 +266,7 @@ const FinancialStatistics = () => {
       value: 1199,
       total: 1199,
       type: "Rendimento (Pendente)",
-      info: "ola",
+      moreOptions: "ola",
       expandableContent: () =>
         getExpandableContent("Rendimento", [
           {
@@ -294,7 +294,7 @@ const FinancialStatistics = () => {
       value: 1999,
       total: 1999,
       type: "Despesa",
-      info: "ola",
+      moreOptions: "ola",
       expandableContent: () =>
         getExpandableContent("Despesa", [
           {
@@ -327,8 +327,8 @@ const FinancialStatistics = () => {
       value: 399,
       total: 399,
       type: "Despesa",
-      info: "ola",
-      info: "ola",
+      moreOptions: "ola",
+      moreOptions: "ola",
       expandableContent: () =>
         getExpandableContent("Despesa", [
           {
@@ -351,7 +351,7 @@ const FinancialStatistics = () => {
       value: 49,
       total: 49,
       type: "Rendimento",
-      info: "ola",
+      moreOptions: "ola",
       expandableContent: () =>
         getExpandableContent("Rendimento", [
           {
@@ -394,7 +394,7 @@ const FinancialStatistics = () => {
       value: 2499,
       total: 2499,
       type: "Rendimento",
-      info: "ola",
+      moreOptions: "ola",
       expandableContent: () =>
         getExpandableContent("Rendimento", [
           {
