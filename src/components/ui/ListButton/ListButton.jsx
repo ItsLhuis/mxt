@@ -4,13 +4,16 @@ import React from "react"
 
 import { List, ListItem, ListItemButton, ListItemText } from "@mui/material"
 
-const ListButton = ({ buttons }) => {
+const ListButton = ({ buttons, onClose }) => {
   return (
     <List sx={{ minWidth: "90px" }}>
       {buttons.map((button, index) => (
         <ListItem key={index} disablePadding>
           <ListItemButton
-            onClick={button.onClick}
+            onClick={() => {
+              button.onClick()
+              onClose()
+            }}
             sx={{
               margin: "0 8px",
               marginBottom: index !== buttons.length - 1 && "4px",
@@ -35,7 +38,8 @@ ListButton.propTypes = {
       onClick: PropTypes.func.isRequired,
       selected: PropTypes.bool
     })
-  ).isRequired
+  ).isRequired,
+  onClose: PropTypes.func
 }
 
 export default ListButton
