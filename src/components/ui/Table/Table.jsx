@@ -425,7 +425,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
         </MuiTable>
       </TableContainer>
       {mode === "datatable" && data.length !== 0 && (
-        <Box sx={{ padding: 2, borderTop: "1px solid var(--elevation-level5)" }}>
+        <Box sx={{ padding: 2, paddingBottom: 0, borderTop: "1px solid var(--elevation-level5)" }}>
           <TablePagination
             labelRowsPerPage="Itens por página"
             labelDisplayedRows={({ from, to, count }) => {
