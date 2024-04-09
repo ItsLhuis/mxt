@@ -137,7 +137,9 @@ const ButtonDropDownSelect = ({
           horizontal: "right"
         }}
       >
-        {children}
+        {React.Children.map(children, (child) =>
+          React.cloneElement(child, { onClose: handleClose })
+        )}
       </Popover>
     </>
   )
