@@ -109,45 +109,50 @@ p {
   font-size: 13px !important;
 }
 
-.MuiButton-root.MuiButton-contained.secundary {
-  color: var(--onSurface) !important;
-  background-color: var(--secondaryContainer);
-}
-
-.MuiButton-root.MuiButton-contained.secundary:hover {
-  background-color: var(--elevation-level4);
-}
-
-.MuiButton-root.MuiButton-contained {
-  min-height: 45px !important;
-  padding: 8px 16px !important;
-  border-radius: 8px !important;
-}
-
-.MuiButton-root.MuiButton-contained {
-  color: rgb(228, 225, 230) !important;
-}
-
-.MuiButton-contained.MuiLoadingButton-loading {
+.MuiButton-containedPrimary.MuiLoadingButton-loading {
   color: transparent !important;
   background-color: var(--primary) !important;
 }
 
-.MuiLoadingButton-loadingIndicator {
+.MuiButton-containedPrimary .MuiLoadingButton-loadingIndicator {
   color: rgb(228, 225, 230) !important;
 }
 
+.MuiButton-containedSecondary.MuiLoadingButton-loading {
+  color: transparent !important;
+  background-color: var(--secondaryContainer) !important;
+}
+
+.MuiButton-containedSecondary .MuiLoadingButton-loadingIndicator {
+  color: var(--onSurface) !important;
+}
+
+.MuiButton-containedError.MuiLoadingButton-loading {
+  color: transparent !important;
+  background-color: rgba(211, 47, 47) !important;
+}
+
+.MuiButton-containedError .MuiLoadingButton-loadingIndicator {
+  color: rgb(228, 225, 230) !important;
+}
+
+.MuiButton-root:not(.MuiButton-text) {
+  box-shadow: none !important;
+}
+
+.MuiButton-root {
+  min-height: 45px !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  text-transform: none !important;
+}
+
 .MuiButton-containedPrimary {
-  box-shadow: 0 0 0.625rem var(--boxShadow) !important;
   color: rgb(228, 225, 230) !important;
 }
 
 .MuiButton-containedPrimary .MuiSvgIcon-root {
   color: rgb(228, 225, 230) !important;
-}
-
-.MuiButtonBase-root {
-  text-transform: none !important;
 }
 
 .MuiIconButton-root:hover {
@@ -182,11 +187,16 @@ p {
 }
 
 .MuiListItem-root .MuiButtonBase-root {
-  border-radius: 10px
+  border-radius: 8px
 }
 
 .MuiFormLabel-root.MuiInputLabel-root.Mui-focused {
   color: var(--onSurface) !important;
+}
+
+.MuiFormLabel-root.Mui-disabled {
+  color: var(--outline) !important;
+  opacity: .5;
 }
 
 input,
@@ -209,6 +219,12 @@ textarea:-webkit-autofill:active {
   border-radius: 10px !important;
 }
 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .MuiDrawer-paper {
   color: var(--onSurface) !important;
   width: 280px !important;
@@ -219,10 +235,15 @@ textarea:-webkit-autofill:active {
   font-size: 0.7125rem !important;
   font-weight: 700;
   border-radius: 8px !important;
+  user-select: none !important;
 }
 
 .MuiChip-colorDefault {
   background-color: var(--surfaceVariant) !important;
+  color: var(--onSurface) !important;
+}
+
+.MuiChip-deleteIcon {
   color: var(--onSurface) !important;
 }
 
@@ -260,6 +281,17 @@ textarea:-webkit-autofill:active {
 .MuiPaper-root {
   color: var(--onSurface) !important;
   border-radius: 10px !important;
+}
+
+.MuiDialog-paper {
+  box-shadow: rgba(0, 0, 0, 0.24) -40px 40px 80px -8px !important
+}
+
+.MuiPaper-elevation1,
+.MuiPaper-elevation2,
+.MuiPaper-elevation3,
+.MuiPaper-elevation4,
+.MuiPaper-elevation5 {
   box-shadow: 0 0 0.465rem var(--boxShadow) !important;
 }
 
@@ -294,7 +326,10 @@ textarea:-webkit-autofill:active {
   height: 40px;
 }
 
-.MuiTabs-scrollButtons.Mui-disabled {
+.MuiTabs-scrollButtons.Mui-disabled,
+.MuiTablePagination-actions .MuiButtonBase-root.Mui-disabled,
+.MuiPickersArrowSwitcher-root .MuiIconButton-root.Mui-disabled .MuiSvgIcon-root,
+.MuiPagination-ul .MuiButtonBase-root.Mui-disabled {
   opacity: 0.2 !important;
 }
 
@@ -355,8 +390,18 @@ textarea:-webkit-autofill:active {
   color: var(--onSurface) !important;
 }
 
-.MuiCheckbox-root .MuiSvgIcon-root {
-  fill: var(--onSurface) !important;
+.MuiTablePagination-root .MuiTablePagination-selectLabel,
+.MuiTablePagination-root .MuiTablePagination-displayedRows {
+  font-size: 13px;
+}
+
+.MuiTablePagination-root .MuiSelect-select {
+  border-radius: 8px !important;
+  font-size: 13px;
+}
+
+.MuiTablePagination-selectIcon {
+  color: var(--onSurface) !important;
 }
 
 .MuiPickersToolbar-root .MuiTypography-root {
@@ -370,7 +415,7 @@ textarea:-webkit-autofill:active {
 }
 
 .MuiDayCalendar-header .MuiTypography-root,
-.MuiDayCalendar-monthContainer .MuiDayCalendar-weekContainer .MuiPickersDay-root:not(.Mui-selected) {
+.MuiDayCalendar-monthContainer .MuiDayCalendar-weekContainer .MuiPickersDay-root:not(.Mui-selected):not(.Mui-disabled) {
   color: var(--onSurface) !important;
 }
 
@@ -395,6 +440,19 @@ textarea:-webkit-autofill:active {
 .MuiPickersLayout-actionBar {
   background-color: var(--elevation-level2);
   border-radius: 8px;
+}
+
+.MuiPickersDay-root.Mui-disabled {
+  color: var(--onSurface) !important;
+  opacity: .4 !important;
+}
+
+.MuiPagination-ul .MuiButtonBase-root:not(.Mui-selected) {
+  color: var(--onSurface) !important;
+}
+
+.MuiPaginationItem-root.MuiPaginationItem-ellipsis {
+  color: var(--outline) !important;
 }
 
 .apexcharts-xaxistooltip-bottom {
