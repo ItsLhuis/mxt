@@ -40,7 +40,7 @@ const OverallChart = () => {
                   { label: "2021", onClick: () => console.log() },
                   { label: "2020", onClick: () => console.log() },
                   { label: "2019", onClick: () => console.log() }
-                ]}label
+                ]}
               />
             </ButtonDropDownSelect>
           </Box>

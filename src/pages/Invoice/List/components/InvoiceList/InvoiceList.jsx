@@ -526,7 +526,7 @@ const InvoiceList = () => {
           actions={[
             {
               icon: <DeleteOutline sx={{ color: "rgb(228, 225, 230)" }} />,
-              tooltip: "Eliminar",
+              title: "Eliminar",
               onClick: () => console.log()
             }
           ]}
