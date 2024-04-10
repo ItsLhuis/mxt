@@ -29,7 +29,6 @@ import { Modal, Select } from "@components/ui"
 
 import { showSuccessToast } from "@config/toast"
 
-import { formatNumber } from "@utils/format/number"
 import { formatValueToEuro } from "@utils/format/currency"
 
 const schema = z.object({
@@ -44,12 +43,10 @@ const schema = z.object({
     .number({ invalid_type_error: "A quantidade é obrigatória" })
     .int({ message: "A quantidade deve ser número inteiro" })
     .min(1, { message: "A quantidade deve ser maior que 0" }),
-  price: z
-    .number({
-      invalid_type_error: "O preço é obrigatório",
-      required_error: "O preço é obrigatório"
-    })
-    .min(0.01, { message: "O preço deve ser maior que 0" }),
+  price: z.number({
+    invalid_type_error: "O preço é obrigatório",
+    required_error: "O preço é obrigatório"
+  }),
   vat: z
     .number({ invalid_type_error: "O IVA é obrigatório", required_error: "O IVA é obrigatório" })
     .min(0, {
@@ -66,7 +63,7 @@ const schema = z.object({
     .optional()
 })
 
-const ItemModal = ({ open, handleClose, onClick, services, products, initialValues }) => {
+const ProductModal = ({ open, handleClose, onClick, services, products, initialValues }) => {
   const {
     control,
     register,
@@ -79,7 +76,7 @@ const ItemModal = ({ open, handleClose, onClick, services, products, initialValu
     resolver: zodResolver(schema)
   })
 
-  const [searchItemModalOpen, setSearchItemModalOpen] = useState(false)
+  const [searchProductModalOpen, setSearchProductModalOpen] = useState(false)
 
   const [selectedProductId, setSelectedProductId] = useState(null)
 
@@ -139,8 +136,8 @@ const ItemModal = ({ open, handleClose, onClick, services, products, initialValu
       open={open}
       onClose={handleClose}
       mode="form"
-      title="Adicionar Item"
-      submitButtonText="Adicionar Item"
+      title="Adicionar Produto"
+      submitButtonText="Adicionar Produto"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Box sx={{ padding: 3, paddingTop: 1 }}>
@@ -148,7 +145,7 @@ const ItemModal = ({ open, handleClose, onClick, services, products, initialValu
           <Grid item xs={12}>
             <Stack sx={{ flexDirection: "row", alignItems: "flex-start", gap: 1 }}>
               <Tooltip title="Pesquisar" placement="bottom">
-                <IconButton sx={{ marginTop: 1 }} onClick={() => setSearchItemModalOpen(true)}>
+                <IconButton sx={{ marginTop: 1 }} onClick={() => setSearchProductModalOpen(true)}>
                   <Search />
                 </IconButton>
               </Tooltip>
@@ -309,8 +306,8 @@ const ItemModal = ({ open, handleClose, onClick, services, products, initialValu
         </Grid>
       </Box>
       <Modal
-        open={searchItemModalOpen}
-        onClose={() => setSearchItemModalOpen(false)}
+        open={searchProductModalOpen}
+        onClose={() => setSearchProductModalOpen(false)}
         title="Produtos"
         placeholder="Pesquise por um produto"
         mode="data"
@@ -382,7 +379,7 @@ const ItemModal = ({ open, handleClose, onClick, services, products, initialValu
   )
 }
 
-ItemModal.propTypes = {
+ProductModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
@@ -391,4 +388,4 @@ ItemModal.propTypes = {
   initialValues: PropTypes.array
 }
 
-export default ItemModal
+export default ProductModal

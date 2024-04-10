@@ -27,7 +27,7 @@ import {
 import { Add, DeleteOutline } from "@mui/icons-material"
 
 import { PageLoader, HeaderPage, DatePicker, Select, Table, Modal, Caption } from "@components/ui"
-import ItemModal from "./components/ItemModal/ItemModal"
+import ProductModal from "./components/ProductModal/ProductModal"
 
 import { motion } from "framer-motion"
 
@@ -120,7 +120,7 @@ const Create = () => {
   const [selectedItemToEdit, setSelectedItemToEdit] = useState([])
 
   const [selectClientModalOpen, setSelectClientModalOpen] = useState(false)
-  const [itemModalOpen, setItemModalOpen] = useState(false)
+  const [ProductModalOpen, setProductModalOpen] = useState(false)
 
   useEffect(() => {
     const newClients = generateClients()
@@ -439,13 +439,29 @@ const Create = () => {
                     <Typography variant="h6" component="h6" sx={{ color: "var(--outline)" }}>
                       Detalhes:
                     </Typography>
-                    <Button
-                      sx={{ marginLeft: "auto" }}
-                      startIcon={<Add fontSize="large" sx={{ color: "var(--primary)" }} />}
-                      onClick={() => setItemModalOpen(true)}
+                    <Stack
+                      sx={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                        flexFlow: "wrap",
+                        marginLeft: "auto",
+                        gap: 1
+                      }}
                     >
-                      Adicionar Item
-                    </Button>
+                      <Button
+                        startIcon={<Add fontSize="large" sx={{ color: "var(--primary)" }} />}
+                        onClick={() => setProductModalOpen(true)}
+                      >
+                        Adicionar Serviço
+                      </Button>
+                      <Button
+                        startIcon={<Add fontSize="large" sx={{ color: "var(--primary)" }} />}
+                        onClick={() => setProductModalOpen(true)}
+                      >
+                        Adicionar Produto
+                      </Button>
+                    </Stack>
                   </Stack>
                   <Table
                     data={formData.items}
@@ -554,10 +570,10 @@ const Create = () => {
                 )
               }}
             />
-            <ItemModal
+            <ProductModal
               mode="add"
-              open={itemModalOpen}
-              handleClose={() => setItemModalOpen(false)}
+              open={ProductModalOpen}
+              handleClose={() => setProductModalOpen(false)}
               onClick={addItem}
               services={services}
               products={products}
