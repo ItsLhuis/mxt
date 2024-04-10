@@ -4,10 +4,11 @@ import "./styles.css"
 
 import { useNavigate, useLocation } from "react-router-dom"
 
-import { Collapse, Typography, ButtonBase, Drawer, Tooltip, IconButton } from "@mui/material"
+import { Box, Collapse, Typography, ButtonBase, Drawer, Tooltip, IconButton } from "@mui/material"
 
 import {
   Dashboard,
+  Build,
   Inventory,
   Person,
   AppsOutlined,
@@ -115,9 +116,26 @@ const sidebarData = [
   },
   {
     title: "MANUTENÇÃO",
+    icon: <Build fontSize="small" />,
+    path: "/service/",
+    name: "Serviço",
+    submenu: [
+      {
+        path: "/service/list",
+        name: "Lista",
+        className: ""
+      },
+      {
+        path: "/service/add",
+        name: "Adicionar",
+        className: ""
+      }
+    ]
+  },
+  {
     icon: <Inventory fontSize="small" />,
     path: "/stock/",
-    name: "Stock",
+    name: "Inventário",
     submenu: [
       {
         path: "/stock/list",
@@ -144,23 +162,6 @@ const sidebarData = [
       {
         path: "/client/add",
         name: "Adicionar",
-        className: ""
-      }
-    ]
-  },
-  {
-    icon: <AppsOutlined fontSize="small" />,
-    path: "/equipment/",
-    name: "Equipamento",
-    submenu: [
-      {
-        path: "/repair/list",
-        name: "Lista",
-        className: ""
-      },
-      {
-        path: "/equipment/tag",
-        name: "Etiqueta",
         className: ""
       }
     ]
@@ -203,6 +204,23 @@ const sidebarData = [
           {
             path: "/repair/state/dc",
             name: "DC",
+            className: "__but__lvlDown"
+          }
+        ]
+      },
+      {
+        icon: <AppsOutlined fontSize="small" />,
+        path: "/equipment/",
+        name: "Equipamento",
+        submenu: [
+          {
+            path: "/repair/list",
+            name: "Lista",
+            className: "__but__lvlDown"
+          },
+          {
+            path: "/equipment/tag",
+            name: "Etiqueta",
             className: "__but__lvlDown"
           }
         ]
@@ -267,7 +285,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
 
   const renderSubmenu = (item, index) => {
     return (
-      <div key={index}>
+      <Box key={index}>
         {item.title && <h3 className="menu-item-title">{item.title}</h3>}
         <ButtonBase
           tabIndex={-1}
@@ -293,7 +311,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
         </ButtonBase>
         {item.submenu && (
           <Collapse in={open[index]} timeout="auto" unmountOnExit>
-            <div className={`sidebar-sub-menu`}>
+            <Box className={`sidebar-sub-menu`}>
               {item.submenu.map((subitem, subindex) => {
                 return subitem.submenu ? (
                   renderSubmenu(subitem, `${index}-${subindex}`)
@@ -320,16 +338,16 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
                   </ButtonBase>
                 )
               })}
-            </div>
+            </Box>
           </Collapse>
         )}
-      </div>
+      </Box>
     )
   }
 
   const renderDrawerSubmenu = (item, index) => {
     return (
-      <div key={index}>
+      <Box key={index}>
         {item.title && <h3 className="menu-item-title">{item.title}</h3>}
         <ButtonBase
           className={`but-sidebar ${isActive(`${item.path}`) ? "active" : ""}`}
@@ -352,7 +370,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
         </ButtonBase>
         {item.submenu && (
           <Collapse in={open[index]} timeout="auto" unmountOnExit>
-            <div className={`sidebar-sub-menu`}>
+            <Box className="sidebar-sub-menu">
               {item.submenu.map((subitem, subindex) => {
                 return subitem.submenu ? (
                   renderDrawerSubmenu(subitem, `${index}-${subindex}`)
@@ -378,10 +396,10 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
                   </ButtonBase>
                 )
               })}
-            </div>
+            </Box>
           </Collapse>
         )}
-      </div>
+      </Box>
     )
   }
 
@@ -397,14 +415,14 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
   return (
     <>
       <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} sx={{ width: "280px" }}>
-        <div className="sidebar __drawer">
-          <div className="navbar-content-info-container __sidebar-nav">
-            <div className="navbar-info">
+        <Box className="sidebar __drawer">
+          <Box className="navbar-content-info-container __sidebar-nav">
+            <Box className="navbar-info">
               <Typography variant="h3" component="h3" className="company-name">
                 MixTech
               </Typography>
-            </div>
-            <div className="container-but-menu" style={{ marginRight: "0.6rem" }}>
+            </Box>
+            <Box className="container-but-menu" style={{ marginRight: "0.6rem" }}>
               <Tooltip title="Fechar" placement="bottom">
                 <IconButton
                   aria-label="Fechar"
@@ -415,14 +433,14 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
                   <Close />
                 </IconButton>
               </Tooltip>
-            </div>
-          </div>
-          <div className="menu drawer">
+            </Box>
+          </Box>
+          <Box className="menu drawer">
             {sidebarData.map((item, index) => {
               return item.submenu ? (
                 renderDrawerSubmenu(item, index)
               ) : (
-                <div key={index}>
+                <Box key={index}>
                   {item.title && <h3 className="menu-item-title">{item.title}</h3>}
                   <ButtonBase
                     className={`but-sidebar ${isActive(`${item.path}`) ? "active" : ""}`}
@@ -441,19 +459,19 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
                       {item.name}
                     </Typography>
                   </ButtonBase>
-                </div>
+                </Box>
               )
             })}
-          </div>
-        </div>
+          </Box>
+        </Box>
       </Drawer>
-      <div className="sidebar" ref={sidebarRef}>
-        <div className="menu">
+      <Box className="sidebar" ref={sidebarRef}>
+        <Box className="menu">
           {sidebarData.map((item, index) => {
             return item.submenu ? (
               renderSubmenu(item, index)
             ) : (
-              <div key={index}>
+              <Box key={index}>
                 {item.title && <h3 className="menu-item-title">{item.title}</h3>}
                 <ButtonBase
                   tabIndex={-1}
@@ -475,11 +493,11 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
                     {item.name}
                   </Typography>
                 </ButtonBase>
-              </div>
+              </Box>
             )
           })}
-        </div>
-      </div>
+        </Box>
+      </Box>
     </>
   )
 }

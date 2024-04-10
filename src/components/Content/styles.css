@@ -1,7 +1,6 @@
 .main-content {
-    background: var(--background);
+    background-color: var(--background);
     margin-left: 280px;
-    z-index: 2;
 }
 
 .all-content {

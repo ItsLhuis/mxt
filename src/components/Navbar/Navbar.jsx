@@ -43,15 +43,15 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
 
   return (
     <>
-      <div className="navbar">
-        <div className="navbar-content">
-          <div className="navbar-content-info-container">
-            <div className="navbar-info">
+      <Box component="header" className="navbar">
+        <Box className="navbar-content">
+          <Box className="navbar-content-info-container">
+            <Box className="navbar-info">
               <Typography variant="h3" component="h3" className="company-name">
                 MixTech
               </Typography>
-            </div>
-            <div className="container-but-menu">
+            </Box>
+            <Box className="container-but-menu">
               <Tooltip title="Menu" placement="bottom">
                 <IconButton
                   aria-label="Menu"
@@ -84,9 +84,9 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                 </Tooltip>
                 {!isSmallScreen && <Chip label="Alt + p" />}
               </Box>
-            </div>
-          </div>
-          <div className="navbar-user-container" style={{ gap: isMediumScreen ? 0 : "16px" }}>
+            </Box>
+          </Box>
+          <Box className="navbar-user-container" sx={{ gap: isMediumScreen ? 0 : 2 }}>
             <Tooltip title="Notificações" placement="bottom">
               <IconButton
                 aria-label="Notificações"
@@ -98,9 +98,9 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
             </Tooltip>
             {!isMediumScreen && (
               <>
-                <div className="navbar-user-container-profile">
+                <Box className="navbar-user-container-profile">
                   <Avatar alt="Luis Rodrigues" />
-                  <div className="navbar-user-container-profile-details">
+                  <Box className="navbar-user-container-profile-details">
                     <Typography variant="h6" component="h6" sx={{ fontWeight: 600 }}>
                       Luis Rodrigues
                     </Typography>
@@ -111,11 +111,11 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                     >
                       Administrador
                     </Typography>
-                  </div>
-                </div>
+                  </Box>
+                </Box>
               </>
             )}
-            <div className="container-but-settings">
+            <Box className="container-but-settings">
               <Tooltip title="Definições" placement="bottom">
                 <IconButton
                   aria-label="Definições"
@@ -126,10 +126,10 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                   <Settings />
                 </IconButton>
               </Tooltip>
-            </div>
-          </div>
-        </div>
-      </div>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
       <CommandDialog open={commandDialogOpen} handleClose={() => setCommandDialogOpen(false)} />
     </>
   )

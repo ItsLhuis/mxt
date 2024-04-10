@@ -4,6 +4,8 @@ import "./styles.css"
 
 import { Routes, Route, Navigate, useLocation } from "react-router-dom"
 
+import { Box } from "@mui/material"
+
 import { PageProgress } from "@components/ui"
 
 import { Dashboard, InvoiceList, CreateInvoice, Settings } from "@pages"
@@ -20,8 +22,8 @@ const Content = () => {
   }, [location])
 
   return (
-    <div className="main-content">
-      <div className="all-content" ref={allContentRef}>
+    <Box className="main-content">
+      <Box className="all-content" ref={allContentRef}>
         <Suspense fallback={<PageProgress />}>
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Navigate replace to="/dashboard" />} />
@@ -34,8 +36,8 @@ const Content = () => {
             <Route path="/settings" element={<Settings />} />
           </Routes>
         </Suspense>
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }
 
