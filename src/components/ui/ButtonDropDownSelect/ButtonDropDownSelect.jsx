@@ -146,7 +146,14 @@ const ButtonDropDownSelect = ({
 }
 
 ButtonDropDownSelect.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: function (props, propName, componentName) {
+    if (props.mode !== "custom" && !props[propName]) {
+      return new Error(
+        `The prop '${propName}' is required when mode is not 'custom' in '${componentName}'.`
+      )
+    }
+    return null
+  },
   subTitle: PropTypes.string,
   description: PropTypes.string,
   mode: PropTypes.oneOf(["normal", "advanced", "custom"]),
