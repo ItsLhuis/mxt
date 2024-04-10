@@ -108,7 +108,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 13px;
-    margin-left: 2rem;
+    margin-left: 1.4rem;
     text-align: left;
     transition: opacity 0.2s ease-in-out;
 }
