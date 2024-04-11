@@ -97,18 +97,6 @@ p {
   border-radius: 10px !important;
 }
 
-.MuiListItemButton-root {
-  padding: 6px 14px !important;
-}
-
-.MuiListItemButton-root:hover {
-  background-color: var(--secondaryContainer) !important;
-}
-
-.MuiListItemButton-root .MuiListItemText-primary {
-  font-size: 13px !important;
-}
-
 .MuiButton-containedPrimary.MuiLoadingButton-loading {
   color: transparent !important;
   background-color: var(--primary) !important;
