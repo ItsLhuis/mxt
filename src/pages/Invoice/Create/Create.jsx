@@ -4,6 +4,8 @@ import { produce } from "immer"
 
 import { z } from "zod"
 
+import { v4 as uuidv4 } from "uuid"
+
 import { isAfter, endOfDay } from "date-fns"
 
 import { useNavigate } from "react-router-dom"
@@ -21,13 +23,25 @@ import {
   FormControl,
   FormHelperText,
   Button,
+  Tooltip,
+  IconButton,
   useTheme,
   useMediaQuery
 } from "@mui/material"
-import { Add, DeleteOutline } from "@mui/icons-material"
+import { Add, DeleteOutline, MoreVert } from "@mui/icons-material"
 
-import { PageLoader, HeaderPage, DatePicker, Select, Table, Modal, Caption } from "@components/ui"
-import ProductModal from "./components/ProductModal/ProductModal"
+import {
+  PageLoader,
+  HeaderPage,
+  DatePicker,
+  Select,
+  Table,
+  Modal,
+  Caption,
+  ButtonDropDownSelect,
+  ListButton
+} from "@components/ui"
+import { ItemModal } from "./components"
 
 import { motion } from "framer-motion"
 
@@ -49,7 +63,7 @@ const invoiceSchema = z
       },
       { invalid_type_error: "O cliente é obrigatório" }
     ),
-    invoiceNumber: z.string(),
+    invoiceID: z.string(),
     state: z.string(),
     creationDate: z.date({ invalid_type_error: "A data de criação é obrigatória" }),
     dueDate: z.date({ invalid_type_error: "A data de vencimento é obrigatória" }),
@@ -88,11 +102,40 @@ const generateProducts = () => {
       description: `Produto ${i}`,
       service: "Venda de Produtos",
       quantity: 1,
-      price: 29.99,
-      vat: 23
+      price: 29.99
     })
   }
   return products
+}
+
+const generateItems = () => {
+  const items = []
+  for (let i = 1; i <= 26; i++) {
+    const id = uuidv4()
+    items.push({
+      id,
+      title: `Produto ${i}`,
+      description: `Descrição do Produto ${i}`,
+      service: "Venda de Produtos",
+      quantity: 1,
+      price: 29.99,
+      discount: 0,
+      total: 29.99,
+      moreOptions: {
+        item: {
+          id,
+          title: `Produto ${i}`,
+          description: `Descrição do Produto ${i}`,
+          service: "Venda de Produtos",
+          quantity: 1,
+          price: 29.99,
+          discount: 0,
+          total: 29.99
+        }
+      }
+    })
+  }
+  return items
 }
 
 const Create = () => {
@@ -105,7 +148,7 @@ const Create = () => {
 
   const [formData, setFormData] = useState({
     client: null,
-    invoiceNumber: "INV-9832-9123",
+    invoiceID: "INV-9832-9123",
     state: "Rascunho",
     creationDate: new Date(),
     dueDate: null,
@@ -116,11 +159,32 @@ const Create = () => {
   const [clients, setClients] = useState([])
   const [products, setProducts] = useState([])
 
-  const [selectedItemsIdToEdit, setSelectedItemsIdToEdit] = useState([])
-  const [selectedItemToEdit, setSelectedItemToEdit] = useState([])
+  const [callBackFunc, setCallBackFunc] = useState(null)
+  const [deleteConfirmation, setDeleteConfirmation] = useState({
+    open: false,
+    items: []
+  })
 
-  const [selectClientModalOpen, setSelectClientModalOpen] = useState(false)
-  const [ProductModalOpen, setProductModalOpen] = useState(false)
+  const [clientModalOpen, setClientModalOpen] = useState(false)
+  const [itemModal, setItemModal] = useState({
+    open: false,
+    item: null,
+    mode: null
+  })
+  const openAddItemModal = () => {
+    setItemModal({
+      open: true,
+      item: null,
+      mode: "add"
+    })
+  }
+  const openEditItemModal = (item) => {
+    setItemModal({
+      open: true,
+      item: item,
+      mode: "edit"
+    })
+  }
 
   useEffect(() => {
     const newClients = generateClients()
@@ -137,17 +201,10 @@ const Create = () => {
     { id: "quantity", label: "Quantidade", align: "left", sortable: false },
     {
       id: "price",
-      label: "Preço s/IVA",
+      label: "Preço",
       align: "left",
       sortable: false,
       formatter: formatValueToEuro
-    },
-    {
-      id: "vat",
-      label: "IVA",
-      align: "left",
-      sortable: false,
-      formatter: formatValueToPercentage
     },
     {
       id: "discount",
@@ -156,7 +213,41 @@ const Create = () => {
       sortable: false,
       formatter: formatValueToPercentage
     },
-    { id: "total", label: "Total", align: "left", sortable: false, formatter: formatValueToEuro }
+    { id: "total", label: "Total", align: "left", sortable: false, formatter: formatValueToEuro },
+    {
+      id: "moreOptions",
+      align: "center",
+      sortable: false,
+      renderComponent: ({ data }) => (
+        <ButtonDropDownSelect
+          mode="custom"
+          customButton={
+            <Tooltip title="Mais Opções" placement="bottom" sx={{ margin: -1 }}>
+              <IconButton>
+                <MoreVert fontSize="inherit" />
+              </IconButton>
+            </Tooltip>
+          }
+        >
+          <ListButton
+            buttons={[
+              {
+                label: "Editar",
+                onClick: () => openEditItemModal(data.item)
+              },
+              {
+                label: "Eliminar",
+                color: "error",
+                divider: true,
+                onClick: () => {
+                  setDeleteConfirmation({ open: true, items: [data.item.id] })
+                }
+              }
+            ]}
+          />
+        </ButtonDropDownSelect>
+      )
+    }
   ]
 
   const states = ["Pago", "Pendente", "Atrasado", "Rascunho"]
@@ -219,18 +310,18 @@ const Create = () => {
     )
   }
 
-  const [callBackFunc, setCallBackFunc] = useState(null)
-  const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] = useState(false)
   const handleDeleteConfirmation = () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        removeItems(selectedItemsIdToEdit)
+        removeItems(deleteConfirmation.items)
 
         showSuccessToast("Item(s) eliminado(s) com sucesso!")
 
         if (callBackFunc) {
           callBackFunc()
         }
+
+        setDeleteConfirmation({ open: false, items: [] })
 
         resolve(true)
       }, 500)
@@ -349,7 +440,7 @@ const Create = () => {
                             borderColor: "var(--primary)"
                           }
                         }}
-                        onClick={() => setSelectClientModalOpen(true)}
+                        onClick={() => setClientModalOpen(true)}
                       >
                         {!formData.client ? (
                           "Adicionar Cliente"
@@ -388,9 +479,9 @@ const Create = () => {
                     <Grid item xs={12} md={12} lg={3}>
                       <FormControl fullWidth>
                         <TextField
-                          name="invoiceNumber"
+                          name="invoiceID"
                           label="Número da fatura"
-                          value={formData.invoiceNumber}
+                          value={formData.invoiceID}
                           disabled
                         />
                       </FormControl>
@@ -439,29 +530,13 @@ const Create = () => {
                     <Typography variant="h6" component="h6" sx={{ color: "var(--outline)" }}>
                       Detalhes:
                     </Typography>
-                    <Stack
-                      sx={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "flex-end",
-                        flexFlow: "wrap",
-                        marginLeft: "auto",
-                        gap: 1
-                      }}
+                    <Button
+                      sx={{ marginLeft: "auto" }}
+                      startIcon={<Add fontSize="large" sx={{ color: "var(--primary)" }} />}
+                      onClick={openAddItemModal}
                     >
-                      <Button
-                        startIcon={<Add fontSize="large" sx={{ color: "var(--primary)" }} />}
-                        onClick={() => setProductModalOpen(true)}
-                      >
-                        Adicionar Serviço
-                      </Button>
-                      <Button
-                        startIcon={<Add fontSize="large" sx={{ color: "var(--primary)" }} />}
-                        onClick={() => setProductModalOpen(true)}
-                      >
-                        Adicionar Produto
-                      </Button>
-                    </Stack>
+                      Adicionar Item
+                    </Button>
                   </Stack>
                   <Table
                     data={formData.items}
@@ -469,11 +544,10 @@ const Create = () => {
                     mode="datatable"
                     actions={[
                       {
-                        icon: <DeleteOutline sx={{ color: "rgb(228, 225, 230)" }} />,
+                        icon: <DeleteOutline />,
                         title: "Eliminar",
                         onClick: (selectedItems, func) => {
-                          setDeleteConfirmationModalOpen(true)
-                          setSelectedItemsIdToEdit(selectedItems)
+                          setDeleteConfirmation({ open: true, items: selectedItems })
                           setCallBackFunc(() => func)
                         }
                       }
@@ -483,7 +557,7 @@ const Create = () => {
                   />
                   <Stack sx={{ marginLeft: "auto", padding: 1, paddingTop: 3, paddingInline: 3 }}>
                     <Typography variant="h5" component="h5">
-                      Total:
+                      Total: 43 €
                     </Typography>
                   </Stack>
                 </Stack>
@@ -505,8 +579,8 @@ const Create = () => {
               </Box>
             </Paper>
             <Modal
-              open={selectClientModalOpen}
-              onClose={() => setSelectClientModalOpen(false)}
+              open={clientModalOpen}
+              onClose={() => setClientModalOpen(false)}
               title="Clientes"
               placeholder="Pesquise por um cliente"
               mode="data"
@@ -570,20 +644,29 @@ const Create = () => {
                 )
               }}
             />
-            <ProductModal
+            <ItemModal
               mode="add"
-              open={ProductModalOpen}
-              handleClose={() => setProductModalOpen(false)}
+              open={itemModal.mode === "add" && itemModal.open}
+              handleClose={() => setItemModal({ open: false, item: null, mode: null })}
               onClick={addItem}
               services={services}
               products={products}
             />
+            <ItemModal
+              mode="edit"
+              open={itemModal.mode === "edit" && itemModal.open}
+              handleClose={() => setItemModal({ open: false, item: null, mode: null })}
+              onClick={editItem}
+              services={services}
+              products={products}
+              initialValues={itemModal.item}
+            />
             <Modal
-              open={deleteConfirmationModalOpen}
-              onClose={() => setDeleteConfirmationModalOpen(false)}
+              open={deleteConfirmation.open}
+              onClose={() => setDeleteConfirmation({ open: false, items: [] })}
               onSubmit={handleDeleteConfirmation}
               mode="delete"
-              description="Deseja eliminar o(s) item(s) selecionado(s)?"
+              description="Deseja eliminar o(s) seguinte(s) item(s)?"
             />
           </Container>
         </Box>
