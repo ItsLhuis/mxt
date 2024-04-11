@@ -45,7 +45,7 @@ const ListButton = ({ buttons, onClose }) => {
                 }
               }}
             >
-              <Typography variant="p" component="p" sx={{ fontWeight: 400 }}>
+              <Typography variant="p" component="p" >
                 {button.label}
               </Typography>
             </Button>
