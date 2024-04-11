@@ -44,7 +44,7 @@ const FinancialStatistics = () => {
   const financialData = [
     { title: "Rendimentos", amount: formatValueToEuro(152983.0) },
     { title: "Despesas", amount: formatValueToEuro(24813.0) },
-    { title: "Total", amount: formatValueToEuro(128170.0) }
+    { title: "Lucro", amount: formatValueToEuro(128170.0) }
   ]
 
   const mdSize = financialData.length % 2 === 0 ? 6 : 12
