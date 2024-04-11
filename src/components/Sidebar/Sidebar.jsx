@@ -5,15 +5,12 @@ import "./styles.css"
 import { useNavigate, useLocation } from "react-router-dom"
 
 import { Box, Collapse, Typography, ButtonBase, Drawer, Tooltip, IconButton } from "@mui/material"
-
 import {
   Dashboard,
-  Build,
   Inventory,
   Person,
   AppsOutlined,
   Construction,
-  FormatListBulleted,
   TableChart,
   Terminal,
   ReceiptLongOutlined,
@@ -116,23 +113,6 @@ const sidebarData = [
   },
   {
     title: "MANUTENÇÃO",
-    icon: <Build fontSize="small" />,
-    path: "/service/",
-    name: "Serviço",
-    submenu: [
-      {
-        path: "/service/list",
-        name: "Lista",
-        className: ""
-      },
-      {
-        path: "/service/add",
-        name: "Adicionar",
-        className: ""
-      }
-    ]
-  },
-  {
     icon: <Inventory fontSize="small" />,
     path: "/stock/",
     name: "Inventário",
@@ -182,44 +162,17 @@ const sidebarData = [
         className: ""
       },
       {
-        icon: <FormatListBulleted fontSize="small" />,
-        path: "/repair/state",
-        name: "Estado",
-        submenu: [
-          {
-            path: "/repair/state/open",
-            name: "Aberto",
-            className: "__but__lvlDown"
-          },
-          {
-            path: "/repair/state/repaired",
-            name: "Reparado",
-            className: "__but__lvlDown"
-          },
-          {
-            path: "/repair/state/closed",
-            name: "Fechado",
-            className: "__but__lvlDown"
-          },
-          {
-            path: "/repair/state/dc",
-            name: "DC",
-            className: "__but__lvlDown"
-          }
-        ]
-      },
-      {
         icon: <AppsOutlined fontSize="small" />,
-        path: "/equipment/",
+        path: "/repair/equipment/",
         name: "Equipamento",
         submenu: [
           {
-            path: "/repair/list",
+            path: "/repair/equipment/list",
             name: "Lista",
             className: "__but__lvlDown"
           },
           {
-            path: "/equipment/tag",
+            path: "/repair/equipment/tag",
             name: "Etiqueta",
             className: "__but__lvlDown"
           }
