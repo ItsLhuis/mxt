@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 
 import { produce } from "immer"
 
@@ -63,6 +63,27 @@ const getDataCountText = (dataSize) => {
 }
 
 const Table = ({ columns, data, mode, actions, error, helperText }) => {
+  const tableRef = useRef(null)
+  const [tableHeadHeight, setTableHeadHeight] = useState(0)
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (tableRef.current) {
+        const tableHead = tableRef.current.querySelector("thead")
+        if (tableHead) {
+          setTableHeadHeight(tableHead.getBoundingClientRect().height)
+        }
+      }
+    }
+
+    handleResize()
+    window.addEventListener("resize", handleResize)
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [tableRef.current])
+
   const [state, setState] = useState({
     order: "asc",
     orderBy: "",
@@ -74,34 +95,37 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
   })
 
   useEffect(() => {
-    const defaultOptions = [5, 10, 15, 25, 50]
+    setState((prevState) =>
+      produce(prevState, (draft) => {
+        const newSelected = new Set(
+          Array.from(draft.selected).filter((id) => data.some((item) => item.id === id))
+        )
+        draft.selected = newSelected
 
-    let newRowsPerPage = state.rowsPerPage
+        const defaultOptions = [5, 10, 15, 25, 50]
+        let newRowsPerPage = draft.rowsPerPage
 
-    if (data.length <= defaultOptions[defaultOptions.length - 1]) {
-      const filteredOptions = defaultOptions.filter((option) => option <= data.length)
-      setState(
-        produce((draft) => {
+        if (data.length <= defaultOptions[defaultOptions.length - 1]) {
+          const filteredOptions = defaultOptions.filter((option) => option <= data.length)
           draft.rowsPerPageOptions = filteredOptions
 
           if (filteredOptions.length === 0) {
             draft.rowsPerPage = 5
-            return
-          }
-
-          if (!filteredOptions.includes(state.rowsPerPage)) {
+          } else if (!filteredOptions.includes(draft.rowsPerPage)) {
             newRowsPerPage = filteredOptions[filteredOptions.length - 1]
             draft.rowsPerPage = newRowsPerPage
           }
-        })
-      )
-    } else {
-      setState(
-        produce((draft) => {
+        } else {
           draft.rowsPerPageOptions = defaultOptions
-        })
-      )
-    }
+        }
+
+        const totalPages = Math.ceil(data.length / draft.rowsPerPage)
+        if (totalPages > 0 && draft.page >= totalPages) {
+          const newPage = Math.max(totalPages - 1, 0)
+          draft.page = newPage
+        }
+      })
+    )
   }, [data])
 
   const handleSort = (columnId) => {
@@ -207,8 +231,8 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            backgroundColor: "var(--elevation-level3)",
-            height: 56,
+            backgroundColor: "var(--elevation-level5)",
+            height: tableHeadHeight,
             width: "100%",
             position: "absolute",
             zIndex: 3
@@ -219,19 +243,10 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
               indeterminate={state.selected.size > 0 && state.selected.size < data.length}
               checked={data.length > 0 && state.selected.size === data.length}
               onChange={handleSelectAllClick}
-              sx={{
-                "& .MuiSvgIcon-root": {
-                  color: "rgb(228, 225, 230)"
-                }
-              }}
             />
           </Box>
           <Box sx={{ border: "none", paddingLeft: 3 }}>
-            <Typography
-              variant="body2"
-              component="p"
-              sx={{ fontWeight: 600, color: "rgb(228, 225, 230)" }}
-            >
+            <Typography variant="body2" component="p" sx={{ fontWeight: 600 }}>
               {formatNumber(state.selected.size)} {getSelectedText(state.selected.size)}
             </Typography>
           </Box>
@@ -257,7 +272,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
           )}
         </Stack>
       )}
-      <TableContainer component={Box}>
+      <TableContainer ref={tableRef} component={Box}>
         <MuiTable
           sx={{
             width: "100%",
@@ -350,13 +365,15 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
                         <>
                           {row.expandableContent ? (
                             <TableCell sx={{ width: 0 }}>
-                              <IconButton size="small" onClick={() => handleRowClick(row.id)}>
-                                <KeyboardArrowUp
-                                  className={`arrow-but-drop-down ${
-                                    state.openRows.has(row.id) && "__arrow-but-drop-down__rotate"
-                                  }`}
-                                />
-                              </IconButton>
+                              <Tooltip title="Expandir">
+                                <IconButton size="small" onClick={() => handleRowClick(row.id)}>
+                                  <KeyboardArrowUp
+                                    className={`arrow-but-drop-down ${
+                                      state.openRows.has(row.id) && "__arrow-but-drop-down__rotate"
+                                    }`}
+                                  />
+                                </IconButton>
+                              </Tooltip>
                             </TableCell>
                           ) : (
                             <TableCell />
