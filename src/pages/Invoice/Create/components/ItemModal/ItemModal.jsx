@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 
 import { produce } from "immer"
 
@@ -43,15 +43,12 @@ const schema = z.object({
     .number({ invalid_type_error: "A quantidade é obrigatória" })
     .int({ message: "A quantidade deve ser número inteiro" })
     .min(1, { message: "A quantidade deve ser maior que 0" }),
-  price: z.number({
-    invalid_type_error: "O preço é obrigatório",
-    required_error: "O preço é obrigatório"
-  }),
-  vat: z
-    .number({ invalid_type_error: "O IVA é obrigatório", required_error: "O IVA é obrigatório" })
-    .min(0, {
-      message: "O IVA deve ser maior ou igual a 0"
-    }),
+  price: z
+    .number({
+      invalid_type_error: "O preço é obrigatório",
+      required_error: "O preço é obrigatório"
+    })
+    .min(1, { message: "O preço deve ser maior que 0,00" }),
   discount: z
     .union([
       z
@@ -63,7 +60,7 @@ const schema = z.object({
     .optional()
 })
 
-const ProductModal = ({ open, handleClose, onClick, services, products, initialValues }) => {
+const ItemModal = ({ mode, open, handleClose, onClick, services, products, initialValues }) => {
   const {
     control,
     register,
@@ -76,7 +73,7 @@ const ProductModal = ({ open, handleClose, onClick, services, products, initialV
     resolver: zodResolver(schema)
   })
 
-  const [searchProductModalOpen, setSearchProductModalOpen] = useState(false)
+  const [searchItemModalOpen, setSearchtemModalOpen] = useState(false)
 
   const [selectedProductId, setSelectedProductId] = useState(null)
 
@@ -84,6 +81,18 @@ const ProductModal = ({ open, handleClose, onClick, services, products, initialV
     setSelectedProductId(null)
 
     reset()
+
+    if (initialValues) {
+      setValue("title", initialValues.title)
+      setValue("description", initialValues.description)
+      setValue("service", initialValues.service)
+      setValue("quantity", initialValues.quantity)
+      setValue("price", initialValues.price)
+
+      setSelectedProductId(initialValues.id)
+
+      updateTotal()
+    }
   }, [open])
 
   const handleProductSelect = (product) => {
@@ -92,41 +101,67 @@ const ProductModal = ({ open, handleClose, onClick, services, products, initialV
     setValue("service", product.service)
     setValue("quantity", product.quantity)
     setValue("price", product.price)
-    setValue("vat", product.vat)
 
-    setSelectedProductId(product.id)
+    if (mode === "add" && !selectedProductId) {
+      setSelectedProductId(product.id)
+    }
 
     updateTotal()
   }
 
   const onSubmit = (data) => {
+    if (!selectedProductId) {
+      return
+    }
+
     if (data.discount === null || data.discount === undefined || isNaN(data.discount)) {
       data.discount = 0
     }
 
-    const id = uuidv4()
-    const newData = produce(data, (draft) => {
-      draft.id = id
-      draft.total = getValues("total")
-    })
-    onClick(newData)
+    if (mode === "add") {
+      const id = uuidv4()
+      const newData = produce(data, (draft) => {
+        draft.id = id
+        draft.total = getValues("total")
+        draft.moreOptions = {
+          item: {
+            id,
+            ...data,
+            total: getValues("total")
+          }
+        }
+      })
+      onClick(newData)
+      showSuccessToast("Item adicionado com sucesso!")
+    } else if (mode === "edit") {
+      const newData = produce(data, (draft) => {
+        draft.id = selectedProductId
+        draft.total = getValues("total")
+        draft.moreOptions = {
+          item: {
+            id: selectedProductId,
+            ...data,
+            total: getValues("total")
+          }
+        }
+      })
+      onClick(newData)
+      showSuccessToast("Item editado com sucesso!")
+    }
 
-    showSuccessToast("Item adicionado com sucesso!")
     handleClose()
   }
 
   const updateTotal = () => {
-    const { quantity, price, discount, vat } = getValues()
+    const { quantity, price, discount } = getValues()
+
     const numericQuantity = parseFloat(quantity) || 0
     const numericPrice = parseFloat(price) || 0
     const numericDiscount = parseFloat(discount) || 0
-    const numericVat = parseFloat(vat) || 0
-
     const totalPrice = numericQuantity * numericPrice
     const discountAmount = (totalPrice * numericDiscount) / 100
-    const subtotal = totalPrice - discountAmount
-    const vatAmount = subtotal * (numericVat / 100)
-    const total = subtotal + vatAmount
+
+    const total = totalPrice - discountAmount
 
     setValue("total", total.toFixed(2), { shouldValidate: false })
   }
@@ -136,8 +171,8 @@ const ProductModal = ({ open, handleClose, onClick, services, products, initialV
       open={open}
       onClose={handleClose}
       mode="form"
-      title="Adicionar Produto"
-      submitButtonText="Adicionar Produto"
+      title={mode === "edit" ? "Editar Item" : "Adicionar Item"}
+      submitButtonText={mode === "edit" ? "Editar Item" : "Adicionar Item"}
       onSubmit={handleSubmit(onSubmit)}
     >
       <Box sx={{ padding: 3, paddingTop: 1 }}>
@@ -145,20 +180,23 @@ const ProductModal = ({ open, handleClose, onClick, services, products, initialV
           <Grid item xs={12}>
             <Stack sx={{ flexDirection: "row", alignItems: "flex-start", gap: 1 }}>
               <Tooltip title="Pesquisar" placement="bottom">
-                <IconButton sx={{ marginTop: 1 }} onClick={() => setSearchProductModalOpen(true)}>
+                <IconButton sx={{ marginTop: 1 }} onClick={() => setSearchtemModalOpen(true)}>
                   <Search />
                 </IconButton>
               </Tooltip>
               <FormControl fullWidth>
                 <TextField
+                  {...register("title")}
                   name="title"
                   label="Título"
                   placeholder="Título"
                   disabled
-                  value={getValues("title")}
                   InputLabelProps={{ shrink: true }}
                   error={!!errors.title}
                   helperText={errors.title ? errors.title.message : ""}
+                  onChange={(e) => {
+                    e.target.value = getValues("title") || ""
+                  }}
                 />
               </FormControl>
             </Stack>
@@ -171,6 +209,7 @@ const ProductModal = ({ open, handleClose, onClick, services, products, initialV
                 label="Descrição"
                 placeholder="Descrição"
                 InputLabelProps={{ shrink: true }}
+                multiline
               />
             </FormControl>
           </Grid>
@@ -215,12 +254,11 @@ const ProductModal = ({ open, handleClose, onClick, services, products, initialV
           <Grid item xs={12} sm={3}>
             <FormControl fullWidth>
               <TextField
+                {...register("price", { valueAsNumber: true })}
                 name="price"
                 label="Preço"
                 placeholder="0,00"
                 type="number"
-                disabled
-                value={getValues("price")}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -231,37 +269,18 @@ const ProductModal = ({ open, handleClose, onClick, services, products, initialV
                 InputLabelProps={{ shrink: true }}
                 error={!!errors.price}
                 helperText={errors.price ? errors.price.message : ""}
-              />
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <FormControl fullWidth>
-              <TextField
-                name="vat"
-                label="IVA"
-                placeholder="0,00"
-                type="number"
-                disabled
-                value={getValues("vat")}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Percent fontSize="small" />
-                    </InputAdornment>
-                  )
+                onChange={(e) => {
+                  setValue("price", e.target.value)
+                  updateTotal()
                 }}
-                InputLabelProps={{ shrink: true }}
-                error={!!errors.vat}
-                helperText={errors.vat ? errors.vat.message : ""}
               />
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <TextField
                 {...register("discount", {
-                  valueAsNumber: true,
-                  setValueAs: (value) => Number(value)
+                  valueAsNumber: true
                 })}
                 name="discount"
                 label="Desconto"
@@ -300,14 +319,17 @@ const ProductModal = ({ open, handleClose, onClick, services, products, initialV
                   )
                 }}
                 InputLabelProps={{ shrink: true }}
+                onChange={(e) => {
+                  e.target.value = getValues("total") || ""
+                }}
               />
             </FormControl>
           </Grid>
         </Grid>
       </Box>
       <Modal
-        open={searchProductModalOpen}
-        onClose={() => setSearchProductModalOpen(false)}
+        open={searchItemModalOpen}
+        onClose={() => setSearchtemModalOpen(false)}
         title="Produtos"
         placeholder="Pesquise por um produto"
         mode="data"
@@ -379,13 +401,14 @@ const ProductModal = ({ open, handleClose, onClick, services, products, initialV
   )
 }
 
-ProductModal.propTypes = {
+ItemModal.propTypes = {
+  mode: PropTypes.oneOf(["add", "edit"]).isRequired,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
   services: PropTypes.array.isRequired,
   products: PropTypes.array.isRequired,
-  initialValues: PropTypes.array
+  initialValues: PropTypes.object
 }
 
-export default ProductModal
+export default ItemModal
