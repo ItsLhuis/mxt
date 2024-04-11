@@ -1,5 +1,7 @@
 import React, { useState } from "react"
 
+import { produce } from "immer"
+
 import {
   Paper,
   Box,
@@ -32,41 +34,49 @@ const InvoiceList = () => {
     searchValue: ""
   })
 
+  const updateFilters = (newFilters) => {
+    setFilters(
+      produce(filters, (draft) => {
+        Object.assign(draft, newFilters)
+      })
+    )
+  }
+
   const handleResetSelectedTab = () => {
-    setFilters({ ...filters, selectedTab: 0 })
+    updateFilters({ selectedTab: 0 })
   }
   const handleTabChange = (_, value) => {
-    setFilters({ ...filters, selectedTab: value })
+    updateFilters({ selectedTab: value })
   }
 
   const handleRemoveService = (index) => {
     const updatedServices = [...filters.selectedServiceItems]
     updatedServices.splice(index, 1)
-    setFilters({ ...filters, selectedServiceItems: updatedServices })
+    updateFilters({ selectedServiceItems: updatedServices })
   }
   const handleSelectedServiceItemsChange = (value) => {
-    setFilters({ ...filters, selectedServiceItems: value })
+    updateFilters({ selectedServiceItems: value })
   }
 
   const handleRemoveDate = () => {
-    setFilters({ ...filters, startDate: null, endDate: null })
+    updateFilters({ startDate: null, endDate: null })
   }
   const handleStartDateChange = (date) => {
-    setFilters({ ...filters, startDate: date })
+    updateFilters({ startDate: date })
   }
   const handleEndDateChange = (date) => {
-    setFilters({ ...filters, endDate: date })
+    updateFilters({ endDate: date })
   }
 
   const handleRemoveSearchInpuValue = () => {
-    setFilters({ ...filters, searchValue: "" })
+    updateFilters({ searchValue: "" })
   }
   const handleSearchInputChange = (value) => {
-    setFilters({ ...filters, searchValue: value })
+    updateFilters({ searchValue: value })
   }
 
   const handleClearFilters = () => {
-    setFilters({
+    updateFilters({
       selectedTab: 0,
       selectedServiceItems: [],
       startDate: null,
@@ -474,7 +484,7 @@ const InvoiceList = () => {
 
   return (
     <Paper elevation={1}>
-      <Box sx={{ marginTop: 3 }}>
+      <Box sx={{ marginTop: 3, paddingBottom: 2 }}>
         <Tabs
           value={filters.selectedTab}
           onChange={handleTabChange}
@@ -525,7 +535,7 @@ const InvoiceList = () => {
           mode="datatable"
           actions={[
             {
-              icon: <DeleteOutline sx={{ color: "rgb(228, 225, 230)" }} />,
+              icon: <DeleteOutline />,
               title: "Eliminar",
               onClick: () => console.log()
             }
