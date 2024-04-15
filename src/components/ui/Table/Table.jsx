@@ -95,6 +95,11 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
   })
 
   useEffect(() => {
+    const tableHead = tableRef.current.querySelector("thead")
+    if (tableHead) {
+      setTableHeadHeight(tableHead.getBoundingClientRect().height)
+    }
+
     setState((prevState) =>
       produce(prevState, (draft) => {
         const newSelected = new Set(
@@ -478,7 +483,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
                       fontSize: 13
                     },
                     "& .MuiPaper-root .MuiList-root .MuiButtonBase-root:hover": {
-                      bgcolor: "var(--elevation-level5)"
+                      backgroundColor: "var(--secondaryContainer)"
                     }
                   }
                 }
