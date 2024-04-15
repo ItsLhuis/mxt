@@ -106,7 +106,8 @@ const ButtonDropDownSelect = ({
                 <Box display="flex" alignItems="center" gap="8px">
                   {description && (
                     <Typography
-                      variant="body3"
+                      variant="p"
+                      component="p"
                       sx={{ textAlign: "left", color: "var(--outline)", fontWeight: 500 }}
                     >
                       {description}
