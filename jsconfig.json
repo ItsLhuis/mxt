@@ -2,14 +2,13 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@": ["src/"],
-      "@assets/*": ["assets/*"],
-      "@components/*": ["components/*"],
-      "@pages/*": ["pages/*"],
-      "@contexts/*": ["contexts/*"],
+      "@/*": ["*"],
+      "@api/*": ["api/*"],
       "@config/*": ["config/*"],
+      "@controllers/*": ["controllers/*"],
+      "@routes/*": ["routes/*"],
       "@utils/*": ["utils/*"]
     }
   },
-  "exclude": ["node_modules", "vite.config.js"]
+  "exclude": ["node_modules"]
 }

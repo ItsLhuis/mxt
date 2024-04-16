@@ -6,9 +6,9 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom"
 
 import { Box } from "@mui/material"
 
-import { PageProgress } from "@components/ui"
+import { PageLoader } from "@components/ui"
 
-import { Dashboard, InvoiceList, CreateInvoice, Settings } from "@pages"
+import { Dashboard, ClientList, AddClient, InvoiceList, CreateInvoice, Settings } from "@pages"
 
 const Content = () => {
   const location = useLocation()
@@ -24,14 +24,21 @@ const Content = () => {
   return (
     <Box className="main-content">
       <Box className="all-content" ref={allContentRef}>
-        <Suspense fallback={<PageProgress />}>
+        <Suspense fallback={<PageLoader />}>
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Navigate replace to="/dashboard" />} />
 
             <Route path="/dashboard" element={<Dashboard />} />
 
+            {/* Client */}
+            <Route path="/client/list" element={<ClientList />} />
+            <Route path="/client/add" element={<AddClient />} />
+            {/* ---------------------------------------------------------- */}
+
+            {/* Invoice */}
             <Route path="/invoice/list" element={<InvoiceList />} />
             <Route path="/invoice/add" element={<CreateInvoice />} />
+            {/* ---------------------------------------------------------- */}
 
             <Route path="/settings" element={<Settings />} />
           </Routes>

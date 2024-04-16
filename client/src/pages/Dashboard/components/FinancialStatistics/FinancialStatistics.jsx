@@ -328,7 +328,6 @@ const FinancialStatistics = () => {
       total: 399,
       type: "Despesa",
       moreOptions: "ola",
-      moreOptions: "ola",
       expandableContent: () =>
         getExpandableContent("Despesa", [
           {

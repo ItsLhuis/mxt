@@ -152,7 +152,7 @@ const Create = () => {
     state: "Rascunho",
     creationDate: new Date(),
     dueDate: null,
-    items: []
+    items: generateItems()
   })
   const [errors, setErrors] = useState({})
 

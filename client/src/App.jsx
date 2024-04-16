@@ -10,7 +10,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles"
 
 import { Toaster } from "react-hot-toast"
 
-import Body from "@components/Body/Body"
+import { Body } from "@components"
 import { Auth } from "@pages"
 
 import { Loader } from "@components/ui"
