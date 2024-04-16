@@ -7,6 +7,7 @@ const helmet = require("helmet")
 const session = require("express-session")
 const bodyParser = require("body-parser")
 const crypto = require("crypto")
+const path = require("path")
 
 const app = express()
 
@@ -40,6 +41,11 @@ app.use(
 
 const apiV1Routes = require("@api/v1")
 app.use("/api/v1", apiV1Routes)
+
+app.use(express.static(path.join(__dirname, "public/client/dist")))
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/client/dist", "index.html"))
+})
 
 const server = http.createServer(app)
 
