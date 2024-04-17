@@ -23,7 +23,7 @@ O esquema da base de dados abaixo descreve a estrutura das tabelas utilizadas na
 
 - **ID**: Identificador único do contacto (Chave Primária).
 - **ClientID**: ID do cliente associado (Chave Estrangeira).
-- **ContactType**: Tipo de contacto (telefone, e-mail, etc.).
+- **ContactType**: Tipo de contacto (E-mail, Telefone, Telemóvel, Outro, etc.) [ENUMERAÇÃO].
 - **ContactDetails**: Detalhes do contacto.
 - **CreatedBy**: ID do utilizador que criou o registro.
 - **CreationDate**: Data e hora de criação do registro.
