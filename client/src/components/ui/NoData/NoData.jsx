@@ -21,7 +21,7 @@ const NoData = ({ error, onlyLottie }) => {
   return (
     <>
       {onlyLottie ? (
-        <Lottie animationData={LottieAnimation[dataTheme]} style={{ height: 100 }} />
+        <Lottie animationData={LottieAnimation[dataTheme]} style={{ height: 150 }} />
       ) : (
         <Stack
           sx={{
