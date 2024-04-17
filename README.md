@@ -8,50 +8,100 @@ O esquema da base de dados abaixo descreve a estrutura das tabelas utilizadas na
 
 ### Tabelas
 
+#### Users
+
+```sql
+CREATE TABLE Users (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Username VARCHAR(255),
+    Password VARCHAR(255),
+    UserType ENUM('Chefe', 'Administrador', 'Funcionário') NOT NULL,
+    IsActive BOOLEAN,
+    CreatedAt DATETIME,
+    LastLogin DATETIME
+);
+```
+
+#### Employees
+
+```sql
+CREATE TABLE Employees (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    UserID INT UNIQUE,
+    FullName VARCHAR(255),
+    Email VARCHAR(255),
+    Department VARCHAR(255),
+    FOREIGN KEY (UserID) REFERENCES Users(ID)
+);
+```
+
 #### Clients
 
-- **ID**: Identificador único do cliente (Chave Primária).
-- **Name**: Nome do cliente.
-- **Description**: Descrição adicional sobre o cliente.
-- **CreatedBy**: ID do utilizador que criou o registro.
-- **CreationDate**: Data e hora de criação do registro.
-- **LastModifiedBy**: ID do utilizador que realizou a última modificação.
-- **LastModifiedDate**: Data e hora da última modificação.
-- **Foreign Keys**: `CreatedBy` e `LastModifiedBy` referenciam a tabela `Users`.
+```sql
+CREATE TABLE Clients (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(255),
+    Description TEXT,
+    CreatedByUserID INT,
+    CreationDate DATETIME,
+    LastModifiedByUserID INT,
+    LastModifiedDateTime DATETIME,
+    FOREIGN KEY (CreatedByUserID) REFERENCES Users(ID),
+    FOREIGN KEY (LastModifiedByUserID) REFERENCES Users(ID)
+);
+```
 
 #### ClientContacts
 
-- **ID**: Identificador único do contacto (Chave Primária).
-- **ClientID**: ID do cliente associado (Chave Estrangeira).
-- **ContactType**: Tipo de contacto (E-mail, Telefone, Telemóvel, Outro, etc.) [ENUMERAÇÃO].
-- **ContactDetails**: Detalhes do contacto.
-- **CreatedBy**: ID do utilizador que criou o registro.
-- **CreationDate**: Data e hora de criação do registro.
-- **LastModifiedBy**: ID do utilizador que realizou a última modificação.
-- **LastModifiedDate**: Data e hora da última modificação.
-- **Foreign Keys**: `ClientID`, `CreatedBy` e `LastModifiedBy` referenciam a tabela `Clients` e `Users`.
+```sql
+CREATE TABLE ClientContacts (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    ClientID INT,
+    ContactType ENUM('E-mail', 'Telefone', 'Telemóvel', 'Outro') NOT NULL,
+    Contact VARCHAR(255),
+    Description TEXT,
+    CreatedByUserID INT,
+    CreationDate DATETIME,
+    LastModifiedByUserID INT,
+    LastModifiedDateTime DATETIME,
+    FOREIGN KEY (ClientID) REFERENCES Clients(ID),
+    FOREIGN KEY (CreatedByUserID) REFERENCES Users(ID),
+    FOREIGN KEY (LastModifiedByUserID) REFERENCES Users(ID)
+);
+```
 
 #### ClientAddresses
 
-- **ID**: Identificador único do endereço (Chave Primária).
-- **ClientID**: ID do cliente associado (Chave Estrangeira).
-- **Country**: País do endereço.
-- **City**: Cidade do endereço.
-- **Locality**: Localidade do endereço.
-- **Address**: Endereço completo.
-- **PostalCode**: Código postal.
-- **CreatedBy**: ID do utilizador que criou o registro.
-- **CreationDate**: Data e hora de criação do registro.
-- **LastModifiedBy**: ID do utilizador que realizou a última modificação.
-- **LastModifiedDate**: Data e hora da última modificação.
-- **Foreign Keys**: `ClientID`, `CreatedBy` e `LastModifiedBy` referenciam a tabela `Clients` e `Users`.
+```sql
+CREATE TABLE ClientAddresses (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    ClientID INT,
+    Country VARCHAR(255),
+    City VARCHAR(255),
+    Locality VARCHAR(255),
+    Address TEXT,
+    PostalCode VARCHAR(20),
+    CreatedByUserID INT,
+    CreationDate DATETIME,
+    LastModifiedByUserID INT,
+    LastModifiedDateTime DATETIME,
+    FOREIGN KEY (ClientID) REFERENCES Clients(ID),
+    FOREIGN KEY (CreatedByUserID) REFERENCES Users(ID),
+    FOREIGN KEY (LastModifiedByUserID) REFERENCES Users(ID)
+);
+```
 
 #### ClientInteractionsHistory
 
-- **ID**: Identificador único da interação (Chave Primária).
-- **ClientID**: ID do cliente associado (Chave Estrangeira).
-- **InteractionDateTime**: Data e hora da interação.
-- **InteractionType**: Tipo de interação ('Novo Contacto Adicionado', 'Endereço Atualizado', etc.).
-- **Details**: Detalhes adicionais sobre a interação.
-- **ResponsibleUser**: ID do utilizador responsável pela interação.
-- **Foreign Keys**: `ClientID` e `ResponsibleUser` referenciam a tabela `Clients` e `Users`.
+```sql
+CREATE TABLE ClientInteractionsHistory (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    ClientID INT,
+    InteractionDateTime DATETIME,
+    InteractionType VARCHAR(255),
+    Details TEXT,
+    ResponsibleUserID INT,
+    FOREIGN KEY (ClientID) REFERENCES Clients(ID),
+    FOREIGN KEY (ResponsibleUserID) REFERENCES Users(ID)
+);
+```
