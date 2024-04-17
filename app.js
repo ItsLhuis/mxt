@@ -9,6 +9,8 @@ const bodyParser = require("body-parser")
 const crypto = require("crypto")
 const path = require("path")
 
+const serveClientBuildCodeMiddleware = require("@middlewares/serveClientBuildCode")
+
 const app = express()
 
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -39,13 +41,12 @@ app.use(
   })
 )
 
+app.use(express.static(path.join(__dirname, "public/client/build")))
+
 const apiV1Routes = require("@api/v1")
 app.use("/api/v1", apiV1Routes)
 
-app.use(express.static(path.join(__dirname, "public/client/build")))
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/client/build", "index.html"))
-})
+app.use(serveClientBuildCodeMiddleware)
 
 const server = http.createServer(app)
 

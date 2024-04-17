@@ -5,6 +5,7 @@ addAliases({
   "@app": `${__dirname}/app.js`,
   "@config": `${__dirname}/config`,
   "@controllers": `${__dirname}/controllers`,
+  "@middlewares": `${__dirname}/middlewares`,
   "@routes": `${__dirname}/routes`,
   "@utils": `${__dirname}/utils`,
   "@public": `${__dirname}/public`
