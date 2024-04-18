@@ -3,11 +3,19 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["*"],
+      "@app/*": ["app.js"],
       "@api/*": ["api/*"],
+      "@classes/*": ["classes/*"],
       "@config/*": ["config/*"],
+      "@constants/*": ["constants/*"],
       "@controllers/*": ["controllers/*"],
+      "@middlewares/*": ["middlewares/*"],
+      "@models/*": ["models/*"],
       "@routes/*": ["routes/*"],
-      "@utils/*": ["utils/*"]
+      "@schemas/*": ["schemas/*"],
+      "@scripts/*": ["scripts/*"],
+      "@utils/*": ["utils/*"],
+      "@public/*": ["public/*"]
     }
   },
   "exclude": ["node_modules"]

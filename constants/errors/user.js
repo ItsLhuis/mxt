@@ -1,0 +1,4 @@
+module.exports = {
+  USERNAME_ALREADY_EXISTS: 1001,
+  EMAIL_ALREADY_EXISTS: 1002
+}

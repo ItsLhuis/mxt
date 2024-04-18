@@ -9,7 +9,9 @@ const bodyParser = require("body-parser")
 const crypto = require("crypto")
 const path = require("path")
 
-const serveClientBuildCodeMiddleware = require("@middlewares/serveClientBuildCode")
+const serveClientBuildCodeHandler = require("@middlewares/serveClientBuildCodeHandler")
+const notFoundHandler = require("@middlewares/notFoundHandler")
+const errorHandler = require("@middlewares/errorHandler")
 
 const app = express()
 
@@ -42,11 +44,13 @@ app.use(
 )
 
 app.use(express.static(path.join(__dirname, "public/client/build")))
+app.use(serveClientBuildCodeHandler)
 
 const apiV1Routes = require("@api/v1")
 app.use("/api/v1", apiV1Routes)
 
-app.use(serveClientBuildCodeMiddleware)
+app.use(notFoundHandler)
+app.use(errorHandler)
 
 const server = http.createServer(app)
 
