@@ -7,4 +7,7 @@ router.use("/auth", authRouter)
 const userRouter = require("@routes/user")
 router.use("/users", userRouter)
 
+const employeeRouter = require("@routes/employee")
+router.use("/employees", employeeRouter)
+
 module.exports = router
