@@ -21,6 +21,18 @@ const User = {
     const query =
       "INSERT INTO users (username, password, email, role, is_active, created_at_datetime) VALUES (?, ?, ?, ?, ?, NOW())"
     return queryExecutor.execute(query, [username, password, email, role, isActive])
+  },
+  update: (id, username, email, role, isActive) => {
+    const query = "UPDATE users SET username = ?, email = ?, role = ?, is_active = ? WHERE id = ?"
+    return queryExecutor.execute(query, [username, email, role, isActive, id])
+  },
+  updatePassword: (id, password) => {
+    const query = "UPDATE users SET password = ? WHERE id = ?"
+    return queryExecutor.execute(query, [password, id])
+  },
+  delete: (id) => {
+    const query = "DELETE FROM users WHERE id = ?"
+    return queryExecutor.execute(query, [id])
   }
 }
 
