@@ -30,9 +30,13 @@ app.use(
 
 app.use(express.json())
 
+const secretKey = process.env.SESSION_SECRET
+  ? crypto.randomBytes(64).toString("hex")
+  : crypto.createHash("sha256").update(process.env.SESSION_SECRET).digest("hex")
+
 app.use(
   session({
-    secret: crypto.randomBytes(64).toString("hex"),
+    secret: secretKey,
     resave: true,
     saveUninitialized: true,
     cookie: {
