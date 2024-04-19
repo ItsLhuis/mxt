@@ -1,10 +1,13 @@
--- Criar a base de dados "mxt"
-CREATE DATABASE IF NOT EXISTS mxt;
+-- Create the "mxt" database with the time zone set to Portugal
+CREATE DATABASE IF NOT EXISTS mxt CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Usar a base de dados "mxt"
+-- Use the "mxt" database
 USE mxt;
 
--- Tabela users
+-- Set the default time zone to Portugal
+SET time_zone = '+00:00';
+
+-- Table users
 CREATE TABLE IF NOT EXISTS users (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(255) NOT NULL UNIQUE,
@@ -16,7 +19,7 @@ CREATE TABLE IF NOT EXISTS users (
     last_login_datetime DATETIME
 );
 
--- Tabela employees
+-- Table employees
 CREATE TABLE IF NOT EXISTS employees (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL UNIQUE,
@@ -31,7 +34,7 @@ CREATE TABLE IF NOT EXISTS employees (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Tabela clients
+-- Table clients
 CREATE TABLE IF NOT EXISTS clients (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255),
@@ -44,7 +47,7 @@ CREATE TABLE IF NOT EXISTS clients (
     FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- Tabela client_contacts
+-- Table client_contacts
 CREATE TABLE IF NOT EXISTS client_contacts (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     client_id INT,
@@ -60,7 +63,7 @@ CREATE TABLE IF NOT EXISTS client_contacts (
     FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Tabela client_addresses
+-- Table client_addresses
 CREATE TABLE IF NOT EXISTS client_addresses (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     client_id INT,
@@ -78,7 +81,7 @@ CREATE TABLE IF NOT EXISTS client_addresses (
     FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- Tabela client_interactions_history
+-- Table client_interactions_history
 CREATE TABLE IF NOT EXISTS client_interactions_history (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     client_id INT,
