@@ -1,19 +1,40 @@
 require("dotenv").config()
 
 const express = require("express")
+const session = require("express-session")
+const cookieParser = require("cookie-parser")
 const http = require("http")
 const cors = require("cors")
 const helmet = require("helmet")
-const session = require("express-session")
 const bodyParser = require("body-parser")
-const crypto = require("crypto")
 const path = require("path")
 
 const serveClientBuildCodeHandler = require("@middlewares/serveClientBuildCodeHandler")
 const notFoundHandler = require("@middlewares/notFoundHandler")
 const errorHandler = require("@middlewares/errorHandler")
 
+const isProduction = process.env.NODE_ENV === "production"
+
 const app = express()
+
+if (isProduction) {
+  app.set("trust proxy", 1)
+}
+
+app.use(cookieParser())
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    saveUninitialized: false,
+    resave: true,
+    cookie: {
+      sameSite: "none",
+      secure: isProduction,
+      httpOnly: true,
+      maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN * 1000
+    }
+  })
+)
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -29,23 +50,6 @@ app.use(
 )
 
 app.use(express.json())
-
-const secretKey = process.env.SESSION_SECRET
-  ? crypto.randomBytes(64).toString("hex")
-  : crypto.createHash("sha256").update(process.env.SESSION_SECRET).digest("hex")
-
-app.use(
-  session({
-    secret: secretKey,
-    resave: true,
-    saveUninitialized: true,
-    cookie: {
-      sameSite: "none",
-      secure: true,
-      httpOnly: false
-    }
-  })
-)
 
 app.use(express.static(path.join(__dirname, "public/client/build")))
 app.use(serveClientBuildCodeHandler)
