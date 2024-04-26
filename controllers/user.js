@@ -3,14 +3,14 @@ const bcrypt = require("bcrypt")
 const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
-const { SALT_ROUNDS } = require("@constants/bcrypt")
-
 const {
   USERNAME_ALREADY_EXISTS,
   EMAIL_ALREADY_EXISTS,
   USER_NOT_FOUND,
   PASSWORD_MISMATCH
 } = require("@constants/errors/user")
+
+const { SALT_ROUNDS } = require("@constants/bcrypt")
 
 const User = require("@models/user")
 const { createUserSchema, updateUserSchema, updateUserPasswordSchema } = require("@schemas/user")
