@@ -19,9 +19,12 @@ addAliases({
 const { server } = require("@app")
 
 const PORT = process.env.PORT || 8080
+const isProduction = process.env.NODE_ENV === "production"
 
 server.listen(PORT, () => {
-  if (PORT == 8080) {
+  if (isProduction) {
+    console.log("Server is on...")
+  } else {
     console.log(`Listening on port ${PORT} (http://localhost:${PORT})...`)
   }
 })
