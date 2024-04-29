@@ -44,10 +44,10 @@ const userController = {
     res.status(201).json({ message: "User created successfully" })
   }),
   update: tryCatch(async (req, res) => {
-    const { id } = req.params
+    const { userId } = req.params
     const { username, email, role, isActive } = req.body
 
-    const existingUser = await User.findById(id)
+    const existingUser = await User.findById(userId)
     if (!existingUser.length) {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
@@ -55,23 +55,23 @@ const userController = {
     updateUserSchema.parse(req.body)
 
     const existingUsername = await User.findByUsername(username)
-    if (existingUsername.length > 0 && existingUsername[0].id !== parseInt(id)) {
+    if (existingUsername.length > 0 && existingUsername[0].id !== parseInt(userId)) {
       throw new AppError(400, USERNAME_ALREADY_EXISTS, "The username already exists", true)
     }
 
     const existingEmail = await User.findByEmail(email)
-    if (existingEmail.length > 0 && existingEmail[0].id !== parseInt(id)) {
+    if (existingEmail.length > 0 && existingEmail[0].id !== parseInt(userId)) {
       throw new AppError(400, EMAIL_ALREADY_EXISTS, "The e-mail already exists", true)
     }
 
-    await User.update(id, username, email, role, isActive)
+    await User.update(userId, username, email, role, isActive)
     res.status(204).json({ message: "User updated successfully" })
   }),
   updatePassword: tryCatch(async (req, res) => {
-    const { id } = req.params
+    const { userId } = req.params
     const { password, newPassword } = req.body
 
-    const existingUser = await User.findById(id)
+    const existingUser = await User.findById(userId)
     if (!existingUser.length) {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
@@ -85,18 +85,18 @@ const userController = {
 
     const hashedNewPassword = await bcrypt.hash(newPassword, SALT_ROUNDS)
 
-    User.updatePassword(id, hashedNewPassword)
+    User.updatePassword(userId, hashedNewPassword)
     res.status(204).json({ message: "Password updated successfully" })
   }),
   delete: tryCatch(async (req, res) => {
-    const { id } = req.params
+    const { userId } = req.params
 
-    const existingUser = await User.findById(id)
+    const existingUser = await User.findById(userId)
     if (!existingUser.length) {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
 
-    await User.delete(id)
+    await User.delete(userId)
     res.status(204).json({ message: "User removed successfully" })
   })
 }

@@ -49,6 +49,17 @@ const clientController = {
     await Client.delete(clientId)
     res.status(204).json({ message: "Client deleted successfully" })
   }),
+  findAllContactsByClientId: tryCatch(async (req, res) => {
+    const { clientId } = req.params
+
+    const existingClientId = await Client.findByClientId(clientId)
+    if (existingClientId.length <= 0) {
+      throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+    }
+
+    const contacts = await Client.contacts.findByClientId(clientId)
+    res.status(200).json(contacts)
+  }),
   createContact: tryCatch(async (req, res) => {
     const { clientId } = req.params
     const { contactType, contact, description } = req.body
@@ -83,6 +94,17 @@ const clientController = {
     await Client.contacts.delete(contactId)
 
     res.status(204).json({ message: "Contact deleted successfully" })
+  }),
+  findAllAddressesByClientId: tryCatch(async (req, res) => {
+    const { clientId } = req.params
+
+    const existingClientId = await Client.findByClientId(clientId)
+    if (existingClientId.length <= 0) {
+      throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+    }
+
+    const addresses = await Client.addresses.findByClientId(clientId)
+    res.status(200).json(addresses)
   }),
   createAddress: tryCatch(async (req, res) => {
     const { clientId } = req.params
