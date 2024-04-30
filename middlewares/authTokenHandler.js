@@ -18,27 +18,27 @@ const authToken = tryCatch((req, res, next) => {
   const accessTokenFromSession = req.session.accessToken
 
   if (!refreshTokenFromRequest) {
-    throw new AppError(401, REFRESH_TOKEN_NOT_PROVIDED, "Refresh token not provided", true)
+    throw new AppError(401, REFRESH_TOKEN_NOT_PROVIDED, "Refresh token not provided")
   }
   if (!accessTokenFromRequest) {
-    throw new AppError(401, TOKEN_NOT_PROVIDED, "Access token not provided", true)
+    throw new AppError(401, TOKEN_NOT_PROVIDED, "Access token not provided")
   }
 
   if (refreshTokenFromRequest !== refreshTokenFromSession) {
-    throw new AppError(403, INVALID_REFRESH_TOKEN, "Invalid refresh token", true)
+    throw new AppError(403, INVALID_REFRESH_TOKEN, "Invalid refresh token")
   }
   if (accessTokenFromRequest !== accessTokenFromSession) {
-    throw new AppError(403, INVALID_TOKEN, "Invalid access token", true)
+    throw new AppError(403, INVALID_TOKEN, "Invalid access token")
   }
 
   jwt.verify(refreshTokenFromRequest, process.env.REFRESH_TOKEN_SECRET, (error) => {
     if (error) {
-      throw new AppError(403, INVALID_REFRESH_TOKEN, "Invalid refresh token", true)
+      throw new AppError(403, INVALID_REFRESH_TOKEN, "Invalid refresh token")
     }
 
     jwt.verify(accessTokenFromRequest, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
       if (error) {
-        throw new AppError(403, INVALID_TOKEN, "Invalid access token", true)
+        throw new AppError(403, INVALID_TOKEN, "Invalid access token")
       }
 
       req.user.id = user.id
