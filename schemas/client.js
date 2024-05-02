@@ -5,11 +5,21 @@ const clientSchema = z.object({
   description: z.string().optional()
 })
 
-const clientContactSchema = z.object({
-  contactType: z.enum(["E-mail", "Telefone", "Telemóvel", "Outro"]),
-  contact: z.string().max(255),
-  description: z.string().optional()
-})
+const clientContactSchema = z
+  .object({
+    contactType: z.enum(["E-mail", "Telefone", "Telemóvel", "Outro"]),
+    contact: z.string().max(255),
+    description: z.string().optional()
+  })
+  .refine(
+    (data) => {
+      if (data.contactType === "E-mail") {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.contact)
+      }
+      return true
+    },
+    { message: "Invalid contact format for E-mail contact type", path: ["contact"] }
+  )
 
 const clientAddressSchema = z.object({
   country: z.string().max(255),

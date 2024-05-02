@@ -23,10 +23,26 @@ const Client = {
     const query = "DELETE FROM clients WHERE id = ?"
     return queryExecutor.execute(query, [clientId])
   },
-  contacts: {
+  contact: {
     findByClientId: (clientId) => {
       const query = "SELECT * FROM client_contacts WHERE client_id = ?"
       return queryExecutor.execute(query, [clientId])
+    },
+    findByContactId: (contactId) => {
+      const query = "SELECT * FROM client_contacts WHERE id = ?"
+      return queryExecutor.execute(query, [contactId])
+    },
+    findContactByClientIdAndDetails: (clientId, contactType, contact, contactIdToExclude) => {
+      let query =
+        "SELECT * FROM client_contacts WHERE client_id = ? AND contact_type = ? AND contact = ?"
+      const params = [clientId, contactType, contact]
+
+      if (contactIdToExclude) {
+        query += " AND id != ?"
+        params.push(contactIdToExclude)
+      }
+
+      return queryExecutor.execute(query, params)
     },
     create: (clientId, contactType, contact, description, createdByUserId) => {
       const query =
@@ -55,10 +71,34 @@ const Client = {
       return queryExecutor.execute(query, [contactId])
     }
   },
-  addresses: {
+  address: {
     findByClientId: (clientId) => {
       const query = "SELECT * FROM client_addresses WHERE client_id = ?"
       return queryExecutor.execute(query, [clientId])
+    },
+    findByAddressId: (addressId) => {
+      const query = "SELECT * FROM client_addresses WHERE id = ?"
+      return queryExecutor.execute(query, [addressId])
+    },
+    findAddressByClientIdAndDetails: (
+      clientId,
+      country,
+      city,
+      locality,
+      address,
+      postalCode,
+      addressIdToExclude
+    ) => {
+      let query =
+        "SELECT * FROM client_addresses WHERE client_id = ? AND country = ? AND city = ? AND locality = ? AND address = ? AND postal_code = ?"
+      const params = [clientId, country, city, locality, address, postalCode]
+
+      if (addressIdToExclude) {
+        query += " AND id != ?"
+        params.push(addressIdToExclude)
+      }
+
+      return queryExecutor.execute(query, params)
     },
     create: (clientId, country, city, locality, address, postalCode, createdByUserId) => {
       const query =
