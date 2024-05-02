@@ -9,13 +9,27 @@ const User = {
     const query = "SELECT * FROM users WHERE id = ?"
     return queryExecutor.execute(query, [id])
   },
-  findByUsername: (username) => {
-    const query = "SELECT * FROM users WHERE username = ?"
-    return queryExecutor.execute(query, [username])
+  findByUsername: (username, userIdToExclude) => {
+    let query = "SELECT * FROM users WHERE username = ?"
+    let params = [username]
+
+    if (userIdToExclude) {
+      query += " AND id != ?"
+      params.push(userIdToExclude)
+    }
+
+    return queryExecutor.execute(query, params)
   },
-  findByEmail: (email) => {
-    const query = "SELECT * FROM users WHERE email = ?"
-    return queryExecutor.execute(query, [email])
+  findByEmail: (email, userIdToExclude) => {
+    let query = "SELECT * FROM users WHERE email = ?"
+    let params = [email]
+
+    if (userIdToExclude) {
+      query += " AND id != ?"
+      params.push(userIdToExclude)
+    }
+
+    return queryExecutor.execute(query, params)
   },
   create: (username, password, email, role, isActive) => {
     const query =

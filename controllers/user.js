@@ -54,13 +54,13 @@ const userController = {
 
     updateUserSchema.parse(req.body)
 
-    const existingUsername = await User.findByUsername(username)
-    if (existingUsername.length > 0 && existingUsername[0].id !== parseInt(userId)) {
+    const existingUsername = await User.findByUsername(username, userId)
+    if (existingUsername.length > 0) {
       throw new AppError(400, USERNAME_ALREADY_EXISTS, "The username already exists", true)
     }
 
-    const existingEmail = await User.findByEmail(email)
-    if (existingEmail.length > 0 && existingEmail[0].id !== parseInt(userId)) {
+    const existingEmail = await User.findByEmail(email, userId)
+    if (existingEmail.length > 0) {
       throw new AppError(400, EMAIL_ALREADY_EXISTS, "The e-mail already exists", true)
     }
 
