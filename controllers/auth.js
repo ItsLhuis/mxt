@@ -4,7 +4,11 @@ const jwt = require("jsonwebtoken")
 const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
-const { AUTHENTICATION_FAILED, INVALID_REFRESH_TOKEN } = require("@constants/errors/user")
+const {
+  AUTHENTICATION_FAILED,
+  INVALID_REFRESH_TOKEN,
+  USER_NOT_ACTIVE
+} = require("@constants/errors/user")
 
 const generateAccessToken = require("@utils/generateAccessToken")
 
@@ -25,6 +29,10 @@ const authController = {
     const isPasswordMatch = await bcrypt.compare(password, user[0].password)
     if (!isPasswordMatch) {
       throw new AppError(401, AUTHENTICATION_FAILED, "Invalid username or password", true)
+    }
+
+    if (!user[0].is_active) {
+      throw new AppError(403, USER_NOT_ACTIVE, "User is not active", true)
     }
 
     const refreshToken = jwt.sign({ id: user[0].id }, process.env.REFRESH_TOKEN_SECRET, {
