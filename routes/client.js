@@ -3,13 +3,13 @@ const router = express.Router()
 
 const checkPermissionHandler = require("@middlewares/checkPermissionHandler")
 const permissions = require("@constants/permissions")
-
 const clientController = require("@controllers/client")
 
 router
   .route("/")
   .get(checkPermissionHandler("client", permissions.READ), clientController.findAll)
   .post(checkPermissionHandler("client", permissions.CREATE), clientController.create)
+
 router
   .route("/:clientId")
   .put(checkPermissionHandler("client", permissions.UPDATE), clientController.update)
@@ -25,8 +25,9 @@ router
     checkPermissionHandler("client.contact", permissions.CREATE),
     clientController.contact.create
   )
+
 router
-  .route("/:clientId/contacts/:contactId")
+  .route("/contacts/:contactId")
   .put(
     checkPermissionHandler("client.contact", permissions.UPDATE),
     clientController.contact.update
@@ -46,8 +47,9 @@ router
     checkPermissionHandler("client.address", permissions.CREATE),
     clientController.address.create
   )
+
 router
-  .route("/:clientId/addresses/:addressId")
+  .route("/addresses/:addressId")
   .put(
     checkPermissionHandler("client.address", permissions.UPDATE),
     clientController.address.update
