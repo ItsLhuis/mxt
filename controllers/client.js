@@ -10,9 +10,9 @@ const {
 } = require("@constants/errors/client")
 
 const clientInteractions = {
-  CLIENT_UPDATED: "Cliente Atualizado",
-  CONTACT_UPDATED: "Contacto Atualizado",
-  ADDRESS_UPDATED: "Morada Atualizada"
+  CLIENT_UPDATED: "Client Updated",
+  CONTACT_UPDATED: "Contact Updated",
+  ADDRESS_UPDATED: "Address Updated"
 }
 
 const Client = require("@models/client")
@@ -44,17 +44,27 @@ const clientController = {
 
     await Client.update(clientId, name, description, req.user.id)
 
-    /*     const changes = [
-      { field: "Name", before: oldClientDetails.name, after: clientUpdated.name, changed: oldClientDetails.name !== newClientDetails.name },
-      { field: "Description", before: oldClientDetails.description, after: newClientDetails.description, changed: oldClientDetails.description !== newClientDetails.description }
-    ]; */
+    const changes = [
+      {
+        field: "Name",
+        before: existingClient[0].name,
+        after: name,
+        changed: existingClient[0].name !== name
+      },
+      {
+        field: "Description",
+        before: existingClient[0].description,
+        after: description,
+        changed: existingClient[0].description !== description
+      }
+    ]
 
-    /*     await createInteractionHistory(
+    await createInteractionHistory(
       existingClient[0].id,
-      CLIENT_UPDATED,
-      JSON.stringify(existingClient[0]),
+      clientInteractions.CLIENT_UPDATED,
+      changes,
       req.user.id
-    ) */
+    )
     res.status(204).json({ message: "Client updated successfully" })
   }),
   delete: tryCatch(async (req, res) => {
@@ -136,6 +146,34 @@ const clientController = {
       }
 
       await Client.contact.update(contactId, contactType, contact, description, req.user.id)
+
+      const changes = [
+        {
+          field: "Contact Type",
+          before: existingContact[0].contact_type,
+          after: contactType,
+          changed: existingContact[0].contact_type !== contactType
+        },
+        {
+          field: "Contact",
+          before: existingContact[0].contact,
+          after: contact,
+          changed: existingContact[0].contact !== contact
+        },
+        {
+          field: "Description",
+          before: existingContact[0].description,
+          after: description,
+          changed: existingContact[0].description !== description
+        }
+      ]
+
+      await createInteractionHistory(
+        existingContact[0].client_id,
+        clientInteractions.CONTACT_UPDATED,
+        changes,
+        req.user.id
+      )
       res.status(200).json({ message: "Contact updated successfully" })
     }),
     delete: tryCatch(async (req, res) => {
@@ -240,6 +278,46 @@ const clientController = {
         postalCode,
         req.user.id
       )
+
+      const changes = [
+        {
+          field: "Country",
+          before: existingAddress[0].country,
+          after: country,
+          changed: existingAddress[0].country !== country
+        },
+        {
+          field: "City",
+          before: existingAddress[0].city,
+          after: city,
+          changed: existingAddress[0].city !== city
+        },
+        {
+          field: "Locality",
+          before: existingAddress[0].locality,
+          after: locality,
+          changed: existingAddress[0].locality !== locality
+        },
+        {
+          field: "Address",
+          before: existingAddress[0].address,
+          after: address,
+          changed: existingAddress[0].address !== address
+        },
+        {
+          field: "Postal Code",
+          before: existingAddress[0].postal_code,
+          after: postalCode,
+          changed: existingAddress[0].postal_code !== postalCode
+        }
+      ]
+
+      await createInteractionHistory(
+        existingAddress[0].client_id,
+        clientInteractions.ADDRESS_UPDATED,
+        changes,
+        req.user.id
+      )
       res.status(200).json({ message: "Address updated successfully" })
     }),
     delete: tryCatch(async (req, res) => {
@@ -264,6 +342,9 @@ const clientController = {
       }
 
       const interactionsHistory = await Client.interactionsHistory.findByClientId(clientId)
+      interactionsHistory.forEach((interaction) => {
+        interaction.details = JSON.parse(interaction.details)
+      })
       res.status(200).json(interactionsHistory)
     })
   }

@@ -1,23 +1,66 @@
 const express = require("express")
 const router = express.Router()
 
+const checkPermissionHandler = require("@middlewares/checkPermissionHandler")
+const permissions = require("@constants/permissions")
+
 const clientController = require("@controllers/client")
 
-router.get("/", clientController.findAll)
-router.post("/", clientController.create)
-router.put("/:clientId", clientController.update)
-router.delete("/:clientId", clientController.delete)
+router
+  .route("/")
+  .get(checkPermissionHandler("client", permissions.READ), clientController.findAll)
+  .post(checkPermissionHandler("client", permissions.CREATE), clientController.create)
+router
+  .route("/:clientId")
+  .put(checkPermissionHandler("client", permissions.UPDATE), clientController.update)
+  .delete(checkPermissionHandler("client", permissions.DELETE), clientController.delete)
 
-router.get("/:clientId/contacts", clientController.contact.findAllByClientId)
-router.post("/:clientId/contacts", clientController.contact.create)
-router.put("/contacts/:contactId", clientController.contact.update)
-router.delete("/contacts/:contactId", clientController.contact.delete)
+router
+  .route("/:clientId/contacts")
+  .get(
+    checkPermissionHandler("client.contact", permissions.READ),
+    clientController.contact.findAllByClientId
+  )
+  .post(
+    checkPermissionHandler("client.contact", permissions.CREATE),
+    clientController.contact.create
+  )
+router
+  .route("/:clientId/contacts/:contactId")
+  .put(
+    checkPermissionHandler("client.contact", permissions.UPDATE),
+    clientController.contact.update
+  )
+  .delete(
+    checkPermissionHandler("client.contact", permissions.DELETE),
+    clientController.contact.delete
+  )
 
-router.get("/:clientId/addresses", clientController.address.findAllByClientId)
-router.post("/:clientId/addresses", clientController.address.create)
-router.put("/addresses/:addressId", clientController.address.update)
-router.delete("/addresses/:addressId", clientController.address.delete)
+router
+  .route("/:clientId/addresses")
+  .get(
+    checkPermissionHandler("client.address", permissions.READ),
+    clientController.address.findAllByClientId
+  )
+  .post(
+    checkPermissionHandler("client.address", permissions.CREATE),
+    clientController.address.create
+  )
+router
+  .route("/:clientId/addresses/:addressId")
+  .put(
+    checkPermissionHandler("client.address", permissions.UPDATE),
+    clientController.address.update
+  )
+  .delete(
+    checkPermissionHandler("client.address", permissions.DELETE),
+    clientController.address.delete
+  )
 
-router.get("/:clientId/interactionsHistory", clientController.interactionsHistory.findAllByClientId)
+router.get(
+  "/:clientId/interactionsHistory",
+  checkPermissionHandler("client.interactionsHistory", permissions.READ),
+  clientController.interactionsHistory.findAllByClientId
+)
 
 module.exports = router
