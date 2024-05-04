@@ -12,6 +12,7 @@ const errorHandler = (error, req, res, next) => {
 
   if (error instanceof AppError) {
     return res.status(error.statusCode).json({
+      type: error.errorType,
       code: error.errorCode,
       message: error.errorMessage,
       isOperational: error.isOperational

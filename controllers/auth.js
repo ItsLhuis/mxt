@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken")
 const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
+const destroyUser = require("@utils/destroyUser")
+
 const {
   AUTHENTICATION_FAILED,
   INVALID_REFRESH_TOKEN,
@@ -67,13 +69,7 @@ const authController = {
     res.status(200).json({ message: "Reauthentication successful" })
   }),
   logout: tryCatch(async (req, res) => {
-    req.user = null
-
-    req.session.refreshToken = null
-    req.session.accessToken = null
-
-    res.clearCookie("refreshToken")
-    res.clearCookie("accessToken")
+    await destroyUser(req, res)
 
     res.status(200).json({ message: "Logout successful" })
   })

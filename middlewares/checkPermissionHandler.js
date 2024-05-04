@@ -26,7 +26,13 @@ const checkPermission = (entity, action) => {
     }
 
     if (!checkNestedPermission(entity, action)) {
-      throw new AppError(403, 1000, "You don't have permission to perform this action", true)
+      throw new AppError(
+        403,
+        "PERM-001",
+        "You don't have permission to perform this action",
+        true,
+        "PermissionDenied"
+      )
     }
 
     next()
