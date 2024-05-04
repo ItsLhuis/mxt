@@ -15,8 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) NOT NULL UNIQUE,
     role ENUM('Chefe', 'Administrador', 'Funcionário') NOT NULL,
     is_active BOOLEAN,
-    created_at_datetime DATETIME NOT NULL,
-    last_login_datetime DATETIME
+    created_at_datetime DATETIME NOT NULL
 );
 
 -- Table employees
