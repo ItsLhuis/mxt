@@ -12,14 +12,17 @@ const path = require("path")
 const serveClientBuildCodeHandler = require("@middlewares/serveClientBuildCodeHandler")
 const notFoundHandler = require("@middlewares/notFoundHandler")
 const errorHandler = require("@middlewares/errorHandler")
+const emptyStringHandler = require("@middlewares/emptyStringHandler")
 
-const isProduction = process.env.NODE_ENV === "production"
+const initializeBossUser = require("@utils/initializeBossUser")
+
+// const isProduction = process.env.NODE_ENV === "production"
 
 const app = express()
 
-if (isProduction) {
+/* if (isProduction) {
   app.set("trust proxy", 1)
-}
+} */
 
 app.use(cookieParser())
 app.use(
@@ -29,7 +32,7 @@ app.use(
     resave: true,
     cookie: {
       sameSite: "none",
-      secure: isProduction,
+      secure: /* isProduction */ false,
       httpOnly: true,
       maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN * 1000
     }
@@ -55,10 +58,12 @@ app.use(express.static(path.join(__dirname, "public/client/build")))
 app.use(serveClientBuildCodeHandler)
 
 const apiV1Routes = require("@api/v1")
-app.use("/api/v1", apiV1Routes)
+app.use("/api/v1", emptyStringHandler, apiV1Routes)
 
 app.use(notFoundHandler)
 app.use(errorHandler)
+
+initializeBossUser()
 
 const server = http.createServer(app)
 
