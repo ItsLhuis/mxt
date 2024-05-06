@@ -2,14 +2,14 @@ const { z } = require("zod")
 
 const clientSchema = z.object({
   name: z.string().min(1).max(255),
-  description: z.string().optional()
+  description: z.string().optional().nullable()
 })
 
 const clientContactSchema = z
   .object({
     contactType: z.enum(["E-mail", "Telefone", "Telemóvel", "Outro"]),
     contact: z.string().max(255),
-    description: z.string().optional()
+    description: z.string().optional().nullable()
   })
   .refine(
     (data) => {
@@ -22,14 +22,16 @@ const clientContactSchema = z
   )
 
 const clientAddressSchema = z.object({
-  country: z.string().max(255),
-  city: z.string().max(255),
-  locality: z.string().max(255),
-  address: z.string().max(255),
+  country: z.string().max(255).optional().nullable(),
+  city: z.string().max(255).optional().nullable(),
+  locality: z.string().max(255).optional().nullable(),
+  address: z.string().max(255).optional().nullable(),
   postalCode: z
     .string()
     .max(20)
     .regex(/^\d{4}-\d{3}$/)
+    .optional()
+    .nullable()
 })
 
 module.exports = {

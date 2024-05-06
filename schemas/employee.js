@@ -11,7 +11,7 @@ const employeeSchema = z.object({
     .string()
     .max(20)
     .regex(/^\d{4}-\d{3}$/),
-  description: z.string().optional()
+  description: z.string().optional().nullable()
 })
 
 module.exports = {
