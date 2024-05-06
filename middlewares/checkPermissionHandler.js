@@ -1,6 +1,8 @@
 const AppError = require("@classes/app/error")
 const permissions = require("@config/permissions")
 
+const { PERMISSION_DENIED } = require("@constants/errors/permission")
+
 const checkPermission = (entity, action) => {
   return (req, res, next) => {
     const role = req.user.role
@@ -28,7 +30,7 @@ const checkPermission = (entity, action) => {
     if (!checkNestedPermission(entity, action)) {
       throw new AppError(
         403,
-        "PERM-001",
+        PERMISSION_DENIED,
         "You don't have permission to perform this action",
         true,
         "PermissionDenied"
