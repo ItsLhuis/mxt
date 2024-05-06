@@ -1,10 +1,22 @@
 const express = require("express")
 const router = express.Router()
 
+const checkPermissionHandler = require("@middlewares/checkPermissionHandler")
+const permissions = require("@constants/permissions")
 const userController = require("@controllers/user")
 
-router.route("/").get(userController.findAll).post(userController.create)
-router.route("/:userId").put(userController.update).delete(userController.delete)
-router.put("/:userId/password", userController.updatePassword)
+router
+  .route("/")
+  .get(checkPermissionHandler("user", permissions.READ), userController.findAll)
+  .post(checkPermissionHandler("user", permissions.CREATE), userController.create)
+router
+  .route("/:userId")
+  .put(checkPermissionHandler("user", permissions.UPDATE), userController.update)
+  .delete(checkPermissionHandler("user", permissions.DELETE), userController.delete)
+router.put(
+  "/:userId/password",
+  checkPermissionHandler("user", permissions.UPDATE),
+  userController.updatePassword
+)
 
 module.exports = router

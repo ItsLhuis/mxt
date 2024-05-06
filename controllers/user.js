@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt")
 const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
+const { PERMISSION_DENIED } = require("@constants/errors/permission")
+
 const {
   USERNAME_ALREADY_EXISTS,
   EMAIL_ALREADY_EXISTS,
@@ -11,6 +13,8 @@ const {
 } = require("@constants/errors/user")
 
 const { SALT_ROUNDS } = require("@constants/bcrypt")
+
+const roles = require("@constants/roles")
 
 const User = require("@models/user")
 const { createUserSchema, updateUserSchema, updateUserPasswordSchema } = require("@schemas/user")
@@ -26,6 +30,20 @@ const userController = {
     const { username, password, email, role, isActive } = req.body
 
     createUserSchema.parse(req.body)
+
+    const currentUserRole = req.user.role
+    if (
+      (currentUserRole === roles.BOSS && role === roles.BOSS) ||
+      (currentUserRole === roles.ADMIN && role !== roles.EMPLOYEE)
+    ) {
+      throw new AppError(
+        403,
+        PERMISSION_DENIED,
+        "You don't have permission to perform this action",
+        true,
+        "PermissionDenied"
+      )
+    }
 
     const existingUsername = await User.findByUsername(username)
     if (existingUsername.length > 0) {
@@ -91,9 +109,24 @@ const userController = {
   delete: tryCatch(async (req, res) => {
     const { userId } = req.params
 
+    const currentUserRole = req.user.role
+
     const existingUser = await User.findById(userId)
     if (!existingUser.length) {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
+    }
+
+    if (
+      (currentUserRole !== roles.ADMIN || existingUser.role === roles.EMPLOYEE) &&
+      (currentUserRole !== roles.BOSS || userId === req.user.id)
+    ) {
+      throw new AppError(
+        403,
+        PERMISSION_DENIED,
+        "You don't have permission to perform this action",
+        true,
+        "PermissionDenied"
+      )
     }
 
     await User.delete(userId)
