@@ -24,9 +24,9 @@
     "jsonwebtoken": "^9.0.2",
     "mjml": "^4.15.3",
     "module-alias": "^2.2.3",
-    "mysql2": "^3.9.5",
+    "mysql2": "^3.9.7",
     "nodemailer": "^6.9.13",
     "nodemon": "^3.1.0",
-    "zod": "^3.22.4"
+    "zod": "^3.23.6"
   }
 }
