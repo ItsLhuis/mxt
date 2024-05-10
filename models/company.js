@@ -9,7 +9,7 @@ const Company = {
     const query = "INSERT INTO company (enforce_one_row, created_at_datetime) VALUES (?, NOW())"
     return queryExecutor.execute(query, ["only"])
   },
-  update: (name, address, city, country, postal_code, phone_number, email, logo) => {
+  update: (name, address, city, country, postalCode, phoneNumber, email, logo) => {
     const query =
       "UPDATE company SET name = ?, address = ?, city = ?, country = ?, postal_code = ?, phone_number = ?, email = ?, logo = ? WHERE enforce_one_row = 'only'"
     return queryExecutor.execute(query, [
@@ -17,8 +17,8 @@ const Company = {
       address,
       city,
       country,
-      postal_code,
-      phone_number,
+      postalCode,
+      phoneNumber,
       email,
       logo
     ])
