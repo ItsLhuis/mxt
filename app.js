@@ -14,7 +14,7 @@ const notFoundHandler = require("@middlewares/notFoundHandler")
 const errorHandler = require("@middlewares/errorHandler")
 const emptyStringHandler = require("@middlewares/emptyStringHandler")
 
-const initializeBossUser = require("@utils/initializeBossUser")
+const initializeApp = require("@utils/initializeApp")
 
 // const isProduction = process.env.NODE_ENV === "production"
 
@@ -63,7 +63,7 @@ app.use("/api/v1", emptyStringHandler, apiV1Routes)
 app.use(notFoundHandler)
 app.use(errorHandler)
 
-initializeBossUser()
+initializeApp()
 
 const server = http.createServer(app)
 

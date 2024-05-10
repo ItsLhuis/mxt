@@ -5,6 +5,8 @@ const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
 const destroyUser = require("@utils/destroyUser")
+const sendEmail = require("@utils/sendEmail")
+const generateOTP = require("@utils/generateOTP")
 
 const {
   AUTHENTICATION_FAILED,
@@ -72,7 +74,34 @@ const authController = {
     await destroyUser(req, res)
 
     res.status(200).json({ message: "Logout successful" })
-  })
+  }),
+  requestResetPassword: tryCatch(async (req, res) => {
+    const { to } = req.body
+
+    const logoCompanyURL = `${req.protocol}://${req.get("host")}/api/v1/images/icon.png`
+
+    const otpCode = generateOTP()
+
+    await sendEmail(
+      "Mixtura",
+      to ?? "luisrodrigues6789@gmail.com",
+      `Código de Verificação - ${otpCode}`,
+      {
+        username: "Luis",
+        otpCode: otpCode,
+        companyLogo: logoCompanyURL,
+        companyName: "Mixtura",
+        companyAddress: "R. 15 751, 4500-159",
+        companyCity: "Espinho",
+        companyCountry: "Portugal"
+      },
+      "resetPassword"
+    ).then(() => {
+      console.log("Enviado")
+    })
+  }),
+  verifyResetPassword: tryCatch(async (req, res) => {}),
+  confirmResetPassword: tryCatch(async (req, res) => {})
 }
 
 module.exports = authController

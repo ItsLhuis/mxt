@@ -7,6 +7,20 @@ USE mxt;
 -- Set the default time zone to Portugal
 SET time_zone = '+00:00';
 
+-- Table company
+CREATE TABLE IF NOT EXISTS company (
+    enforce_one_row ENUM('only') NOT NULL UNIQUE DEFAULT 'only',
+    name VARCHAR(255),
+    address VARCHAR(255),
+    city VARCHAR(255),
+    country VARCHAR(255),
+    postal_code VARCHAR(20),
+    phone_number VARCHAR(20),
+    email VARCHAR(255),
+    logo VARCHAR(50),
+    created_at_datetime DATETIME NOT NULL
+);
+
 -- Table users
 CREATE TABLE IF NOT EXISTS users (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -16,6 +30,16 @@ CREATE TABLE IF NOT EXISTS users (
     role ENUM('Chefe', 'Administrador', 'Funcionário') NOT NULL,
     is_active BOOLEAN,
     created_at_datetime DATETIME NOT NULL
+);
+
+-- Table users
+CREATE TABLE IF NOT EXISTS user_otp_codes (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    otp_code VARCHAR(10) NOT NULL,
+    expiration_datetime DATETIME NOT NULL,
+    created_at_datetime DATETIME NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Table employees

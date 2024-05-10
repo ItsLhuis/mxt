@@ -44,6 +44,10 @@ const User = {
     const query = "UPDATE users SET password = ? WHERE id = ?"
     return queryExecutor.execute(query, [password, id])
   },
+  updatePasswordByEmail: (email, password) => {
+    const query = "UPDATE users SET password = ? WHERE email = ?"
+    return queryExecutor.execute(query, [password, email])
+  },
   delete: (id) => {
     const query = "DELETE FROM users WHERE id = ?"
     return queryExecutor.execute(query, [id])
