@@ -1,4 +1,4 @@
-const generateOTP = (length = 6) => {
+const generateOtp = (length = 6) => {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
   let otp = ""
 
@@ -10,4 +10,4 @@ const generateOTP = (length = 6) => {
   return otp
 }
 
-module.exports = generateOTP
+module.exports = generateOtp
