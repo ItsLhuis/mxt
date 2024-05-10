@@ -6,7 +6,7 @@ const { tryCatch } = require("@utils/tryCatch")
 
 const destroyUser = require("@utils/destroyUser")
 const sendEmail = require("@utils/sendEmail")
-const generateOTP = require("@utils/generateOTP")
+const generateOtp = require("@utils/generateOtp")
 
 const {
   AUTHENTICATION_FAILED,
@@ -80,7 +80,7 @@ const authController = {
 
     const logoCompanyURL = `${req.protocol}://${req.get("host")}/api/v1/images/icon.png`
 
-    const otpCode = generateOTP()
+    const otpCode = generateOtp()
 
     await sendEmail(
       "Mixtura",
