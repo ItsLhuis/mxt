@@ -63,7 +63,7 @@ app.use("/api/v1", emptyStringHandler, apiV1Routes)
 app.use(notFoundHandler)
 app.use(errorHandler)
 
-//initializeApp()
+initializeApp()
 
 const server = http.createServer(app)
 
