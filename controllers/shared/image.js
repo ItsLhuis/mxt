@@ -12,9 +12,6 @@ const imageController = {
 
     const imagePath = path.join(__dirname, "../../", "uploads/", imageName)
 
-    console.log("__dirname: ", __dirname)
-    console.log("imagePath: ", imagePath)
-
     if (fs.existsSync(imagePath)) {
       res.sendFile(imagePath)
     } else {
