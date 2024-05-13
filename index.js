@@ -1,8 +1,7 @@
 const { addAliases } = require("module-alias")
 
 addAliases({
-  "@app": `${__dirname}/app.js`,
-  "@api": `${__dirname}/api`,
+  "@app": `${__dirname}/app`,
   "@classes": `${__dirname}/classes`,
   "@config": `${__dirname}/config`,
   "@constants": `${__dirname}/constants`,
@@ -16,7 +15,7 @@ addAliases({
   "@public": `${__dirname}/public`
 })
 
-const { server } = require("@app")
+const { server } = require("./app.js")
 
 const PORT = process.env.PORT || 8080
 const isProduction = process.env.NODE_ENV === "production"

@@ -32,9 +32,14 @@ const updateUserPasswordSchema = z
     { message: "New password and confirmation password do not match", path: ["newPassword"] }
   )
 
+const requestResetPasswordSchema = z.object({
+  email: z.string().email().max(255)
+})
+
 module.exports = {
   authSchema,
   createUserSchema,
   updateUserSchema,
-  updateUserPasswordSchema
+  updateUserPasswordSchema,
+  requestResetPasswordSchema
 }

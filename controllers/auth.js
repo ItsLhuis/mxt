@@ -7,17 +7,25 @@ const { tryCatch } = require("@utils/tryCatch")
 const destroyUser = require("@utils/destroyUser")
 const sendEmail = require("@utils/sendEmail")
 const generateOtp = require("@utils/generateOtp")
+const getImageUrl = require("@utils/getImageUrl")
 
 const {
   AUTHENTICATION_FAILED,
   INVALID_REFRESH_TOKEN,
-  USER_NOT_ACTIVE
+  USER_NOT_ACTIVE,
+  USER_NOT_FOUND
 } = require("@constants/errors/user")
+
+const { EMAIL_SEND_ERROR } = require("@constants/errors/shared/email")
+
+const { EMAIL_ERROR_TYPE } = require("@constants/errors/shared/types")
 
 const generateAccessToken = require("@utils/generateAccessToken")
 
 const User = require("@models/user")
-const { authSchema } = require("@schemas/user")
+const { authSchema, requestResetPasswordSchema } = require("@schemas/user")
+
+const Company = require("@models/company")
 
 const authController = {
   login: tryCatch(async (req, res) => {
@@ -25,21 +33,21 @@ const authController = {
 
     authSchema.parse(req.body)
 
-    const user = await User.findByUsername(username)
-    if (user.length === 0) {
+    const existingUser = await User.findByUsername(username)
+    if (existingUser.length === 0) {
       throw new AppError(401, AUTHENTICATION_FAILED, "Invalid username or password", true)
     }
 
-    const isPasswordMatch = await bcrypt.compare(password, user[0].password)
+    const isPasswordMatch = await bcrypt.compare(password, existingUser[0].password)
     if (!isPasswordMatch) {
       throw new AppError(401, AUTHENTICATION_FAILED, "Invalid username or password", true)
     }
 
-    if (!user[0].is_active) {
+    if (!existingUser[0].is_active) {
       throw new AppError(403, USER_NOT_ACTIVE, "User is not active", true)
     }
 
-    const refreshToken = jwt.sign({ id: user[0].id }, process.env.REFRESH_TOKEN_SECRET, {
+    const refreshToken = jwt.sign({ id: existingUser[0].id }, process.env.REFRESH_TOKEN_SECRET, {
       expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN
     })
 
@@ -76,29 +84,49 @@ const authController = {
     res.status(200).json({ message: "Logout successful" })
   }),
   requestResetPassword: tryCatch(async (req, res) => {
-    const { to } = req.body
+    const { email } = req.body
 
-    const logoCompanyURL = `${req.protocol}://${req.get("host")}/api/v1/images/icon.png`
+    requestResetPasswordSchema.parse(req.body)
+
+    const companyDetails = await Company.find()
+    const logoCompanyUrl = getImageUrl(req, companyDetails[0].logo)
+
+    const existingUser = await User.findByEmail(email)
+    if (existingUser.length === 0) {
+      throw new AppError(404, USER_NOT_FOUND, "User with this e-mail not found", true)
+    }
 
     const otpCode = generateOtp()
 
+    await User.otpCode.create(existingUser[0].id, otpCode)
+
     await sendEmail(
-      "Mixtura",
-      to ?? "luisrodrigues6789@gmail.com",
+      companyDetails[0].name,
+      email,
       `Código de Verificação - ${otpCode}`,
       {
-        username: "Luis",
+        username: existingUser[0].username,
         otpCode: otpCode,
-        companyLogo: logoCompanyURL,
-        companyName: "Mixtura",
-        companyAddress: "R. 15 751, 4500-159",
-        companyCity: "Espinho",
-        companyCountry: "Portugal"
+        companyLogo: logoCompanyUrl,
+        companyName: companyDetails[0].name,
+        companyAddress: `${companyDetails[0].address}, ${companyDetails[0].postal_code}`,
+        companyCity: companyDetails[0].city,
+        companyCountry: companyDetails[0].country
       },
       "resetPassword"
-    ).then(() => {
-      console.log("Enviado")
-    })
+    )
+      .then(() => {
+        res.status(200).json({ message: "Reset password e-mail sent successfully" })
+      })
+      .catch(() => {
+        throw new AppError(
+          500,
+          EMAIL_SEND_ERROR,
+          "An error occurred while sending the reset password e-mail",
+          true,
+          EMAIL_ERROR_TYPE
+        )
+      })
   }),
   verifyResetPassword: tryCatch(async (req, res) => {}),
   confirmResetPassword: tryCatch(async (req, res) => {})

@@ -51,6 +51,17 @@ const User = {
   delete: (id) => {
     const query = "DELETE FROM users WHERE id = ?"
     return queryExecutor.execute(query, [id])
+  },
+  otpCode: {
+    findByUserId: (userId) => {
+      const query = "SELECT * FROM user_otp_codes WHERE user_id = ?"
+      return queryExecutor.execute(query, [userId])
+    },
+    create: (userId, otpCode) => {
+      const query =
+        "INSERT INTO user_otp_codes (user_id, otp_code, created_at_datetime, expiration_datetime) VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 5 MINUTE))"
+      return queryExecutor.execute(query, [userId, otpCode])
+    }
   }
 }
 

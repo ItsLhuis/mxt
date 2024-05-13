@@ -3,8 +3,7 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["*"],
-      "@app/*": ["app.js"],
-      "@api/*": ["api/*"],
+      "@app/*": ["app/*"],
       "@classes/*": ["classes/*"],
       "@config/*": ["config/*"],
       "@constants/*": ["constants/*"],

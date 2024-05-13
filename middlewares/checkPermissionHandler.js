@@ -3,6 +3,8 @@ const permissions = require("@config/permissions")
 
 const { PERMISSION_DENIED } = require("@constants/errors/permission")
 
+const { PERMISSION_DENIED_ERROR_TYPE } = require("@constants/errors/shared/types")
+
 const checkPermission = (entity, action) => {
   return (req, res, next) => {
     const role = req.user.role
@@ -33,7 +35,7 @@ const checkPermission = (entity, action) => {
         PERMISSION_DENIED,
         "You don't have permission to perform this action",
         true,
-        "PermissionDenied"
+        PERMISSION_DENIED_ERROR_TYPE
       )
     }
 

@@ -37,8 +37,8 @@ CREATE TABLE IF NOT EXISTS user_otp_codes (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     otp_code VARCHAR(10) NOT NULL,
-    expiration_datetime DATETIME NOT NULL,
     created_at_datetime DATETIME NOT NULL,
+    expiration_datetime DATETIME NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

@@ -5,11 +5,6 @@ const initializeUserHandler = require("@middlewares/initializeUserHandler")
 const authTokenHandler = require("@middlewares/authTokenHandler")
 const userRoleHandler = require("@middlewares/userRoleHandler")
 
-const imageRouter = require("@routes/shared/image")
-router.use("/images", imageRouter)
-
-//----------------------------------------------------------------------------------------------------------
-
 const authRouter = require("@routes/auth")
 router.use("/auth", initializeUserHandler, authRouter)
 

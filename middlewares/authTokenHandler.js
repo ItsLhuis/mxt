@@ -14,6 +14,8 @@ const {
   USER_NOT_ACTIVE
 } = require("@constants/errors/user")
 
+const { AUTHENTICATION_ERROR_TYPE } = require("@constants/errors/shared/types")
+
 const User = require("@models/user")
 
 const authToken = tryCatch(async (req, res, next) => {
@@ -29,7 +31,7 @@ const authToken = tryCatch(async (req, res, next) => {
       REFRESH_TOKEN_NOT_PROVIDED,
       "Refresh token not provided",
       undefined,
-      "Authentication"
+      AUTHENTICATION_ERROR_TYPE
     )
   }
   if (!accessTokenFromRequest) {
@@ -38,7 +40,7 @@ const authToken = tryCatch(async (req, res, next) => {
       TOKEN_NOT_PROVIDED,
       "Access token not provided",
       undefined,
-      "Authentication"
+      AUTHENTICATION_ERROR_TYPE
     )
   }
 
@@ -48,11 +50,17 @@ const authToken = tryCatch(async (req, res, next) => {
       INVALID_REFRESH_TOKEN,
       "Invalid refresh token",
       undefined,
-      "Authentication"
+      AUTHENTICATION_ERROR_TYPE
     )
   }
   if (accessTokenFromRequest !== accessTokenFromSession) {
-    throw new AppError(403, INVALID_TOKEN, "Invalid access token", undefined, "Authentication")
+    throw new AppError(
+      403,
+      INVALID_TOKEN,
+      "Invalid access token",
+      undefined,
+      AUTHENTICATION_ERROR_TYPE
+    )
   }
 
   await verifyRefreshToken(refreshTokenFromRequest)
@@ -61,12 +69,12 @@ const authToken = tryCatch(async (req, res, next) => {
   const existingUser = await User.findById(user.id)
   if (!existingUser || !existingUser.length) {
     await destroyUser(req, res)
-    throw new AppError(404, USER_NOT_FOUND, "User not found", true, "Authentication")
+    throw new AppError(404, USER_NOT_FOUND, "User not found", true, AUTHENTICATION_ERROR_TYPE)
   }
 
   if (!existingUser[0].is_active) {
     await destroyUser(req, res)
-    throw new AppError(403, USER_NOT_ACTIVE, "User is not active", true, "Authentication")
+    throw new AppError(403, USER_NOT_ACTIVE, "User is not active", true, AUTHENTICATION_ERROR_TYPE)
   }
 
   req.user.id = existingUser[0].id
@@ -83,7 +91,7 @@ const verifyRefreshToken = (token) => {
           INVALID_REFRESH_TOKEN,
           "Invalid refresh token",
           undefined,
-          "Authentication"
+          AUTHENTICATION_ERROR_TYPE
         )
       }
       resolve()
@@ -95,7 +103,13 @@ const verifyAccessToken = (token) => {
   return new Promise((resolve, reject) => {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
       if (error) {
-        throw new AppError(403, INVALID_TOKEN, "Invalid access token", undefined, "Authentication")
+        throw new AppError(
+          403,
+          INVALID_TOKEN,
+          "Invalid access token",
+          undefined,
+          AUTHENTICATION_ERROR_TYPE
+        )
       }
       resolve(user)
     })

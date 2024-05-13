@@ -12,6 +12,8 @@ const {
   PASSWORD_MISMATCH
 } = require("@constants/errors/user")
 
+const { PERMISSION_DENIED_ERROR_TYPE } = require("@constants/errors/shared/types")
+
 const { SALT_ROUNDS } = require("@constants/bcrypt")
 
 const roles = require("@constants/roles")
@@ -41,7 +43,7 @@ const userController = {
         PERMISSION_DENIED,
         "You don't have permission to perform this action",
         true,
-        "PermissionDenied"
+        PERMISSION_DENIED_ERROR_TYPE
       )
     }
 
@@ -125,7 +127,7 @@ const userController = {
         PERMISSION_DENIED,
         "You don't have permission to perform this action",
         true,
-        "PermissionDenied"
+        PERMISSION_DENIED_ERROR_TYPE
       )
     }
 
