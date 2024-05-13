@@ -9,7 +9,7 @@ SET time_zone = '+00:00';
 
 -- Table company
 CREATE TABLE IF NOT EXISTS company (
-    enforce_one_row ENUM('only') NOT NULL UNIQUE DEFAULT 'only',
+    enforce_one_row ENUM('only') NOT NULL PRIMARY KEY UNIQUE DEFAULT 'only',
     name VARCHAR(255),
     address VARCHAR(255),
     city VARCHAR(255),
