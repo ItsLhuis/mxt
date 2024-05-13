@@ -27,6 +27,10 @@ const processImage = async (imagePath, options) => {
       mergedOptions.size = 2000
     }
 
+    if (mergedOptions.blur > 100) {
+      mergedOptions.blur = 100
+    }
+
     const imageBuffer = await sharp(imagePath).toBuffer()
 
     let resizedImageBuffer
