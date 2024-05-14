@@ -8,10 +8,18 @@ const userController = require("@controllers/user")
 router
   .route("/")
   .get(checkPermissionHandler("user", permissions.READ), userController.findAll)
-  .post(checkPermissionHandler("user", permissions.CREATE), userController.create)
+  .post(
+    checkPermissionHandler("user", permissions.CREATE),
+    userController.uploadImage,
+    userController.create
+  )
 router
   .route("/:userId")
-  .put(checkPermissionHandler("user", permissions.UPDATE), userController.update)
+  .put(
+    checkPermissionHandler("user", permissions.UPDATE),
+    userController.uploadImage,
+    userController.update
+  )
   .delete(checkPermissionHandler("user", permissions.DELETE), userController.delete)
 router.put(
   "/:userId/password",

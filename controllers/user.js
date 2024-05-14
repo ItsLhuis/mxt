@@ -23,7 +23,10 @@ const { createUserSchema, updateUserSchema, updateUserPasswordSchema } = require
 
 const Employee = require("@models/employee")
 
+const { upload } = require("@middlewares/uploadFileHandler")
+
 const userController = {
+  uploadImage: upload.image.single("profilePic"),
   findAll: tryCatch(async (req, res) => {
     const users = await User.findAll()
     res.status(200).json(users)
@@ -59,7 +62,12 @@ const userController = {
 
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
 
-    const user = await User.create(username, hashedPassword, email, role, isActive)
+    let profilePic
+    if (req.file) {
+      profilePic = req.file.filename
+    }
+
+    const user = await User.create(username, hashedPassword, email, profilePic, role, isActive)
     await Employee.create(user.insertId)
     res.status(201).json({ message: "User created successfully" })
   }),
@@ -84,7 +92,12 @@ const userController = {
       throw new AppError(400, EMAIL_ALREADY_EXISTS, "The e-mail already exists", true)
     }
 
-    await User.update(userId, username, email, role, isActive)
+    let profilePic
+    if (req.file) {
+      profilePic = req.file.filename
+    }
+
+    await User.update(userId, username, email, profilePic, role, isActive)
     res.status(204).json({ message: "User updated successfully" })
   }),
   updatePassword: tryCatch(async (req, res) => {

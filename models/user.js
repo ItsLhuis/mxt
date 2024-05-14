@@ -31,14 +31,15 @@ const User = {
 
     return queryExecutor.execute(query, params)
   },
-  create: (username, password, email, role, isActive) => {
+  create: (username, password, email, profilePic, role, isActive) => {
     const query =
-      "INSERT INTO users (username, password, email, role, is_active, created_at_datetime) VALUES (?, ?, ?, ?, ?, NOW())"
-    return queryExecutor.execute(query, [username, password, email, role, isActive])
+      "INSERT INTO users (username, password, email, profile_pic, role, is_active, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, NOW())"
+    return queryExecutor.execute(query, [username, password, email, profilePic, role, isActive])
   },
-  update: (id, username, email, role, isActive) => {
-    const query = "UPDATE users SET username = ?, email = ?, role = ?, is_active = ? WHERE id = ?"
-    return queryExecutor.execute(query, [username, email, role, isActive, id])
+  update: (id, username, email, profilePic, role, isActive) => {
+    const query =
+      "UPDATE users SET username = ?, email = ?, profile_pic = ?, role = ?, is_active = ? WHERE id = ?"
+    return queryExecutor.execute(query, [username, email, profilePic, role, isActive, id])
   },
   updatePassword: (id, password) => {
     const query = "UPDATE users SET password = ? WHERE id = ?"
