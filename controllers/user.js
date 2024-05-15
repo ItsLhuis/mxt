@@ -26,7 +26,7 @@ const Employee = require("@models/employee")
 const { upload } = require("@middlewares/uploadFileHandler")
 
 const userController = {
-  uploadImage: upload.image.single("profilePic"),
+  uploadAvatar: upload.image.single("avatar"),
   findAll: tryCatch(async (req, res) => {
     const users = await User.findAll()
     res.status(200).json(users)

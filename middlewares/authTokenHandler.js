@@ -30,7 +30,7 @@ const authToken = tryCatch(async (req, res, next) => {
       401,
       REFRESH_TOKEN_NOT_PROVIDED,
       "Refresh token not provided",
-      undefined,
+      false,
       AUTHENTICATION_ERROR_TYPE
     )
   }
@@ -39,7 +39,7 @@ const authToken = tryCatch(async (req, res, next) => {
       401,
       TOKEN_NOT_PROVIDED,
       "Access token not provided",
-      undefined,
+      false,
       AUTHENTICATION_ERROR_TYPE
     )
   }
@@ -49,18 +49,12 @@ const authToken = tryCatch(async (req, res, next) => {
       403,
       INVALID_REFRESH_TOKEN,
       "Invalid refresh token",
-      undefined,
+      false,
       AUTHENTICATION_ERROR_TYPE
     )
   }
   if (accessTokenFromRequest !== accessTokenFromSession) {
-    throw new AppError(
-      403,
-      INVALID_TOKEN,
-      "Invalid access token",
-      undefined,
-      AUTHENTICATION_ERROR_TYPE
-    )
+    throw new AppError(403, INVALID_TOKEN, "Invalid access token", false, AUTHENTICATION_ERROR_TYPE)
   }
 
   await verifyRefreshToken(refreshTokenFromRequest)
@@ -90,7 +84,7 @@ const verifyRefreshToken = (token) => {
           403,
           INVALID_REFRESH_TOKEN,
           "Invalid refresh token",
-          undefined,
+          false,
           AUTHENTICATION_ERROR_TYPE
         )
       }
@@ -107,7 +101,7 @@ const verifyAccessToken = (token) => {
           403,
           INVALID_TOKEN,
           "Invalid access token",
-          undefined,
+          false,
           AUTHENTICATION_ERROR_TYPE
         )
       }

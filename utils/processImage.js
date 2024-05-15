@@ -72,7 +72,7 @@ const processImage = async (imagePath, options) => {
 
     return finalImageBuffer
   } catch (error) {
-    throw new AppError(500, IMAGE_PROCESSING, "Error processing image", undefined, IMAGE_ERROR_TYPE)
+    throw new AppError(500, IMAGE_PROCESSING, "Error processing image", false, IMAGE_ERROR_TYPE)
   }
 }
 

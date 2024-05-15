@@ -1,4 +1,6 @@
 const AppError = require("@classes/app/error")
+const { tryCatch } = require("@utils/tryCatch")
+
 const permissions = require("@config/permissions")
 
 const { PERMISSION_DENIED } = require("@constants/errors/permission")
@@ -6,7 +8,7 @@ const { PERMISSION_DENIED } = require("@constants/errors/permission")
 const { PERMISSION_DENIED_ERROR_TYPE } = require("@constants/errors/shared/types")
 
 const checkPermission = (entity, action) => {
-  return (req, res, next) => {
+  return tryCatch((req, res, next) => {
     const role = req.user.role
 
     const checkNestedPermission = (entity, action) => {
@@ -40,7 +42,7 @@ const checkPermission = (entity, action) => {
     }
 
     next()
-  }
+  })
 }
 
 module.exports = checkPermission

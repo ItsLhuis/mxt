@@ -1,6 +1,6 @@
 const connection = require("@config/database")
 
-const queryExecutor = {
+const dbQueryExecutor = {
   execute: (query, values) => {
     return new Promise((resolve, reject) => {
       connection.query(query, values, (error, results, fields) => {
@@ -14,4 +14,4 @@ const queryExecutor = {
   }
 }
 
-module.exports = queryExecutor
+module.exports = dbQueryExecutor

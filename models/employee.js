@@ -1,13 +1,13 @@
-const queryExecutor = require("@utils/database/queryExecutor")
+const dbQueryExecutor = require("@utils/dbQueryExecutor")
 
 const Employee = {
   findAll: () => {
     const query = "SELECT * FROM employees"
-    return queryExecutor.execute(query)
+    return dbQueryExecutor.execute(query)
   },
   findByUserId: (userId) => {
     const query = "SELECT * FROM employees WHERE user_id = ?"
-    return queryExecutor.execute(query, [userId])
+    return dbQueryExecutor.execute(query, [userId])
   },
   create: (
     userId,
@@ -22,7 +22,7 @@ const Employee = {
   ) => {
     const query =
       "INSERT INTO employees (user_id, name, phone_number, country, city, locality, address, postal_code, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
-    return queryExecutor.execute(query, [
+    return dbQueryExecutor.execute(query, [
       userId,
       name,
       phoneNumber,
@@ -47,7 +47,7 @@ const Employee = {
   ) => {
     const query =
       "UPDATE employees SET name = ?, phone_number = ?, country = ?, city = ?, locality = ?, address = ?, postal_code = ?, description = ? WHERE user_id = ?"
-    return queryExecutor.execute(query, [
+    return dbQueryExecutor.execute(query, [
       name,
       phoneNumber,
       country,

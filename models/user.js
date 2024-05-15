@@ -1,13 +1,13 @@
-const queryExecutor = require("@utils/database/queryExecutor")
+const dbQueryExecutor = require("@utils/dbQueryExecutor")
 
 const User = {
   findAll: () => {
     const query = "SELECT * FROM users"
-    return queryExecutor.execute(query)
+    return dbQueryExecutor.execute(query)
   },
   findById: (id) => {
     const query = "SELECT * FROM users WHERE id = ?"
-    return queryExecutor.execute(query, [id])
+    return dbQueryExecutor.execute(query, [id])
   },
   findByUsername: (username, userIdToExclude) => {
     let query = "SELECT * FROM users WHERE username = ?"
@@ -18,7 +18,7 @@ const User = {
       params.push(userIdToExclude)
     }
 
-    return queryExecutor.execute(query, params)
+    return dbQueryExecutor.execute(query, params)
   },
   findByEmail: (email, userIdToExclude) => {
     let query = "SELECT * FROM users WHERE email = ?"
@@ -29,39 +29,39 @@ const User = {
       params.push(userIdToExclude)
     }
 
-    return queryExecutor.execute(query, params)
+    return dbQueryExecutor.execute(query, params)
   },
   create: (username, password, email, profilePic, role, isActive) => {
     const query =
       "INSERT INTO users (username, password, email, profile_pic, role, is_active, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, NOW())"
-    return queryExecutor.execute(query, [username, password, email, profilePic, role, isActive])
+    return dbQueryExecutor.execute(query, [username, password, email, profilePic, role, isActive])
   },
   update: (id, username, email, profilePic, role, isActive) => {
     const query =
       "UPDATE users SET username = ?, email = ?, profile_pic = ?, role = ?, is_active = ? WHERE id = ?"
-    return queryExecutor.execute(query, [username, email, profilePic, role, isActive, id])
+    return dbQueryExecutor.execute(query, [username, email, profilePic, role, isActive, id])
   },
   updatePassword: (id, password) => {
     const query = "UPDATE users SET password = ? WHERE id = ?"
-    return queryExecutor.execute(query, [password, id])
+    return dbQueryExecutor.execute(query, [password, id])
   },
   updatePasswordByEmail: (email, password) => {
     const query = "UPDATE users SET password = ? WHERE email = ?"
-    return queryExecutor.execute(query, [password, email])
+    return dbQueryExecutor.execute(query, [password, email])
   },
   delete: (id) => {
     const query = "DELETE FROM users WHERE id = ?"
-    return queryExecutor.execute(query, [id])
+    return dbQueryExecutor.execute(query, [id])
   },
   otpCode: {
     findByUserId: (userId) => {
       const query = "SELECT * FROM user_otp_codes WHERE user_id = ?"
-      return queryExecutor.execute(query, [userId])
+      return dbQueryExecutor.execute(query, [userId])
     },
     create: (userId, otpCode) => {
       const query =
         "INSERT INTO user_otp_codes (user_id, otp_code, created_at_datetime, expiration_datetime) VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 5 MINUTE))"
-      return queryExecutor.execute(query, [userId, otpCode])
+      return dbQueryExecutor.execute(query, [userId, otpCode])
     }
   }
 }

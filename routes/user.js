@@ -10,14 +10,14 @@ router
   .get(checkPermissionHandler("user", permissions.READ), userController.findAll)
   .post(
     checkPermissionHandler("user", permissions.CREATE),
-    userController.uploadImage,
+    userController.uploadAvatar,
     userController.create
   )
 router
   .route("/:userId")
   .put(
     checkPermissionHandler("user", permissions.UPDATE),
-    userController.uploadImage,
+    userController.uploadAvatar,
     userController.update
   )
   .delete(checkPermissionHandler("user", permissions.DELETE), userController.delete)
