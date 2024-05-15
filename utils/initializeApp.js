@@ -17,7 +17,7 @@ const initializeApp = async () => {
 
     const hashedPassword = await bcrypt.hash("adminboss", SALT_ROUNDS)
 
-    await User.create("Admin", hashedPassword, null, BOSS, 1)
+    await User.create("Admin", hashedPassword, null, null, BOSS, 1)
     await Company.initialize()
   } catch (error) {
     console.error('Error initializing the "Boss" user and company')

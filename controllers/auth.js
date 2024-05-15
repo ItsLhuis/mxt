@@ -98,12 +98,13 @@ const authController = {
 
     const otpCode = generateOtp()
 
-    await User.otpCode.create(existingUser[0].id, otpCode)
+    const userOtpCode = await User.otpCode.create(existingUser[0].id, otpCode)
 
     await sendEmail(
       companyDetails[0].name,
       email,
       `Código de Verificação - ${otpCode}`,
+      `O seu código de verificação é - ${otpCode}`,
       {
         username: existingUser[0].username,
         otpCode: otpCode,
@@ -118,11 +119,13 @@ const authController = {
       .then(() => {
         res.status(200).json({ message: "Reset password e-mail sent successfully" })
       })
-      .catch(() => {
+      .catch(async (err) => {
+        await User.otpCode.delete(userOtpCode.insertId)
+
         throw new AppError(
           500,
           EMAIL_SEND_ERROR,
-          "An error occurred while sending the reset password e-mail",
+          "An error occurred while sending the reset password e-mail" + err,
           true,
           EMAIL_ERROR_TYPE
         )

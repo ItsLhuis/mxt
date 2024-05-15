@@ -1,5 +1,5 @@
-const multer = require("multer")
 const { v4: uuidv4 } = require("uuid")
+const multer = require("multer")
 const sharp = require("sharp")
 const fs = require("fs")
 const path = require("path")
@@ -11,50 +11,20 @@ const { INVALID_IMAGE_FORMAT } = require("@constants/errors/shared/image")
 
 const { IMAGE_ERROR_TYPE } = require("@constants/errors/shared/types")
 
-const IMAGE_EXTENSIONS = [".jpeg", ".jpg", ".png"]
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024
+const VALID_IMAGE_EXTENSIONS = [".jpeg", ".jpg", ".png"]
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024
 
-const getFileExtension = (fileName) => {
-  return path.extname(fileName).toLowerCase()
-}
-
-const storage = (fileType) => {
-  return multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, "uploads/")
-    },
-    filename: function (req, file, cb) {
-      const fileId = uuidv4()
-
-      let extension = ""
-
-      if (fileType === "image") {
-        const fileExtension = getFileExtension(file.originalname)
-        if (!IMAGE_EXTENSIONS.includes(fileExtension)) {
-          return cb(
-            new AppError(
-              400,
-              INVALID_IMAGE_FORMAT,
-              `Invalid image format. Only ${IMAGE_EXTENSIONS.join(", ")} files are allowed`,
-              undefined,
-              IMAGE_ERROR_TYPE
-            )
-          )
-        }
-        extension = fileExtension
-      }
-
-      const fileName = `${fileId}${extension}`
-
-      cb(null, fileName)
-    }
-  })
-}
+const memoryStorage = multer.memoryStorage()
 
 const multerUploadImage = multer({
-  storage: storage("image"),
+  storage: memoryStorage,
   limits: { fileSize: MAX_IMAGE_SIZE }
 })
+
+const isValidImageExtension = (fileName) => {
+  const extension = fileName.split(".").pop().toLowerCase()
+  return VALID_IMAGE_EXTENSIONS.includes("." + extension)
+}
 
 const uploadImage = {
   single: (fieldName) =>
@@ -65,20 +35,27 @@ const uploadImage = {
         }
 
         try {
-          const outputFileName = `${uuidv4()}.${req.file.originalname.split(".").pop()}`
+          if (!isValidImageExtension(req.file.originalname)) {
+            throw new AppError(
+              400,
+              INVALID_IMAGE_FORMAT,
+              `Invalid image format. Only ${VALID_IMAGE_EXTENSIONS.join(", ")} files are allowed`,
+              false,
+              IMAGE_ERROR_TYPE
+            )
+          }
+
+          const outputFileName = `${uuidv4()}${path.extname(req.file.originalname)}`
           const outputPath = `uploads/${outputFileName}`
 
-          const metadata = await sharp(req.file.path).metadata()
+          const targetWidth = 1400
 
-          const targetWidth = metadata.width >= 1400 ? 1400 : metadata.width
-
-          await sharp(req.file.path)
+          await sharp(req.file.buffer)
             .resize({ width: targetWidth })
             .jpeg({ quality: 90 })
             .toFile(outputPath)
-            .then(() => {
-              fs.unlinkSync(req.file.path)
-            })
+
+          req.file.buffer = null
 
           req.file.filename = outputFileName
           req.file.path = outputPath
@@ -90,5 +67,15 @@ const uploadImage = {
       })
     })
 }
+
+const createUploadsFolderIfNotExists = () => {
+  const UPLOADS_FOLDER = "uploads"
+
+  if (!fs.existsSync(UPLOADS_FOLDER)) {
+    fs.mkdirSync(UPLOADS_FOLDER)
+  }
+}
+
+createUploadsFolderIfNotExists()
 
 module.exports = { upload: { image: uploadImage } }

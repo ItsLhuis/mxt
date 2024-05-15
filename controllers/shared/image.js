@@ -30,7 +30,7 @@ const imageController = {
       res.setHeader("Content-Type", "image/jpeg")
       res.end(processedImageBuffer, "binary")
     } else {
-      throw new AppError(404, IMAGE_NOT_FOUND, "Image not found", true, IMAGE_ERROR_TYPE)
+      throw new AppError(404, IMAGE_NOT_FOUND, "Image not found", false, IMAGE_ERROR_TYPE)
     }
   })
 }

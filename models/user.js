@@ -31,15 +31,15 @@ const User = {
 
     return dbQueryExecutor.execute(query, params)
   },
-  create: (username, password, email, profilePic, role, isActive) => {
+  create: (username, password, email, avatar, role, isActive) => {
     const query =
-      "INSERT INTO users (username, password, email, profile_pic, role, is_active, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, NOW())"
-    return dbQueryExecutor.execute(query, [username, password, email, profilePic, role, isActive])
+      "INSERT INTO users (username, password, email, avatar, role, is_active, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, NOW())"
+    return dbQueryExecutor.execute(query, [username, password, email, avatar, role, isActive])
   },
-  update: (id, username, email, profilePic, role, isActive) => {
+  update: (id, username, email, avatar, role, isActive) => {
     const query =
-      "UPDATE users SET username = ?, email = ?, profile_pic = ?, role = ?, is_active = ? WHERE id = ?"
-    return dbQueryExecutor.execute(query, [username, email, profilePic, role, isActive, id])
+      "UPDATE users SET username = ?, email = ?, avatar = ?, role = ?, is_active = ? WHERE id = ?"
+    return dbQueryExecutor.execute(query, [username, email, avatar, role, isActive, id])
   },
   updatePassword: (id, password) => {
     const query = "UPDATE users SET password = ? WHERE id = ?"
@@ -62,6 +62,10 @@ const User = {
       const query =
         "INSERT INTO user_otp_codes (user_id, otp_code, created_at_datetime, expiration_datetime) VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 5 MINUTE))"
       return dbQueryExecutor.execute(query, [userId, otpCode])
+    },
+    delete: (id) => {
+      const query = "DELETE FROM user_otp_codes WHERE id = ?"
+      return dbQueryExecutor.execute(query, [id])
     }
   }
 }
