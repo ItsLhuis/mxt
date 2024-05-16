@@ -12,7 +12,7 @@ const { INVALID_IMAGE_FORMAT } = require("@constants/errors/shared/image")
 const { IMAGE_ERROR_TYPE } = require("@constants/errors/shared/types")
 
 const VALID_IMAGE_EXTENSIONS = [".jpeg", ".jpg", ".png"]
-const MAX_IMAGE_SIZE = 10 * 1024 * 1024
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024
 
 const memoryStorage = multer.memoryStorage()
 
