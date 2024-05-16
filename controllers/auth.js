@@ -119,13 +119,13 @@ const authController = {
       .then(() => {
         res.status(200).json({ message: "Reset password e-mail sent successfully" })
       })
-      .catch(async (err) => {
+      .catch(async () => {
         await User.otpCode.delete(userOtpCode.insertId)
 
         throw new AppError(
           500,
           EMAIL_SEND_ERROR,
-          "An error occurred while sending the reset password e-mail" + err,
+          "An error occurred while sending the reset password e-mail",
           true,
           EMAIL_ERROR_TYPE
         )

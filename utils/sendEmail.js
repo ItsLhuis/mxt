@@ -1,9 +1,8 @@
 const fs = require("fs")
 const path = require("path")
 
-const formData = require("form-data")
-const Mailgun = require("mailgun.js")
-const mailgun = new Mailgun(formData)
+const { Resend } = require("resend")
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 const generateEmailHtml = require("@utils/emailMjmlToHtml")
 
@@ -14,27 +13,24 @@ const sendEmail = (companyName, to, subject, text, data, template) => {
 
     const emailHtml = generateEmailHtml(mjmlTemplate, data)
 
-    const mg = mailgun.client({
-      username: "api",
-      key: process.env.MAILGUN_API_KEY
-    })
-
     const mailOptions = {
-      from: `"${companyName}" <mailgun@sandbox4c598ca6ba214b6b89e34d4024aea70d.mailgun.org>`,
+      from: `"${companyName}" <onboarding@resend.dev>`,
       to,
       subject,
       text: text,
       html: emailHtml
     }
 
-    mg.messages
-      .create("sandbox4c598ca6ba214b6b89e34d4024aea70d.mailgun.org", mailOptions)
+    resend.emails
+      .send(mailOptions)
       .then((msg) => {
-        resolve(msg)
+        if (msg.error) {
+          reject(msg.error)
+        }
+
+        resolve(msg.data)
       })
-      .catch((error) => {
-        reject(error)
-      })
+      .catch((error) => reject(error))
   })
 }
 
