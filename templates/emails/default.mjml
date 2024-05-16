@@ -1,0 +1,38 @@
+<mjml>
+  <mj-head>
+    <mj-font name="Poppins" href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"></mj-font>
+    <mj-attributes>
+      <mj-all font-family="Poppins, Helvetica, Arial, sans-serif"></mj-all>
+      <mj-text font-weight="500" font-size="15px" color="#000000" line-height="24px"></mj-text>
+      <mj-section padding="0px"></mj-section>
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="rgb(245, 243, 255)">
+    <mj-wrapper padding="24px">
+      <mj-section padding-top="16px" background-color="rgb(235, 232, 248)" border-radius="8px 8px 0 0">
+        <mj-column width="100%">
+          <mj-image width="120px" src="{{ data.companyLogo }}" alt="{{ data.companyName }}" align="left" />
+        </mj-column>
+      </mj-section>
+      <mj-section padding="0 24px 24px 24px" background-color="rgb(235, 232, 248)">
+        <mj-column>
+          <mj-text align="left" font-weight="600" padding="24px 0 8px 0" font-size="23px">{{ data.title }}</mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="rgb(223, 225, 247)">
+        <mj-column width="100%">
+          <mj-text padding="16px 24px 16px 24px" font-size="14px">{{ data.message }}</mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section padding="8px 0 0 0" background-color="rgb(235, 232, 248)" border-radius="0 0 8px 8px">
+        <mj-column>
+          <mj-text font-size="11px" padding="16px 24px 0 24px">{{ data.footer }}</mj-text>
+          <mj-text font-weight="700" font-size="20px" padding="8px 24px 36px 24px">{{ data.companyName }}</mj-text>
+          <mj-divider border-color="rgb(225, 224, 234)" border-width="2px" border-style="solid" padding="0 24px" />
+          <mj-text color="rgb(145, 144, 154)" font-size="11px" padding="16px 24px 0 24px">{{ data.companyAddress }}, {{ data.companyCity }}, {{ data.companyCountry }}</mj-text>
+          <mj-text color="rgb(145, 144, 154)" font-size="11px" padding="0px 24px 24px 24px">Enviado por {{ data.companyName }}</mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
+</mjml>

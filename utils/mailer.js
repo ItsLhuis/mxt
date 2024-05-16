@@ -8,7 +8,12 @@ const generateEmailHtml = require("@utils/emailMjmlToHtml")
 
 const sendEmail = (companyName, to, subject, text, data, template) => {
   return new Promise((resolve, reject) => {
-    const emailTemplatePath = path.join(__dirname, "../", "templates/emails", `${template}.mjml`)
+    const emailTemplatePath = path.join(
+      __dirname,
+      "../",
+      "templates/emails",
+      `${template ? template : "default"}.mjml`
+    )
     const mjmlTemplate = fs.readFileSync(emailTemplatePath, "utf-8")
 
     const emailHtml = generateEmailHtml(mjmlTemplate, data)
@@ -27,11 +32,29 @@ const sendEmail = (companyName, to, subject, text, data, template) => {
         if (msg.error) {
           reject(msg.error)
         }
-
         resolve(msg.data)
       })
       .catch((error) => reject(error))
   })
 }
 
-module.exports = sendEmail
+const getEmail = (id) => {
+  return new Promise((resolve, reject) => {
+    resend.emails
+      .get(id)
+      .then((msg) => {
+        if (msg.error) {
+          reject(msg.error)
+        }
+        resolve(msg.data)
+      })
+      .catch((error) => reject(error))
+  })
+}
+
+const email = {
+  send: sendEmail,
+  get: getEmail
+}
+
+module.exports = email

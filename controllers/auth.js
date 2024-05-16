@@ -5,7 +5,7 @@ const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
 const destroyUser = require("@utils/destroyUser")
-const sendEmail = require("@utils/sendEmail")
+const mailer = require("@utils/mailer")
 const generateOtp = require("@utils/generateOtp")
 const getImageUrl = require("@utils/getImageUrl")
 
@@ -100,7 +100,7 @@ const authController = {
 
     const userOtpCode = await User.otpCode.create(existingUser[0].id, otpCode)
 
-    await sendEmail(
+    await mailer.send(
       companyDetails[0].name,
       email,
       `Código de Verificação - ${otpCode}`,

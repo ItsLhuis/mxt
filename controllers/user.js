@@ -3,6 +3,9 @@ const bcrypt = require("bcrypt")
 const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
+const mailer = require("@utils/mailer")
+const getImageUrl = require("@utils/getImageUrl")
+
 const { PERMISSION_DENIED } = require("@constants/errors/permission")
 
 const {
@@ -23,7 +26,9 @@ const { createUserSchema, updateUserSchema, updateUserPasswordSchema } = require
 
 const Employee = require("@models/employee")
 
-const { upload } = require("@middlewares/uploadFileHandler")
+const Company = require("@models/company")
+
+const upload = require("@middlewares/uploadFileHandler")
 
 const userController = {
   uploadAvatar: upload.image.single("avatar"),
@@ -69,6 +74,42 @@ const userController = {
 
     const user = await User.create(username, hashedPassword, email, profilePic, role, isActive)
     await Employee.create(user.insertId)
+
+    const companyDetails = await Company.find()
+    const logoCompanyUrl = getImageUrl(req, companyDetails[0].logo)
+
+    await mailer.send(
+      companyDetails[0].name,
+      email,
+      "Bem Vindo",
+      `Seja muito bem vindo à ${companyDetails[0].name}`,
+      {
+        companyLogo: logoCompanyUrl,
+        title: "Bem Vindo",
+        message: `Seja muito bem-vindo(a) à ${
+          companyDetails[0].name
+        }! Estamos felizes em tê-lo(a) conosco.
+                  <br>Para acessar à <a href="${req.protocol}://${req.get(
+          "host"
+        )}">plataforma</a>, aqui estão seus dados de acesso:
+                  <br>
+                  <ul>
+                    <li><strong>Nome de utilizador:</strong> ${username}</li>
+                    <li><strong>Senha:</strong> ${password}</li>
+                  </ul>
+                  <br>
+                  Aconselhamos seriamente a que assim que aceder à plataforma, <strong>altere</strong> a senha por uma de sua preferência.
+                  <br>
+                  <br>
+                  Mal podemos esperar para ver o que você fará!`,
+        footer: "Por motivos de segurança, recomendamos o não compartilhamento desta mensagem!",
+        companyName: companyDetails[0].name,
+        companyAddress: `${companyDetails[0].address}, ${companyDetails[0].postal_code}`,
+        companyCity: companyDetails[0].city,
+        companyCountry: companyDetails[0].country
+      }
+    )
+
     res.status(201).json({ message: "User created successfully" })
   }),
   update: tryCatch(async (req, res) => {
