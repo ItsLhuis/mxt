@@ -11,7 +11,7 @@
     <mj-wrapper padding="24px">
       <mj-section padding-top="16px" background-color="rgb(235, 232, 248)" border-radius="8px 8px 0 0">
         <mj-column width="100%">
-          <mj-image width="120px" src="{{ data.companyLogo }}" alt="{{ data.companyName }}" align="left" />
+          <mj-image width="100px" src="{{ data.companyLogo }}" alt="{{ data.companyName }}" align="left" />
         </mj-column>
       </mj-section>
       <mj-section padding="0 24px 24px 24px" background-color="rgb(235, 232, 248)">
