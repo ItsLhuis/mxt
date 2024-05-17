@@ -5,38 +5,20 @@ const NodeCache = require("node-cache")
 const fs = require("fs")
 const path = require("path")
 
-class DiskCache {
-  constructor({ cacheDir = "default", memoryTTL = 0, diskTTL = 0 } = {}) {
-    if (cacheDir === "default") {
-      cacheDir = path.join("tmp/cache", "/")
-    } else {
-      if (
-        cacheDir.startsWith("./") ||
-        cacheDir.startsWith("../") ||
-        cacheDir.startsWith("~/") ||
-        cacheDir.startsWith("/")
-      ) {
-        throw new Error(
-          "The 'cacheDir' directory must be relative and must not begin with ./, ../, ~/, or /."
-        )
-      }
-
-      cacheDir = path.join("tmp/cache", cacheDir)
-    }
-
+class Cache {
+  constructor({ memoryTTL = 0, diskTTL = 0 } = {}) {
     this.memoryCache = new NodeCache({ stdTTL: memoryTTL })
-    this.cacheDir = cacheDir
+    this.cacheDir = "tmp/cache"
     this.memoryTTL = memoryTTL
     this.diskTTL = diskTTL
 
-    if (!fs.existsSync(cacheDir)) {
-      fs.mkdirSync(cacheDir, { recursive: true })
-    }
+    if (this.diskTTL > 0) {
+      const cleaningInterval = (this.diskTTL * 1000) / 2 + this.diskTTL * 1000 * 0.1
 
-    setInterval(() => {
-      console.log("Entrou no clearExpiredDiskCache().")
-      this.clearExpiredDiskCache()
-    }, 60 * 1000)
+      setInterval(() => {
+        this.clearExpiredDiskCache()
+      }, cleaningInterval)
+    }
   }
 
   set(key, data) {
@@ -46,14 +28,20 @@ class DiskCache {
       fs.promises
         .readFile(filePath)
         .then((existingData) => {
-          const parsedExistingData = zlib.gunzipSync(existingData).toString()
+          let parsedExistingData
+          try {
+            parsedExistingData = zlib.gunzipSync(existingData).toString()
+          } catch (error) {
+            parsedExistingData = "[]"
+            fs.promises.unlink(filePath)
+          }
 
           let currentData = []
-
           try {
             currentData = JSON.parse(parsedExistingData)
           } catch (error) {
             currentData = []
+            fs.promises.unlink(filePath)
           }
 
           const isDuplicate = currentData.some(
@@ -63,6 +51,7 @@ class DiskCache {
           if (!isDuplicate) {
             currentData.push(data)
           } else {
+            this.memoryCache.set(key, currentData, this.memoryTTL)
             return resolve()
           }
 
@@ -81,8 +70,16 @@ class DiskCache {
           throw error
         })
         .then(() => {
-          this.memoryCache.set(key, [data], this.memoryTTL)
+          const memoryData = this.memoryCache.get(key) || []
+          const isDuplicate = memoryData.some(
+            (item) => JSON.stringify(item) === JSON.stringify(data)
+          )
 
+          if (!isDuplicate) {
+            memoryData.push(data)
+          }
+
+          this.memoryCache.set(key, memoryData, this.memoryTTL)
           resolve()
         })
         .catch((error) => reject(error))
@@ -91,33 +88,36 @@ class DiskCache {
 
   get(key) {
     return new Promise((resolve, reject) => {
-      const data = this.memoryCache.get(key)
-
-      if (data !== undefined) {
-        console.log("Cache em memória!")
-        resolve(data)
-      } else {
-        const filePath = path.join(this.cacheDir, key)
-        fs.promises
-          .readFile(filePath)
-          .then((fileData) => {
-            console.log("Cache em disco!")
-            const parsedData = zlib.gunzipSync(fileData).toString()
-            const jsonData = JSON.parse(parsedData)
-
-            this.memoryCache.set(key, jsonData, this.memoryTTL)
-
-            resolve(jsonData)
-          })
-          .catch((error) => {
-            if (error.code === "ENOENT") {
-              console.log("Cache em lado nenhum!")
-              resolve(null)
-            } else {
-              reject(error)
-            }
-          })
+      const memoryData = this.memoryCache.get(key)
+      if (memoryData !== undefined) {
+        return resolve(memoryData)
       }
+
+      const filePath = path.join(this.cacheDir, key)
+
+      fs.promises
+        .readFile(filePath)
+        .then((data) => {
+          let parsedData
+          try {
+            parsedData = JSON.parse(zlib.gunzipSync(data).toString())
+          } catch (error) {
+            parsedData = null
+            fs.promises.unlink(filePath)
+          }
+
+          if (parsedData) {
+            this.memoryCache.set(key, parsedData, this.memoryTTL)
+          }
+          resolve(parsedData === null ? [] : parsedData)
+        })
+        .catch((error) => {
+          if (error.code === "ENOENT") {
+            resolve([])
+          } else {
+            reject(error)
+          }
+        })
     })
   }
 
@@ -146,15 +146,13 @@ class DiskCache {
       fs.promises
         .readdir(this.cacheDir)
         .then((files) => {
-          const promises = files.map((file) => {
-            const filePath = path.join(this.cacheDir, file)
-
-            this.memoryCache.del(file)
-            return fs.promises.unlink(filePath)
-          })
+          const promises = files.map((file) => fs.promises.unlink(path.join(this.cacheDir, file)))
           return Promise.all(promises)
         })
-        .then(() => resolve())
+        .then(() => {
+          this.memoryCache.flushAll()
+          resolve()
+        })
         .catch((error) => {
           reject(error)
         })
@@ -176,12 +174,11 @@ class DiskCache {
         fs.stat(filePath, (err, stats) => {
           if (err) throw err
 
-          const fileAgeSeconds = (now - stats.mtime.getTime()) / 1000
+          const fileAgeSeconds = Math.floor((now - stats.mtime.getTime()) / 1000)
 
           if (fileAgeSeconds > this.diskTTL) {
             fs.unlink(filePath, (err) => {
               if (err) throw err
-              console.log(`Arquivo de cache expirado ${filePath} removido.`)
             })
           }
         })
@@ -190,4 +187,4 @@ class DiskCache {
   }
 }
 
-module.exports = DiskCache
+module.exports = Cache

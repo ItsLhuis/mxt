@@ -64,13 +64,4 @@ initializeApp()
 
 const server = http.createServer(app)
 
-const DiskCache = require("@classes/cache")
-const cache = new DiskCache({ memoryTTL: 20, diskTTL: 70 })
-
-cache.set("test", { name: "Luis" })
-
-setInterval(() => {
-  cache.get("test").then((data) => console.log(data))
-}, 1000)
-
 module.exports = { server }
