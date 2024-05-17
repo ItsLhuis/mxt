@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) UNIQUE,
     avatar VARCHAR(50),
     role ENUM('Chefe', 'Administrador', 'Funcionário') NOT NULL,
-    is_active BOOLEAN,
+    is_active BOOLEAN NOT NULL DEFAULT true,
     created_at_datetime DATETIME NOT NULL
 );
 
@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS user_otp_codes (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     otp_code VARCHAR(10) NOT NULL,
+    is_used BOOLEAN NOT NULL DEFAULT false,
     created_at_datetime DATETIME NOT NULL,
     expiration_datetime DATETIME NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE

@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require("uuid")
+
 const multer = require("multer")
 const sharp = require("sharp")
 const fs = require("fs")
@@ -29,13 +30,13 @@ const isValidImageExtension = (fileName) => {
 const uploadImage = {
   single: (fieldName) =>
     tryCatch(async (req, res, next) => {
-      if (!req.file) {
-        return next()
-      }
-
       multerUploadImage.single(fieldName)(req, res, async (err) => {
         if (err) {
           return next(err)
+        }
+
+        if (!req.file) {
+          return next()
         }
 
         try {

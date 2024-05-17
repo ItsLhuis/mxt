@@ -16,13 +16,7 @@ const emptyStringHandler = require("@middlewares/emptyStringHandler")
 
 const initializeApp = require("@utils/initializeApp")
 
-// const isProduction = process.env.NODE_ENV === "production"
-
 const app = express()
-
-/* if (isProduction) {
-  app.set("trust proxy", 1)
-} */
 
 app.use(cookieParser())
 app.use(
@@ -32,7 +26,7 @@ app.use(
     resave: true,
     cookie: {
       sameSite: "none",
-      secure: /* isProduction */ false,
+      secure: false,
       httpOnly: true,
       maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN * 1000
     }

@@ -27,6 +27,18 @@ const { authSchema, requestResetPasswordSchema } = require("@schemas/user")
 
 const Company = require("@models/company")
 
+const generateUniqueOtp = async () => {
+  let otp = generateOtp()
+  let existingOTP = await User.otpCode.findByOtpCode(otp)
+
+  while (existingOTP.length > 0) {
+    otp = generateOtp()
+    existingOTP = await User.otpCode.findByOtpCode(otp)
+  }
+
+  return otp
+}
+
 const authController = {
   login: tryCatch(async (req, res) => {
     const { username, password } = req.body
@@ -96,26 +108,27 @@ const authController = {
       throw new AppError(404, USER_NOT_FOUND, "User with this e-mail not found", true)
     }
 
-    const otpCode = generateOtp()
+    const otpCode = await generateUniqueOtp()
 
     const userOtpCode = await User.otpCode.create(existingUser[0].id, otpCode)
 
-    await mailer.send(
-      companyDetails[0].name,
-      email,
-      `Código de Verificação - ${otpCode}`,
-      `O seu código de verificação é - ${otpCode}`,
-      {
-        username: existingUser[0].username,
-        otpCode: otpCode,
-        companyLogo: logoCompanyUrl,
-        companyName: companyDetails[0].name,
-        companyAddress: `${companyDetails[0].address}, ${companyDetails[0].postal_code}`,
-        companyCity: companyDetails[0].city,
-        companyCountry: companyDetails[0].country
-      },
-      "resetPassword"
-    )
+    await mailer
+      .send(
+        companyDetails[0].name,
+        email,
+        `Código de Verificação - ${otpCode}`,
+        `O seu código de verificação é - ${otpCode}`,
+        {
+          username: existingUser[0].username,
+          otpCode: otpCode,
+          companyLogo: logoCompanyUrl,
+          companyName: companyDetails[0].name,
+          companyAddress: `${companyDetails[0].address}, ${companyDetails[0].postal_code}`,
+          companyCity: companyDetails[0].city,
+          companyCountry: companyDetails[0].country
+        },
+        "resetPassword"
+      )
       .then(() => {
         res.status(200).json({ message: "Reset password e-mail sent successfully" })
       })

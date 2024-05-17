@@ -91,7 +91,7 @@ const userController = {
         }! Estamos felizes em tê-lo(a) conosco.
                   <br>Para acessar à <a href="${req.protocol}://${req.get(
           "host"
-        )}">plataforma</a>, aqui estão seus dados de acesso:
+        )}/auth/login">plataforma</a>, aqui estão seus dados de acesso:
                   <br>
                   <ul>
                     <li><strong>Nome de utilizador:</strong> ${username}</li>

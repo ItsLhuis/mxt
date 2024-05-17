@@ -19,7 +19,7 @@ const sendEmail = (companyName, to, subject, text, data, template) => {
     const emailHtml = generateEmailHtml(mjmlTemplate, data)
 
     const mailOptions = {
-      from: `"${companyName}" <onboarding@resend.dev>`,
+      from: `"${companyName}" <${process.env.RESEND_DOMAIN}>`,
       to,
       subject,
       text: text,

@@ -58,9 +58,13 @@ const User = {
       const query = "SELECT * FROM user_otp_codes WHERE user_id = ?"
       return dbQueryExecutor.execute(query, [userId])
     },
+    findByOtpCode: (otpCode) => {
+      const query = "SELECT * FROM user_otp_codes WHERE otp_code = ?"
+      return dbQueryExecutor.execute(query, [otpCode])
+    },
     create: (userId, otpCode) => {
       const query =
-        "INSERT INTO user_otp_codes (user_id, otp_code, created_at_datetime, expiration_datetime) VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 5 MINUTE))"
+        "INSERT INTO user_otp_codes (user_id, otp_code, is_used, created_at_datetime, expiration_datetime) VALUES (?, ?, false, NOW(), DATE_ADD(NOW(), INTERVAL 5 MINUTE))"
       return dbQueryExecutor.execute(query, [userId, otpCode])
     },
     delete: (id) => {

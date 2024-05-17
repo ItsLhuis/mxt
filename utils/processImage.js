@@ -6,18 +6,18 @@ const { IMAGE_PROCESSING } = require("@constants/errors/shared/image")
 
 const { IMAGE_ERROR_TYPE } = require("@constants/errors/shared/types")
 
-const processImage = async (imagePath, options) => {
+const processImage = async (imagePath, { size, quality, format, blur } = {}) => {
   try {
     const imageInfo = await sharp(imagePath).metadata()
 
     const defaultOptions = {
-      size: imageInfo.width || 800,
-      quality: "high",
-      format: "jpeg",
-      blur: false
+      size: size || imageInfo.width || 800,
+      quality: quality || "high",
+      format: format || "jpeg",
+      blur: blur || false
     }
 
-    const mergedOptions = { ...defaultOptions, ...options }
+    const mergedOptions = { ...defaultOptions }
 
     if (!["high", "medium", "low"].includes(mergedOptions.quality)) {
       mergedOptions.quality = "high"
@@ -49,9 +49,9 @@ const processImage = async (imagePath, options) => {
     if (mergedOptions.quality === "high") {
       processedImageBuffer = await sharp(resizedImageBuffer).jpeg({ quality: 90 }).toBuffer()
     } else if (mergedOptions.quality === "low") {
-      processedImageBuffer = await sharp(resizedImageBuffer).jpeg({ quality: 50 }).toBuffer()
+      processedImageBuffer = await sharp(resizedImageBuffer).jpeg({ quality: 30 }).toBuffer()
     } else if (mergedOptions.quality === "medium") {
-      processedImageBuffer = await sharp(resizedImageBuffer).jpeg({ quality: 75 }).toBuffer()
+      processedImageBuffer = await sharp(resizedImageBuffer).jpeg({ quality: 60 }).toBuffer()
     }
 
     let blurredImageBuffer
