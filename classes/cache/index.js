@@ -1,10 +1,12 @@
 const zlib = require("zlib")
 
+const NodeCache = require("node-cache")
+
 const fs = require("fs")
 const path = require("path")
 
 class DiskCache {
-  constructor({ cacheDir = "default", maxSize = null } = {}) {
+  constructor({ cacheDir = "default", memoryTTL = 0, diskTTL = 0 } = {}) {
     if (cacheDir === "default") {
       cacheDir = path.join("tmp/cache", "/")
     } else {
@@ -22,12 +24,19 @@ class DiskCache {
       cacheDir = path.join("tmp/cache", cacheDir)
     }
 
+    this.memoryCache = new NodeCache({ stdTTL: memoryTTL })
     this.cacheDir = cacheDir
-    this.maxSize = maxSize
+    this.memoryTTL = memoryTTL
+    this.diskTTL = diskTTL
 
     if (!fs.existsSync(cacheDir)) {
       fs.mkdirSync(cacheDir, { recursive: true })
     }
+
+    setInterval(() => {
+      console.log("Entrou no clearExpiredDiskCache().")
+      this.clearExpiredDiskCache()
+    }, 60 * 1000)
   }
 
   set(key, data) {
@@ -71,51 +80,44 @@ class DiskCache {
           }
           throw error
         })
-        .then(() => resolve())
+        .then(() => {
+          this.memoryCache.set(key, [data], this.memoryTTL)
+
+          resolve()
+        })
         .catch((error) => reject(error))
     })
   }
 
   get(key) {
     return new Promise((resolve, reject) => {
-      const filePath = path.join(this.cacheDir, key)
-      fs.promises
-        .readFile(filePath)
-        .then((data) => {
-          let parsedData = zlib.gunzipSync(data).toString()
-          resolve(JSON.parse(parsedData))
-        })
-        .catch((error) => {
-          if (error.code === "ENOENT") {
-            resolve(null)
-          } else {
-            reject(error)
-          }
-        })
-    })
-  }
+      const data = this.memoryCache.get(key)
 
-  getAll() {
-    return new Promise((resolve, reject) => {
-      fs.promises
-        .readdir(this.cacheDir)
-        .then((files) => {
-          const data = []
+      if (data !== undefined) {
+        console.log("Cache em memória!")
+        resolve(data)
+      } else {
+        const filePath = path.join(this.cacheDir, key)
+        fs.promises
+          .readFile(filePath)
+          .then((fileData) => {
+            console.log("Cache em disco!")
+            const parsedData = zlib.gunzipSync(fileData).toString()
+            const jsonData = JSON.parse(parsedData)
 
-          const promises = files.map((file) => {
-            const filePath = path.join(this.cacheDir, file)
+            this.memoryCache.set(key, jsonData, this.memoryTTL)
 
-            return fs.promises.readFile(filePath).then((fileData) => {
-              const parsedData = zlib.gunzipSync(fileData).toString()
-              data.push({ key: file, value: JSON.parse(parsedData) })
-            })
+            resolve(jsonData)
           })
-
-          Promise.all(promises)
-            .then(() => resolve(data))
-            .catch((error) => reject(error))
-        })
-        .catch((error) => reject(error))
+          .catch((error) => {
+            if (error.code === "ENOENT") {
+              console.log("Cache em lado nenhum!")
+              resolve(null)
+            } else {
+              reject(error)
+            }
+          })
+      }
     })
   }
 
@@ -125,6 +127,7 @@ class DiskCache {
       fs.promises
         .access(filePath, fs.constants.F_OK)
         .then(() => {
+          this.memoryCache.del(key)
           return fs.promises.unlink(filePath)
         })
         .then(() => resolve())
@@ -143,7 +146,12 @@ class DiskCache {
       fs.promises
         .readdir(this.cacheDir)
         .then((files) => {
-          const promises = files.map((file) => fs.promises.unlink(path.join(this.cacheDir, file)))
+          const promises = files.map((file) => {
+            const filePath = path.join(this.cacheDir, file)
+
+            this.memoryCache.del(file)
+            return fs.promises.unlink(filePath)
+          })
           return Promise.all(promises)
         })
         .then(() => resolve())
@@ -153,14 +161,31 @@ class DiskCache {
     })
   }
 
-  getTotalKeys() {
-    return new Promise((resolve, reject) => {
-      fs.promises
-        .readdir(this.cacheDir)
-        .then((files) => resolve(files.length))
-        .catch((error) => {
-          reject(error)
+  clearExpiredDiskCache() {
+    if (this.diskTTL === 0) {
+      return
+    }
+
+    const now = Date.now()
+    fs.readdir(this.cacheDir, (err, files) => {
+      if (err) throw err
+
+      files.forEach((file) => {
+        const filePath = path.join(this.cacheDir, file)
+
+        fs.stat(filePath, (err, stats) => {
+          if (err) throw err
+
+          const fileAgeSeconds = (now - stats.mtime.getTime()) / 1000
+
+          if (fileAgeSeconds > this.diskTTL) {
+            fs.unlink(filePath, (err) => {
+              if (err) throw err
+              console.log(`Arquivo de cache expirado ${filePath} removido.`)
+            })
+          }
         })
+      })
     })
   }
 }
