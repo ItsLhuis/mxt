@@ -5,10 +5,17 @@ const NodeCache = require("node-cache")
 const fs = require("fs")
 const path = require("path")
 
+const { isEqual } = require("lodash")
+
 class Cache {
   constructor({ memoryTTL = 0, diskTTL = 0 } = {}) {
     this.memoryCache = new NodeCache({ stdTTL: memoryTTL })
-    this.cacheDir = "tmp/cache"
+    Object.defineProperty(this, "cacheDir", {
+      value: "tmp/cache",
+      writable: false,
+      configurable: false,
+      enumerable: true
+    })
     this.memoryTTL = memoryTTL
     this.diskTTL = diskTTL
 
@@ -44,39 +51,46 @@ class Cache {
             fs.promises.unlink(filePath)
           }
 
-          const isDuplicate = currentData.some(
-            (item) => JSON.stringify(item) === JSON.stringify(data)
+          const newData = Array.isArray(data) ? data : [data]
+          const uniqueData = newData.filter(
+            (newItem) => !currentData.some((existingItem) => isEqual(existingItem, newItem))
           )
 
-          if (!isDuplicate) {
-            currentData.push(data)
+          if (uniqueData.length > 0) {
+            currentData.push(...uniqueData)
+
+            const serializedData = zlib.gzipSync(JSON.stringify(currentData), {
+              level: zlib.constants.Z_BEST_COMPRESSION
+            })
+
+            return fs.promises.writeFile(filePath, serializedData)
           } else {
             this.memoryCache.set(key, currentData, this.memoryTTL)
             return resolve()
           }
-
-          const serializedData = zlib.gzipSync(JSON.stringify(currentData), {
-            level: zlib.constants.Z_BEST_COMPRESSION
-          })
-          return fs.promises.writeFile(filePath, serializedData)
         })
         .catch((error) => {
           if (error.code === "ENOENT") {
-            const serializedData = zlib.gzipSync(JSON.stringify([data]), {
-              level: zlib.constants.Z_BEST_COMPRESSION
-            })
+            const serializedData = zlib.gzipSync(
+              JSON.stringify(Array.isArray(data) ? data : [data]),
+              {
+                level: zlib.constants.Z_BEST_COMPRESSION
+              }
+            )
             return fs.promises.writeFile(filePath, serializedData)
           }
           throw error
         })
         .then(() => {
           const memoryData = this.memoryCache.get(key) || []
-          const isDuplicate = memoryData.some(
-            (item) => JSON.stringify(item) === JSON.stringify(data)
+
+          const newData = Array.isArray(data) ? data : [data]
+          const uniqueData = newData.filter(
+            (item) => !memoryData.some((existingItem) => isEqual(existingItem, item))
           )
 
-          if (!isDuplicate) {
-            memoryData.push(data)
+          if (uniqueData.length > 0) {
+            memoryData.push(...uniqueData)
           }
 
           this.memoryCache.set(key, memoryData, this.memoryTTL)
