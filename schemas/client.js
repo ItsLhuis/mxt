@@ -7,13 +7,13 @@ const clientSchema = z.object({
 
 const clientContactSchema = z
   .object({
-    contactType: z.enum(["E-mail", "Telefone", "Telemóvel", "Outro"]),
+    type: z.enum(["E-mail", "Telefone", "Telemóvel", "Outro"]),
     contact: z.string().max(255),
     description: z.string().optional().nullable()
   })
   .refine(
     (data) => {
-      if (data.contactType === "E-mail") {
+      if (data.type === "E-mail") {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.contact)
       }
       return true

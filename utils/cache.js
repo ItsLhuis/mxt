@@ -5,7 +5,7 @@ const withCache = (cacheKey, fetchDataFunction) => {
   return async () => {
     const cachedData = await cache.get(cacheKey)
 
-    if (cachedData.length > 0) {
+    if (cachedData) {
       return Promise.resolve(cachedData)
     }
 
@@ -16,4 +16,6 @@ const withCache = (cacheKey, fetchDataFunction) => {
   }
 }
 
-module.exports = withCache
+const revalidateCache = (cacheKey) => {}
+
+module.exports = { withCache, revalidateCache }

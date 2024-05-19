@@ -92,7 +92,7 @@ const clientController = {
     }),
     create: tryCatch(async (req, res) => {
       const { clientId } = req.params
-      const { contactType, contact, description } = req.body
+      const { type, contact, description } = req.body
 
       clientContactSchema.parse(req.body)
 
@@ -103,7 +103,7 @@ const clientController = {
 
       const duplicateContact = await Client.contact.findContactByClientIdAndDetails(
         clientId,
-        contactType,
+        type,
         contact,
         null
       )
@@ -116,12 +116,12 @@ const clientController = {
         )
       }
 
-      await Client.contact.create(clientId, contactType, contact, description, req.user.id)
+      await Client.contact.create(clientId, type, contact, description, req.user.id)
       res.status(201).json({ message: "Contact created successfully" })
     }),
     update: tryCatch(async (req, res) => {
       const { contactId } = req.params
-      const { contactType, contact, description } = req.body
+      const { type, contact, description } = req.body
 
       clientContactSchema.parse(req.body)
 
@@ -132,7 +132,7 @@ const clientController = {
 
       const duplicateContact = await Client.contact.findContactByClientIdAndDetails(
         existingContact[0].client_id,
-        contactType,
+        type,
         contact,
         contactId
       )
@@ -145,14 +145,14 @@ const clientController = {
         )
       }
 
-      await Client.contact.update(contactId, contactType, contact, description, req.user.id)
+      await Client.contact.update(contactId, type, contact, description, req.user.id)
 
       const changes = [
         {
-          field: "Contact Type",
-          before: existingContact[0].contact_type,
-          after: contactType,
-          changed: existingContact[0].contact_type !== contactType
+          field: "Type",
+          before: existingContact[0].type,
+          after: type,
+          changed: existingContact[0].type !== type
         },
         {
           field: "Contact",

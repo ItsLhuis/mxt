@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS clients (
 CREATE TABLE IF NOT EXISTS client_contacts (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     client_id INT,
-    contact_type ENUM('E-mail', 'Telefone', 'Telemóvel', 'Outro') NOT NULL,
+    type ENUM('E-mail', 'Telefone', 'Telemóvel', 'Outro') NOT NULL,
     contact VARCHAR(255),
     description TEXT,
     created_by_user_id INT,

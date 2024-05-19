@@ -1,10 +1,24 @@
 const dbQueryExecutor = require("@utils/dbQueryExecutor")
 
+const { withCache } = require("@utils/cache")
+
 const Client = {
-  findAll: () => {
-    const query = "SELECT * FROM clients"
-    return dbQueryExecutor.execute(query)
-  },
+  findAll: withCache("clients", async () => {
+    const clientsQuery = "SELECT * FROM clients"
+    const clients = await dbQueryExecutor.execute(clientsQuery)
+
+    const clientsWithDetails = await Promise.all(
+      clients.map(async (client) => {
+        const contacts = await Client.contact.findByClientId(client.id)
+        const addresses = await Client.address.findByClientId(client.id)
+        const interactionsHistory = await Client.interactionsHistory.findByClientId(client.id)
+
+        return { ...client, contacts, addresses, interactionsHistory }
+      })
+    )
+
+    return clientsWithDetails
+  }),
   findByClientId: (clientId) => {
     const query = "SELECT * FROM clients WHERE id = ?"
     return dbQueryExecutor.execute(query, [clientId])
@@ -32,10 +46,9 @@ const Client = {
       const query = "SELECT * FROM client_contacts WHERE id = ?"
       return dbQueryExecutor.execute(query, [contactId])
     },
-    findContactByClientIdAndDetails: (clientId, contactType, contact, contactIdToExclude) => {
-      let query =
-        "SELECT * FROM client_contacts WHERE client_id = ? AND contact_type = ? AND contact = ?"
-      const params = [clientId, contactType, contact]
+    findContactByClientIdAndDetails: (clientId, type, contact, contactIdToExclude) => {
+      let query = "SELECT * FROM client_contacts WHERE client_id = ? AND type = ? AND contact = ?"
+      const params = [clientId, type, contact]
 
       if (contactIdToExclude) {
         query += " AND id != ?"
@@ -44,22 +57,16 @@ const Client = {
 
       return dbQueryExecutor.execute(query, params)
     },
-    create: (clientId, contactType, contact, description, createdByUserId) => {
+    create: (clientId, type, contact, description, createdByUserId) => {
       const query =
-        "INSERT INTO client_contacts (client_id, contact_type, contact, description, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, NOW())"
-      return dbQueryExecutor.execute(query, [
-        clientId,
-        contactType,
-        contact,
-        description,
-        createdByUserId
-      ])
+        "INSERT INTO client_contacts (client_id, type, contact, description, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, NOW())"
+      return dbQueryExecutor.execute(query, [clientId, type, contact, description, createdByUserId])
     },
-    update: (contactId, contactType, contact, description, lastModifiedByUserId) => {
+    update: (contactId, type, contact, description, lastModifiedByUserId) => {
       const query =
-        "UPDATE client_contacts SET contact_type = ?, contact = ?, description = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
+        "UPDATE client_contacts SET type = ?, contact = ?, description = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
       return dbQueryExecutor.execute(query, [
-        contactType,
+        type,
         contact,
         description,
         lastModifiedByUserId,

@@ -5,8 +5,6 @@ const NodeCache = require("node-cache")
 const fs = require("fs")
 const path = require("path")
 
-const { isEqual } = require("lodash")
-
 class Cache {
   constructor({ memoryTTL = 0, diskTTL = 0 } = {}) {
     this.memoryCache = new NodeCache({ stdTTL: memoryTTL })
@@ -18,6 +16,10 @@ class Cache {
     })
     this.memoryTTL = memoryTTL
     this.diskTTL = diskTTL
+
+    if (!fs.existsSync(this.cacheDir)) {
+      fs.mkdirSync(this.cacheDir, { recursive: true })
+    }
 
     if (this.diskTTL > 0) {
       const cleaningInterval = (this.diskTTL * 1000) / 2 + this.diskTTL * 1000 * 0.1
@@ -32,78 +34,36 @@ class Cache {
     return new Promise((resolve, reject) => {
       const filePath = path.join(this.cacheDir, key)
 
+      const serializedData = zlib.gzipSync(JSON.stringify(data), {
+        level: zlib.constants.Z_BEST_COMPRESSION
+      })
+
       fs.promises
-        .readFile(filePath)
-        .then((existingData) => {
-          let parsedExistingData
-          try {
-            parsedExistingData = zlib.gunzipSync(existingData).toString()
-          } catch (error) {
-            parsedExistingData = "[]"
-            fs.promises.unlink(filePath)
-          }
-
-          let currentData = []
-          try {
-            currentData = JSON.parse(parsedExistingData)
-          } catch (error) {
-            currentData = []
-            fs.promises.unlink(filePath)
-          }
-
-          const newData = Array.isArray(data) ? data : [data]
-          const uniqueData = newData.filter(
-            (newItem) => !currentData.some((existingItem) => isEqual(existingItem, newItem))
-          )
-
-          if (uniqueData.length > 0) {
-            currentData.push(...uniqueData)
-
-            const serializedData = zlib.gzipSync(JSON.stringify(currentData), {
-              level: zlib.constants.Z_BEST_COMPRESSION
-            })
-
-            return fs.promises.writeFile(filePath, serializedData)
-          } else {
-            this.memoryCache.set(key, currentData, this.memoryTTL)
-            return resolve()
-          }
-        })
+        .unlink(filePath)
         .catch((error) => {
-          if (error.code === "ENOENT") {
-            const serializedData = zlib.gzipSync(
-              JSON.stringify(Array.isArray(data) ? data : [data]),
-              {
-                level: zlib.constants.Z_BEST_COMPRESSION
-              }
-            )
-            return fs.promises.writeFile(filePath, serializedData)
+          if (error.code !== "ENOENT") {
+            this.memoryCache.set(key, data, this.memoryTTL)
+            reject(error)
           }
-          throw error
         })
         .then(() => {
-          const memoryData = this.memoryCache.get(key) || []
-
-          const newData = Array.isArray(data) ? data : [data]
-          const uniqueData = newData.filter(
-            (item) => !memoryData.some((existingItem) => isEqual(existingItem, item))
-          )
-
-          if (uniqueData.length > 0) {
-            memoryData.push(...uniqueData)
-          }
-
-          this.memoryCache.set(key, memoryData, this.memoryTTL)
+          return fs.promises.writeFile(filePath, serializedData)
+        })
+        .then(() => {
+          this.memoryCache.set(key, data, this.memoryTTL)
           resolve()
         })
-        .catch((error) => reject(error))
+        .catch((error) => {
+          this.memoryCache.set(key, data, this.memoryTTL)
+          reject(error)
+        })
     })
   }
 
   get(key) {
     return new Promise((resolve, reject) => {
       const memoryData = this.memoryCache.get(key)
-      if (memoryData !== undefined) {
+      if (memoryData) {
         return resolve(memoryData)
       }
 
@@ -116,18 +76,18 @@ class Cache {
           try {
             parsedData = JSON.parse(zlib.gunzipSync(data).toString())
           } catch (error) {
-            parsedData = null
+            parsedData = undefined
             fs.promises.unlink(filePath)
           }
 
           if (parsedData) {
             this.memoryCache.set(key, parsedData, this.memoryTTL)
           }
-          resolve(parsedData === null ? [] : parsedData)
+          resolve(parsedData)
         })
         .catch((error) => {
           if (error.code === "ENOENT") {
-            resolve([])
+            resolve(undefined)
           } else {
             reject(error)
           }
@@ -180,19 +140,19 @@ class Cache {
 
     const now = Date.now()
     fs.readdir(this.cacheDir, (err, files) => {
-      if (err) throw err
+      if (err) return
 
       files.forEach((file) => {
         const filePath = path.join(this.cacheDir, file)
 
         fs.stat(filePath, (err, stats) => {
-          if (err) throw err
+          if (err) return
 
           const fileAgeSeconds = Math.floor((now - stats.mtime.getTime()) / 1000)
 
           if (fileAgeSeconds > this.diskTTL) {
             fs.unlink(filePath, (err) => {
-              if (err) throw err
+              if (err) return
             })
           }
         })
