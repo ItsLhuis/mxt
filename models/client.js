@@ -163,12 +163,13 @@ const Client = {
   },
   interactionsHistory: {
     findByClientId: (clientId) => {
-      const query = "SELECT * FROM client_interactions_history WHERE client_id = ? ORDER BY datetime ASC"
+      const query =
+        "SELECT * FROM client_interactions_history WHERE client_id = ? ORDER BY created_at_datetime ASC"
       return dbQueryExecutor.execute(query, [clientId])
     },
     create: (clientId, interactionType, details, responsibleUserId) => {
       const query =
-        "INSERT INTO client_interactions_history (client_id, datetime, type, details, responsible_user_id) VALUES (?, NOW(), ?, ?, ?)"
+        "INSERT INTO client_interactions_history (client_id, created_at_datetime, type, details, responsible_user_id) VALUES (?, NOW(), ?, ?, ?)"
       return dbQueryExecutor.execute(query, [clientId, interactionType, details, responsibleUserId])
     }
   }
