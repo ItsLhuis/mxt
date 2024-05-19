@@ -6,7 +6,7 @@ const fs = require("fs")
 const path = require("path")
 
 class Cache {
-  constructor({ memoryTTL = 0, diskTTL = 0 } = {}) {
+  constructor({ memoryTTL = 0, diskTTL = 0, storage = "both" } = {}) {
     this.memoryCache = new NodeCache({ stdTTL: memoryTTL })
     Object.defineProperty(this, "cacheDir", {
       value: "tmp/cache",
@@ -16,12 +16,13 @@ class Cache {
     })
     this.memoryTTL = memoryTTL
     this.diskTTL = diskTTL
+    this.storage = storage.toLowerCase().trim()
 
     if (!fs.existsSync(this.cacheDir)) {
       fs.mkdirSync(this.cacheDir, { recursive: true })
     }
 
-    if (this.diskTTL > 0) {
+    if (this.storage === "both" && this.diskTTL > 0) {
       const cleaningInterval = (this.diskTTL * 1000) / 2 + this.diskTTL * 1000 * 0.1
 
       setInterval(() => {
@@ -38,25 +39,30 @@ class Cache {
         level: zlib.constants.Z_BEST_COMPRESSION
       })
 
-      fs.promises
-        .unlink(filePath)
-        .catch((error) => {
-          if (error.code !== "ENOENT") {
+      if (this.storage === "both") {
+        fs.promises
+          .unlink(filePath)
+          .catch((error) => {
+            if (error.code !== "ENOENT") {
+              this.memoryCache.set(key, data, this.memoryTTL)
+              reject(error)
+            }
+          })
+          .then(() => {
+            return fs.promises.writeFile(filePath, serializedData)
+          })
+          .then(() => {
+            this.memoryCache.set(key, data, this.memoryTTL)
+            resolve()
+          })
+          .catch((error) => {
             this.memoryCache.set(key, data, this.memoryTTL)
             reject(error)
-          }
-        })
-        .then(() => {
-          return fs.promises.writeFile(filePath, serializedData)
-        })
-        .then(() => {
-          this.memoryCache.set(key, data, this.memoryTTL)
-          resolve()
-        })
-        .catch((error) => {
-          this.memoryCache.set(key, data, this.memoryTTL)
-          reject(error)
-        })
+          })
+      } else {
+        this.memoryCache.set(key, data, this.memoryTTL)
+        resolve()
+      }
     })
   }
 
@@ -67,51 +73,60 @@ class Cache {
         return resolve(memoryData)
       }
 
-      const filePath = path.join(this.cacheDir, key)
+      if (this.storage === "both") {
+        const filePath = path.join(this.cacheDir, key)
 
-      fs.promises
-        .readFile(filePath)
-        .then((data) => {
-          let parsedData
-          try {
-            parsedData = JSON.parse(zlib.gunzipSync(data).toString())
-          } catch (error) {
-            parsedData = undefined
-            fs.promises.unlink(filePath)
-          }
+        fs.promises
+          .readFile(filePath)
+          .then((data) => {
+            let parsedData
+            try {
+              parsedData = JSON.parse(zlib.gunzipSync(data).toString())
+            } catch (error) {
+              parsedData = undefined
+              fs.promises.unlink(filePath)
+            }
 
-          if (parsedData) {
-            this.memoryCache.set(key, parsedData, this.memoryTTL)
-          }
-          resolve(parsedData)
-        })
-        .catch((error) => {
-          if (error.code === "ENOENT") {
-            resolve(undefined)
-          } else {
-            reject(error)
-          }
-        })
+            if (parsedData) {
+              this.memoryCache.set(key, parsedData, this.memoryTTL)
+            }
+            resolve(parsedData)
+          })
+          .catch((error) => {
+            if (error.code === "ENOENT") {
+              resolve(undefined)
+            } else {
+              reject(error)
+            }
+          })
+      } else {
+        resolve(undefined)
+      }
     })
   }
 
   delete(key) {
     return new Promise((resolve, reject) => {
       const filePath = path.join(this.cacheDir, key)
-      fs.promises
-        .access(filePath, fs.constants.F_OK)
-        .then(() => {
-          this.memoryCache.del(key)
-          return fs.promises.unlink(filePath)
-        })
-        .then(() => resolve())
-        .catch((error) => {
-          if (error.code === "ENOENT") {
-            resolve()
-          } else {
-            reject(error)
-          }
-        })
+      if (this.storage === "both") {
+        fs.promises
+          .access(filePath, fs.constants.F_OK)
+          .then(() => {
+            this.memoryCache.del(key)
+            return fs.promises.unlink(filePath)
+          })
+          .then(() => resolve())
+          .catch((error) => {
+            if (error.code === "ENOENT") {
+              resolve()
+            } else {
+              reject(error)
+            }
+          })
+      } else {
+        this.memoryCache.del(key)
+        resolve()
+      }
     })
   }
 

@@ -12,6 +12,7 @@ router
 
 router
   .route("/:clientId")
+  .get(checkPermissionHandler("client", permissions.READ), clientController.findByClientId)
   .put(checkPermissionHandler("client", permissions.UPDATE), clientController.update)
   .delete(checkPermissionHandler("client", permissions.DELETE), clientController.delete)
 

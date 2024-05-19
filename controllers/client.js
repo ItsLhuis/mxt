@@ -23,6 +23,16 @@ const clientController = {
     const clients = await Client.findAll()
     res.status(200).json(clients)
   }),
+  findByClientId: tryCatch(async (req, res) => {
+    const { clientId } = req.params
+
+    const existingClient = await Client.findByClientId(clientId)
+    if (existingClient.length <= 0) {
+      throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+    }
+
+    res.status(200).json(existingClient)
+  }),
   create: tryCatch(async (req, res) => {
     const { name, description } = req.body
 

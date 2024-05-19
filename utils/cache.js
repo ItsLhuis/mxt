@@ -1,16 +1,32 @@
 const Cache = require("@classes/cache")
-const cache = new Cache({ memoryTTL: 5, diskTTL: 10 })
 
-const withCache = (cacheKey, fetchDataFunction) => {
+const diskAndMemoryCache = new Cache({ memoryTTL: 30, diskTTL: 60, storage: "both" })
+const memoryOnlyCache = new Cache({ memoryTTL: 30, storage: "memory" })
+
+const withCache = (cacheKey, fetchDataFunction, storageType = "both") => {
+  let cacheInstance
+
+  switch (storageType.toLowerCase().trim()) {
+    case "memory":
+      cacheInstance = memoryOnlyCache
+      break
+    case "both":
+    default:
+      cacheInstance = diskAndMemoryCache
+      break
+  }
+
   return async () => {
-    const cachedData = await cache.get(cacheKey)
+    const cachedData = await cacheInstance.get(cacheKey)
 
     if (cachedData) {
       return Promise.resolve(cachedData)
     }
 
     return fetchDataFunction().then((data) => {
-      cache.set(cacheKey, data)
+      if (data && Array.isArray(data) && data.length > 0) {
+        cacheInstance.set(cacheKey, data)
+      }
       return data
     })
   }

@@ -110,8 +110,8 @@ CREATE TABLE IF NOT EXISTS client_addresses (
 CREATE TABLE IF NOT EXISTS client_interactions_history (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     client_id INT,
-    interaction_datetime DATETIME,
-    interaction_type VARCHAR(255),
+    datetime DATETIME,
+    type VARCHAR(255),
     details TEXT,
     responsible_user_id INT,
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,

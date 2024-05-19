@@ -19,10 +19,33 @@ const Client = {
 
     return clientsWithDetails
   }),
-  findByClientId: (clientId) => {
-    const query = "SELECT * FROM clients WHERE id = ?"
-    return dbQueryExecutor.execute(query, [clientId])
-  },
+  findByClientId: (clientId) =>
+    withCache(
+      `client:${clientId}`,
+      async () => {
+        const clientQuery = "SELECT * FROM clients WHERE id = ?"
+        const client = await dbQueryExecutor.execute(clientQuery, [clientId])
+
+        if (!client || client.length === 0) {
+          return []
+        }
+
+        const clientWithDetails = { ...client[0] }
+
+        const [contacts, addresses, interactionsHistory] = await Promise.all([
+          Client.contact.findByClientId(clientId),
+          Client.address.findByClientId(clientId),
+          Client.interactionsHistory.findByClientId(clientId)
+        ])
+
+        clientWithDetails.contacts = contacts
+        clientWithDetails.addresses = addresses
+        clientWithDetails.interactionsHistory = interactionsHistory
+
+        return [clientWithDetails]
+      },
+      "memory"
+    )(),
   create: (name, description, createdByUserId) => {
     const query =
       "INSERT INTO clients (name, description, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, NOW())"
@@ -140,12 +163,12 @@ const Client = {
   },
   interactionsHistory: {
     findByClientId: (clientId) => {
-      const query = "SELECT * FROM client_interactions_history WHERE client_id = ?"
+      const query = "SELECT * FROM client_interactions_history WHERE client_id = ? ORDER BY datetime ASC"
       return dbQueryExecutor.execute(query, [clientId])
     },
     create: (clientId, interactionType, details, responsibleUserId) => {
       const query =
-        "INSERT INTO client_interactions_history (client_id, interaction_datetime, interaction_type, details, responsible_user_id) VALUES (?, NOW(), ?, ?, ?)"
+        "INSERT INTO client_interactions_history (client_id, datetime, type, details, responsible_user_id) VALUES (?, NOW(), ?, ?, ?)"
       return dbQueryExecutor.execute(query, [clientId, interactionType, details, responsibleUserId])
     }
   }
