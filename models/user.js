@@ -1,14 +1,21 @@
 const dbQueryExecutor = require("@utils/dbQueryExecutor")
 
+const { withCache, revalidateCache, memoryOnlyCache } = require("@utils/cache")
+
 const User = {
-  findAll: () => {
+  findAll: withCache("users", () => {
     const query = "SELECT * FROM users"
     return dbQueryExecutor.execute(query)
-  },
-  findById: (id) => {
-    const query = "SELECT * FROM users WHERE id = ?"
-    return dbQueryExecutor.execute(query, [id])
-  },
+  }),
+  findByUserId: (userId) =>
+    withCache(
+      `user:${userId}`,
+      async () => {
+        const query = "SELECT * FROM users WHERE id = ?"
+        return dbQueryExecutor.execute(query, [userId])
+      },
+      memoryOnlyCache
+    )(),
   findByUsername: (username, userIdToExclude) => {
     let query = "SELECT * FROM users WHERE username = ?"
     let params = [username]
@@ -34,24 +41,43 @@ const User = {
   create: (username, password, email, avatar, role, isActive) => {
     const query =
       "INSERT INTO users (username, password, email, avatar, role, is_active, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, NOW())"
-    return dbQueryExecutor.execute(query, [username, password, email, avatar, role, isActive])
+    return dbQueryExecutor
+      .execute(query, [username, password, email, avatar, role, isActive])
+      .then((result) => {
+        return revalidateCache("users").then(() => result)
+      })
   },
-  update: (id, username, email, avatar, role, isActive) => {
+  update: (userId, username, email, avatar, role, isActive) => {
     const query =
       "UPDATE users SET username = ?, email = ?, avatar = ?, role = ?, is_active = ? WHERE id = ?"
-    return dbQueryExecutor.execute(query, [username, email, avatar, role, isActive, id])
+    return dbQueryExecutor
+      .execute(query, [username, email, avatar, role, isActive, userId])
+      .then((result) => {
+        return revalidateCache(["users", `user:${userId}`]).then(() => result)
+      })
   },
-  updatePassword: (id, password) => {
+  updatePassword: (userId, password) => {
     const query = "UPDATE users SET password = ? WHERE id = ?"
-    return dbQueryExecutor.execute(query, [password, id])
+    return dbQueryExecutor.execute(query, [password, userId]).then((result) => {
+      return revalidateCache(["users", `user:${userId}`]).then(() => result)
+    })
   },
   updatePasswordByEmail: (email, password) => {
     const query = "UPDATE users SET password = ? WHERE email = ?"
-    return dbQueryExecutor.execute(query, [password, email])
+    return dbQueryExecutor.execute(query, [password, email]).then(async (result) => {
+      const user = await User.findByEmail(email)
+      const userId = user[0].id
+
+      return revalidateCache(["users", userId && `user:${userId}`].filter(Boolean)).then(
+        () => result
+      )
+    })
   },
-  delete: (id) => {
+  delete: (userId) => {
     const query = "DELETE FROM users WHERE id = ?"
-    return dbQueryExecutor.execute(query, [id])
+    return dbQueryExecutor.execute(query, [userId]).then((result) => {
+      return revalidateCache(["users", `user:${userId}`, `employee:${userId}`]).then(() => result)
+    })
   },
   otpCode: {
     findByUserId: (userId) => {
@@ -67,9 +93,9 @@ const User = {
         "INSERT INTO user_otp_codes (user_id, otp_code, is_used, created_at_datetime, expiration_datetime) VALUES (?, ?, false, NOW(), DATE_ADD(NOW(), INTERVAL 5 MINUTE))"
       return dbQueryExecutor.execute(query, [userId, otpCode])
     },
-    delete: (id) => {
+    delete: (otpCodeId) => {
       const query = "DELETE FROM user_otp_codes WHERE id = ?"
-      return dbQueryExecutor.execute(query, [id])
+      return dbQueryExecutor.execute(query, [otpCodeId])
     }
   }
 }

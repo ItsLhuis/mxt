@@ -15,6 +15,7 @@ router
   )
 router
   .route("/:userId")
+  .get(checkPermissionHandler("user", permissions.READ), userController.findByUserId)
   .put(
     checkPermissionHandler("user", permissions.UPDATE),
     userController.uploadAvatar,

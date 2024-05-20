@@ -8,17 +8,18 @@ const Company = require("@models/company")
 
 const initializeApp = async () => {
   try {
-    const users = await User.findAll()
-    const bossUser = users.find((user) => user.role === BOSS)
-
-    if (bossUser) {
-      return
+    const company = await Company.find()
+    if (company.length <= 0) {
+      await Company.initialize()
     }
 
-    const hashedPassword = await bcrypt.hash("adminboss", SALT_ROUNDS)
+    const users = await User.findAll()
+    const bossUser = users.find((user) => user.role === BOSS)
+    if (!bossUser) {
+      const hashedPassword = await bcrypt.hash("adminboss", SALT_ROUNDS)
 
-    await User.create("Admin", hashedPassword, null, null, BOSS, 1)
-    await Company.initialize()
+      await User.create("Admin", hashedPassword, null, null, BOSS, 1)
+    }
   } catch (error) {
     console.error('Error initializing the "Boss" user and company')
     throw error

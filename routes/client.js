@@ -28,7 +28,7 @@ router
   )
 
 router
-  .route("/contacts/:contactId")
+  .route("/:clientId/contacts/:contactId")
   .put(
     checkPermissionHandler("client.contact", permissions.UPDATE),
     clientController.contact.update
@@ -50,7 +50,7 @@ router
   )
 
 router
-  .route("/addresses/:addressId")
+  .route("/:clientId/addresses/:addressId")
   .put(
     checkPermissionHandler("client.address", permissions.UPDATE),
     clientController.address.update

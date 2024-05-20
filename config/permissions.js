@@ -7,6 +7,11 @@ module.exports = {
     [roles.ADMIN]: [permissions.ALL],
     [roles.EMPLOYEE]: [permissions.UPDATE]
   },
+  employee: {
+    [roles.BOSS]: [permissions.ALL],
+    [roles.ADMIN]: [permissions.ALL],
+    [roles.EMPLOYEE]: [permissions.UPDATE]
+  },
   client: {
     [roles.BOSS]: [permissions.ALL],
     [roles.ADMIN]: [permissions.ALL],

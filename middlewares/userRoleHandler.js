@@ -12,12 +12,12 @@ const userRole = tryCatch(async (req, res, next) => {
     throw new AppError(401, USER_NOT_AUTHENTICATED, "User not authenticated", true)
   }
 
-  const user = await User.findById(userId)
-  if (!user) {
+  const existingUser = await User.findByUserId(userId)
+  if (existingUser.length <= 0) {
     throw new AppError(404, USER_NOT_FOUND, "User not found", true)
   }
 
-  req.user.role = user[0].role
+  req.user.role = existingUser[0].role
 
   next()
 })

@@ -8,13 +8,13 @@ const path = require("path")
 class Cache {
   constructor({ memoryTTL = 0, diskTTL = 0, storage = "both" } = {}) {
     this.memoryCache = new NodeCache({ stdTTL: memoryTTL })
+    this.memoryTTL = memoryTTL
     Object.defineProperty(this, "cacheDir", {
       value: "tmp/cache",
       writable: false,
       configurable: false,
       enumerable: true
     })
-    this.memoryTTL = memoryTTL
     this.diskTTL = diskTTL
     this.storage = storage.toLowerCase().trim()
 
@@ -105,7 +105,7 @@ class Cache {
     })
   }
 
-  delete(key) {
+  del(key) {
     return new Promise((resolve, reject) => {
       const filePath = path.join(this.cacheDir, key)
       if (this.storage === "both") {

@@ -12,7 +12,9 @@ const {
 const clientInteractions = {
   CLIENT_UPDATED: "Client Updated",
   CONTACT_UPDATED: "Contact Updated",
-  ADDRESS_UPDATED: "Address Updated"
+  CONTACT_DELETED: "Contact Deleted",
+  ADDRESS_UPDATED: "Address Updated",
+  ADDRESS_DELETED: "Address Deleted"
 }
 
 const Client = require("@models/client")
@@ -130,13 +132,22 @@ const clientController = {
       res.status(201).json({ message: "Contact created successfully" })
     }),
     update: tryCatch(async (req, res) => {
-      const { contactId } = req.params
+      const { clientId, contactId } = req.params
       const { type, contact, description } = req.body
 
       clientContactSchema.parse(req.body)
 
+      const existingClient = await Client.findByClientId(clientId)
+      if (existingClient.length <= 0) {
+        throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+      }
+
       const existingContact = await Client.contact.findByContactId(contactId)
       if (existingContact.length <= 0) {
+        throw new AppError(400, CONTACT_NOT_FOUND, "Contact not found", true)
+      }
+
+      if (existingContact[0].client_id !== Number(clientId)) {
         throw new AppError(400, CONTACT_NOT_FOUND, "Contact not found", true)
       }
 
@@ -155,7 +166,7 @@ const clientController = {
         )
       }
 
-      await Client.contact.update(contactId, type, contact, description, req.user.id)
+      await Client.contact.update(clientId, contactId, type, contact, description, req.user.id)
 
       const changes = [
         {
@@ -187,14 +198,45 @@ const clientController = {
       res.status(200).json({ message: "Contact updated successfully" })
     }),
     delete: tryCatch(async (req, res) => {
-      const { contactId } = req.params
+      const { clientId, contactId } = req.params
+
+      const existingClient = await Client.findByClientId(clientId)
+      if (existingClient.length <= 0) {
+        throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+      }
 
       const existingContact = await Client.contact.findByContactId(contactId)
       if (existingContact.length <= 0) {
         throw new AppError(400, CONTACT_NOT_FOUND, "Contact not found", true)
       }
 
-      await Client.contact.delete(contactId)
+      if (existingContact[0].client_id !== clientId) {
+        throw new AppError(400, CONTACT_NOT_FOUND, "Contact not found", true)
+      }
+
+      await Client.contact.delete(clientId, contactId)
+
+      const changes = [
+        {
+          field: "Type",
+          before: existingContact[0].type
+        },
+        {
+          field: "Contact",
+          before: existingContact[0].contact
+        },
+        {
+          field: "Description",
+          before: existingContact[0].description
+        }
+      ]
+
+      await createInteractionHistory(
+        existingContact[0].client_id,
+        clientInteractions.CONTACT_DELETED,
+        changes,
+        req.user.id
+      )
       res.status(204).json({ message: "Contact deleted successfully" })
     })
   },
@@ -251,14 +293,23 @@ const clientController = {
       res.status(201).json({ message: "Address created successfully" })
     }),
     update: tryCatch(async (req, res) => {
-      const { addressId } = req.params
+      const { clientId, addressId } = req.params
       const { country, city, locality, address, postalCode } = req.body
 
       clientAddressSchema.parse(req.body)
 
+      const existingClient = await Client.findByClientId(clientId)
+      if (existingClient.length <= 0) {
+        throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+      }
+
       const existingAddress = await Client.address.findByAddressId(addressId)
       if (existingAddress.length <= 0) {
         throw new AppError(400, ADDRESS_NOT_FOUND, "Address not found", true)
+      }
+
+      if (existingAddress[0].client_id !== Number(clientId)) {
+        throw new AppError(400, CONTACT_NOT_FOUND, "Address not found", true)
       }
 
       const duplicateAddress = await Client.address.findAddressByClientIdAndDetails(
@@ -274,12 +325,13 @@ const clientController = {
         throw new AppError(
           400,
           DUPLICATE_ADDRESS,
-          "An address with the same details already exists for another client",
+          "An address with the same details already exists for this client",
           true
         )
       }
 
       await Client.address.update(
+        clientId,
         addressId,
         country,
         city,
@@ -331,14 +383,49 @@ const clientController = {
       res.status(200).json({ message: "Address updated successfully" })
     }),
     delete: tryCatch(async (req, res) => {
-      const { addressId } = req.params
+      const { clientId, addressId } = req.params
+
+      const existingClient = await Client.findByClientId(clientId)
+      if (existingClient.length <= 0) {
+        throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+      }
 
       const existingAddress = await Client.address.findByAddressId(addressId)
       if (existingAddress.length <= 0) {
         throw new AppError(400, ADDRESS_NOT_FOUND, "Address not found", true)
       }
 
-      await Client.address.delete(addressId)
+      await Client.address.delete(clientId, addressId)
+
+      const changes = [
+        {
+          field: "Country",
+          before: existingAddress[0].country
+        },
+        {
+          field: "City",
+          before: existingAddress[0].city
+        },
+        {
+          field: "Locality",
+          before: existingAddress[0].locality
+        },
+        {
+          field: "Address",
+          before: existingAddress[0].address
+        },
+        {
+          field: "Postal Code",
+          before: existingAddress[0].postal_code
+        }
+      ]
+
+      await createInteractionHistory(
+        existingAddress[0].client_id,
+        clientInteractions.ADDRESS_DELETED,
+        changes,
+        req.user.id
+      )
       res.status(204).json({ message: "Address deleted successfully" })
     })
   },

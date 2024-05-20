@@ -60,8 +60,8 @@ const authToken = tryCatch(async (req, res, next) => {
   await verifyRefreshToken(refreshTokenFromRequest)
   const user = await verifyAccessToken(accessTokenFromRequest)
 
-  const existingUser = await User.findById(user.id)
-  if (!existingUser || !existingUser.length) {
+  const existingUser = await User.findByUserId(user.id)
+  if (existingUser.length <= 0) {
     await destroyUser(req, res)
     throw new AppError(404, USER_NOT_FOUND, "User not found", true, AUTHENTICATION_ERROR_TYPE)
   }

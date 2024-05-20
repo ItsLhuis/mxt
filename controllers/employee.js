@@ -11,6 +11,16 @@ const employeeController = {
     const employees = await Employee.findAll()
     res.status(200).json(employees)
   }),
+  findByUserId: tryCatch(async (req, res) => {
+    const { userId } = req.params
+
+    const existingUser = await Employee.findByUserId(userId)
+    if (existingUser.length <= 0) {
+      throw new AppError(400, USER_NOT_FOUND, "User not found", true)
+    }
+
+    res.status(200).json(existingUser)
+  }),
   update: tryCatch(async (req, res) => {
     const { userId } = req.params
     const { name, phoneNumber, country, city, locality, address, postalCode, description } =
@@ -18,8 +28,8 @@ const employeeController = {
 
     employeeSchema.parse(req.body)
 
-    const existingUserId = await Employee.findByUserId(userId)
-    if (existingUserId.length <= 0) {
+    const existingUser = await Employee.findByUserId(userId)
+    if (existingUser.length <= 0) {
       throw new AppError(400, USER_NOT_FOUND, "User not found", true)
     }
 

@@ -36,6 +36,16 @@ const userController = {
     const users = await User.findAll()
     res.status(200).json(users)
   }),
+  findByUserId: tryCatch(async (req, res) => {
+    const { userId } = req.params
+
+    const existingUser = await User.findByUserId(userId)
+    if (existingUser.length <= 0) {
+      throw new AppError(404, USER_NOT_FOUND, "User not found", true)
+    }
+
+    res.status(200).json(existingUser)
+  }),
   create: tryCatch(async (req, res) => {
     const { username, password, email, role, isActive } = req.body
 
@@ -73,6 +83,8 @@ const userController = {
     }
 
     const user = await User.create(username, hashedPassword, email, profilePic, role, isActive)
+
+    console.log(user);
     await Employee.create(user.insertId)
 
     const companyDetails = await Company.find()
@@ -116,8 +128,8 @@ const userController = {
     const { userId } = req.params
     const { username, email, role, isActive } = req.body
 
-    const existingUser = await User.findById(userId)
-    if (!existingUser.length) {
+    const existingUser = await User.findByUserId(userId)
+    if (existingUser.length <= 0) {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
 
@@ -145,8 +157,8 @@ const userController = {
     const { userId } = req.params
     const { password, newPassword } = req.body
 
-    const existingUser = await User.findById(userId)
-    if (!existingUser.length) {
+    const existingUser = await User.findByUserId(userId)
+    if (existingUser.length <= 0) {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
 
@@ -167,9 +179,19 @@ const userController = {
 
     const currentUserRole = req.user.role
 
-    const existingUser = await User.findById(userId)
-    if (!existingUser.length) {
+    const existingUser = await User.findByUserId(userId)
+    if (existingUser.length <= 0) {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
+    }
+
+    if (existingUser[0].role === roles.BOSS) {
+      throw new AppError(
+        403,
+        PERMISSION_DENIED,
+        "You don't have permission to perform this action",
+        true,
+        PERMISSION_DENIED_ERROR_TYPE
+      )
     }
 
     if (
