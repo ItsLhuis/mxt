@@ -2,6 +2,9 @@ const roles = require("@constants/roles")
 const permissions = require("@constants/permissions")
 
 module.exports = {
+  company: {
+    [roles.BOSS]: [permissions.ALL]
+  },
   user: {
     [roles.BOSS]: [permissions.ALL],
     [roles.ADMIN]: [permissions.ALL],

@@ -73,6 +73,10 @@ const uploadImage = {
     })
 }
 
+const deleteFile = (filePath) => {
+  fs.unlink(filePath, (err) => {})
+}
+
 const createUploadsFolderIfNotExists = () => {
   const UPLOADS_FOLDER = "uploads"
 
@@ -83,6 +87,6 @@ const createUploadsFolderIfNotExists = () => {
 
 createUploadsFolderIfNotExists()
 
-const upload = { image: uploadImage }
+const upload = { image: uploadImage, deleteFile }
 
 module.exports = upload

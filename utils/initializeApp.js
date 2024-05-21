@@ -21,7 +21,7 @@ const initializeApp = async () => {
       await User.create("Admin", hashedPassword, null, null, BOSS, 1)
     }
   } catch (error) {
-    console.error('Error initializing the "Boss" user and company')
+    console.error('Error initializing the app')
     throw error
   }
 }

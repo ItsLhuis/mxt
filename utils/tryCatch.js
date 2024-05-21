@@ -5,7 +5,7 @@ exports.tryCatch = (controller) => async (req, res, next) => {
     await controller(req, res, next)
   } catch (error) {
     if (req.file) {
-      fs.unlinkSync(req.file.path)
+      fs.unlink(req.file.path, (err) => {})
     }
 
     return next(error)
