@@ -3,7 +3,7 @@ const permissions = require("@constants/permissions")
 
 module.exports = {
   company: {
-    [roles.BOSS]: [permissions.ALL]
+    [roles.BOSS]: [permissions.READ, permissions.UPDATE]
   },
   user: {
     [roles.BOSS]: [permissions.ALL],
@@ -14,6 +14,14 @@ module.exports = {
     [roles.BOSS]: [permissions.ALL],
     [roles.ADMIN]: [permissions.ALL],
     [roles.EMPLOYEE]: [permissions.UPDATE]
+  },
+  email: {
+    [roles.BOSS]: [permissions.READ, permissions.CREATE],
+    [roles.ADMIN]: [permissions.READ, permissions.CREATE]
+  },
+  sms: {
+    [roles.BOSS]: [permissions.READ, permissions.CREATE],
+    [roles.ADMIN]: [permissions.READ, permissions.CREATE]
   },
   client: {
     [roles.BOSS]: [permissions.ALL],

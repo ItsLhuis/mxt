@@ -26,7 +26,7 @@ const Client = {
         const clientQuery = "SELECT * FROM clients WHERE id = ?"
         const client = await dbQueryExecutor.execute(clientQuery, [clientId])
 
-        if (!client || client.length === 0) {
+        if (!client || client.length <= 0) {
           return []
         }
 

@@ -8,10 +8,16 @@ const Company = {
     return dbQueryExecutor.execute(query)
   }),
   initialize: () => {
-    const query = "INSERT INTO company (enforce_one_row, created_at_datetime) VALUES (?, NOW())"
+    const query =
+      "INSERT INTO company (enforce_one_row, name, address, city, country, postal_code, phone_number, email, logo, created_at_datetime) VALUES ('only', 'ABC Company', '123 Main Street', 'Cityville', 'Countryland', '1234-123', '+1234567890', 'info@abccompany.com', 'logo.png', NOW())"
     return dbQueryExecutor.execute(query, ["only"]).then((result) => {
       return revalidateCache("company").then(() => result)
     })
+
+    /*     const query = "INSERT INTO company (enforce_one_row, created_at_datetime) VALUES (?, NOW())"
+    return dbQueryExecutor.execute(query, ["only"]).then((result) => {
+      return revalidateCache("company").then(() => result)
+    }) */
   },
   update: (name, address, city, country, postalCode, phoneNumber, email, logo) => {
     const query =

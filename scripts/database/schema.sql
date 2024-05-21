@@ -117,3 +117,27 @@ CREATE TABLE IF NOT EXISTS client_interactions_history (
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
     FOREIGN KEY (responsible_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
+
+-- Table emails
+CREATE TABLE IF NOT EXISTS emails (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    api_id VARCHAR(255) NOT NULL,
+    client_id INT,
+    subject VARCHAR(255),
+    sent_by_user_id INT,
+    created_at_datetime DATETIME NOT NULL,
+    FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE SET NULL,
+    FOREIGN KEY (sent_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Table smses
+CREATE TABLE IF NOT EXISTS smses (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    api_id VARCHAR(255) NOT NULL,
+    client_id INT,
+    message TEXT NOT NULL,
+    sent_by_user_id INT,
+    created_at_datetime DATETIME NOT NULL,
+    FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE SET NULL,
+    FOREIGN KEY (sent_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+);

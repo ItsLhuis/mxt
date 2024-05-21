@@ -38,6 +38,11 @@ router.use(
 
 //----------------------------------------------------------------------------------------------------------
 
+const smsRouter = require("@routes/sms")
+router.use("/smses", initializeUserHandler, authTokenHandler, userRoleHandler, smsRouter)
+
+//----------------------------------------------------------------------------------------------------------
+
 const clientRouter = require("@routes/client")
 router.use(
   "/clients",

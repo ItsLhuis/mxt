@@ -1,10 +1,10 @@
 const fs = require("fs")
 const path = require("path")
 
-const processImage = require("@utils/processImage")
-
 const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
+
+const processImage = require("@utils/processImage")
 
 const { IMAGE_NOT_FOUND } = require("@constants/errors/shared/image")
 
