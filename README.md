@@ -1,4 +1,4 @@
-# MXT - Manutenção e Administração de Reparações
+# MixTech - Manutenção e Administração de Reparações
 
 ## Script ChatGPT
 
