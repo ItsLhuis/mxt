@@ -33,6 +33,10 @@ class Cache {
 
   set(key, data) {
     return new Promise((resolve, reject) => {
+      if (!fs.existsSync(this.cacheDir)) {
+        fs.mkdirSync(this.cacheDir, { recursive: true })
+      }
+
       const filePath = path.join(this.cacheDir, key)
 
       const serializedData = zlib.gzipSync(JSON.stringify(data), {
@@ -74,6 +78,10 @@ class Cache {
       }
 
       if (this.storage === "both") {
+        if (!fs.existsSync(this.cacheDir)) {
+          fs.mkdirSync(this.cacheDir, { recursive: true })
+        }
+
         const filePath = path.join(this.cacheDir, key)
 
         fs.promises
@@ -107,6 +115,10 @@ class Cache {
 
   del(key) {
     return new Promise((resolve, reject) => {
+      if (!fs.existsSync(this.cacheDir)) {
+        fs.mkdirSync(this.cacheDir, { recursive: true })
+      }
+
       const filePath = path.join(this.cacheDir, key)
       if (this.storage === "both") {
         fs.promises
@@ -132,6 +144,10 @@ class Cache {
 
   clear() {
     return new Promise((resolve, reject) => {
+      if (!fs.existsSync(this.cacheDir)) {
+        fs.mkdirSync(this.cacheDir, { recursive: true })
+      }
+
       fs.promises
         .readdir(this.cacheDir)
         .then((files) => {
@@ -151,6 +167,10 @@ class Cache {
   clearExpiredDiskCache() {
     if (this.diskTTL === 0) {
       return
+    }
+
+    if (!fs.existsSync(this.cacheDir)) {
+      fs.mkdirSync(this.cacheDir, { recursive: true })
     }
 
     const now = Date.now()
