@@ -184,7 +184,7 @@ const clientController = {
         {
           field: "Description",
           before: existingContact[0].description,
-          after: description,
+          after: !description ? null : description,
           changed: existingContact[0].description !== description
         }
       ]
@@ -345,31 +345,31 @@ const clientController = {
         {
           field: "Country",
           before: existingAddress[0].country,
-          after: country,
+          after: !country ? null : country,
           changed: existingAddress[0].country !== country
         },
         {
           field: "City",
           before: existingAddress[0].city,
-          after: city,
+          after: !city ? null : city,
           changed: existingAddress[0].city !== city
         },
         {
           field: "Locality",
           before: existingAddress[0].locality,
-          after: locality,
+          after: !locality ? null : locality,
           changed: existingAddress[0].locality !== locality
         },
         {
           field: "Address",
           before: existingAddress[0].address,
-          after: address,
+          after: !address ? null : address,
           changed: existingAddress[0].address !== address
         },
         {
           field: "Postal Code",
           before: existingAddress[0].postal_code,
-          after: postalCode,
+          after: !postalCode ? null : postalCode,
           changed: existingAddress[0].postal_code !== postalCode
         }
       ]
@@ -439,9 +439,6 @@ const clientController = {
       }
 
       const interactionsHistory = await Client.interactionsHistory.findByClientId(clientId)
-      interactionsHistory.forEach((interaction) => {
-        interaction.details = JSON.parse(interaction.details)
-      })
       res.status(200).json(interactionsHistory)
     })
   }

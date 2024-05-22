@@ -2,6 +2,9 @@ const dbQueryExecutor = require("@utils/dbQueryExecutor")
 
 const { withCache, revalidateCache, memoryOnlyCache } = require("@utils/cache")
 
+const User = require("@models/user")
+const mapUser = require("@utils/mapUser")
+
 const Client = {
   findAll: withCache("clients", async () => {
     const clientsQuery = "SELECT * FROM clients"
@@ -9,11 +12,32 @@ const Client = {
 
     const clientsWithDetails = await Promise.all(
       clients.map(async (client) => {
-        const contacts = await Client.contact.findByClientId(client.id)
-        const addresses = await Client.address.findByClientId(client.id)
-        const interactionsHistory = await Client.interactionsHistory.findByClientId(client.id)
+        const [contacts, addresses, interactionsHistory, createdByUser, lastModifiedByUser] =
+          await Promise.all([
+            Client.contact.findByClientId(client.id),
+            Client.address.findByClientId(client.id),
+            Client.interactionsHistory.findByClientId(client.id),
+            User.findByUserId(client.created_by_user_id),
+            client.last_modified_by_user_id
+              ? User.findByUserId(client.last_modified_by_user_id)
+              : Promise.resolve(null)
+          ])
 
-        return { ...client, contacts, addresses, interactionsHistory }
+        return {
+          id: client.id,
+          name: client.name,
+          description: client.description,
+          created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+          created_at_datetime: client.created_at_datetime,
+          last_modified_by_user:
+            lastModifiedByUser && lastModifiedByUser.length > 0
+              ? mapUser(lastModifiedByUser[0])
+              : null,
+          last_modified_datetime: client.last_modified_datetime,
+          contacts,
+          addresses,
+          interactionsHistory
+        }
       })
     )
 
@@ -30,17 +54,32 @@ const Client = {
           return []
         }
 
-        const clientWithDetails = { ...client[0] }
+        const [contacts, addresses, interactionsHistory, createdByUser, lastModifiedByUser] =
+          await Promise.all([
+            Client.contact.findByClientId(clientId),
+            Client.address.findByClientId(clientId),
+            Client.interactionsHistory.findByClientId(clientId),
+            User.findByUserId(client[0].created_by_user_id),
+            client[0].last_modified_by_user_id
+              ? User.findByUserId(client[0].last_modified_by_user_id)
+              : Promise.resolve(null)
+          ])
 
-        const [contacts, addresses, interactionsHistory] = await Promise.all([
-          Client.contact.findByClientId(clientId),
-          Client.address.findByClientId(clientId),
-          Client.interactionsHistory.findByClientId(clientId)
-        ])
-
-        clientWithDetails.contacts = contacts
-        clientWithDetails.addresses = addresses
-        clientWithDetails.interactionsHistory = interactionsHistory
+        const clientWithDetails = {
+          id: client[0].id,
+          name: client[0].name,
+          description: client[0].description,
+          created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+          created_at_datetime: client[0].created_at_datetime,
+          last_modified_by_user:
+            lastModifiedByUser && lastModifiedByUser.length > 0
+              ? mapUser(lastModifiedByUser[0])
+              : null,
+          last_modified_datetime: client[0].last_modified_datetime,
+          contacts,
+          addresses,
+          interactionsHistory
+        }
 
         return [clientWithDetails]
       },
@@ -78,8 +117,36 @@ const Client = {
       withCache(
         `client:contacts:${clientId}`,
         async () => {
-          const query = "SELECT * FROM client_contacts WHERE client_id = ?"
-          return dbQueryExecutor.execute(query, [clientId])
+          const contactsQuery = "SELECT * FROM client_contacts WHERE client_id = ?"
+          const contacts = await dbQueryExecutor.execute(contactsQuery, [clientId])
+
+          const contactsWithDetails = await Promise.all(
+            contacts.map(async (contact) => {
+              const [createdByUser, lastModifiedByUser] = await Promise.all([
+                User.findByUserId(contact.created_by_user_id),
+                contact.last_modified_by_user_id
+                  ? User.findByUserId(contact.last_modified_by_user_id)
+                  : Promise.resolve(null)
+              ])
+
+              return {
+                id: contact.id,
+                client_id: contact.client_id,
+                type: contact.type,
+                contact: contact.contact,
+                description: contact.description,
+                created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+                created_at_datetime: contact.created_at_datetime,
+                last_modified_by_user:
+                  lastModifiedByUser && lastModifiedByUser.length > 0
+                    ? mapUser(lastModifiedByUser[0])
+                    : null,
+                last_modified_datetime: contact.last_modified_datetime
+              }
+            })
+          )
+
+          return contactsWithDetails
         },
         memoryOnlyCache
       )(),
@@ -140,8 +207,38 @@ const Client = {
       withCache(
         `client:addresses:${clientId}`,
         async () => {
-          const query = "SELECT * FROM client_addresses WHERE client_id = ?"
-          return dbQueryExecutor.execute(query, [clientId])
+          const addressesQuery = "SELECT * FROM client_addresses WHERE client_id = ?"
+          const addresses = await dbQueryExecutor.execute(addressesQuery, [clientId])
+
+          const addressesWithDetails = await Promise.all(
+            addresses.map(async (address) => {
+              const [createdByUser, lastModifiedByUser] = await Promise.all([
+                User.findByUserId(address.created_by_user_id),
+                address.last_modified_by_user_id
+                  ? User.findByUserId(address.last_modified_by_user_id)
+                  : Promise.resolve(null)
+              ])
+
+              return {
+                id: address.id,
+                client_id: address.client_id,
+                country: address.country,
+                city: address.city,
+                locality: address.locality,
+                address: address.address,
+                postal_code: address.postal_code,
+                created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+                created_at_datetime: address.created_at_datetime,
+                last_modified_by_user:
+                  lastModifiedByUser && lastModifiedByUser.length > 0
+                    ? mapUser(lastModifiedByUser[0])
+                    : null,
+                last_modified_datetime: address.last_modified_datetime
+              }
+            })
+          )
+
+          return addressesWithDetails
         },
         memoryOnlyCache
       )(),
@@ -229,8 +326,26 @@ const Client = {
         `client:interactionsHistory:${clientId}`,
         async () => {
           const query =
-            "SELECT * FROM client_interactions_history WHERE client_id = ? ORDER BY created_at_datetime ASC"
-          return dbQueryExecutor.execute(query, [clientId])
+            "SELECT * FROM client_interactions_history WHERE client_id = ? ORDER BY created_at_datetime DESC"
+          const interactions = await dbQueryExecutor.execute(query, [clientId])
+
+          const interactionsWithDetails = await Promise.all(
+            interactions.map(async (interaction) => {
+              const responsibleUser = await User.findByUserId(interaction.responsible_user_id)
+
+              return {
+                id: interaction.id,
+                client_id: interaction.client_id,
+                created_at_datetime: interaction.created_at_datetime,
+                type: interaction.type,
+                details: JSON.parse(interaction.details),
+                responsible_user:
+                  responsibleUser && responsibleUser.length > 0 ? mapUser(responsibleUser[0]) : null
+              }
+            })
+          )
+
+          return interactionsWithDetails
         },
         memoryOnlyCache
       )(),
