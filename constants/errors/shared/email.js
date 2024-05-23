@@ -1,3 +1,4 @@
 module.exports = {
-  EMAIL_SEND_ERROR: "EMAIL-001"
+  EMAIL_SEND_ERROR: "EMAIL-001",
+  EMAIL_NOT_FOUND: "EMAIL-002"
 }

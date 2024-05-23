@@ -100,13 +100,12 @@ const authController = {
 
     requestResetPasswordSchema.parse(req.body)
 
-    const companyDetails = await Company.find()
-    const logoCompanyUrl = getImageUrl(req, companyDetails[0].logo)
-
     const existingUser = await User.findByEmail(email)
     if (existingUser.length === 0) {
       throw new AppError(404, USER_NOT_FOUND, "User with this e-mail not found", true)
     }
+
+    const companyDetails = await Company.find()
 
     const otpCode = await generateUniqueOtp()
 
@@ -121,7 +120,7 @@ const authController = {
         {
           username: existingUser[0].username,
           otpCode: otpCode,
-          companyLogo: logoCompanyUrl,
+          companyLogo: `${getImageUrl(req, companyDetails[0].logo)}?size=100`,
           companyName: companyDetails[0].name,
           companyAddress: `${companyDetails[0].address}, ${companyDetails[0].postal_code}`,
           companyCity: companyDetails[0].city,

@@ -1,3 +1,9 @@
+const AppError = require("@classes/app/error")
+
+const { SMS_SEND_ERROR } = require("@constants/errors/shared/sms")
+
+const { SMS_ERROR_TYPE } = require("@constants/errors/shared/types")
+
 const dbQueryExecutor = require("@utils/dbQueryExecutor")
 
 const { withCache, revalidateCache, memoryOnlyCache } = require("@utils/cache")
@@ -13,13 +19,15 @@ const mapUser = require("@utils/mapUser")
 
 const Sms = {
   findAll: withCache("smses", async () => {
-    const query = "SELECT * FROM smses"
-    const smsList = await dbQueryExecutor.execute(query)
+    const smsesQuery = "SELECT * FROM smses"
+    const smses = await dbQueryExecutor.execute(smsesQuery)
 
-    const detailedSmsList = await Promise.all(
-      smsList.map(async (sms) => {
-        const client = await Client.findByClientId(sms.client_id)
-        const sentByUser = await User.findByUserId(sms.sent_by_user_id)
+    const smsesWithDetails = await Promise.all(
+      smses.map(async (sms) => {
+        const [client, sentByUser] = await Promise.all([
+          Client.findByClientId(sms.client_id),
+          User.findByUserId(sms.sent_by_user_id)
+        ])
 
         return {
           id: sms.id,
@@ -35,7 +43,7 @@ const Sms = {
       })
     )
 
-    return detailedSmsList
+    return smsesWithDetails
   }),
   findBySmsId: (smsId) =>
     withCache(
@@ -54,7 +62,7 @@ const Sms = {
         try {
           smsReleansData = await releans.get(apiId)
         } catch (error) {
-          console.error("Error fetching SMS details from Releans:", error)
+          console.error("Error fetching sms details from Releans:", error)
         }
 
         const convertTimeZone = moment
@@ -62,8 +70,10 @@ const Sms = {
           .tz("Europe/Lisbon")
           .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]")
 
-        const client = await Client.findByClientId(sms[0].client_id)
-        const sentByUser = await User.findByUserId(sms[0].sent_by_user_id)
+        const [client, sentByUser] = await Promise.all([
+          Client.findByClientId(sms[0].client_id),
+          User.findByUserId(sms[0].sent_by_user_id)
+        ])
 
         const smsWithDetails = {
           id: sms[0].id,
@@ -85,14 +95,22 @@ const Sms = {
       },
       memoryOnlyCache
     )(),
-  create: (apiId, clientId, message, sentByUserId) => {
-    const query =
-      "INSERT INTO smses (api_id, client_id, message, sent_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, NOW())"
-    return dbQueryExecutor
-      .execute(query, [apiId, clientId, message, sentByUserId])
-      .then((result) => {
-        return revalidateCache("smses").then(() => result)
-      })
+  send: (clientId, contact, message, sentByUserId) => {
+    return new Promise((resolve, reject) => {
+      releans
+        .send(process.env.RELEANS_SENDER_ID, contact, message)
+        .then((data) => {
+          const query =
+            "INSERT INTO smses (api_id, client_id, message, sent_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, NOW())"
+          return dbQueryExecutor.execute(query, [data.id, clientId, message, sentByUserId])
+        })
+        .then((result) => {
+          return revalidateCache("smses").then(() => resolve(result))
+        })
+        .catch(() => {
+          reject(new AppError(500, SMS_SEND_ERROR, "Failed to send Sms", false, SMS_ERROR_TYPE))
+        })
+    })
   }
 }
 

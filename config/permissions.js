@@ -17,11 +17,13 @@ module.exports = {
   },
   email: {
     [roles.BOSS]: [permissions.READ, permissions.CREATE],
-    [roles.ADMIN]: [permissions.READ, permissions.CREATE]
+    [roles.ADMIN]: [permissions.READ, permissions.CREATE],
+    [roles.EMPLOYEE]: [permissions.READ]
   },
   sms: {
     [roles.BOSS]: [permissions.READ, permissions.CREATE],
-    [roles.ADMIN]: [permissions.READ, permissions.CREATE]
+    [roles.ADMIN]: [permissions.READ, permissions.CREATE],
+    [roles.EMPLOYEE]: [permissions.READ]
   },
   client: {
     [roles.BOSS]: [permissions.ALL],

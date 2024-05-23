@@ -5,5 +5,6 @@ module.exports = {
   AUTHENTICATION_ERROR_TYPE: "Authentication",
   PERMISSION_DENIED_ERROR_TYPE: "PermissionDenied",
   IMAGE_ERROR_TYPE: "Image",
-  EMAIL_ERROR_TYPE: "Email"
+  EMAIL_ERROR_TYPE: "Email",
+  SMS_ERROR_TYPE: "Sms"
 }

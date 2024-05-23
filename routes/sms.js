@@ -5,7 +5,10 @@ const checkPermissionHandler = require("@middlewares/checkPermissionHandler")
 const permissions = require("@constants/permissions")
 const smsController = require("@controllers/sms")
 
-router.get("/", checkPermissionHandler("sms", permissions.READ), smsController.findAll)
+router
+  .route("/")
+  .get(checkPermissionHandler("sms", permissions.READ), smsController.findAll)
+  .post(checkPermissionHandler("sms", permissions.CREATE), smsController.send)
 
 router
   .route("/:smsId")

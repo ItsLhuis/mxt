@@ -38,8 +38,27 @@ router.use(
 
 //----------------------------------------------------------------------------------------------------------
 
+const emailRouter = require("@routes/email")
+router.use(
+  "/emails",
+  checkCompanyHandler,
+  initializeUserHandler,
+  authTokenHandler,
+  userRoleHandler,
+  emailRouter
+)
+
+//----------------------------------------------------------------------------------------------------------
+
 const smsRouter = require("@routes/sms")
-router.use("/smses", initializeUserHandler, authTokenHandler, userRoleHandler, smsRouter)
+router.use(
+  "/smses",
+  checkCompanyHandler,
+  initializeUserHandler,
+  authTokenHandler,
+  userRoleHandler,
+  smsRouter
+)
 
 //----------------------------------------------------------------------------------------------------------
 

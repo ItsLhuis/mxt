@@ -1,4 +1,4 @@
--- Create the "mxt" database with the time zone set to Portugal
+-- Create the "mxt" database
 CREATE DATABASE IF NOT EXISTS mxt CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Use the "mxt" database

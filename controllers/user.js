@@ -86,7 +86,6 @@ const userController = {
     await Employee.create(user.insertId)
 
     const companyDetails = await Company.find()
-    const logoCompanyUrl = getImageUrl(req, companyDetails[0].logo)
 
     await mailer
       .send(
@@ -95,7 +94,7 @@ const userController = {
         "Bem Vindo",
         `Seja muito bem vindo à ${companyDetails[0].name}`,
         {
-          companyLogo: logoCompanyUrl,
+          companyLogo: `${getImageUrl(req, companyDetails[0].logo)}?size=100`,
           title: "Bem Vindo",
           message: `Seja muito bem-vindo(a) à ${
             companyDetails[0].name
