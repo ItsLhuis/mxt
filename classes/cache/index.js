@@ -5,6 +5,8 @@ const NodeCache = require("node-cache")
 const fs = require("fs")
 const path = require("path")
 
+const locks = new Map()
+
 class Cache {
   constructor({ memoryTTL = 0, diskTTL = 0, storage = "both" } = {}) {
     this.memoryCache = new NodeCache({ stdTTL: memoryTTL })
@@ -31,7 +33,9 @@ class Cache {
     }
   }
 
-  set(key, data) {
+  async set(key, data) {
+    await this._acquireLock(key)
+
     return new Promise((resolve, reject) => {
       if (!fs.existsSync(this.cacheDir)) {
         fs.mkdirSync(this.cacheDir, { recursive: true })
@@ -63,17 +67,24 @@ class Cache {
             this.memoryCache.set(key, data, this.memoryTTL)
             reject(error)
           })
+          .finally(() => {
+            this._releaseLock(key)
+          })
       } else {
         this.memoryCache.set(key, data, this.memoryTTL)
         resolve()
+        this._releaseLock(key)
       }
     })
   }
 
-  get(key) {
+  async get(key) {
+    await this._acquireLock(key)
+
     return new Promise((resolve, reject) => {
       const memoryData = this.memoryCache.get(key)
       if (memoryData) {
+        this._releaseLock(key)
         return resolve(memoryData)
       }
 
@@ -107,13 +118,19 @@ class Cache {
               reject(error)
             }
           })
+          .finally(() => {
+            this._releaseLock(key)
+          })
       } else {
         resolve(undefined)
+        this._releaseLock(key)
       }
     })
   }
 
-  del(key) {
+  async del(key) {
+    await this._acquireLock(key)
+
     return new Promise((resolve, reject) => {
       if (!fs.existsSync(this.cacheDir)) {
         fs.mkdirSync(this.cacheDir, { recursive: true })
@@ -135,14 +152,20 @@ class Cache {
               reject(error)
             }
           })
+          .finally(() => {
+            this._releaseLock(key)
+          })
       } else {
         this.memoryCache.del(key)
         resolve()
+        this._releaseLock(key)
       }
     })
   }
 
-  clear() {
+  async clear() {
+    await this._acquireLock("clear")
+
     return new Promise((resolve, reject) => {
       if (!fs.existsSync(this.cacheDir)) {
         fs.mkdirSync(this.cacheDir, { recursive: true })
@@ -160,6 +183,9 @@ class Cache {
         })
         .catch((error) => {
           reject(error)
+        })
+        .finally(() => {
+          this._releaseLock("clear")
         })
     })
   }
@@ -193,6 +219,17 @@ class Cache {
         })
       })
     })
+  }
+
+  async _acquireLock(key) {
+    while (locks.get(key)) {
+      await new Promise((resolve) => setTimeout(resolve, 100))
+    }
+    locks.set(key, true)
+  }
+
+  _releaseLock(key) {
+    locks.delete(key)
   }
 }
 
