@@ -9,13 +9,16 @@ const {
   ADDRESS_NOT_FOUND
 } = require("@constants/errors/client")
 
-const clientInteractions = {
-  CLIENT_UPDATED: "Client Updated",
-  CONTACT_UPDATED: "Contact Updated",
-  CONTACT_DELETED: "Contact Deleted",
-  ADDRESS_UPDATED: "Address Updated",
-  ADDRESS_DELETED: "Address Deleted"
-}
+const {
+  CLIENT_CREATED,
+  CLIENT_UPDATED,
+  CONTACT_CREATED,
+  CONTACT_UPDATED,
+  CONTACT_DELETED,
+  ADDRESS_CREATED,
+  ADDRESS_UPDATED,
+  ADDRESS_DELETED
+} = require("@constants/interactions/client")
 
 const Client = require("@models/client")
 const { clientSchema, clientContactSchema, clientAddressSchema } = require("@schemas/client")
@@ -40,7 +43,14 @@ const clientController = {
 
     clientSchema.parse(req.body)
 
-    await Client.create(name, description, req.user.id)
+    const newClient = await Client.create(name, description, req.user.id)
+
+    const changes = [
+      { field: "Nome", after: name },
+      { field: "Descrição", after: !description ? null : description }
+    ]
+
+    await createInteractionHistory(newClient.insertId, CLIENT_CREATED, changes, req.user.id)
     res.status(201).json({ message: "Client created successfully" })
   }),
   update: tryCatch(async (req, res) => {
@@ -58,25 +68,20 @@ const clientController = {
 
     const changes = [
       {
-        field: "Name",
+        field: "Nome",
         before: existingClient[0].name,
         after: name,
         changed: existingClient[0].name !== name
       },
       {
-        field: "Description",
+        field: "Descrição",
         before: existingClient[0].description,
-        after: description,
+        after: !description ? null : description,
         changed: existingClient[0].description !== description
       }
     ]
 
-    await createInteractionHistory(
-      existingClient[0].id,
-      clientInteractions.CLIENT_UPDATED,
-      changes,
-      req.user.id
-    )
+    await createInteractionHistory(existingClient[0].id, CLIENT_UPDATED, changes, req.user.id)
     res.status(204).json({ message: "Client updated successfully" })
   }),
   delete: tryCatch(async (req, res) => {
@@ -129,6 +134,14 @@ const clientController = {
       }
 
       await Client.contact.create(clientId, type, contact, description, req.user.id)
+
+      const changes = [
+        { field: "Tipo", after: type },
+        { field: "Contacto", after: contact },
+        { field: "Descrição", after: !description ? null : description }
+      ]
+
+      await createInteractionHistory(clientId, CONTACT_CREATED, changes, req.user.id)
       res.status(201).json({ message: "Contact created successfully" })
     }),
     update: tryCatch(async (req, res) => {
@@ -170,19 +183,19 @@ const clientController = {
 
       const changes = [
         {
-          field: "Type",
+          field: "Tipo",
           before: existingContact[0].type,
           after: type,
           changed: existingContact[0].type !== type
         },
         {
-          field: "Contact",
+          field: "Contacto",
           before: existingContact[0].contact,
           after: contact,
           changed: existingContact[0].contact !== contact
         },
         {
-          field: "Description",
+          field: "Descrição",
           before: existingContact[0].description,
           after: !description ? null : description,
           changed: existingContact[0].description !== description
@@ -191,7 +204,7 @@ const clientController = {
 
       await createInteractionHistory(
         existingContact[0].client_id,
-        clientInteractions.CONTACT_UPDATED,
+        CONTACT_UPDATED,
         changes,
         req.user.id
       )
@@ -218,22 +231,22 @@ const clientController = {
 
       const changes = [
         {
-          field: "Type",
+          field: "Tipo",
           before: existingContact[0].type
         },
         {
-          field: "Contact",
+          field: "Contacto",
           before: existingContact[0].contact
         },
         {
-          field: "Description",
+          field: "Descrição",
           before: existingContact[0].description
         }
       ]
 
       await createInteractionHistory(
         existingContact[0].client_id,
-        clientInteractions.CONTACT_DELETED,
+        CONTACT_DELETED,
         changes,
         req.user.id
       )
@@ -290,6 +303,16 @@ const clientController = {
         postalCode,
         req.user.id
       )
+
+      const changes = [
+        { field: "País", after: country },
+        { field: "Cidade", after: city },
+        { field: "Localidade", after: locality },
+        { field: "Morada", after: address },
+        { field: "Código Postal", after: postalCode }
+      ]
+
+      await createInteractionHistory(clientId, ADDRESS_CREATED, changes, req.user.id)
       res.status(201).json({ message: "Address created successfully" })
     }),
     update: tryCatch(async (req, res) => {
@@ -343,31 +366,31 @@ const clientController = {
 
       const changes = [
         {
-          field: "Country",
+          field: "País",
           before: existingAddress[0].country,
           after: !country ? null : country,
           changed: existingAddress[0].country !== country
         },
         {
-          field: "City",
+          field: "Cidade",
           before: existingAddress[0].city,
           after: !city ? null : city,
           changed: existingAddress[0].city !== city
         },
         {
-          field: "Locality",
+          field: "Localidade",
           before: existingAddress[0].locality,
           after: !locality ? null : locality,
           changed: existingAddress[0].locality !== locality
         },
         {
-          field: "Address",
+          field: "Morada",
           before: existingAddress[0].address,
           after: !address ? null : address,
           changed: existingAddress[0].address !== address
         },
         {
-          field: "Postal Code",
+          field: "Código Postal",
           before: existingAddress[0].postal_code,
           after: !postalCode ? null : postalCode,
           changed: existingAddress[0].postal_code !== postalCode
@@ -376,7 +399,7 @@ const clientController = {
 
       await createInteractionHistory(
         existingAddress[0].client_id,
-        clientInteractions.ADDRESS_UPDATED,
+        ADDRESS_UPDATED,
         changes,
         req.user.id
       )
@@ -399,30 +422,30 @@ const clientController = {
 
       const changes = [
         {
-          field: "Country",
+          field: "País",
           before: existingAddress[0].country
         },
         {
-          field: "City",
+          field: "Cidade",
           before: existingAddress[0].city
         },
         {
-          field: "Locality",
+          field: "Localidade",
           before: existingAddress[0].locality
         },
         {
-          field: "Address",
+          field: "Morada",
           before: existingAddress[0].address
         },
         {
-          field: "Postal Code",
+          field: "Código Postal",
           before: existingAddress[0].postal_code
         }
       ]
 
       await createInteractionHistory(
         existingAddress[0].client_id,
-        clientInteractions.ADDRESS_DELETED,
+        ADDRESS_DELETED,
         changes,
         req.user.id
       )

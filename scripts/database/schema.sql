@@ -143,3 +143,70 @@ CREATE TABLE IF NOT EXISTS smses (
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE SET NULL,
     FOREIGN KEY (sent_by_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
+
+-- Table equipment_brands
+CREATE TABLE IF NOT EXISTS equipment_brands (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE
+);
+
+-- Table equipment_types
+CREATE TABLE IF NOT EXISTS equipment_types (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE
+);
+
+-- Table equipment_models
+CREATE TABLE IF NOT EXISTS equipment_models (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    brand_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    FOREIGN KEY (brand_id) REFERENCES equipment_brands(id) ON DELETE CASCADE,
+    UNIQUE (brand_id, name)
+);
+
+-- Table equipments
+CREATE TABLE IF NOT EXISTS equipments (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    client_id INT NOT NULL,
+    brand_id INT NOT NULL,
+    model_id INT NOT NULL,
+    type_id INT NOT NULL,
+    sn VARCHAR(255) NOT NULL UNIQUE,
+    description TEXT,
+    created_by_user_id INT,
+    created_at_datetime DATETIME NOT NULL,
+    last_modified_by_user_id INT,
+    last_modified_datetime DATETIME,
+    FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
+    FOREIGN KEY (brand_id) REFERENCES equipment_brands(id) ON DELETE RESTRICT,
+    FOREIGN KEY (model_id) REFERENCES equipment_models(id) ON DELETE RESTRICT,
+    FOREIGN KEY (type_id) REFERENCES equipment_types(id) ON DELETE RESTRICT,
+    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Table equipment_attachments
+CREATE TABLE IF NOT EXISTS equipment_attachments (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    equipment_id INT NOT NULL,
+    file VARCHAR(255) NOT NULL,
+    original_filename VARCHAR(255) NOT NULL,
+    type ENUM('image', 'document') NOT NULL,
+    uploaded_by_user_id INT,
+    uploaded_at_datetime DATETIME NOT NULL,
+    FOREIGN KEY (equipment_id) REFERENCES equipments(id) ON DELETE CASCADE,
+    FOREIGN KEY (uploaded_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Table equipment_interactions_history
+CREATE TABLE IF NOT EXISTS equipment_interactions_history (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    equipment_id INT NOT NULL,
+    type VARCHAR(255),
+    details TEXT,
+    responsible_user_id INT,
+    created_at_datetime DATETIME NOT NULL,
+    FOREIGN KEY (equipment_id) REFERENCES equipments(id) ON DELETE CASCADE,
+    FOREIGN KEY (responsible_user_id) REFERENCES users(id) ON DELETE SET NULL
+);

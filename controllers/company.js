@@ -8,7 +8,7 @@ const { companySchema } = require("@schemas/company")
 const upload = require("@middlewares/uploadFileHandler")
 
 const companyController = {
-  uploadLogo: upload.image.single("logo"),
+  uploadLogo: upload.image.public.single("logo"),
   find: tryCatch(async (req, res) => {
     const company = await Company.find()
     res.status(200).json(company)

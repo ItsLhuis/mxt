@@ -31,7 +31,7 @@ const Employee = require("@models/employee")
 const upload = require("@middlewares/uploadFileHandler")
 
 const userController = {
-  uploadAvatar: upload.image.single("avatar"),
+  uploadAvatar: upload.image.public.single("avatar"),
   findAll: tryCatch(async (req, res) => {
     const users = await User.findAll()
 
@@ -181,8 +181,8 @@ const userController = {
     }
 
     if (req.file && existingUser[0].avatar) {
-      const oldLogoPath = path.join("uploads", existingUser[0].avatar)
-      upload.deleteFile(oldLogoPath)
+      const oldAvatarPath = path.join("uploads", existingUser[0].avatar)
+      upload.deleteFile(oldAvatarPath)
     }
     res.status(204).json({ message: "User updated successfully" })
   }),
@@ -240,6 +240,11 @@ const userController = {
     }
 
     await User.delete(userId)
+
+    if (existingUser[0].avatar) {
+      const avatarPath = path.join("uploads", existingUser[0].avatar)
+      upload.deleteFile(avatarPath)
+    }
     res.status(204).json({ message: "User removed successfully" })
   })
 }

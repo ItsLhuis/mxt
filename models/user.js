@@ -104,7 +104,7 @@ const User = {
     const query =
       "INSERT INTO users (username, password, email, avatar, role, is_active, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())"
     return dbQueryExecutor
-      .execute(query, [username, password, email, avatar, role, isActive, createdByUserId])
+      .execute(query, [username, password, email, avatar, role, isActive ?? true, createdByUserId])
       .then((result) => {
         return revalidateCache("users").then(() => result)
       })

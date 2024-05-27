@@ -4,6 +4,7 @@ module.exports = {
   APP_ERROR_TYPE: "AppError",
   AUTHENTICATION_ERROR_TYPE: "Authentication",
   PERMISSION_DENIED_ERROR_TYPE: "PermissionDenied",
+  ATTACHMENT_ERROR_TYPE: "Attachment",
   IMAGE_ERROR_TYPE: "Image",
   EMAIL_ERROR_TYPE: "Email",
   SMS_ERROR_TYPE: "Sms"

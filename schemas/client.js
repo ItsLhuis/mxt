@@ -22,16 +22,14 @@ const clientContactSchema = z
   )
 
 const clientAddressSchema = z.object({
-  country: z.string().max(255).optional().nullable(),
-  city: z.string().max(255).optional().nullable(),
-  locality: z.string().max(255).optional().nullable(),
-  address: z.string().max(255).optional().nullable(),
+  country: z.string().max(255),
+  city: z.string().max(255),
+  locality: z.string().max(255),
+  address: z.string().max(255),
   postalCode: z
     .string()
     .max(20)
     .regex(/^\d{4}-\d{3}$/)
-    .optional()
-    .nullable()
 })
 
 module.exports = {
