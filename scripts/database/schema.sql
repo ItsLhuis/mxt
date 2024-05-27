@@ -30,7 +30,9 @@ CREATE TABLE IF NOT EXISTS users (
     avatar VARCHAR(50),
     role ENUM('Chefe', 'Administrador', 'Funcionário') NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT true,
-    created_at_datetime DATETIME NOT NULL
+    created_by_user_id INT,
+    created_at_datetime DATETIME NOT NULL,
+    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 -- Table users

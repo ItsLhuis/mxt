@@ -32,14 +32,29 @@ const updateUserPasswordSchema = z
     { message: "New password and confirmation password do not match", path: ["newPassword"] }
   )
 
-const requestResetPasswordSchema = z.object({
-  email: z.string().email().max(255)
-})
+const resetPassword = {
+  requestSchema: z.object({
+    email: z.string().email().max(255)
+  }),
+  verifySchema: z.object({
+    otp: z.string().length(6)
+  }),
+  confirmSchema: z
+    .object({
+      newPassword: z.string().min(6).max(255),
+      confirmPassword: z.string().min(6).max(255)
+    })
+    .refine(
+      (data) =>
+        !data.newPassword || !data.confirmPassword || data.newPassword === data.confirmPassword,
+      { message: "New password and confirmation password do not match", path: ["newPassword"] }
+    )
+}
 
 module.exports = {
   authSchema,
   createUserSchema,
   updateUserSchema,
   updateUserPasswordSchema,
-  requestResetPasswordSchema
+  resetPassword
 }

@@ -80,15 +80,18 @@ const verifyRefreshToken = (token) => {
   return new Promise((resolve, reject) => {
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (error) => {
       if (error) {
-        throw new AppError(
-          403,
-          INVALID_REFRESH_TOKEN,
-          "Invalid refresh token",
-          false,
-          AUTHENTICATION_ERROR_TYPE
+        reject(
+          new AppError(
+            403,
+            INVALID_REFRESH_TOKEN,
+            "Invalid refresh token",
+            false,
+            AUTHENTICATION_ERROR_TYPE
+          )
         )
+      } else {
+        resolve()
       }
-      resolve()
     })
   })
 }
@@ -97,15 +100,12 @@ const verifyAccessToken = (token) => {
   return new Promise((resolve, reject) => {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
       if (error) {
-        throw new AppError(
-          403,
-          INVALID_TOKEN,
-          "Invalid access token",
-          false,
-          AUTHENTICATION_ERROR_TYPE
+        reject(
+          new AppError(403, INVALID_TOKEN, "Invalid access token", false, AUTHENTICATION_ERROR_TYPE)
         )
+      } else {
+        resolve(user)
       }
-      resolve(user)
     })
   })
 }

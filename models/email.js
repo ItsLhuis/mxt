@@ -75,7 +75,7 @@ const Email = {
             client || client.length > 0
               ? { id: client[0].id, name: client[0].name, description: client[0].description }
               : null,
-          to: emailResendData.to[0],
+          to: emailResendData.to && emailResendData.to[0],
           subject: email[0].subject,
           html: emailResendData.html,
           text: emailResendData.text,

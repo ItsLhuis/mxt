@@ -1,3 +1,5 @@
+const path = require("path")
+
 const bcrypt = require("bcrypt")
 
 const AppError = require("@classes/app/error")
@@ -26,15 +28,19 @@ const { createUserSchema, updateUserSchema, updateUserPasswordSchema } = require
 
 const Employee = require("@models/employee")
 
-const Company = require("@models/company")
-
 const upload = require("@middlewares/uploadFileHandler")
 
 const userController = {
   uploadAvatar: upload.image.single("avatar"),
   findAll: tryCatch(async (req, res) => {
     const users = await User.findAll()
-    res.status(200).json(users)
+
+    const usersWithoutPassword = users.map((user) => {
+      const { password, ...userWithoutPassword } = user
+      return userWithoutPassword
+    })
+
+    res.status(200).json(usersWithoutPassword)
   }),
   findByUserId: tryCatch(async (req, res) => {
     const { userId } = req.params
@@ -44,7 +50,9 @@ const userController = {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
 
-    res.status(200).json(existingUser)
+    const { password, ...userWithoutPassword } = existingUser[0]
+
+    res.status(200).json([userWithoutPassword])
   }),
   create: tryCatch(async (req, res) => {
     const { username, password, email, role, isActive } = req.body
@@ -82,22 +90,30 @@ const userController = {
       avatar = req.file.filename
     }
 
-    const user = await User.create(username, hashedPassword, email, avatar, role, isActive)
+    const user = await User.create(
+      username,
+      hashedPassword,
+      email,
+      avatar,
+      role,
+      isActive,
+      req.user.id
+    )
     await Employee.create(user.insertId)
 
-    const companyDetails = await Company.find()
+    const companyDetails = req.company
 
     await mailer
       .send(
-        companyDetails[0].name,
+        companyDetails.name,
         email,
         "Bem Vindo",
-        `Seja muito bem vindo à ${companyDetails[0].name}`,
+        `Seja muito bem vindo à ${companyDetails.name}`,
         {
-          companyLogo: `${getImageUrl(req, companyDetails[0].logo)}?size=100`,
+          companyLogo: `${getImageUrl(req, companyDetails.logo)}?size=100`,
           title: "Bem Vindo",
           message: `Seja muito bem-vindo(a) à ${
-            companyDetails[0].name
+            companyDetails.name
           }! Estamos felizes em tê-lo(a) conosco.
                   <br>Para acessar à <a href="${req.protocol}://${req.get(
             "host"
@@ -113,10 +129,10 @@ const userController = {
                   <br>
                   Mal podemos esperar para ver o que você fará!`,
           footer: "Por motivos de segurança, recomendamos o não compartilhamento desta mensagem!",
-          companyName: companyDetails[0].name,
-          companyAddress: `${companyDetails[0].address}, ${companyDetails[0].postal_code}`,
-          companyCity: companyDetails[0].city,
-          companyCountry: companyDetails[0].country
+          companyName: companyDetails.name,
+          companyAddress: `${companyDetails.address}, ${companyDetails.postal_code}`,
+          companyCity: companyDetails.city,
+          companyCountry: companyDetails.country
         }
       )
       .catch(() => {})
@@ -126,12 +142,12 @@ const userController = {
     const { userId } = req.params
     const { username, email, role, isActive } = req.body
 
+    updateUserSchema.parse(req.body)
+
     const existingUser = await User.findByUserId(userId)
     if (existingUser.length <= 0) {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
-
-    updateUserSchema.parse(req.body)
 
     const existingUsername = await User.findByUsername(username, userId)
     if (existingUsername.length > 0) {
@@ -143,24 +159,43 @@ const userController = {
       throw new AppError(400, EMAIL_ALREADY_EXISTS, "The e-mail already exists", true)
     }
 
-    let profilePic
+    let avatar
     if (req.file) {
-      profilePic = req.file.filename
+      avatar = req.file.filename
+    } else {
+      avatar = company[0].avatar
     }
 
-    await User.update(userId, username, email, profilePic, role, isActive)
+    const isCurrentUser = req.user.id === parseInt(userId)
+    if (!isCurrentUser) {
+      await User.update(userId, username, email, avatar, role, isActive)
+    } else {
+      await User.update(
+        userId,
+        username,
+        email,
+        avatar,
+        existingUser[0].role,
+        existingUser[0].is_active
+      )
+    }
+
+    if (req.file && existingUser[0].avatar) {
+      const oldLogoPath = path.join("uploads", existingUser[0].avatar)
+      upload.deleteFile(oldLogoPath)
+    }
     res.status(204).json({ message: "User updated successfully" })
   }),
   updatePassword: tryCatch(async (req, res) => {
     const { userId } = req.params
     const { password, newPassword } = req.body
 
+    updateUserPasswordSchema.parse(req.body)
+
     const existingUser = await User.findByUserId(userId)
     if (existingUser.length <= 0) {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
-
-    updateUserPasswordSchema.parse(req.body)
 
     const isPasswordMatch = await bcrypt.compare(password, existingUser[0].password)
     if (!isPasswordMatch) {
@@ -168,8 +203,7 @@ const userController = {
     }
 
     const hashedNewPassword = await bcrypt.hash(newPassword, SALT_ROUNDS)
-
-    User.updatePassword(userId, hashedNewPassword)
+    await User.updatePassword(userId, hashedNewPassword)
     res.status(204).json({ message: "Password updated successfully" })
   }),
   delete: tryCatch(async (req, res) => {

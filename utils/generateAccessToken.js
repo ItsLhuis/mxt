@@ -9,7 +9,7 @@ const generateAccessToken = (refreshToken) => {
     const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
 
     const newAccessToken = jwt.sign({ id: decoded.id }, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN
+      expiresIn: Number(process.env.ACCESS_TOKEN_EXPIRES_IN)
     })
 
     return newAccessToken

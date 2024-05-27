@@ -28,7 +28,7 @@ app.use(
       sameSite: "none",
       secure: false,
       httpOnly: true,
-      maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN * 1000
+      maxAge: Number(process.env.REFRESH_TOKEN_EXPIRES_IN) * 1000
     }
   })
 )
