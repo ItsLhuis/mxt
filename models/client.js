@@ -351,7 +351,7 @@ const Client = {
       )(),
     create: (clientId, interactionType, details, responsibleUserId) => {
       const query =
-        "INSERT INTO client_interactions_history (client_id, created_at_datetime, type, details, responsible_user_id) VALUES (?, NOW(), ?, ?, ?)"
+        "INSERT INTO client_interactions_history (client_id, type, details, responsible_user_id, created_at_datetime) VALUES (?, ?, ?, ?, NOW())"
       return dbQueryExecutor
         .execute(query, [clientId, interactionType, details, responsibleUserId])
         .then((result) => {
