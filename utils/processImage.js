@@ -7,72 +7,51 @@ const { IMAGE_PROCESSING_ERROR } = require("@constants/errors/shared/image")
 
 const { IMAGE_ERROR_TYPE } = require("@constants/errors/shared/types")
 
-const processImage = async (imagePath, { size, quality, format, blur } = {}) => {
+const processImage = async (imagePath, { size, quality, blur } = {}) => {
   try {
     const imageInfo = await sharp(imagePath).metadata()
 
-    const defaultOptions = {
+    const options = {
       size: size || imageInfo.width || 800,
-      quality: quality || "high",
-      format: format || "jpeg",
-      blur: blur || false
+      quality: Number(quality) || 90,
+      blur: blur || 0
     }
 
-    const mergedOptions = { ...defaultOptions }
-
-    if (!["high", "medium", "low"].includes(mergedOptions.quality)) {
-      mergedOptions.quality = "high"
+    if (options.size > 1400) {
+      options.size = 1400
     }
 
-    if (mergedOptions.size > 2000) {
-      mergedOptions.size = 2000
+    const image = sharp(imagePath)
+
+    if (options.size) {
+      image.resize(options.size)
     }
 
-    if (mergedOptions.blur > 100) {
-      mergedOptions.blur = 100
+    if (options.quality < 0 || options.quality > 100) {
+      options.quality = 90
     }
 
-    const imageBuffer = await sharp(imagePath).toBuffer()
-
-    let resizedImageBuffer
-    if (mergedOptions.size) {
-      resizedImageBuffer = await sharp(imageBuffer).resize(mergedOptions.size).toBuffer()
+    if (imageInfo.format === "png") {
+      image.png({ quality: options.quality, force: false })
     } else {
-      resizedImageBuffer = await sharp(imageBuffer)
-        .resize({
-          width: mergedOptions.width,
-          height: mergedOptions.height
-        })
-        .toBuffer()
+      image.jpeg({ quality: options.quality })
     }
 
-    let processedImageBuffer
-    if (mergedOptions.quality === "high") {
-      processedImageBuffer = await sharp(resizedImageBuffer).jpeg({ quality: 90 }).toBuffer()
-    } else if (mergedOptions.quality === "low") {
-      processedImageBuffer = await sharp(resizedImageBuffer).jpeg({ quality: 30 }).toBuffer()
-    } else if (mergedOptions.quality === "medium") {
-      processedImageBuffer = await sharp(resizedImageBuffer).jpeg({ quality: 60 }).toBuffer()
+    if (options.blur < 0) {
+      options.blur = 0
+    } else if (options.blur > 100) {
+      options.blur = 100
     }
 
-    let blurredImageBuffer
-    if (mergedOptions.blur === true) {
-      blurredImageBuffer = await sharp(processedImageBuffer).blur(10).toBuffer()
-    } else if (typeof mergedOptions.blur === "number" && mergedOptions.blur > 0) {
-      blurredImageBuffer = await sharp(processedImageBuffer).blur(mergedOptions.blur).toBuffer()
-    } else {
-      blurredImageBuffer = processedImageBuffer
+    if (options.blur) {
+      image.blur(options.blur)
     }
 
-    let finalImageBuffer
-    if (mergedOptions.format !== "jpeg") {
-      finalImageBuffer = await sharp(blurredImageBuffer).toFormat(mergedOptions.format).toBuffer()
-    } else {
-      finalImageBuffer = blurredImageBuffer
-    }
+    const processedImageBuffer = await image.toBuffer()
 
-    return finalImageBuffer
+    return processedImageBuffer
   } catch (error) {
+    console.log(error)
     throw new AppError(
       500,
       IMAGE_PROCESSING_ERROR,
