@@ -133,7 +133,9 @@ const uploadImage = (outputDir) => ({
 })
 
 const deleteFile = (filePath) => {
-  fs.unlink(filePath, (err) => {})
+  if (fs.existsSync(filePath)) {
+    fs.unlink(filePath, () => {})
+  }
 }
 
 const createUploadsFolderIfNotExists = (folder) => {

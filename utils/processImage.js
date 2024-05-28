@@ -1,8 +1,9 @@
 const sharp = require("sharp")
+sharp.cache(false)
 
 const AppError = require("@classes/app/error")
 
-const { IMAGE_PROCESSING } = require("@constants/errors/shared/image")
+const { IMAGE_PROCESSING_ERROR } = require("@constants/errors/shared/image")
 
 const { IMAGE_ERROR_TYPE } = require("@constants/errors/shared/types")
 
@@ -72,7 +73,13 @@ const processImage = async (imagePath, { size, quality, format, blur } = {}) => 
 
     return finalImageBuffer
   } catch (error) {
-    throw new AppError(500, IMAGE_PROCESSING, "Error processing image", false, IMAGE_ERROR_TYPE)
+    throw new AppError(
+      500,
+      IMAGE_PROCESSING_ERROR,
+      "Error processing image",
+      false,
+      IMAGE_ERROR_TYPE
+    )
   }
 }
 

@@ -163,12 +163,19 @@ const userController = {
     if (req.file) {
       avatar = req.file.filename
     } else {
-      avatar = company[0].avatar
+      avatar = existingUser[0].avatar
     }
 
     const isCurrentUser = req.user.id === parseInt(userId)
     if (!isCurrentUser) {
-      await User.update(userId, username, email, avatar, role, isActive)
+      await User.update(
+        userId,
+        username,
+        email,
+        avatar,
+        role ?? existingUser[0].role,
+        isActive ?? existingUser[0].is_active
+      )
     } else {
       await User.update(
         userId,
