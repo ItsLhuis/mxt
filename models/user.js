@@ -12,7 +12,8 @@ const User = {
         u2.avatar AS created_by_avatar, 
         u2.role AS created_by_role 
       FROM users u1
-      LEFT JOIN users u2 ON u1.created_by_user_id = u2.id`
+      LEFT JOIN users u2 ON u1.created_by_user_id = u2.id
+      ORDER BY u1.created_at_datetime DESC`
     const users = await dbQueryExecutor.execute(query)
 
     return users.map((user) => ({

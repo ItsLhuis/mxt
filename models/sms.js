@@ -19,7 +19,7 @@ const mapUser = require("@utils/mapUser")
 
 const Sms = {
   findAll: withCache("smses", async () => {
-    const smsesQuery = "SELECT * FROM smses"
+    const smsesQuery = "SELECT * FROM smses ORDER BY created_at_datetime DESC"
     const smses = await dbQueryExecutor.execute(smsesQuery)
 
     const smsesWithDetails = await Promise.all(
