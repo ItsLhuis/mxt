@@ -2,7 +2,6 @@ const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
 const { EMAIL_NOT_FOUND } = require("@constants/errors/shared/email")
-
 const { CLIENT_NOT_FOUND, CONTACT_NOT_FOUND, INVALID_CONTACT } = require("@constants/errors/client")
 
 const Email = require("@models/email")
@@ -46,7 +45,7 @@ const emailController = {
     }
 
     const { name, address, city, country, postalCode, logo } = req.company
-    
+
     await Email.send(
       clientId,
       logo,

@@ -2,7 +2,6 @@ const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
 const { SMS_NOT_FOUND } = require("@constants/errors/shared/sms")
-
 const { CLIENT_NOT_FOUND, CONTACT_NOT_FOUND, INVALID_CONTACT } = require("@constants/errors/client")
 
 const Sms = require("@models/sms")

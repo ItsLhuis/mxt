@@ -17,7 +17,6 @@ const {
   INVALID_OTP_CODE,
   INVALID_RESET_PASSWORD_CODE
 } = require("@constants/errors/user")
-
 const { EMAIL_SEND_ERROR } = require("@constants/errors/shared/email")
 
 const { EMAIL_ERROR_TYPE } = require("@constants/errors/shared/types")

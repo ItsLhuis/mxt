@@ -9,7 +9,6 @@ const mailer = require("@utils/mailer")
 const getImageUrl = require("@utils/getImageUrl")
 
 const { PERMISSION_DENIED } = require("@constants/errors/permission")
-
 const {
   USERNAME_ALREADY_EXISTS,
   EMAIL_ALREADY_EXISTS,
