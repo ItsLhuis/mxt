@@ -1,6 +1,6 @@
 const Cache = require("@classes/cache")
-const multiCache = new Cache({ memoryTTL: 60, diskTTL: 120, storage: "both" })
-const memoryOnlyCache = new Cache({ memoryTTL: 30, storage: "memory" })
+const multiCache = new Cache({ memoryTTL: 900, diskTTL: 43200, storage: "both" })
+const memoryOnlyCache = new Cache({ memoryTTL: 1800, storage: "memory" })
 
 const { CACHE_ENABLED } = require("@constants/config")
 
