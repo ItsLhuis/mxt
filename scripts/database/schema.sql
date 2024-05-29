@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS company (
     phone_number VARCHAR(20),
     email VARCHAR(255),
     logo VARCHAR(50),
-    created_at_datetime DATETIME NOT NULL
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 -- Table users
@@ -31,18 +31,18 @@ CREATE TABLE IF NOT EXISTS users (
     role ENUM('Chefe', 'Administrador', 'Funcionário') NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT true,
     created_by_user_id INT,
-    created_at_datetime DATETIME NOT NULL,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- Table users
+-- Table user_otp_codes
 CREATE TABLE IF NOT EXISTS user_otp_codes (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     otp_code VARCHAR(10) NOT NULL,
     is_used BOOLEAN NOT NULL DEFAULT false,
-    created_at_datetime DATETIME NOT NULL,
-    expiration_datetime DATETIME NOT NULL,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    expiration_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -67,9 +67,9 @@ CREATE TABLE IF NOT EXISTS clients (
     name VARCHAR(255),
     description TEXT,
     created_by_user_id INT,
-    created_at_datetime DATETIME,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_modified_by_user_id INT,
-    last_modified_datetime DATETIME,
+    last_modified_datetime TIMESTAMP NULL,
     FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
@@ -82,9 +82,9 @@ CREATE TABLE IF NOT EXISTS client_contacts (
     contact VARCHAR(255),
     description TEXT,
     created_by_user_id INT,
-    created_at_datetime DATETIME,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_modified_by_user_id INT,
-    last_modified_datetime DATETIME,
+    last_modified_datetime TIMESTAMP NULL,
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
     FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -100,9 +100,9 @@ CREATE TABLE IF NOT EXISTS client_addresses (
     address TEXT,
     postal_code VARCHAR(20),
     created_by_user_id INT,
-    created_at_datetime DATETIME,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_modified_by_user_id INT,
-    last_modified_datetime DATETIME,
+    last_modified_datetime TIMESTAMP NULL,
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
     FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS client_interactions_history (
     type VARCHAR(255),
     details TEXT,
     responsible_user_id INT,
-    created_at_datetime DATETIME,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
     FOREIGN KEY (responsible_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS emails (
     client_id INT,
     subject VARCHAR(255),
     sent_by_user_id INT,
-    created_at_datetime DATETIME NOT NULL,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE SET NULL,
     FOREIGN KEY (sent_by_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS smses (
     client_id INT,
     message TEXT NOT NULL,
     sent_by_user_id INT,
-    created_at_datetime DATETIME NOT NULL,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE SET NULL,
     FOREIGN KEY (sent_by_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
@@ -175,9 +175,9 @@ CREATE TABLE IF NOT EXISTS equipments (
     sn VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
     created_by_user_id INT,
-    created_at_datetime DATETIME NOT NULL,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     last_modified_by_user_id INT,
-    last_modified_datetime DATETIME,
+    last_modified_datetime TIMESTAMP NULL,
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
     FOREIGN KEY (brand_id) REFERENCES equipment_brands(id) ON DELETE RESTRICT,
     FOREIGN KEY (model_id) REFERENCES equipment_models(id) ON DELETE RESTRICT,
@@ -194,7 +194,7 @@ CREATE TABLE IF NOT EXISTS equipment_attachments (
     original_filename VARCHAR(255) NOT NULL,
     type ENUM('image', 'document') NOT NULL,
     uploaded_by_user_id INT,
-    uploaded_at_datetime DATETIME NOT NULL,
+    uploaded_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (equipment_id) REFERENCES equipments(id) ON DELETE CASCADE,
     FOREIGN KEY (uploaded_by_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
@@ -206,7 +206,27 @@ CREATE TABLE IF NOT EXISTS equipment_interactions_history (
     type VARCHAR(255),
     details TEXT,
     responsible_user_id INT,
-    created_at_datetime DATETIME NOT NULL,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (equipment_id) REFERENCES equipments(id) ON DELETE CASCADE,
     FOREIGN KEY (responsible_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
+
+-- Indexes
+-- Table users
+CREATE INDEX idx_users_created_at ON users (created_at_datetime);
+
+-- Table clients
+CREATE INDEX idx_clients_created_at ON clients (created_at_datetime);
+CREATE INDEX idx_clients_last_modified ON clients (last_modified_datetime);
+CREATE INDEX idx_client_interactions_created_at ON client_interactions_history (created_at_datetime);
+
+-- Table emails
+CREATE INDEX idx_emails_created_at ON emails (created_at_datetime);
+
+-- Table smses
+CREATE INDEX idx_smses_created_at ON smses (created_at_datetime);
+
+-- Table equipments
+CREATE INDEX idx_equipments_created_at ON equipments (created_at_datetime);
+CREATE INDEX idx_equipments_last_modified ON equipments (last_modified_datetime);
+CREATE INDEX idx_equipment_interactions_created_at ON equipment_interactions_history (created_at_datetime);

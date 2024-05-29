@@ -16,7 +16,7 @@ const mapUser = require("@utils/mapUser")
 
 const Email = {
   findAll: withCache("emails", async () => {
-    const emailsQuery = "SELECT * FROM emails"
+    const emailsQuery = "SELECT * FROM emails ORDER BY created_at_datetime DESC"
     const emails = await dbQueryExecutor.execute(emailsQuery)
 
     const emailsWithDetails = await Promise.all(
@@ -58,9 +58,7 @@ const Email = {
 
         try {
           emailResendData = await mailer.get(apiId)
-        } catch (error) {
-          console.error("Error fetching email details from Resend:", error)
-        }
+        } catch (error) {}
 
         const [client, sentByUser] = await Promise.all([
           Client.findByClientId(email[0].client_id),

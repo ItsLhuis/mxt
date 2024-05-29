@@ -9,12 +9,8 @@ const userRoleHandler = require("@middlewares/userRoleHandler")
 const authRouter = require("@routes/auth")
 router.use("/auth", initializeUserHandler, authRouter)
 
-//----------------------------------------------------------------------------------------------------------
-
 const companyRouter = require("@routes/company")
 router.use("/company", initializeUserHandler, authTokenHandler, userRoleHandler, companyRouter)
-
-//----------------------------------------------------------------------------------------------------------
 
 const userRouter = require("@routes/user")
 router.use(
@@ -36,7 +32,15 @@ router.use(
   employeeRouter
 )
 
-//----------------------------------------------------------------------------------------------------------
+const clientRouter = require("@routes/client")
+router.use(
+  "/clients",
+  checkCompanyHandler,
+  initializeUserHandler,
+  authTokenHandler,
+  userRoleHandler,
+  clientRouter
+)
 
 const emailRouter = require("@routes/email")
 router.use(
@@ -48,8 +52,6 @@ router.use(
   emailRouter
 )
 
-//----------------------------------------------------------------------------------------------------------
-
 const smsRouter = require("@routes/sms")
 router.use(
   "/smses",
@@ -60,16 +62,14 @@ router.use(
   smsRouter
 )
 
-//----------------------------------------------------------------------------------------------------------
-
-const clientRouter = require("@routes/client")
+const equipmentRouter = require("@routes/equipment")
 router.use(
-  "/clients",
+  "/equipments",
   checkCompanyHandler,
   initializeUserHandler,
   authTokenHandler,
   userRoleHandler,
-  clientRouter
+  equipmentRouter
 )
 
 module.exports = router

@@ -11,7 +11,7 @@ const { withCache, revalidateCache, memoryOnlyCache } = require("@utils/cache")
 const ReleansClient = require("@classes/releans")
 const releans = new ReleansClient(process.env.RELEANS_API_KEY)
 
-const moment = require("moment-timezone")
+const momentTz = require("moment-timezone")
 
 const Client = require("@models/client")
 const User = require("@models/user")
@@ -61,13 +61,11 @@ const Sms = {
 
         try {
           smsReleansData = await releans.get(apiId)
-        } catch (error) {
-          console.error("Error fetching sms details from Releans:", error)
-        }
+        } catch (error) {}
 
-        const convertTimeZone = moment
+        const convertTimeZone = momentTz
           .tz(smsReleansData.date_sent, "YYYY-MM-DD HH:mm:ss a", smsReleansData.timezone)
-          .tz("Europe/Lisbon")
+          .utc()
           .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]")
 
         const [client, sentByUser] = await Promise.all([

@@ -5,9 +5,23 @@ const { withCache, revalidateCache, memoryOnlyCache } = require("@utils/cache")
 const User = require("@models/user")
 const mapUser = require("@utils/mapUser")
 
+const { HISTORY_ENABLED } = require("@constants/config")
+
 const Client = {
   findAll: withCache("clients", async () => {
-    const clientsQuery = "SELECT * FROM clients"
+    const clientsQuery = `
+        SELECT c.*, 
+        GREATEST(
+            COALESCE(c.last_modified_datetime, c.created_at_datetime), 
+            COALESCE(MAX(cc.last_modified_datetime), MAX(cc.created_at_datetime), c.created_at_datetime), 
+            COALESCE(MAX(ca.last_modified_datetime), MAX(ca.created_at_datetime), c.created_at_datetime)
+        ) AS last_modified
+        FROM clients c
+        LEFT JOIN client_contacts cc ON c.id = cc.client_id
+        LEFT JOIN client_addresses ca ON c.id = ca.client_id
+        GROUP BY c.id
+        ORDER BY last_modified DESC, c.created_at_datetime DESC;
+    `
     const clients = await dbQueryExecutor.execute(clientsQuery)
 
     const clientsWithDetails = await Promise.all(
@@ -350,13 +364,15 @@ const Client = {
         memoryOnlyCache
       )(),
     create: (clientId, interactionType, details, responsibleUserId) => {
-      const query =
-        "INSERT INTO client_interactions_history (client_id, type, details, responsible_user_id, created_at_datetime) VALUES (?, ?, ?, ?, NOW())"
-      return dbQueryExecutor
-        .execute(query, [clientId, interactionType, details, responsibleUserId])
-        .then((result) => {
-          return revalidateCache(`client:interactionsHistory:${clientId}`).then(() => result)
-        })
+      if (HISTORY_ENABLED) {
+        const query =
+          "INSERT INTO client_interactions_history (client_id, type, details, responsible_user_id, created_at_datetime) VALUES (?, ?, ?, ?, NOW())"
+        return dbQueryExecutor
+          .execute(query, [clientId, interactionType, details, responsibleUserId])
+          .then((result) => {
+            return revalidateCache(`client:interactionsHistory:${clientId}`).then(() => result)
+          })
+      }
     }
   }
 }
