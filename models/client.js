@@ -131,7 +131,8 @@ const Client = {
       withCache(
         `client:contacts:${clientId}`,
         async () => {
-          const contactsQuery = "SELECT * FROM client_contacts WHERE client_id = ? ORDER BY created_at_datetime DESC"
+          const contactsQuery =
+            "SELECT * FROM client_contacts WHERE client_id = ? ORDER BY created_at_datetime DESC"
           const contacts = await dbQueryExecutor.execute(contactsQuery, [clientId])
 
           const contactsWithDetails = await Promise.all(
@@ -170,7 +171,11 @@ const Client = {
     },
     findContactByClientIdAndDetails: (clientId, type, contact, contactIdToExclude) => {
       let query = "SELECT * FROM client_contacts WHERE client_id = ? AND type = ? AND contact = ?"
-      const params = [clientId, type, contact]
+      const params = [
+        clientId,
+        type,
+        type === "Telefone" || type === "Telemóvel" ? contact.replace(/\s/g, "") : contact
+      ]
 
       if (contactIdToExclude) {
         query += " AND id != ?"
@@ -183,7 +188,13 @@ const Client = {
       const query =
         "INSERT INTO client_contacts (client_id, type, contact, description, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, NOW())"
       return dbQueryExecutor
-        .execute(query, [clientId, type, contact, description, createdByUserId])
+        .execute(query, [
+          clientId,
+          type,
+          type === "Telefone" || type === "Telemóvel" ? contact.replace(/\s/g, "") : contact,
+          description,
+          createdByUserId
+        ])
         .then((result) => {
           return revalidateCache([
             "clients",
@@ -196,7 +207,13 @@ const Client = {
       const query =
         "UPDATE client_contacts SET type = ?, contact = ?, description = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
       return dbQueryExecutor
-        .execute(query, [type, contact, description, lastModifiedByUserId, contactId])
+        .execute(query, [
+          type,
+          type === "Telefone" || type === "Telemóvel" ? contact.replace(/\s/g, "") : contact,
+          description,
+          lastModifiedByUserId,
+          contactId
+        ])
         .then((result) => {
           return revalidateCache([
             "clients",
@@ -221,7 +238,8 @@ const Client = {
       withCache(
         `client:addresses:${clientId}`,
         async () => {
-          const addressesQuery = "SELECT * FROM client_addresses WHERE client_id = ? ORDER BY created_at_datetime DESC"
+          const addressesQuery =
+            "SELECT * FROM client_addresses WHERE client_id = ? ORDER BY created_at_datetime DESC"
           const addresses = await dbQueryExecutor.execute(addressesQuery, [clientId])
 
           const addressesWithDetails = await Promise.all(

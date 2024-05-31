@@ -17,7 +17,16 @@ const Company = {
     const query =
       "UPDATE company SET name = ?, address = ?, city = ?, country = ?, postal_code = ?, phone_number = ?, email = ?, logo = ? WHERE enforce_one_row = 'only'"
     return dbQueryExecutor
-      .execute(query, [name, address, city, country, postalCode, phoneNumber, email, logo])
+      .execute(query, [
+        name,
+        address,
+        city,
+        country,
+        postalCode,
+        phoneNumber.replace(/\s/g, ""),
+        email,
+        logo
+      ])
       .then((result) => {
         return revalidateCache("company").then(() => result)
       })

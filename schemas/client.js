@@ -1,4 +1,7 @@
 const { z } = require("zod")
+const { parsePhoneNumberFromString, isPossiblePhoneNumber } = require("libphonenumber-js")
+
+const { EMAIL_REGEX, POSTAL_CODE_REGEX } = require("@constants/regexes")
 
 const clientSchema = z.object({
   name: z.string().min(1).max(255),
@@ -14,11 +17,16 @@ const clientContactSchema = z
   .refine(
     (data) => {
       if (data.type === "E-mail") {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.contact)
+        return EMAIL_REGEX.test(data.contact)
+      } else if (data.type === "Telefone" || data.type === "Telemóvel") {
+        const phoneNumber = parsePhoneNumberFromString(data.contact)
+        return (
+          phoneNumber && phoneNumber.isValid() && isPossiblePhoneNumber(String(phoneNumber.number))
+        )
       }
       return true
     },
-    { message: "Invalid contact format for E-mail contact type", path: ["contact"] }
+    { message: "Invalid contact format", path: ["contact"] }
   )
 
 const clientAddressSchema = z.object({
@@ -26,10 +34,7 @@ const clientAddressSchema = z.object({
   city: z.string().max(255),
   locality: z.string().max(255),
   address: z.string().max(255),
-  postalCode: z
-    .string()
-    .max(20)
-    .regex(/^\d{4}-\d{3}$/)
+  postalCode: z.string().max(20).regex(POSTAL_CODE_REGEX)
 })
 
 module.exports = {
