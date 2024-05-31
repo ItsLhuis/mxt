@@ -159,7 +159,10 @@ const clientController = {
 
       const changes = [
         { field: "Tipo", after: type },
-        { field: "Contacto", after: contact },
+        {
+          field: "Contacto",
+          after: type === "Telefone" || type === "Telemóvel" ? contact.replace(/\s/g, "") : contact
+        },
         { field: "Descrição", after: !description ? null : description }
       ]
 
@@ -213,7 +216,7 @@ const clientController = {
         {
           field: "Contacto",
           before: existingContact[0].contact,
-          after: contact,
+          after: type === "Telefone" || type === "Telemóvel" ? contact.replace(/\s/g, "") : contact,
           changed: existingContact[0].contact !== contact
         },
         {
