@@ -219,6 +219,8 @@ CREATE INDEX idx_users_created_at ON users (created_at_datetime);
 CREATE INDEX idx_clients_created_at ON clients (created_at_datetime);
 CREATE INDEX idx_clients_last_modified ON clients (last_modified_datetime);
 CREATE INDEX idx_client_interactions_created_at ON client_interactions_history (created_at_datetime);
+CREATE INDEX idx_client_contacts_created_at ON client_contacts (created_at_datetime);
+CREATE INDEX idx_client_addresses_created_at ON client_addresses (created_at_datetime);
 
 -- Table emails
 CREATE INDEX idx_emails_created_at ON emails (created_at_datetime);
