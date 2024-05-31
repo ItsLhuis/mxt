@@ -4,7 +4,7 @@ CREATE DATABASE IF NOT EXISTS mxt CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_
 -- Use the "mxt" database
 USE mxt;
 
--- Set the default time zone to Portugal
+-- Set the default time zone to UTC
 SET time_zone = '+00:00';
 
 -- Table company
