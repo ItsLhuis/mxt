@@ -1,3 +1,5 @@
+const { produce } = require("immer")
+
 const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
@@ -20,13 +22,25 @@ const {
   ADDRESS_DELETED
 } = require("@constants/interactions/client")
 
+const roles = require("@constants/roles")
+
 const Client = require("@models/client")
 const { clientSchema, clientContactSchema, clientAddressSchema } = require("@schemas/client")
 
 const clientController = {
   findAll: tryCatch(async (req, res) => {
+    const includeInteractionsHistory = req.user.role !== roles.EMPLOYEE
     const clients = await Client.findAll()
-    res.status(200).json(clients)
+
+    const filteredClients = produce(clients, (draft) => {
+      if (!includeInteractionsHistory) {
+        draft.forEach((client) => {
+          delete client.interactionsHistory
+        })
+      }
+    })
+
+    res.status(200).json(filteredClients)
   }),
   findByClientId: tryCatch(async (req, res) => {
     const { clientId } = req.params
@@ -36,7 +50,15 @@ const clientController = {
       throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
     }
 
-    res.status(200).json(existingClient)
+    const includeInteractionsHistory = req.user.role !== roles.EMPLOYEE
+
+    const filteredClient = produce(existingClient[0], (draft) => {
+      if (!includeInteractionsHistory) {
+        delete draft.interactionsHistory
+      }
+    })
+
+    res.status(200).json([filteredClient])
   }),
   create: tryCatch(async (req, res) => {
     const { name, description } = req.body

@@ -71,7 +71,7 @@ const authToken = tryCatch(async (req, res, next) => {
     throw new AppError(403, USER_NOT_ACTIVE, "User is not active", true, AUTHENTICATION_ERROR_TYPE)
   }
 
-  req.user.id = existingUser[0].id
+  req.user.id = Number(existingUser[0].id)
 
   next()
 })

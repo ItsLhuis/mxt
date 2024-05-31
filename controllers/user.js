@@ -32,6 +32,16 @@ const upload = require("@middlewares/uploadFileHandler")
 const userController = {
   uploadAvatar: upload.image.public.single("avatar"),
   findAll: tryCatch(async (req, res) => {
+    if (req.user.role === roles.EMPLOYEE) {
+      throw new AppError(
+        403,
+        PERMISSION_DENIED,
+        "You don't have permission to perform this action",
+        true,
+        PERMISSION_DENIED_ERROR_TYPE
+      )
+    }
+
     const users = await User.findAll()
 
     const usersWithoutPassword = users.map((user) => {
@@ -43,6 +53,16 @@ const userController = {
   }),
   findByUserId: tryCatch(async (req, res) => {
     const { userId } = req.params
+
+    if (req.user.role === roles.EMPLOYEE && req.user.id !== Number(userId)) {
+      throw new AppError(
+        403,
+        PERMISSION_DENIED,
+        "You don't have permission to perform this action",
+        true,
+        PERMISSION_DENIED_ERROR_TYPE
+      )
+    }
 
     const existingUser = await User.findByUserId(userId)
     if (existingUser.length <= 0) {

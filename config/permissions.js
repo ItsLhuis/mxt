@@ -8,12 +8,12 @@ module.exports = {
   user: {
     [roles.BOSS]: [permissions.ALL],
     [roles.ADMIN]: [permissions.ALL],
-    [roles.EMPLOYEE]: [permissions.UPDATE]
+    [roles.EMPLOYEE]: [permissions.READ, permissions.UPDATE]
   },
   employee: {
     [roles.BOSS]: [permissions.ALL],
     [roles.ADMIN]: [permissions.ALL],
-    [roles.EMPLOYEE]: [permissions.UPDATE]
+    [roles.EMPLOYEE]: [permissions.READ, permissions.UPDATE]
   },
   email: {
     [roles.BOSS]: [permissions.READ, permissions.CREATE],
