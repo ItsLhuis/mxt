@@ -131,7 +131,7 @@ const Client = {
       withCache(
         `client:contacts:${clientId}`,
         async () => {
-          const contactsQuery = "SELECT * FROM client_contacts WHERE client_id = ?"
+          const contactsQuery = "SELECT * FROM client_contacts WHERE client_id = ? ORDER BY created_at_datetime DESC"
           const contacts = await dbQueryExecutor.execute(contactsQuery, [clientId])
 
           const contactsWithDetails = await Promise.all(
@@ -221,7 +221,7 @@ const Client = {
       withCache(
         `client:addresses:${clientId}`,
         async () => {
-          const addressesQuery = "SELECT * FROM client_addresses WHERE client_id = ?"
+          const addressesQuery = "SELECT * FROM client_addresses WHERE client_id = ? ORDER BY created_at_datetime DESC"
           const addresses = await dbQueryExecutor.execute(addressesQuery, [clientId])
 
           const addressesWithDetails = await Promise.all(
