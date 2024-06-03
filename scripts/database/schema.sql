@@ -236,9 +236,9 @@ CREATE INDEX idx_users_created_at ON users (created_at_datetime);
 -- Table clients
 CREATE INDEX idx_clients_created_at ON clients (created_at_datetime);
 CREATE INDEX idx_clients_last_modified ON clients (last_modified_datetime);
-CREATE INDEX idx_client_interactions_created_at ON client_interactions_history (created_at_datetime);
 CREATE INDEX idx_client_contacts_created_at ON client_contacts (created_at_datetime);
 CREATE INDEX idx_client_addresses_created_at ON client_addresses (created_at_datetime);
+CREATE INDEX idx_client_interactions_created_at ON client_interactions_history (created_at_datetime);
 
 -- Table emails
 CREATE INDEX idx_emails_created_at ON emails (created_at_datetime);
@@ -249,4 +249,7 @@ CREATE INDEX idx_smses_created_at ON smses (created_at_datetime);
 -- Table equipments
 CREATE INDEX idx_equipments_created_at ON equipments (created_at_datetime);
 CREATE INDEX idx_equipments_last_modified ON equipments (last_modified_datetime);
+CREATE INDEX idx_equipment_brands_name ON equipment_brands (name);
+CREATE INDEX idx_equipment_models_name ON equipment_models (name);
+CREATE INDEX idx_equipment_types_name ON equipment_types (name);
 CREATE INDEX idx_equipment_interactions_created_at ON equipment_interactions_history (created_at_datetime);
