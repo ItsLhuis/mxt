@@ -30,7 +30,7 @@ const companyController = {
     await Company.update(name, address, city, country, postalCode, phoneNumber, email, logo)
 
     if (req.file && company[0].logo) {
-      const oldLogoPath = path.join("uploads", company[0].logo)
+      const oldLogoPath = path.join(__dirname, "..", "uploads", company[0].logo)
       upload.deleteFile(oldLogoPath)
     }
     res.status(204).json({ message: "Company updated successfully" })

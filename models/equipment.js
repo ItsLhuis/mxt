@@ -284,7 +284,7 @@ const Equipment = {
       const query = "SELECT * FROM equipment_attachments WHERE equipment_id = ?"
       return dbQueryExecutor.execute(query, [equipmentId])
     },
-    findByEquipmentId: async (attachmentId) => {
+    findByAttachmentId: async (attachmentId) => {
       const query = "SELECT * FROM equipment_attachments WHERE id = ?"
       return dbQueryExecutor.execute(query, [attachmentId])
     },

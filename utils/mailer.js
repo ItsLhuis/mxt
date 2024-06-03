@@ -10,8 +10,9 @@ const sendEmail = (companyName, to, subject, text, data, template) => {
   return new Promise((resolve, reject) => {
     const emailTemplatePath = path.join(
       __dirname,
-      "../",
-      "templates/emails",
+      "..",
+      "templates",
+      "emails",
       `${template ? template : "default"}.mjml`
     )
     const mjmlTemplate = fs.readFileSync(emailTemplatePath, "utf-8")

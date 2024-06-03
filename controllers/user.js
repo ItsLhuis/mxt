@@ -207,7 +207,7 @@ const userController = {
     }
 
     if (req.file && existingUser[0].avatar) {
-      const oldAvatarPath = path.join("uploads", existingUser[0].avatar)
+      const oldAvatarPath = path.join(__dirname, "..", "uploads", existingUser[0].avatar)
       upload.deleteFile(oldAvatarPath)
     }
     res.status(204).json({ message: "User updated successfully" })
@@ -268,7 +268,7 @@ const userController = {
     await User.delete(userId)
 
     if (existingUser[0].avatar) {
-      const avatarPath = path.join("uploads", existingUser[0].avatar)
+      const avatarPath = path.join(__dirname, "..", "uploads", existingUser[0].avatar)
       upload.deleteFile(avatarPath)
     }
     res.status(204).json({ message: "User removed successfully" })

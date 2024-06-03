@@ -18,7 +18,7 @@ const imageController = {
 
     const { size, quality, blur } = req.query
 
-    const imagePath = path.join(__dirname, "../../", "uploads/", imageName)
+    const imagePath = path.join(__dirname, "..", "..", "uploads", imageName)
 
     if (fs.existsSync(imagePath)) {
       const options = {

@@ -1,4 +1,7 @@
 const fs = require("fs")
+const path = require("path")
+
+const { PassThrough } = require("stream")
 
 const { produce } = require("immer")
 
@@ -19,6 +22,9 @@ const {
   DUPLICATE_TYPE_NAME
 } = require("@constants/errors/equipment")
 const { CLIENT_NOT_FOUND } = require("@constants/errors/client")
+const { ATTACHMENT_STREAMING_ERROR } = require("@constants/errors/shared/attachment")
+
+const { ATTACHMENT_ERROR_TYPE } = require("@constants/errors/shared/types")
 
 const { EQUIPMENT_CREATED, EQUIPMENT_UPDATED } = require("@constants/interactions/equipment")
 
@@ -469,7 +475,13 @@ const equipmentController = {
         throw new AppError(404, ATTACHMENT_NOT_FOUND, "Attachment not found", true)
       }
 
-      const attachmentFilePath = attachment[0].file
+      const attachmentFilePath = path.join(
+        __dirname,
+        "..",
+        "uploads",
+        "private",
+        attachment[0].file
+      )
 
       if (fs.existsSync(attachmentFilePath)) {
         let readStream = new PassThrough()
@@ -494,10 +506,10 @@ const equipmentController = {
         readStream.on("error", () => {
           throw new AppError(
             500,
-            IMAGE_STREAMING_ERROR,
-            "Image streaming error",
+            ATTACHMENT_STREAMING_ERROR,
+            "Attachment streaming error",
             false,
-            IMAGE_ERROR_TYPE
+            ATTACHMENT_ERROR_TYPE
           )
         })
 
@@ -505,7 +517,13 @@ const equipmentController = {
           res.end()
         })
       } else {
-        throw new AppError(404, ATTACHMENT_NOT_FOUND, "Attachment not found", true)
+        throw new AppError(
+          404,
+          ATTACHMENT_NOT_FOUND,
+          "Attachment not found",
+          false,
+          ATTACHMENT_ERROR_TYPE
+        )
       }
     }),
     findByEquipmentId: tryCatch(async (req, res) => {
@@ -516,7 +534,7 @@ const equipmentController = {
         throw new AppError(404, EQUIPMENT_NOT_FOUND, "Equipment not found", true)
       }
 
-      const attachments = await Equipment.attachment.findByEquipmentId(equipmentId)
+      const attachments = await Equipment.attachment.findByAttachmentId(equipmentId)
       res.status(200).json(attachments)
     }),
     create: tryCatch(async (req, res) => {
@@ -560,6 +578,16 @@ const equipmentController = {
       }
 
       await Equipment.attachment.delete(attachmentId)
+
+      const attachmentFilePath = path.join(
+        __dirname,
+        "..",
+        "uploads",
+        "private",
+        existingAttachment[0].file
+      )
+
+      upload.deleteFile(attachmentFilePath)
       res.status(204).json({ message: "Attachment deleted successfully" })
     })
   }
