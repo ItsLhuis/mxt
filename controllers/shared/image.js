@@ -27,11 +27,12 @@ const imageController = {
         blur: blur ? parseInt(blur) : false
       }
 
-      const processedImageBuffer = await processImage(imagePath, options)
-
       res.setHeader("Content-Type", "image/jpeg")
 
       const readStream = new PassThrough()
+
+      const processedImageBuffer = await processImage(imagePath, options)
+
       readStream.end(processedImageBuffer)
       readStream.pipe(res)
 

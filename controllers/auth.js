@@ -19,7 +19,7 @@ const {
 } = require("@constants/errors/user")
 const { EMAIL_SEND_ERROR } = require("@constants/errors/shared/email")
 
-const { EMAIL_ERROR_TYPE } = require("@constants/errors/shared/types")
+const { AUTHENTICATION_ERROR_TYPE, EMAIL_ERROR_TYPE } = require("@constants/errors/shared/types")
 
 const { SALT_ROUNDS } = require("@constants/bcrypt")
 
@@ -94,7 +94,13 @@ const authController = {
     const refreshToken = req.cookies.refreshToken
 
     if (!refreshToken) {
-      throw new AppError(400, INVALID_REFRESH_TOKEN, "Refresh token is missing", true)
+      throw new AppError(
+        400,
+        INVALID_REFRESH_TOKEN,
+        "Refresh token is missing",
+        false,
+        AUTHENTICATION_ERROR_TYPE
+      )
     }
 
     const newAccessToken = generateAccessToken(refreshToken)

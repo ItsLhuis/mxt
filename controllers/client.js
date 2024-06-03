@@ -29,8 +29,9 @@ const { clientSchema, clientContactSchema, clientAddressSchema } = require("@sch
 
 const clientController = {
   findAll: tryCatch(async (req, res) => {
-    const includeInteractionsHistory = req.user.role !== roles.EMPLOYEE
     const clients = await Client.findAll()
+
+    const includeInteractionsHistory = req.user.role !== roles.EMPLOYEE
 
     const filteredClients = produce(clients, (draft) => {
       if (!includeInteractionsHistory) {
@@ -47,7 +48,7 @@ const clientController = {
 
     const existingClient = await Client.findByClientId(clientId)
     if (existingClient.length <= 0) {
-      throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+      throw new AppError(404, CLIENT_NOT_FOUND, "Client not found", true)
     }
 
     const includeInteractionsHistory = req.user.role !== roles.EMPLOYEE
@@ -83,7 +84,7 @@ const clientController = {
 
     const existingClient = await Client.findByClientId(clientId)
     if (existingClient.length <= 0) {
-      throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+      throw new AppError(404, CLIENT_NOT_FOUND, "Client not found", true)
     }
 
     await Client.update(clientId, name, description, req.user.id)
@@ -111,7 +112,7 @@ const clientController = {
 
     const existingClient = await Client.findByClientId(clientId)
     if (existingClient.length <= 0) {
-      throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+      throw new AppError(404, CLIENT_NOT_FOUND, "Client not found", true)
     }
 
     await Client.delete(clientId)
@@ -123,7 +124,7 @@ const clientController = {
 
       const existingClient = await Client.findByClientId(clientId)
       if (existingClient.length <= 0) {
-        throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+        throw new AppError(404, CLIENT_NOT_FOUND, "Client not found", true)
       }
 
       const contacts = await Client.contact.findByClientId(clientId)
@@ -137,7 +138,7 @@ const clientController = {
 
       const existingClient = await Client.findByClientId(clientId)
       if (existingClient.length <= 0) {
-        throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+        throw new AppError(404, CLIENT_NOT_FOUND, "Client not found", true)
       }
 
       const duplicateContact = await Client.contact.findContactByClientIdAndDetails(
@@ -177,16 +178,16 @@ const clientController = {
 
       const existingClient = await Client.findByClientId(clientId)
       if (existingClient.length <= 0) {
-        throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+        throw new AppError(404, CLIENT_NOT_FOUND, "Client not found", true)
       }
 
       const existingContact = await Client.contact.findByContactId(contactId)
       if (existingContact.length <= 0) {
-        throw new AppError(400, CONTACT_NOT_FOUND, "Contact not found", true)
+        throw new AppError(404, CONTACT_NOT_FOUND, "Contact not found", true)
       }
 
       if (existingContact[0].client_id !== Number(clientId)) {
-        throw new AppError(400, CONTACT_NOT_FOUND, "Contact not found", true)
+        throw new AppError(404, CONTACT_NOT_FOUND, "Contact not found", true)
       }
 
       const duplicateContact = await Client.contact.findContactByClientIdAndDetails(
@@ -240,16 +241,16 @@ const clientController = {
 
       const existingClient = await Client.findByClientId(clientId)
       if (existingClient.length <= 0) {
-        throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+        throw new AppError(404, CLIENT_NOT_FOUND, "Client not found", true)
       }
 
       const existingContact = await Client.contact.findByContactId(contactId)
       if (existingContact.length <= 0) {
-        throw new AppError(400, CONTACT_NOT_FOUND, "Contact not found", true)
+        throw new AppError(404, CONTACT_NOT_FOUND, "Contact not found", true)
       }
 
       if (existingContact[0].client_id !== clientId) {
-        throw new AppError(400, CONTACT_NOT_FOUND, "Contact not found", true)
+        throw new AppError(404, CONTACT_NOT_FOUND, "Contact not found", true)
       }
 
       await Client.contact.delete(clientId, contactId)
@@ -284,7 +285,7 @@ const clientController = {
 
       const existingClient = await Client.findByClientId(clientId)
       if (existingClient.length <= 0) {
-        throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+        throw new AppError(404, CLIENT_NOT_FOUND, "Client not found", true)
       }
 
       const addresses = await Client.address.findByClientId(clientId)
@@ -298,7 +299,7 @@ const clientController = {
 
       const existingClient = await Client.findByClientId(clientId)
       if (existingClient.length <= 0) {
-        throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+        throw new AppError(404, CLIENT_NOT_FOUND, "Client not found", true)
       }
 
       const duplicateAddress = await Client.address.findAddressByClientIdAndDetails(
@@ -348,16 +349,16 @@ const clientController = {
 
       const existingClient = await Client.findByClientId(clientId)
       if (existingClient.length <= 0) {
-        throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+        throw new AppError(404, CLIENT_NOT_FOUND, "Client not found", true)
       }
 
       const existingAddress = await Client.address.findByAddressId(addressId)
       if (existingAddress.length <= 0) {
-        throw new AppError(400, ADDRESS_NOT_FOUND, "Address not found", true)
+        throw new AppError(404, ADDRESS_NOT_FOUND, "Address not found", true)
       }
 
       if (existingAddress[0].client_id !== Number(clientId)) {
-        throw new AppError(400, CONTACT_NOT_FOUND, "Address not found", true)
+        throw new AppError(404, CONTACT_NOT_FOUND, "Address not found", true)
       }
 
       const duplicateAddress = await Client.address.findAddressByClientIdAndDetails(
@@ -435,12 +436,12 @@ const clientController = {
 
       const existingClient = await Client.findByClientId(clientId)
       if (existingClient.length <= 0) {
-        throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+        throw new AppError(404, CLIENT_NOT_FOUND, "Client not found", true)
       }
 
       const existingAddress = await Client.address.findByAddressId(addressId)
       if (existingAddress.length <= 0) {
-        throw new AppError(400, ADDRESS_NOT_FOUND, "Address not found", true)
+        throw new AppError(404, ADDRESS_NOT_FOUND, "Address not found", true)
       }
 
       await Client.address.delete(clientId, addressId)
@@ -483,7 +484,7 @@ const clientController = {
 
       const existingClient = await Client.findByClientId(clientId)
       if (existingClient.length <= 0) {
-        throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+        throw new AppError(404, CLIENT_NOT_FOUND, "Client not found", true)
       }
 
       const interactionsHistory = await Client.interactionsHistory.findByClientId(clientId)

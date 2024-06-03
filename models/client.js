@@ -20,7 +20,7 @@ const Client = {
         LEFT JOIN client_contacts cc ON c.id = cc.client_id
         LEFT JOIN client_addresses ca ON c.id = ca.client_id
         GROUP BY c.id
-        ORDER BY last_modified DESC, c.created_at_datetime DESC;
+        ORDER BY last_modified DESC, c.created_at_datetime DESC
     `
     const clients = await dbQueryExecutor.execute(clientsQuery)
 

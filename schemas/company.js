@@ -5,13 +5,13 @@ const { POSTAL_CODE_REGEX } = require("@constants/regexes")
 
 const companySchema = z
   .object({
-    name: z.string().max(255),
-    address: z.string().max(255),
-    city: z.string().max(255),
-    country: z.string().max(255),
-    postalCode: z.string().max(20).regex(POSTAL_CODE_REGEX),
-    phoneNumber: z.string().max(20),
-    email: z.string().email()
+    name: z.string().max(255).trim(),
+    address: z.string().max(255).trim(),
+    city: z.string().max(255).trim(),
+    country: z.string().max(255).trim(),
+    postalCode: z.string().max(20).regex(POSTAL_CODE_REGEX).trim(),
+    phoneNumber: z.string().max(20).trim(),
+    email: z.string().email().trim()
   })
   .refine(
     (data) => {

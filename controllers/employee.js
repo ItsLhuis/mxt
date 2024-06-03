@@ -41,7 +41,7 @@ const employeeController = {
 
     const existingUser = await Employee.findByUserId(userId)
     if (existingUser.length <= 0) {
-      throw new AppError(400, USER_NOT_FOUND, "User not found", true)
+      throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
 
     res.status(200).json(existingUser)
@@ -55,7 +55,7 @@ const employeeController = {
 
     const existingUser = await Employee.findByUserId(userId)
     if (existingUser.length <= 0) {
-      throw new AppError(400, USER_NOT_FOUND, "User not found", true)
+      throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
 
     await Employee.update(

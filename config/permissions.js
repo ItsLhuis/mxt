@@ -43,5 +43,34 @@ module.exports = {
       [roles.BOSS]: [permissions.READ],
       [roles.ADMIN]: [permissions.READ]
     }
+  },
+  equipment: {
+    [roles.BOSS]: [permissions.ALL],
+    [roles.ADMIN]: [permissions.ALL],
+    [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE],
+    brand: {
+      [roles.BOSS]: [permissions.ALL],
+      [roles.ADMIN]: [permissions.ALL],
+      [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE]
+    },
+    model: {
+      [roles.BOSS]: [permissions.ALL],
+      [roles.ADMIN]: [permissions.ALL],
+      [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE]
+    },
+    type: {
+      [roles.BOSS]: [permissions.ALL],
+      [roles.ADMIN]: [permissions.ALL],
+      [roles.EMPLOYEE]: [permissions.READ]
+    },
+    attachment: {
+      [roles.BOSS]: [permissions.ALL],
+      [roles.ADMIN]: [permissions.ALL],
+      [roles.EMPLOYEE]: [permissions.READ]
+    },
+    interactionsHistory: {
+      [roles.BOSS]: [permissions.READ],
+      [roles.ADMIN]: [permissions.READ]
+    }
   }
 }

@@ -28,16 +28,16 @@ const emailController = {
 
     const existingClient = await Client.findByClientId(clientId)
     if (existingClient.length <= 0) {
-      throw new AppError(400, CLIENT_NOT_FOUND, "Client not found", true)
+      throw new AppError(404, CLIENT_NOT_FOUND, "Client not found", true)
     }
 
     const existingContact = await Client.contact.findByContactId(contactId)
     if (existingContact.length <= 0) {
-      throw new AppError(400, CONTACT_NOT_FOUND, "Contact not found", true)
+      throw new AppError(404, CONTACT_NOT_FOUND, "Contact not found", true)
     }
 
     if (existingContact[0].client_id !== Number(clientId)) {
-      throw new AppError(400, CONTACT_NOT_FOUND, "Contact not found", true)
+      throw new AppError(404, CONTACT_NOT_FOUND, "Contact not found", true)
     }
 
     if (existingContact[0].type !== "E-mail") {
