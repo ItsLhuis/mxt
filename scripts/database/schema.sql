@@ -147,13 +147,13 @@ CREATE TABLE IF NOT EXISTS smses (
 -- Table equipment_brands
 CREATE TABLE IF NOT EXISTS equipment_brands (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL UNIQUE
-);
-
--- Table equipment_types
-CREATE TABLE IF NOT EXISTS equipment_types (
-    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL UNIQUE
+    name VARCHAR(255) NOT NULL UNIQUE,
+    created_by_user_id INT,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    last_modified_by_user_id INT,
+    last_modified_datetime TIMESTAMP NULL,
+    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 -- Table equipment_models
@@ -161,8 +161,26 @@ CREATE TABLE IF NOT EXISTS equipment_models (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     brand_id INT NOT NULL,
     name VARCHAR(255) NOT NULL,
+    created_by_user_id INT,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    last_modified_by_user_id INT,
+    last_modified_datetime TIMESTAMP NULL,
     FOREIGN KEY (brand_id) REFERENCES equipment_brands(id) ON DELETE CASCADE,
+    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
     UNIQUE (brand_id, name)
+);
+
+-- Table equipment_types
+CREATE TABLE IF NOT EXISTS equipment_types (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    created_by_user_id INT,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    last_modified_by_user_id INT,
+    last_modified_datetime TIMESTAMP NULL,
+    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 -- Table equipments
