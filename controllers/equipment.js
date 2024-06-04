@@ -26,7 +26,12 @@ const { ATTACHMENT_STREAMING_ERROR } = require("@constants/errors/shared/attachm
 
 const { ATTACHMENT_ERROR_TYPE } = require("@constants/errors/shared/types")
 
-const { EQUIPMENT_CREATED, EQUIPMENT_UPDATED } = require("@constants/interactions/equipment")
+const {
+  EQUIPMENT_CREATED,
+  EQUIPMENT_UPDATED,
+  EQUIPMENT_ATTACHMENT_CREATED,
+  EQUIPMENT_ATTACHMENT_DELETED
+} = require("@constants/interactions/equipment")
 
 const roles = require("@constants/roles")
 
@@ -552,16 +557,33 @@ const equipmentController = {
 
       const createAllAttachments = files.map((file) => {
         const type = file.mimetype.startsWith("image/") ? "image" : "document"
-        return Equipment.attachment.create(
-          equipmentId,
-          file.path,
-          file.originalname,
-          type,
-          req.user.id
-        )
+        return Equipment.attachment
+          .create(equipmentId, file.path, file.originalname, type, req.user.id)
+          .then((result) => ({
+            insertId: result.insertId,
+            file: file
+          }))
       })
 
-      await Promise.all(createAllAttachments)
+      const attachments = await Promise.all(createAllAttachments)
+
+      const changes = [
+        {
+          field: "Anexos",
+          after: attachments.map((result) => ({
+            id: result.insertId,
+            original_filename: result.file.originalname,
+            type: result.file.mimetype.startsWith("image/") ? "image" : "document"
+          }))
+        }
+      ]
+
+      await createInteractionHistory(
+        existingEquipment[0].id,
+        EQUIPMENT_ATTACHMENT_CREATED,
+        changes,
+        req.user.id
+      )
       res.status(201).json({ message: "Attachments added successfully" })
     }),
     delete: tryCatch(async (req, res) => {
@@ -588,6 +610,24 @@ const equipmentController = {
       )
 
       upload.deleteFile(attachmentFilePath)
+
+      const changes = [
+        {
+          field: "Anexos",
+          before: {
+            id: existingAttachment[0].id,
+            original_filename: existingAttachment[0].original_filename,
+            type: existingAttachment[0].type
+          }
+        }
+      ]
+
+      await createInteractionHistory(
+        existingEquipment[0].id,
+        EQUIPMENT_ATTACHMENT_DELETED,
+        changes,
+        req.user.id
+      )
       res.status(204).json({ message: "Attachment deleted successfully" })
     })
   }
