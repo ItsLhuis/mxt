@@ -6,22 +6,7 @@ const permissions = require("@constants/permissions")
 const equipmentController = require("@controllers/equipment")
 
 router
-  .route("/")
-  .get(checkPermissionHandler("equipment", permissions.READ), equipmentController.findAll)
-  .post(checkPermissionHandler("equipment", permissions.CREATE), equipmentController.create)
-
-router
-  .route("/:equipmentId")
-  .get(checkPermissionHandler("equipment", permissions.READ), equipmentController.findByEquipmentId)
-  .put(checkPermissionHandler("equipment", permissions.UPDATE), equipmentController.update)
-  .delete(checkPermissionHandler("equipment", permissions.DELETE), equipmentController.delete)
-
-router
-  .route("/:equipmentId/client")
-  .put(checkPermissionHandler("equipment", permissions.UPDATE), equipmentController.updateClientId)
-
-router
-  .route("/brand")
+  .route("/brands")
   .get(
     checkPermissionHandler("equipment.brand", permissions.READ),
     equipmentController.brand.findAll
@@ -32,7 +17,7 @@ router
   )
 
 router
-  .route("/brand/:brandId")
+  .route("/brands/:brandId")
   .get(
     checkPermissionHandler("equipment.brand", permissions.READ),
     equipmentController.brand.findByBrandId
@@ -47,7 +32,7 @@ router
   )
 
 router
-  .route("/model")
+  .route("/models")
   .get(
     checkPermissionHandler("equipment.model", permissions.READ),
     equipmentController.model.findAll
@@ -58,7 +43,7 @@ router
   )
 
 router
-  .route("/model/:modelId")
+  .route("/models/:modelId")
   .get(
     checkPermissionHandler("equipment.model", permissions.READ),
     equipmentController.model.findByModelId
@@ -73,7 +58,7 @@ router
   )
 
 router
-  .route("/type")
+  .route("/types")
   .get(checkPermissionHandler("equipment.type", permissions.READ), equipmentController.type.findAll)
   .post(
     checkPermissionHandler("equipment.type", permissions.CREATE),
@@ -81,7 +66,7 @@ router
   )
 
 router
-  .route("/type/:typeId")
+  .route("/types/:typeId")
   .get(
     checkPermissionHandler("equipment.type", permissions.READ),
     equipmentController.type.findByTypeId
@@ -94,6 +79,21 @@ router
     checkPermissionHandler("equipment.type", permissions.DELETE),
     equipmentController.type.delete
   )
+
+router
+  .route("/")
+  .get(checkPermissionHandler("equipment", permissions.READ), equipmentController.findAll)
+  .post(checkPermissionHandler("equipment", permissions.CREATE), equipmentController.create)
+
+router
+  .route("/:equipmentId")
+  .get(checkPermissionHandler("equipment", permissions.READ), equipmentController.findByEquipmentId)
+  .put(checkPermissionHandler("equipment", permissions.UPDATE), equipmentController.update)
+  .delete(checkPermissionHandler("equipment", permissions.DELETE), equipmentController.delete)
+
+router
+  .route("/:equipmentId/client")
+  .put(checkPermissionHandler("equipment", permissions.UPDATE), equipmentController.updateClientId)
 
 router
   .route("/:equipmentId/attachments")
