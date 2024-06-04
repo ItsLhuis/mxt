@@ -6,7 +6,7 @@ const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
 const mailer = require("@utils/mailer")
-const getImageUrl = require("@utils/getImageUrl")
+const getPublicImageUrl = require("@utils/getPublicImageUrl")
 
 const { PERMISSION_DENIED } = require("@constants/errors/permission")
 const {
@@ -129,7 +129,7 @@ const userController = {
         "Bem Vindo",
         `Seja muito bem vindo à ${companyDetails.name}`,
         {
-          companyLogo: `${getImageUrl(req, companyDetails.logo)}?size=100`,
+          companyLogo: `${getPublicImageUrl(req, companyDetails.logo)}?size=100`,
           title: "Bem Vindo",
           message: `Seja muito bem-vindo(a) à ${
             companyDetails.name
@@ -163,6 +163,37 @@ const userController = {
 
     updateUserSchema.parse(req.body)
 
+    const isCurrentUser = req.user.id === Number(userId)
+
+    if (!isCurrentUser) {
+      const currentUserRole = req.user.role
+
+      if (
+        role &&
+        ((currentUserRole === roles.BOSS && role === roles.BOSS) ||
+          (currentUserRole === roles.ADMIN &&
+            (role !== roles.EMPLOYEE || role === roles.ADMIN || role === roles.BOSS)))
+      ) {
+        throw new AppError(
+          403,
+          PERMISSION_DENIED,
+          "You don't have permission to perform this action",
+          true,
+          PERMISSION_DENIED_ERROR_TYPE
+        )
+      }
+    } else {
+      if (role || isActive !== undefined) {
+        throw new AppError(
+          403,
+          PERMISSION_DENIED,
+          "You don't have permission to change your own role or active status",
+          true,
+          PERMISSION_DENIED_ERROR_TYPE
+        )
+      }
+    }
+
     const existingUser = await User.findByUserId(userId)
     if (existingUser.length <= 0) {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
@@ -185,26 +216,14 @@ const userController = {
       avatar = existingUser[0].avatar
     }
 
-    const isCurrentUser = req.user.id === parseInt(userId)
-    if (!isCurrentUser) {
-      await User.update(
-        userId,
-        username,
-        email,
-        avatar,
-        role ?? existingUser[0].role,
-        isActive ?? existingUser[0].is_active
-      )
-    } else {
-      await User.update(
-        userId,
-        username,
-        email,
-        avatar,
-        existingUser[0].role,
-        existingUser[0].is_active
-      )
-    }
+    await User.update(
+      userId,
+      username,
+      email,
+      avatar,
+      isCurrentUser ? existingUser[0].role : role ?? existingUser[0].role,
+      isCurrentUser ? existingUser[0].is_active : isActive ?? existingUser[0].is_active
+    )
 
     if (req.file && existingUser[0].avatar) {
       const oldAvatarPath = path.join(__dirname, "..", "uploads", existingUser[0].avatar)
