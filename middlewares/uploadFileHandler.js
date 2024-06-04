@@ -59,6 +59,7 @@ const memoryStorage = multer.memoryStorage()
 
 const multerUploadAttachment = multer({
   storage: memoryStorage,
+  limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const VALID_ATTACHMENT_EXTENSIONS = [".jpeg", ".jpg", ".png", ".pdf"]
     const extension = path.extname(file.originalname).toLowerCase()
@@ -81,7 +82,7 @@ const multerUploadAttachment = multer({
 
 const multerUploadImage = multer({
   storage: memoryStorage,
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const VALID_IMAGE_EXTENSIONS = [".jpeg", ".jpg", ".png"]
     const extension = path.extname(file.originalname).toLowerCase()
