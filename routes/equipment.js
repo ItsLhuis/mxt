@@ -58,6 +58,13 @@ router
   )
 
 router
+  .route("/models/brands/:brandId")
+  .get(
+    checkPermissionHandler("equipment.model", permissions.READ),
+    equipmentController.model.findByBrandId
+  )
+
+router
   .route("/types")
   .get(checkPermissionHandler("equipment.type", permissions.READ), equipmentController.type.findAll)
   .post(
