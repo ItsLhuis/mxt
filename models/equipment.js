@@ -27,7 +27,7 @@ const Equipment = {
           lastModifiedByUser,
           attachments
         ] = await Promise.all([
-          Client.contact.findByClientId(equipment.client_id),
+          Client.findByClientId(equipment.client_id),
           Equipment.brand.findByBrandId(equipment.brand_id),
           Equipment.model.findByModelId(equipment.model_id),
           Equipment.type.findByTypeId(equipment.type_id),
@@ -87,16 +87,16 @@ const Equipment = {
           lastModifiedByUser,
           attachments
         ] = await Promise.all([
-          Client.contact.findByClientId(equipment.client_id),
-          Equipment.brand.findByBrandId(equipment.brand_id),
-          Equipment.model.findByModelId(equipment.model_id),
-          Equipment.type.findByTypeId(equipment.type_id),
-          Equipment.interactionsHistory.findByEquipmentId(equipment.id),
-          User.findByUserId(equipment.created_by_user_id),
-          equipment.last_modified_by_user_id
-            ? User.findByUserId(equipment.last_modified_by_user_id)
+          Client.findByClientId(equipment[0].client_id),
+          Equipment.brand.findByBrandId(equipment[0].brand_id),
+          Equipment.model.findByModelId(equipment[0].model_id),
+          Equipment.type.findByTypeId(equipment[0].type_id),
+          Equipment.interactionsHistory.findByEquipmentId(equipment[0].id),
+          User.findByUserId(equipment[0].created_by_user_id),
+          equipment[0].last_modified_by_user_id
+            ? User.findByUserId(equipment[0].last_modified_by_user_id)
             : Promise.resolve(null),
-          Equipment.attachment.findAllByEquipmentId(equipmentId)
+          Equipment.attachment.findAllByEquipmentId(equipment[0].id)
         ])
 
         const equipmentWithDetails = {
@@ -126,6 +126,18 @@ const Equipment = {
       },
       memoryOnlyCache
     )(),
+  findByBrandId: async (brandId) => {
+    const query = "SELECT * FROM equipments WHERE brand_id = ?"
+    return dbQueryExecutor.execute(query, [brandId])
+  },
+  findByModelId: async (brandId) => {
+    const query = "SELECT * FROM equipments WHERE brand_id = ?"
+    return dbQueryExecutor.execute(query, [brandId])
+  },
+  findByTypeId: async (brandId) => {
+    const query = "SELECT * FROM equipments WHERE brand_id = ?"
+    return dbQueryExecutor.execute(query, [brandId])
+  },
   create: (clientId, brandId, modelId, typeId, sn, description, createdByUserId) => {
     const query = `
       INSERT INTO equipments (client_id, brand_id, model_id, type_id, sn, description, created_by_user_id, created_at_datetime) 
@@ -194,13 +206,29 @@ const Equipment = {
         "UPDATE equipment_brands SET name = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
       return dbQueryExecutor
         .execute(query, [name, lastModifiedByUserId, brandId])
-        .then((result) => {
+        .then(async (result) => {
+          const allEquipmentsByBrandId = await Equipment.findByBrandId(brandId)
+
+          if (allEquipmentsByBrandId || allEquipmentsByBrandId.length > 0) {
+            allEquipmentsByBrandId.map((equipment) => {
+              return revalidateCache(["equipments", `equipment:${equipment.id}`])
+            })
+          }
+
           return revalidateCache("equipmentBrands").then(() => result)
         })
     },
     delete: (brandId) => {
       const query = "DELETE FROM equipment_brands WHERE id = ?"
-      return dbQueryExecutor.execute(query, [brandId]).then((result) => {
+      return dbQueryExecutor.execute(query, [brandId]).then(async (result) => {
+        const allEquipmentsByBrandId = await Equipment.findByBrandId(brandId)
+
+        if (allEquipmentsByBrandId || allEquipmentsByBrandId.length > 0) {
+          allEquipmentsByBrandId.map((equipment) => {
+            return revalidateCache(["equipments", `equipment:${equipment.id}`])
+          })
+        }
+
         return revalidateCache("equipmentBrands").then(() => result)
       })
     }
@@ -234,13 +262,29 @@ const Equipment = {
         "UPDATE equipment_models SET brand_id = ?, name = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
       return dbQueryExecutor
         .execute(query, [brandId, name, lastModifiedByUserId, modelId])
-        .then((result) => {
+        .then(async (result) => {
+          const allEquipmentsByModelId = await Equipment.findByModelId(modelId)
+
+          if (allEquipmentsByModelId || allEquipmentsByModelId.length > 0) {
+            allEquipmentsByModelId.map((equipment) => {
+              return revalidateCache(["equipments", `equipment:${equipment.id}`])
+            })
+          }
+
           return revalidateCache("equipmentModels").then(() => result)
         })
     },
     delete: (modelId) => {
       const query = "DELETE FROM equipment_models WHERE id = ?"
-      return dbQueryExecutor.execute(query, [modelId]).then((result) => {
+      return dbQueryExecutor.execute(query, [modelId]).then(async (result) => {
+        const allEquipmentsByModelId = await Equipment.findByModelId(modelId)
+
+        if (allEquipmentsByModelId || allEquipmentsByModelId.length > 0) {
+          allEquipmentsByModelId.map((equipment) => {
+            return revalidateCache(["equipments", `equipment:${equipment.id}`])
+          })
+        }
+
         return revalidateCache("equipmentModels").then(() => result)
       })
     }
@@ -258,23 +302,41 @@ const Equipment = {
       const query = "SELECT * FROM equipment_types WHERE name = ?"
       return dbQueryExecutor.execute(query, [name])
     },
-    create: (name) => {
+    create: (name, createdByUserId) => {
       const query =
         "INSERT INTO equipment_types (name, created_by_user_id, created_at_datetime) VALUES (?, ?, NOW())"
-      return dbQueryExecutor.execute(query, [name]).then((result) => {
+      return dbQueryExecutor.execute(query, [name, createdByUserId]).then((result) => {
         return revalidateCache("equipmentTypes").then(() => result)
       })
     },
     update: (typeId, name, lastModifiedByUserId) => {
       const query =
         "UPDATE equipment_types SET name = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
-      return dbQueryExecutor.execute(query, [name, lastModifiedByUserId, typeId]).then((result) => {
-        return revalidateCache("equipmentTypes").then(() => result)
-      })
+      return dbQueryExecutor
+        .execute(query, [name, lastModifiedByUserId, typeId])
+        .then(async (result) => {
+          const allEquipmentsByTypeId = await Equipment.findByTypeId(typeId)
+
+          if (allEquipmentsByTypeId || allEquipmentsByTypeId.length > 0) {
+            allEquipmentsByTypeId.map((equipment) => {
+              return revalidateCache(["equipments", `equipment:${equipment.id}`])
+            })
+          }
+
+          return revalidateCache("equipmentTypes").then(() => result)
+        })
     },
     delete: (typeId) => {
       const query = "DELETE FROM equipment_types WHERE id = ?"
-      return dbQueryExecutor.execute(query, [typeId]).then((result) => {
+      return dbQueryExecutor.execute(query, [typeId]).then(async (result) => {
+        const allEquipmentsByTypeId = await Equipment.findByTypeId(typeId)
+
+        if (allEquipmentsByTypeId || allEquipmentsByTypeId.length > 0) {
+          allEquipmentsByTypeId.map((equipment) => {
+            return revalidateCache(["equipments", `equipment:${equipment.id}`])
+          })
+        }
+
         return revalidateCache("equipmentTypes").then(() => result)
       })
     }
@@ -291,17 +353,17 @@ const Equipment = {
     create: async (equipmentId, file, originalFilename, type, uploadedByUserId) => {
       const query =
         "INSERT INTO equipment_attachments (equipment_id, file, original_filename, type, uploaded_by_user_id) VALUES (?, ?, ?, ?, ?)"
-      return dbQueryExecutor.execute(query, [
-        equipmentId,
-        file,
-        originalFilename,
-        type,
-        uploadedByUserId
-      ])
+      return dbQueryExecutor
+        .execute(query, [equipmentId, file, originalFilename, type, uploadedByUserId])
+        .then((result) => {
+          return revalidateCache(["equipments", `equipment:${equipmentId}`]).then(() => result)
+        })
     },
-    delete: async (attachmentId) => {
+    delete: async (equipmentId, attachmentId) => {
       const query = "DELETE FROM equipment_attachments WHERE id = ?"
-      return dbQueryExecutor.execute(query, [attachmentId])
+      return dbQueryExecutor.execute(query, [attachmentId]).then((result) => {
+        return revalidateCache(["equipments", `equipment:${equipmentId}`]).then(() => result)
+      })
     }
   },
   interactionsHistory: {

@@ -81,7 +81,7 @@ const equipmentController = {
       }
     })
 
-    res.status(200).json(filteredEquipment)
+    res.status(200).json([filteredEquipment])
   }),
   create: tryCatch(async (req, res) => {
     const { clientId, brandId, modelId, typeId, sn, description } = req.body
@@ -599,7 +599,7 @@ const equipmentController = {
         throw new AppError(404, ATTACHMENT_NOT_FOUND, "Attachment not found", true)
       }
 
-      await Equipment.attachment.delete(attachmentId)
+      await Equipment.attachment.delete(equipmentId, attachmentId)
 
       const attachmentFilePath = path.join(
         __dirname,
