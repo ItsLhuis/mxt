@@ -121,4 +121,10 @@ router
     equipmentController.attachment.delete
   )
 
+router.get(
+  "/:equipmentId/interactionsHistory",
+  checkPermissionHandler("equipment.interactionsHistory", permissions.READ),
+  equipmentController.interactionsHistory.findByEquipmentId
+)
+
 module.exports = router

@@ -5,7 +5,7 @@ const { MulterError } = require("multer")
 const {
   INTERNAL_SERVER_ERROR_TYPE,
   VALIDATION_ERROR_TYPE,
-  IMAGE_ERROR_TYPE
+  FILE_ERROR_TYPE
 } = require("@constants/errors/shared/types")
 
 const errorHandler = (error, req, res, next) => {
@@ -34,7 +34,7 @@ const errorHandler = (error, req, res, next) => {
   if (error instanceof MulterError) {
     return res.status(500).json({
       error: {
-        type: IMAGE_ERROR_TYPE,
+        type: FILE_ERROR_TYPE,
         message: error.message,
         field: error.field,
         isOperational: false

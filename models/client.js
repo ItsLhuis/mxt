@@ -368,11 +368,13 @@ const Client = {
               return {
                 id: interaction.id,
                 client_id: interaction.client_id,
-                created_at_datetime: interaction.created_at_datetime,
                 type: interaction.type,
                 details: JSON.parse(interaction.details),
                 responsible_user:
-                  responsibleUser && responsibleUser.length > 0 ? mapUser(responsibleUser[0]) : null
+                  responsibleUser && responsibleUser.length > 0
+                    ? mapUser(responsibleUser[0])
+                    : null,
+                created_at_datetime: interaction.created_at_datetime
               }
             })
           )

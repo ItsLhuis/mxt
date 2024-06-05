@@ -1,6 +1,6 @@
 const dbQueryExecutor = require("@utils/dbQueryExecutor")
 
-const { withCache, revalidateCache, memoryOnlyCache } = require("@utils/cache")
+const { withCache, revalidateCache, clearAllCaches, memoryOnlyCache } = require("@utils/cache")
 
 const User = {
   findAll: withCache("users", async () => {
@@ -116,30 +116,25 @@ const User = {
     return dbQueryExecutor
       .execute(query, [username, email, avatar, role, isActive, userId])
       .then((result) => {
-        return revalidateCache(["users", `user:${userId}`]).then(() => result)
+        return clearAllCaches().then(() => result)
       })
   },
   updatePassword: (userId, password) => {
     const query = "UPDATE users SET password = ? WHERE id = ?"
     return dbQueryExecutor.execute(query, [password, userId]).then((result) => {
-      return revalidateCache(["users", `user:${userId}`]).then(() => result)
+      return clearAllCaches().then(() => result)
     })
   },
   updatePasswordByEmail: (email, password) => {
     const query = "UPDATE users SET password = ? WHERE email = ?"
     return dbQueryExecutor.execute(query, [password, email]).then(async (result) => {
-      const user = await User.findByEmail(email)
-      const userId = user[0].id
-
-      return revalidateCache(["users", userId && `user:${userId}`].filter(Boolean)).then(
-        () => result
-      )
+      return clearAllCaches().then(() => result)
     })
   },
   delete: (userId) => {
     const query = "DELETE FROM users WHERE id = ?"
     return dbQueryExecutor.execute(query, [userId]).then((result) => {
-      return revalidateCache(["users", `user:${userId}`, `employee:${userId}`]).then(() => result)
+      return clearAllCaches().then(() => result)
     })
   },
   otpCode: {

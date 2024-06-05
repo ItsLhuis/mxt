@@ -26,7 +26,6 @@ const brandSchema = z.object({
 })
 
 const modelSchema = z.object({
-  brandId: z.number(),
   name: z.string().max(255).trim()
 })
 

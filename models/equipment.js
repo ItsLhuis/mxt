@@ -130,13 +130,13 @@ const Equipment = {
     const query = "SELECT * FROM equipments WHERE brand_id = ?"
     return dbQueryExecutor.execute(query, [brandId])
   },
-  findByModelId: async (brandId) => {
-    const query = "SELECT * FROM equipments WHERE brand_id = ?"
-    return dbQueryExecutor.execute(query, [brandId])
+  findByModelId: async (modelId) => {
+    const query = "SELECT * FROM equipments WHERE model_id = ?"
+    return dbQueryExecutor.execute(query, [modelId])
   },
-  findByTypeId: async (brandId) => {
-    const query = "SELECT * FROM equipments WHERE brand_id = ?"
-    return dbQueryExecutor.execute(query, [brandId])
+  findByTypeId: async (typeId) => {
+    const query = "SELECT * FROM equipments WHERE type_id = ?"
+    return dbQueryExecutor.execute(query, [typeId])
   },
   create: (clientId, brandId, modelId, typeId, sn, description, createdByUserId) => {
     const query = `
@@ -183,13 +183,68 @@ const Equipment = {
   },
   brand: {
     findAll: withCache("equipmentBrands", async () => {
-      const query = "SELECT * FROM equipment_brands ORDER BY name"
-      return dbQueryExecutor.execute(query)
+      const brandsQuery = "SELECT * FROM equipment_brands ORDER BY name"
+      const brands = await dbQueryExecutor.execute(brandsQuery)
+
+      const brandsWithDetails = await Promise.all(
+        brands.map(async (brand) => {
+          const [createdByUser, lastModifiedByUser] = await Promise.all([
+            User.findByUserId(brand.created_by_user_id),
+            brand.last_modified_by_user_id
+              ? User.findByUserId(brand.last_modified_by_user_id)
+              : null
+          ])
+
+          return {
+            id: brand.id,
+            name: brand.name,
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: brand.created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: brand.last_modified_datetime
+          }
+        })
+      )
+
+      return brandsWithDetails
     }),
-    findByBrandId: async (brandId) => {
-      const query = "SELECT * FROM equipment_brands WHERE id = ?"
-      return dbQueryExecutor.execute(query, [brandId])
-    },
+    findByBrandId: async (brandId) =>
+      withCache(
+        `equipmentBrand:${brandId}`,
+        async () => {
+          const brandQuery = "SELECT * FROM equipment_brands WHERE id = ?"
+          const brand = await dbQueryExecutor.execute(brandQuery, [brandId])
+
+          if (!brand || brand.length <= 0) {
+            return []
+          }
+
+          const [createdByUser, lastModifiedByUser] = await Promise.all([
+            User.findByUserId(brand[0].created_by_user_id),
+            brand[0].last_modified_by_user_id
+              ? User.findByUserId(brand[0].last_modified_by_user_id)
+              : null
+          ])
+
+          const brandWithDetails = {
+            id: brand[0].id,
+            name: brand[0].name,
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: brand[0].created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: brand[0].last_modified_datetime
+          }
+
+          return [brandWithDetails]
+        },
+        memoryOnlyCache
+      )(),
     findByName: async (name) => {
       const query = "SELECT * FROM equipment_brands WHERE name = ?"
       return dbQueryExecutor.execute(query, [name])
@@ -235,17 +290,117 @@ const Equipment = {
   },
   model: {
     findAll: withCache("equipmentModels", async () => {
-      const query = "SELECT * FROM equipment_models ORDER BY name"
-      return dbQueryExecutor.execute(query)
+      const modelsQuery = "SELECT * FROM equipment_models ORDER BY name"
+      const models = await dbQueryExecutor.execute(modelsQuery)
+
+      const modelsWithDetails = await Promise.all(
+        models.map(async (model) => {
+          const [createdByUser, lastModifiedByUser, brand] = await Promise.all([
+            User.findByUserId(model.created_by_user_id),
+            model.last_modified_by_user_id
+              ? User.findByUserId(model.last_modified_by_user_id)
+              : null,
+            Equipment.brand.findByBrandId(model.brand_id)
+          ])
+
+          return {
+            id: model.id,
+            name: model.name,
+            brand: {
+              id: brand[0].id,
+              name: brand[0].name
+            },
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: model.created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: model.last_modified_datetime
+          }
+        })
+      )
+
+      return modelsWithDetails
     }),
-    findByModelId: async (modelId) => {
-      const query = "SELECT * FROM equipment_models WHERE id = ?"
-      return dbQueryExecutor.execute(query, [modelId])
-    },
-    findByBrandId: async (brandId) => {
-      const query = "SELECT * FROM equipment_models WHERE brand_id = ? ORDER BY name"
-      return dbQueryExecutor.execute(query, [brandId])
-    },
+    findByModelId: async (modelId) =>
+      withCache(
+        `equipmentModel:${modelId}`,
+        async () => {
+          const modelQuery = "SELECT * FROM equipment_models WHERE id = ?"
+          const model = await dbQueryExecutor.execute(modelQuery, [modelId])
+
+          if (!model || model.length <= 0) {
+            return []
+          }
+
+          const [createdByUser, lastModifiedByUser, brand] = await Promise.all([
+            User.findByUserId(model[0].created_by_user_id),
+            model[0].last_modified_by_user_id
+              ? User.findByUserId(model[0].last_modified_by_user_id)
+              : null,
+            Equipment.brand.findByBrandId(model[0].brand_id)
+          ])
+
+          const modelWithDetails = {
+            id: model[0].id,
+            name: model[0].name,
+            brand: {
+              id: brand[0].id,
+              name: brand[0].name
+            },
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: model[0].created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: model[0].last_modified_datetime
+          }
+
+          return [modelWithDetails]
+        },
+        memoryOnlyCache
+      )(),
+    findByBrandId: async (brandId) =>
+      withCache(
+        `equipmentModelsByBrand:${brandId}`,
+        async () => {
+          const modelsQuery = "SELECT * FROM equipment_models WHERE brand_id = ? ORDER BY name"
+          const models = await dbQueryExecutor.execute(modelsQuery, [brandId])
+
+          const modelsWithDetails = await Promise.all(
+            models.map(async (model) => {
+              const [createdByUser, lastModifiedByUser, brand] = await Promise.all([
+                User.findByUserId(model.created_by_user_id),
+                model.last_modified_by_user_id
+                  ? User.findByUserId(model.last_modified_by_user_id)
+                  : null,
+                Equipment.brand.findByBrandId(model.brand_id)
+              ])
+
+              return {
+                id: model.id,
+                name: model.name,
+                brand: {
+                  id: brand[0].id,
+                  name: brand[0].name
+                },
+                created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+                created_at_datetime: model.created_at_datetime,
+                last_modified_by_user:
+                  lastModifiedByUser && lastModifiedByUser.length > 0
+                    ? mapUser(lastModifiedByUser[0])
+                    : null,
+                last_modified_datetime: model.last_modified_datetime
+              }
+            })
+          )
+
+          return modelsWithDetails
+        },
+        memoryOnlyCache
+      )(),
     findByNameAndBrandId: async (name, brandId) => {
       const query = "SELECT * FROM equipment_models WHERE name = ? AND brand_id = ?"
       return dbQueryExecutor.execute(query, [name, brandId])
@@ -254,16 +409,21 @@ const Equipment = {
       const query =
         "INSERT INTO equipment_models (brand_id, name, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, NOW())"
       return dbQueryExecutor.execute(query, [brandId, name, createdByUserId]).then((result) => {
-        return revalidateCache("equipmentModels").then(() => result)
+        return revalidateCache(["equipmentModels", `equipmentModelsByBrand:${brandId}`]).then(
+          () => result
+        )
       })
     },
-    update: (modelId, brandId, name, lastModifiedByUserId) => {
+    update: (modelId, name, lastModifiedByUserId) => {
       const query =
-        "UPDATE equipment_models SET brand_id = ?, name = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
+        "UPDATE equipment_models SET name = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
       return dbQueryExecutor
-        .execute(query, [brandId, name, lastModifiedByUserId, modelId])
+        .execute(query, [name, lastModifiedByUserId, modelId])
         .then(async (result) => {
-          const allEquipmentsByModelId = await Equipment.findByModelId(modelId)
+          const [modelDetails, allEquipmentsByModelId] = await Promise.all([
+            Equipment.model.findByModelId(modelId),
+            Equipment.findByModelId(modelId)
+          ])
 
           if (allEquipmentsByModelId || allEquipmentsByModelId.length > 0) {
             allEquipmentsByModelId.map((equipment) => {
@@ -271,13 +431,21 @@ const Equipment = {
             })
           }
 
-          return revalidateCache("equipmentModels").then(() => result)
+          const cacheKeys = [
+            "equipmentModels",
+            `equipmentModel:${modelId}`,
+            modelDetails.length > 0 && `equipmentModelsByBrand:${modelDetails[0].brand.id}`
+          ].filter(Boolean)
+          return revalidateCache(cacheKeys).then(() => result)
         })
     },
     delete: (modelId) => {
       const query = "DELETE FROM equipment_models WHERE id = ?"
       return dbQueryExecutor.execute(query, [modelId]).then(async (result) => {
-        const allEquipmentsByModelId = await Equipment.findByModelId(modelId)
+        const [modelDetails, allEquipmentsByModelId] = await Promise.all([
+          Equipment.model.findByModelId(modelId),
+          Equipment.findByModelId(modelId)
+        ])
 
         if (allEquipmentsByModelId || allEquipmentsByModelId.length > 0) {
           allEquipmentsByModelId.map((equipment) => {
@@ -285,19 +453,77 @@ const Equipment = {
           })
         }
 
-        return revalidateCache("equipmentModels").then(() => result)
+        const cacheKeys = [
+          "equipmentModels",
+          `equipmentModel:${modelId}`,
+          modelDetails.length > 0 && `equipmentModelsByBrand:${modelDetails[0].brand.id}`
+        ].filter(Boolean)
+        return revalidateCache(cacheKeys).then(() => result)
       })
     }
   },
   type: {
     findAll: withCache("equipmentTypes", async () => {
-      const query = "SELECT * FROM equipment_types ORDER BY name"
-      return dbQueryExecutor.execute(query)
+      const typesQuery = "SELECT * FROM equipment_types ORDER BY name"
+      const types = await dbQueryExecutor.execute(typesQuery)
+
+      const typesWithDetails = await Promise.all(
+        types.map(async (type) => {
+          const [createdByUser, lastModifiedByUser] = await Promise.all([
+            User.findByUserId(type.created_by_user_id),
+            type.last_modified_by_user_id ? User.findByUserId(type.last_modified_by_user_id) : null
+          ])
+
+          return {
+            id: type.id,
+            name: type.name,
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: type.created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: type.last_modified_datetime
+          }
+        })
+      )
+
+      return typesWithDetails
     }),
-    findByTypeId: async (typeId) => {
-      const query = "SELECT * FROM equipment_types WHERE id = ?"
-      return dbQueryExecutor.execute(query, [typeId])
-    },
+    findByTypeId: async (typeId) =>
+      withCache(
+        `equipmentType:${typeId}`,
+        async () => {
+          const typeQuery = "SELECT * FROM equipment_types WHERE id = ?"
+          const type = await dbQueryExecutor.execute(typeQuery, [typeId])
+
+          if (!type || type.length <= 0) {
+            return []
+          }
+
+          const [createdByUser, lastModifiedByUser] = await Promise.all([
+            User.findByUserId(type[0].created_by_user_id),
+            type[0].last_modified_by_user_id
+              ? User.findByUserId(type[0].last_modified_by_user_id)
+              : null
+          ])
+
+          const typeWithDetails = {
+            id: type[0].id,
+            name: type[0].name,
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: type[0].created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: type[0].last_modified_datetime
+          }
+
+          return [typeWithDetails]
+        },
+        memoryOnlyCache
+      )(),
     findByName: async (name) => {
       const query = "SELECT * FROM equipment_types WHERE name = ?"
       return dbQueryExecutor.execute(query, [name])
@@ -323,7 +549,7 @@ const Equipment = {
             })
           }
 
-          return revalidateCache("equipmentTypes").then(() => result)
+          return revalidateCache(["equipmentTypes", `equipmentType:${typeId}`]).then(() => result)
         })
     },
     delete: (typeId) => {
@@ -337,7 +563,7 @@ const Equipment = {
           })
         }
 
-        return revalidateCache("equipmentTypes").then(() => result)
+        return revalidateCache(["equipmentTypes", `equipmentType:${typeId}`]).then(() => result)
       })
     }
   },
@@ -371,7 +597,29 @@ const Equipment = {
       withCache(
         `equipment:interactionsHistory:${equipmentId}`,
         async () => {
-          return []
+          const query =
+            "SELECT * FROM equipment_interactions_history WHERE equipment_id = ? ORDER BY created_at_datetime DESC"
+          const interactions = await dbQueryExecutor.execute(query, [equipmentId])
+
+          const interactionsWithDetails = await Promise.all(
+            interactions.map(async (interaction) => {
+              const responsibleUser = await User.findByUserId(interaction.responsible_user_id)
+
+              return {
+                id: interaction.id,
+                equipment_id: interaction.equipment_id,
+                type: interaction.type,
+                details: JSON.parse(interaction.details),
+                responsible_user:
+                  responsibleUser && responsibleUser.length > 0
+                    ? mapUser(responsibleUser[0])
+                    : null,
+                created_at_datetime: interaction.created_at_datetime
+              }
+            })
+          )
+
+          return interactionsWithDetails
         },
         memoryOnlyCache
       )(),

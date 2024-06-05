@@ -19,7 +19,10 @@ const {
   TYPE_NOT_FOUND,
   DUPLICATE_BRAND_NAME,
   DUPLICATE_MODEL_NAME,
-  DUPLICATE_TYPE_NAME
+  DUPLICATE_TYPE_NAME,
+  EQUIPMENTS_ASSOCIATED_WITH_BRAND,
+  EQUIPMENTS_ASSOCIATED_WITH_MODEL,
+  EQUIPMENTS_ASSOCIATED_WITH_TYPE
 } = require("@constants/errors/equipment")
 const { CLIENT_NOT_FOUND } = require("@constants/errors/client")
 const { ATTACHMENT_STREAMING_ERROR } = require("@constants/errors/shared/attachment")
@@ -168,21 +171,21 @@ const equipmentController = {
     const changes = [
       {
         field: "Marca",
-        before: { id: existingBrand[0].id, name: existingBrand[0].name },
+        before: { id: existingEquipment[0].brand.id, name: existingEquipment[0].brand.name },
         after: { id: existingBrand[0].id, name: existingBrand[0].name },
-        changed: existingEquipment[0].brandId !== Number(brandId)
+        changed: existingEquipment[0].brand.id !== Number(brandId)
       },
       {
         field: "Modelo",
-        before: { id: existingModel[0].id, name: existingModel[0].name },
+        before: { id: existingEquipment[0].model.id, name: existingEquipment[0].model.name },
         after: { id: existingModel[0].id, name: existingModel[0].name },
-        changed: existingEquipment[0].modelId !== Number(modelId)
+        changed: existingEquipment[0].model.id !== Number(modelId)
       },
       {
         field: "Tipo",
-        before: { id: existingType[0].id, name: existingType[0].name },
+        before: { id: existingEquipment[0].type.id, name: existingEquipment[0].type.name },
         after: { id: existingType[0].id, name: existingType[0].name },
-        changed: existingEquipment[0].typeId !== Number(typeId)
+        changed: existingEquipment[0].type.id !== Number(typeId)
       },
       {
         field: "SN",
@@ -194,7 +197,7 @@ const equipmentController = {
         field: "Descrição",
         before: existingEquipment[0].description,
         after: !description ? null : description,
-        changed: existingEquipment[0].description !== description
+        changed: existingEquipment[0].description !== (!description ? null : description)
       }
     ]
 
@@ -217,7 +220,7 @@ const equipmentController = {
       throw new AppError(404, CLIENT_NOT_FOUND, "Client not found", true)
     }
 
-    const oldClient = await Client.findByClientId(existingEquipment[0].client_id)
+    const oldClient = await Client.findByClientId(existingEquipment[0].client.id)
 
     await Equipment.updateClientId(equipmentId, clientId, req.user.id)
 
@@ -317,6 +320,16 @@ const equipmentController = {
         throw new AppError(404, BRAND_NOT_FOUND, "Brand not found", true)
       }
 
+      const relatedEquipments = await Equipment.findByBrandId(brandId)
+      if (relatedEquipments.length > 0) {
+        throw new AppError(
+          400,
+          EQUIPMENTS_ASSOCIATED_WITH_BRAND,
+          "This brand cannot be deleted. It is associated with one or more equipments",
+          true
+        )
+      }
+
       await Equipment.brand.delete(brandId)
       res.status(204).json({ message: "Brand deleted successfully" })
     })
@@ -372,7 +385,7 @@ const equipmentController = {
     }),
     update: tryCatch(async (req, res) => {
       const { modelId } = req.params
-      const { brandId, name } = req.body
+      const { name } = req.body
 
       modelSchema.parse(req.body)
 
@@ -381,7 +394,10 @@ const equipmentController = {
         throw new AppError(404, MODEL_NOT_FOUND, "Model not found", true)
       }
 
-      const duplicateModel = await Equipment.model.findByNameAndBrandId(name, brandId)
+      const duplicateModel = await Equipment.model.findByNameAndBrandId(
+        name,
+        existingModel[0].brand.id
+      )
       if (duplicateModel.length > 0 && duplicateModel[0].id !== Number(modelId)) {
         throw new AppError(
           400,
@@ -391,7 +407,7 @@ const equipmentController = {
         )
       }
 
-      await Equipment.model.update(modelId, brandId, name, req.user.id)
+      await Equipment.model.update(modelId, name, req.user.id)
       res.status(204).json({ message: "Model updated successfully" })
     }),
     delete: tryCatch(async (req, res) => {
@@ -400,6 +416,16 @@ const equipmentController = {
       const existingModel = await Equipment.model.findByModelId(modelId)
       if (existingModel.length <= 0) {
         throw new AppError(404, MODEL_NOT_FOUND, "Model not found", true)
+      }
+
+      const relatedEquipments = await Equipment.findByModelId(modelId)
+      if (relatedEquipments.length > 0) {
+        throw new AppError(
+          400,
+          EQUIPMENTS_ASSOCIATED_WITH_MODEL,
+          "This model cannot be deleted. It is associated with one or more equipments",
+          true
+        )
       }
 
       await Equipment.model.delete(modelId)
@@ -461,6 +487,16 @@ const equipmentController = {
         throw new AppError(404, TYPE_NOT_FOUND, "Type not found", true)
       }
 
+      const relatedEquipments = await Equipment.findByTypeId(typeId)
+      if (relatedEquipments.length > 0) {
+        throw new AppError(
+          400,
+          EQUIPMENTS_ASSOCIATED_WITH_TYPE,
+          "This type cannot be deleted. It is associated with one or more equipments",
+          true
+        )
+      }
+
       await Equipment.type.delete(typeId)
       res.status(204).json({ message: "Type deleted successfully" })
     })
@@ -479,6 +515,8 @@ const equipmentController = {
       if (attachment.length <= 0) {
         throw new AppError(404, ATTACHMENT_NOT_FOUND, "Attachment not found", true)
       }
+
+      const attachmentType = attachment[0].type
 
       const attachmentFilePath = path.join(
         __dirname,
@@ -558,7 +596,7 @@ const equipmentController = {
       const createAllAttachments = files.map((file) => {
         const type = file.mimetype.startsWith("image/") ? "image" : "document"
         return Equipment.attachment
-          .create(equipmentId, file.path, file.originalname, type, req.user.id)
+          .create(equipmentId, file.filename, file.originalname, type, req.user.id)
           .then((result) => ({
             insertId: result.insertId,
             file: file
@@ -629,6 +667,19 @@ const equipmentController = {
         req.user.id
       )
       res.status(204).json({ message: "Attachment deleted successfully" })
+    })
+  },
+  interactionsHistory: {
+    findByEquipmentId: tryCatch(async (req, res) => {
+      const { equipmentId } = req.params
+
+      const existingEquipment = await Equipment.findByEquipmentId(equipmentId)
+      if (existingEquipment.length <= 0) {
+        throw new AppError(404, EQUIPMENT_NOT_FOUND, "Equipment not found", true)
+      }
+
+      const interactionsHistory = await Equipment.interactionsHistory.findByEquipmentId(equipmentId)
+      res.status(200).json(interactionsHistory)
     })
   }
 }

@@ -43,4 +43,13 @@ const revalidateCache = async (cacheKeys, cacheInstances = [multiCache, memoryOn
   }
 }
 
-module.exports = { withCache, revalidateCache, multiCache, memoryOnlyCache }
+const clearAllCaches = async (cacheInstances = [multiCache, memoryOnlyCache]) => {
+  if (CACHE_ENABLED) {
+    const clearPromises = cacheInstances.map(async (cacheInstance) => {
+      await cacheInstance.clear()
+    })
+    await Promise.all(clearPromises)
+  }
+}
+
+module.exports = { withCache, revalidateCache, clearAllCaches, multiCache, memoryOnlyCache }

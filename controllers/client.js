@@ -100,7 +100,7 @@ const clientController = {
         field: "Descrição",
         before: existingClient[0].description,
         after: !description ? null : description,
-        changed: existingClient[0].description !== description
+        changed: existingClient[0].description !== (!description ? null : description)
       }
     ]
 
@@ -224,7 +224,7 @@ const clientController = {
           field: "Descrição",
           before: existingContact[0].description,
           after: !description ? null : description,
-          changed: existingContact[0].description !== description
+          changed: existingContact[0].description !== (!description ? null : description)
         }
       ]
 
