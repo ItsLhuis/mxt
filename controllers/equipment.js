@@ -20,6 +20,8 @@ const {
   DUPLICATE_BRAND_NAME,
   DUPLICATE_MODEL_NAME,
   DUPLICATE_TYPE_NAME,
+  DUPLICATE_SN,
+  MODEL_NOT_MATCH_BRAND,
   EQUIPMENTS_ASSOCIATED_WITH_BRAND,
   EQUIPMENTS_ASSOCIATED_WITH_MODEL,
   EQUIPMENTS_ASSOCIATED_WITH_TYPE
@@ -106,9 +108,20 @@ const equipmentController = {
       throw new AppError(404, MODEL_NOT_FOUND, "Model not found", true)
     }
 
+    const modelsByBrand = await Equipment.model.findByBrandId(brandId)
+    const isModelFromBrand = modelsByBrand.some((model) => model.id === modelId)
+    if (!isModelFromBrand) {
+      throw new AppError(400, MODEL_NOT_MATCH_BRAND, "Model does not match the brand", true)
+    }
+
     const existingType = await Equipment.type.findByTypeId(typeId)
     if (existingType.length <= 0) {
       throw new AppError(404, TYPE_NOT_FOUND, "Type not found", true)
+    }
+
+    const existingSn = await Equipment.findBySn(sn)
+    if (existingSn.length > 0) {
+      throw new AppError(400, DUPLICATE_SN, "Serial number already exists", true)
     }
 
     const newEquipment = await Equipment.create(
@@ -164,6 +177,17 @@ const equipmentController = {
     const existingType = await Equipment.type.findByTypeId(typeId)
     if (existingType.length <= 0) {
       throw new AppError(404, TYPE_NOT_FOUND, "Type not found", true)
+    }
+
+    const modelsByBrand = await Equipment.model.findByBrandId(brandId)
+    const isModelFromBrand = modelsByBrand.some((model) => model.id === modelId)
+    if (!isModelFromBrand) {
+      throw new AppError(400, MODEL_NOT_MATCH_BRAND, "Model does not match the brand", true)
+    }
+
+    const existingSn = await Equipment.findBySn(sn, existingEquipment[0].id)
+    if (existingSn.length > 0) {
+      throw new AppError(400, DUPLICATE_SN, "Serial number already exists", true)
     }
 
     await Equipment.update(equipmentId, brandId, modelId, typeId, sn, description, req.user.id)

@@ -17,10 +17,27 @@ const { INVALID_IMAGE_FORMAT } = require("@constants/errors/shared/image")
 
 const { ATTACHMENT_ERROR_TYPE, IMAGE_ERROR_TYPE } = require("@constants/errors/shared/types")
 
+const normalizeFileName = (fileName) => {
+  const normalizedFileName = Buffer.from(fileName, "latin1").toString("utf8")
+
+  if (normalizedFileName === fileName) {
+    return fileName
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^\w\s.-]/g, "")
+      .toLowerCase()
+      .replace(/^\w/, (char) => char.toUpperCase())
+  }
+
+  return normalizedFileName
+}
+
 const processFile = async (file, outputDir) => {
   const extension = path.extname(file.originalname).toLowerCase()
   const outputFileName = `${uuidv4()}${extension}`
   const outputPath = path.join(outputDir, outputFileName)
+
+  const normalizedOriginalFileName = normalizeFileName(file.originalname)
 
   if ([".jpeg", ".jpg", ".png"].includes(extension)) {
     const imageInfo = await sharp(file.buffer).metadata()
@@ -52,6 +69,7 @@ const processFile = async (file, outputDir) => {
   }
 
   return {
+    originalname: normalizedOriginalFileName,
     filename: outputFileName,
     path: outputPath
   }
@@ -121,6 +139,7 @@ const uploadAttachment = (outputDir) => ({
           for (const file of req.files) {
             const processedFile = await processFile(file, outputDir)
 
+            file.originalname = processedFile.originalname
             file.filename = processedFile.filename
             file.path = processedFile.path
           }
@@ -150,6 +169,7 @@ const uploadImage = (outputDir) => ({
         try {
           const processedFile = await processFile(req.file, outputDir)
 
+          req.file.originalname = processedFile.originalname
           req.file.filename = processedFile.filename
           req.file.path = processedFile.path
 

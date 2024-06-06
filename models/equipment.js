@@ -138,6 +138,17 @@ const Equipment = {
     const query = "SELECT * FROM equipments WHERE type_id = ?"
     return dbQueryExecutor.execute(query, [typeId])
   },
+  findBySn: async (sn, equipmentIdToExclude) => {
+    let query = "SELECT * FROM equipments WHERE sn = ?"
+    const params = [sn]
+
+    if (equipmentIdToExclude) {
+      query += " AND id != ?"
+      params.push(equipmentIdToExclude)
+    }
+
+    return dbQueryExecutor.execute(query, params)
+  },
   create: (clientId, brandId, modelId, typeId, sn, description, createdByUserId) => {
     const query = `
       INSERT INTO equipments (client_id, brand_id, model_id, type_id, sn, description, created_by_user_id, created_at_datetime) 
