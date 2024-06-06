@@ -61,12 +61,12 @@ module.exports = {
     type: {
       [roles.BOSS]: [permissions.ALL],
       [roles.ADMIN]: [permissions.ALL],
-      [roles.EMPLOYEE]: [permissions.READ]
+      [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE]
     },
     attachment: {
       [roles.BOSS]: [permissions.ALL],
       [roles.ADMIN]: [permissions.ALL],
-      [roles.EMPLOYEE]: [permissions.READ]
+      [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE]
     },
     interactionsHistory: {
       [roles.BOSS]: [permissions.READ],
