@@ -1,6 +1,6 @@
 const dbQueryExecutor = require("@utils/dbQueryExecutor")
 
-const { withCache, revalidateCache, memoryOnlyCache } = require("@utils/cache")
+const { withCache, revalidateCache, clearAllCaches, memoryOnlyCache } = require("@utils/cache")
 
 const User = require("@models/user")
 const mapUser = require("@utils/mapUser")
@@ -111,19 +111,14 @@ const Client = {
       "UPDATE clients SET name = ?, description = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
     return dbQueryExecutor
       .execute(query, [name, description, lastModifiedByUserId, clientId])
-      .then(() => {
-        return revalidateCache(["clients", `client:${clientId}`]).then((result) => result)
+      .then((result) => {
+        return clearAllCaches().then(() => result)
       })
   },
   delete: (clientId) => {
     const query = "DELETE FROM clients WHERE id = ?"
     return dbQueryExecutor.execute(query, [clientId]).then((result) => {
-      return revalidateCache([
-        "clients",
-        `client:${clientId}`,
-        `client:contacts:${clientId}`,
-        `client:addresses:${clientId}`
-      ]).then(() => result)
+      return clearAllCaches().then(() => result)
     })
   },
   contact: {
