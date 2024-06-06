@@ -11,12 +11,12 @@
     <mj-wrapper padding="24px">
       <mj-section padding-top="16px" background-color="rgb(235, 232, 248)" border-radius="8px 8px 0 0">
         <mj-column width="100%">
-          <mj-image width="100px" src="{{ data.companyLogo }}" alt="{{ data.companyName }}" align="left" />
+          <mj-text font-weight="700" font-size="32px" padding="24px">{{ data.companyName }}</mj-text>
         </mj-column>
       </mj-section>
       <mj-section padding="0 24px 24px 24px" background-color="rgb(235, 232, 248)">
         <mj-column>
-          <mj-text align="left" font-weight="600" padding="24px 0 8px 0" font-size="23px">{{ data.title }}</mj-text>
+          <mj-text align="left" font-weight="600" padding="8px 0 8px 0" font-size="18px">{{ data.title }}</mj-text>
         </mj-column>
       </mj-section>
       <mj-section background-color="rgb(223, 225, 247)">
@@ -27,10 +27,10 @@
       <mj-section padding="8px 0 0 0" background-color="rgb(235, 232, 248)" border-radius="0 0 8px 8px">
         <mj-column>
           <mj-text font-size="11px" padding="16px 24px 0 24px">{{ data.footer }}</mj-text>
-          <mj-text font-weight="700" font-size="20px" padding="8px 24px 36px 24px">{{ data.companyName }}</mj-text>
+          <mj-text font-weight="700" font-size="18px" padding="8px 24px 36px 24px">{{ data.companyName }}</mj-text>
           <mj-divider border-color="rgb(225, 224, 234)" border-width="2px" border-style="solid" padding="0 24px" />
           <mj-text color="rgb(145, 144, 154)" font-size="11px" padding="16px 24px 0 24px">{{ data.companyAddress }}, {{ data.companyCity }}, {{ data.companyCountry }}</mj-text>
-          <mj-text color="rgb(145, 144, 154)" font-size="11px" padding="0px 24px 24px 24px">Enviado por MixTech</mj-text>
+          <mj-text color="rgb(145, 144, 154)" font-size="11px" padding="0px 24px 24px 24px">Enviado por Mixtech</mj-text>
         </mj-column>
       </mj-section>
     </mj-wrapper>

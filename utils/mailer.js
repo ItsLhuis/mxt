@@ -8,16 +8,22 @@ const generateEmailHtml = require("@utils/emailMjmlToHtml")
 
 const sendEmail = (companyName, to, subject, text, data, template) => {
   return new Promise((resolve, reject) => {
-    const emailTemplatePath = path.join(
-      __dirname,
-      "..",
-      "templates",
-      "emails",
-      `${template ? template : "default"}.mjml`
-    )
-    const mjmlTemplate = fs.readFileSync(emailTemplatePath, "utf-8")
+    let emailHtml = ""
 
-    const emailHtml = generateEmailHtml(mjmlTemplate, data)
+    if (template !== "blank") {
+      const emailTemplatePath = path.join(
+        __dirname,
+        "..",
+        "templates",
+        "emails",
+        `${template ? template : "default"}.mjml`
+      )
+
+      const mjmlTemplate = fs.readFileSync(emailTemplatePath, "utf-8")
+      emailHtml = generateEmailHtml(mjmlTemplate, data)
+    } else {
+      emailHtml = data
+    }
 
     const mailOptions = {
       from: `${companyName} <${process.env.RESEND_DOMAIN}>`,
