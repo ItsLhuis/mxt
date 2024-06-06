@@ -30,7 +30,7 @@
           <mj-text font-weight="700" font-size="20px" padding="8px 24px 36px 24px">{{ data.companyName }}</mj-text>
           <mj-divider border-color="rgb(225, 224, 234)" border-width="2px" border-style="solid" padding="0 24px" />
           <mj-text color="rgb(145, 144, 154)" font-size="11px" padding="16px 24px 0 24px">{{ data.companyAddress }}, {{ data.companyCity }}, {{ data.companyCountry }}</mj-text>
-          <mj-text color="rgb(145, 144, 154)" font-size="11px" padding="0px 24px 24px 24px">Enviado por {{ data.companyName }}</mj-text>
+          <mj-text color="rgb(145, 144, 154)" font-size="11px" padding="0px 24px 24px 24px">Enviado por MixTech</mj-text>
         </mj-column>
       </mj-section>
     </mj-wrapper>

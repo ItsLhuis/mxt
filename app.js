@@ -51,9 +51,6 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname, "public/client/build")))
 app.use(serveClientBuildCodeHandler)
 
-const resourcesRoutes = require("@app/resources")
-app.use("/resources", resourcesRoutes)
-
 const apiV1Routes = require("@app/api/v1")
 app.use("/api/v1", emptyStringHandler, apiV1Routes)
 

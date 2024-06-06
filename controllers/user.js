@@ -1,14 +1,18 @@
+const fs = require("fs")
 const path = require("path")
 
 const bcrypt = require("bcrypt")
+
+const { PassThrough } = require("stream")
 
 const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
 const mailer = require("@utils/mailer")
-const getPublicImageUrl = require("@utils/getPublicImageUrl")
+const processImage = require("@utils/processImage")
 
 const { PERMISSION_DENIED } = require("@constants/errors/permission")
+const { IMAGE_NOT_FOUND, IMAGE_STREAMING_ERROR } = require("@constants/errors/shared/image")
 const {
   USERNAME_ALREADY_EXISTS,
   EMAIL_ALREADY_EXISTS,
@@ -16,7 +20,7 @@ const {
   PASSWORD_MISMATCH
 } = require("@constants/errors/user")
 
-const { PERMISSION_DENIED_ERROR_TYPE } = require("@constants/errors/shared/types")
+const { IMAGE_ERROR_TYPE, PERMISSION_DENIED_ERROR_TYPE } = require("@constants/errors/shared/types")
 
 const { SALT_ROUNDS } = require("@constants/bcrypt")
 
@@ -72,6 +76,55 @@ const userController = {
     const { password, ...userWithoutPassword } = existingUser[0]
 
     res.status(200).json([userWithoutPassword])
+  }),
+  findAvatarByUserId: tryCatch(async (req, res) => {
+    const { userId } = req.params
+    const { size, quality, blur } = req.query
+
+    const existingUser = await User.findByUserId(userId)
+    if (existingUser.length <= 0) {
+      throw new AppError(404, USER_NOT_FOUND, "User not found", true)
+    }
+
+    if (!existingUser[0].avatar) {
+      res.status(200).json({ username: existingUser[0].username })
+      return
+    }
+
+    const imagePath = path.join(__dirname, "..", "uploads", existingUser[0].avatar)
+
+    if (fs.existsSync(imagePath)) {
+      const options = {
+        size: parseInt(size),
+        quality: quality || "high",
+        blur: blur ? parseInt(blur) : false
+      }
+
+      res.setHeader("Content-Type", "image/jpeg")
+
+      const readStream = new PassThrough()
+
+      const processedImageBuffer = await processImage(imagePath, options)
+
+      readStream.end(processedImageBuffer)
+      readStream.pipe(res)
+
+      readStream.on("error", () => {
+        throw new AppError(
+          500,
+          IMAGE_STREAMING_ERROR,
+          "Image streaming error",
+          false,
+          IMAGE_ERROR_TYPE
+        )
+      })
+
+      readStream.on("end", () => {
+        res.end()
+      })
+    } else {
+      throw new AppError(404, IMAGE_NOT_FOUND, "Image not found", false, IMAGE_ERROR_TYPE)
+    }
   }),
   create: tryCatch(async (req, res) => {
     const { username, password, email, role, isActive } = req.body
@@ -129,7 +182,6 @@ const userController = {
         "Bem Vindo",
         `Seja muito bem vindo à ${companyDetails.name}`,
         {
-          companyLogo: `${getPublicImageUrl(req, companyDetails.logo)}?size=100`,
           title: "Bem Vindo",
           message: `Seja muito bem-vindo(a) à ${
             companyDetails.name

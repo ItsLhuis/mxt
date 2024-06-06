@@ -13,6 +13,7 @@ router
     userController.uploadAvatar,
     userController.create
   )
+
 router
   .route("/:userId")
   .get(checkPermissionHandler("user", permissions.READ), userController.findByUserId)
@@ -22,10 +23,13 @@ router
     userController.update
   )
   .delete(checkPermissionHandler("user", permissions.DELETE), userController.delete)
+
 router.put(
   "/:userId/password",
   checkPermissionHandler("user", permissions.UPDATE),
   userController.updatePassword
 )
+
+router.route("/:userId/avatar").get(userController.findAvatarByUserId)
 
 module.exports = router

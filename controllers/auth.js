@@ -7,7 +7,6 @@ const { tryCatch } = require("@utils/tryCatch")
 const destroyUser = require("@utils/destroyUser")
 const mailer = require("@utils/mailer")
 const generateOtp = require("@utils/generateOtp")
-const getPublicImageUrl = require("@utils/getPublicImageUrl")
 
 const {
   AUTHENTICATION_FAILED,
@@ -151,7 +150,6 @@ const authController = {
           {
             username: existingUser[0].username,
             otpCode: otpCode,
-            companyLogo: `${getPublicImageUrl(req, companyDetails[0].logo)}?size=100`,
             companyName: companyDetails[0].name,
             companyAddress: `${companyDetails[0].address}, ${companyDetails[0].postal_code}`,
             companyCity: companyDetails[0].city,
