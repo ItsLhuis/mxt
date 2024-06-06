@@ -2,6 +2,10 @@ const roles = require("@constants/roles")
 const permissions = require("@constants/permissions")
 
 module.exports = {
+  cache: {
+    [roles.BOSS]: [permissions.DELETE],
+    [roles.ADMIN]: [permissions.DELETE]
+  },
   company: {
     [roles.BOSS]: [permissions.READ, permissions.UPDATE]
   },

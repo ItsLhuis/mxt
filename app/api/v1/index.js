@@ -6,6 +6,25 @@ const initializeUserHandler = require("@middlewares/initializeUserHandler")
 const authTokenHandler = require("@middlewares/authTokenHandler")
 const userRoleHandler = require("@middlewares/userRoleHandler")
 
+const checkPermissionHandler = require("@middlewares/checkPermissionHandler")
+const permissions = require("@constants/permissions")
+const { clearAllCaches } = require("@utils/cache")
+router.delete(
+  "/cache",
+  checkCompanyHandler,
+  initializeUserHandler,
+  authTokenHandler,
+  userRoleHandler,
+  checkPermissionHandler("cache", permissions.DELETE),
+  (req, res) => {
+    clearAllCaches()
+      .then(() => res.send({ message: "Cache removed" }))
+      .catch(() => {
+        res.status(500).send({ message: "An error occurred while clearing the cache" })
+      })
+  }
+)
+
 const authRouter = require("@routes/auth")
 router.use("/auth", initializeUserHandler, authRouter)
 
