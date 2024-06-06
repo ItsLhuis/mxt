@@ -173,22 +173,15 @@ const userController = {
     )
     await Employee.create(user.insertId)
 
-    const companyDetails = req.company
-
     await mailer
-      .send(
-        companyDetails.name,
-        email,
-        "Bem Vindo",
-        `Seja muito bem vindo à ${companyDetails.name}`,
-        {
-          title: "Bem Vindo",
-          message: `Seja muito bem-vindo(a) à ${
-            companyDetails.name
-          }! Estamos felizes em tê-lo(a) conosco.
+      .send(req.company.name, email, "Bem Vindo", `Seja muito bem vindo à ${req.company.name}`, {
+        title: "Bem Vindo",
+        message: `Seja muito bem-vindo(a) à ${
+          req.company.name
+        }! Estamos felizes em tê-lo(a) conosco.
                   <br>Para acessar à <a href="${req.protocol}://${req.get(
-            "host"
-          )}/auth/login">plataforma</a>, aqui estão seus dados de acesso:
+          "host"
+        )}/auth/login">plataforma</a>, aqui estão seus dados de acesso:
                   <br>
                   <ul>
                     <li><strong>Nome de utilizador:</strong> ${username}</li>
@@ -199,13 +192,12 @@ const userController = {
                   <br>
                   <br>
                   Mal podemos esperar para ver o que você fará!`,
-          footer: "Por motivos de segurança, recomendamos o não compartilhamento desta mensagem!",
-          companyName: companyDetails.name,
-          companyAddress: `${companyDetails.address}, ${companyDetails.postal_code}`,
-          companyCity: companyDetails.city,
-          companyCountry: companyDetails.country
-        }
-      )
+        footer: "Por motivos de segurança, recomendamos o não compartilhamento desta mensagem!",
+        companyName: req.company.name,
+        companyAddress: `${req.company.address}, ${req.company.postalCode}`,
+        companyCity: req.company.city,
+        companyCountry: req.company.country
+      })
       .catch(() => {})
     res.status(201).json({ message: "User created successfully" })
   }),
