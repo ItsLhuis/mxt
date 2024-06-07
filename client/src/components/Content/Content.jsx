@@ -26,8 +26,9 @@ const Content = () => {
       <Box className="all-content" ref={allContentRef}>
         <Suspense fallback={<PageLoader />}>
           <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<Navigate replace to="/dashboard" />} />
+            <Route path="/auth/*" element={<Navigate to="/dashboard" replace />} />
 
+            <Route path="/" element={<Navigate replace to="/dashboard" />} />
             <Route path="/dashboard" element={<Dashboard />} />
 
             {/* Client */}

@@ -1,10 +1,8 @@
 import React, { useState } from "react"
 
-import { useLocation } from "react-router-dom"
-
-import { useLoader } from "@contexts/loaderContext"
-
-import { useTheme } from "@contexts/themeContext"
+import { useLoader } from "@/contexts/loader"
+import { useTheme } from "@/contexts/theme"
+import { useUser } from "@/contexts/user"
 
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 
@@ -18,11 +16,9 @@ import { Loader } from "@components/ui"
 import { AnimatePresence } from "framer-motion"
 
 function App() {
-  const location = useLocation()
-
   const { loader } = useLoader()
-
   const { dataTheme } = useTheme()
+  const { user, isLoadingUser } = useUser()
 
   const [sidebarSize, setSidebarSize] = useState(localStorage.getItem("sidebarSize") || "large")
 
@@ -120,33 +116,37 @@ function App() {
       <ThemeProvider theme={theme}>
         <>
           <Loader visible={loader} />
-          {location.pathname.includes("/auth") ? (
-            <Auth />
-          ) : (
+          {!isLoadingUser && (
             <>
-              <div className="app">
-                <div className="container-main">
-                  <Body toggleSidebarSize={toggleSidebarSize} sidebarSize={sidebarSize} />
-                </div>
-              </div>
-              <Toaster
-                position="top-right"
-                containerStyle={{
-                  inset: "24px"
-                }}
-                toastOptions={{
-                  duration: 3000,
-                  style: {
-                    background: "var(--elevation-level5)",
-                    color: "var(--onSurface)",
-                    fontWeight: 600,
-                    fontSize: ".875rem",
-                    padding: 0,
-                    paddingLeft: 20,
-                    paddingBlock: 8
-                  }
-                }}
-              />
+              {user ? (
+                <>
+                  <div className="app">
+                    <div className="container-main">
+                      <Body toggleSidebarSize={toggleSidebarSize} sidebarSize={sidebarSize} />
+                    </div>
+                  </div>
+                  <Toaster
+                    position="top-right"
+                    containerStyle={{
+                      inset: "24px"
+                    }}
+                    toastOptions={{
+                      duration: 3000,
+                      style: {
+                        background: "var(--elevation-level5)",
+                        color: "var(--onSurface)",
+                        fontWeight: 600,
+                        fontSize: ".875rem",
+                        padding: 0,
+                        paddingLeft: 20,
+                        paddingBlock: 8
+                      }
+                    }}
+                  />
+                </>
+              ) : (
+                <Auth />
+              )}
             </>
           )}
         </>

@@ -53,6 +53,13 @@ const verifyResetPasswordToken = (token) => {
   })
 }
 
+const cookieOptions = {
+  secure: process.env.NODE_ENV === "production",
+  httpOnly: true,
+  sameSite: "lax",
+  maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN * 1000
+}
+
 const authController = {
   login: tryCatch(async (req, res) => {
     const { username, password } = req.body
@@ -79,18 +86,25 @@ const authController = {
 
     const accessToken = generateAccessToken(refreshToken)
 
-    req.session.refreshToken = refreshToken
-    req.session.accessToken = accessToken
-
-    req.session.cookie.maxAge = process.env.REFRESH_TOKEN_EXPIRES_IN * 1000
-
-    res.cookie("refreshToken", refreshToken, { httpOnly: true })
-    res.cookie("accessToken", accessToken, { httpOnly: true })
+    res.cookie(
+      `${process.env.NODE_ENV === "production" ? "__Secure-" : ""}auth-refresh-token`,
+      refreshToken,
+      cookieOptions
+    )
+    res.cookie(
+      `${process.env.NODE_ENV === "production" ? "__Secure-" : ""}auth-access-token`,
+      accessToken,
+      {
+        ...cookieOptions,
+        maxAge: process.env.ACCESS_TOKEN_EXPIRES_IN * 1000
+      }
+    )
 
     res.status(200).json({ message: "Authentication successful" })
   }),
   refreshToken: tryCatch(async (req, res) => {
-    const refreshToken = req.cookies.refreshToken
+    const refreshToken =
+      req.cookies[`${process.env.NODE_ENV === "production" ? "__Secure-" : ""}auth-refresh-token`]
 
     if (!refreshToken) {
       throw new AppError(
@@ -104,9 +118,14 @@ const authController = {
 
     const newAccessToken = generateAccessToken(refreshToken)
 
-    req.session.accessToken = newAccessToken
-
-    res.cookie("accessToken", newAccessToken, { httpOnly: true })
+    res.cookie(
+      `${process.env.NODE_ENV === "production" ? "__Secure-" : ""}auth-access-token`,
+      newAccessToken,
+      {
+        ...cookieOptions,
+        maxAge: process.env.ACCESS_TOKEN_EXPIRES_IN * 1000
+      }
+    )
 
     res.status(200).json({ message: "Reauthentication successful" })
   }),

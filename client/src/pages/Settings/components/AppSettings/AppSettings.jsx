@@ -1,6 +1,6 @@
 import React from "react"
 
-import { useTheme } from "@contexts/themeContext"
+import { useTheme } from "@/contexts/theme"
 
 import { Paper, Box, Typography } from "@mui/material"
 

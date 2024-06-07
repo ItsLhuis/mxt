@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from "react"
 
-import { useLoader } from "@contexts/loaderContext"
+import { useLoader } from "@/contexts/loader"
 
 import { Box, Container, Grid } from "@mui/material"
 

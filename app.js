@@ -1,7 +1,6 @@
 require("dotenv").config()
 
 const express = require("express")
-const session = require("express-session")
 const cookieParser = require("cookie-parser")
 const http = require("http")
 const cors = require("cors")
@@ -18,25 +17,21 @@ const initializeApp = require("@utils/initializeApp")
 
 const app = express()
 
+app.use(express.json())
+
 app.use(cookieParser())
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    saveUninitialized: false,
-    resave: true,
-    cookie: {
-      sameSite: "none",
-      secure: false,
-      httpOnly: true,
-      maxAge: Number(process.env.REFRESH_TOKEN_EXPIRES_IN) * 1000
-    }
-  })
-)
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 app.use(helmet())
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      imgSrc: ["'self'", "blob:"]
+    }
+  })
+)
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -45,8 +40,6 @@ app.use(
     credentials: true
   })
 )
-
-app.use(express.json())
 
 app.use(express.static(path.join(__dirname, "public/client/build")))
 app.use(serveClientBuildCodeHandler)

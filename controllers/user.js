@@ -49,11 +49,23 @@ const userController = {
     const users = await User.findAll()
 
     const usersWithoutPassword = users.map((user) => {
-      const { password, ...userWithoutPassword } = user
+      const { password, avatar, ...userWithoutPassword } = user
       return userWithoutPassword
     })
 
     res.status(200).json(usersWithoutPassword)
+  }),
+  findProfile: tryCatch(async (req, res) => {
+    const userId = req.user.id
+
+    const existingUser = await User.findByUserId(userId)
+    if (existingUser.length <= 0) {
+      throw new AppError(404, USER_NOT_FOUND, "User not found", true)
+    }
+
+    const { password, avatar, ...userWithoutPassword } = existingUser[0]
+
+    res.status(200).json([userWithoutPassword])
   }),
   findByUserId: tryCatch(async (req, res) => {
     const { userId } = req.params

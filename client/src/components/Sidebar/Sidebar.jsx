@@ -198,7 +198,7 @@ const sidebarData = [
     ]
   },
   {
-    title: "OUTRO",
+    title: "OUTROS",
     path: "/send-email",
     icon: <Email fontSize="small" />,
     name: "E-mail"
@@ -372,7 +372,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
           <Box className="navbar-content-info-container __sidebar-nav">
             <Box className="navbar-info">
               <Typography variant="h3" component="h3" className="company-name">
-                MixTech
+                Mixtech
               </Typography>
             </Box>
             <Box className="container-but-menu" style={{ marginRight: "0.6rem" }}>

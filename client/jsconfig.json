@@ -3,12 +3,13 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@assets/*": ["assets/*"],
-      "@components/*": ["components/*"],
-      "@pages/*": ["pages/*"],
-      "@contexts/*": ["contexts/*"],
-      "@config/*": ["config/*"],
-      "@utils/*": ["utils/*"]
+      "@api/*": ["src/api/*"],
+      "@assets/*": ["src/assets/*"],
+      "@components/*": ["src/components/*"],
+      "@config/*": ["src/config/*"],
+      "@contexts/*": ["src/contexts/*"],
+      "@pages/*": ["src/pages/*"],
+      "@utils/*": ["src/utils/*"]
     }
   },
   "exclude": ["node_modules", "vite.config.js"]

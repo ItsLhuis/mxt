@@ -303,6 +303,15 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: var(--elevation-level5) !important;
 }
 
+.MuiAlert-root {
+  background-color: rgb(211, 47, 47) !important;
+  color: rgb(228, 225, 230) !important;
+}
+
+.MuiAlert-root .MuiAlert-icon .MuiSvgIcon-root {
+  color: rgb(228, 225, 230) !important;
+}
+
 .MuiTabs-root {
   display: flex;
   align-items: center;

@@ -2,7 +2,7 @@ import PropTypes from "prop-types"
 
 import React from "react"
 
-import { useTheme } from "@contexts/themeContext"
+import { useTheme } from "@/contexts/theme"
 
 import { Stack, Typography } from "@mui/material"
 

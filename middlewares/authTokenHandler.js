@@ -19,11 +19,10 @@ const { AUTHENTICATION_ERROR_TYPE } = require("@constants/errors/shared/types")
 const User = require("@models/user")
 
 const authToken = tryCatch(async (req, res, next) => {
-  const refreshTokenFromRequest = req.cookies.refreshToken
-  const accessTokenFromRequest = req.cookies.accessToken
-
-  const refreshTokenFromSession = req.session.refreshToken
-  const accessTokenFromSession = req.session.accessToken
+  const refreshTokenFromRequest =
+    req.cookies[`${process.env.NODE_ENV === "production" ? "__Secure-" : ""}auth-refresh-token`]
+  const accessTokenFromRequest =
+    req.cookies[`${process.env.NODE_ENV === "production" ? "__Secure-" : ""}auth-access-token`]
 
   if (!refreshTokenFromRequest) {
     throw new AppError(
@@ -42,19 +41,6 @@ const authToken = tryCatch(async (req, res, next) => {
       false,
       AUTHENTICATION_ERROR_TYPE
     )
-  }
-
-  if (refreshTokenFromRequest !== refreshTokenFromSession) {
-    throw new AppError(
-      403,
-      INVALID_REFRESH_TOKEN,
-      "Invalid refresh token",
-      false,
-      AUTHENTICATION_ERROR_TYPE
-    )
-  }
-  if (accessTokenFromRequest !== accessTokenFromSession) {
-    throw new AppError(403, INVALID_TOKEN, "Invalid access token", false, AUTHENTICATION_ERROR_TYPE)
   }
 
   await verifyRefreshToken(refreshTokenFromRequest)

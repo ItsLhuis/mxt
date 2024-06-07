@@ -15,6 +15,10 @@ router
   )
 
 router
+  .route("/profile")
+  .get(checkPermissionHandler("user", permissions.READ), userController.findProfile)
+
+router
   .route("/:userId")
   .get(checkPermissionHandler("user", permissions.READ), userController.findByUserId)
   .put(

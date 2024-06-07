@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react"
 
+import { useNavigate } from "react-router-dom"
+
+import { useUser } from "@/contexts/user"
+
+import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 
-import { useNavigate } from "react-router-dom"
-
-import { useLoader } from "@contexts/loaderContext"
+import { getUserAvatar } from "@api/routes/user"
+import { logout } from "@api/routes/auth"
 
 import { LoadingButton } from "@mui/lab"
 import {
@@ -17,7 +21,6 @@ import {
   TextField,
   FormControl,
   Stack,
-  Button,
   ListItemText
 } from "@mui/material"
 
@@ -52,26 +55,24 @@ const Account = () => {
 
   const navigate = useNavigate()
 
-  const { showLoader, hideLoader } = useLoader()
+  const { user, deleteUser } = useUser()
 
-  const [load, setLoad] = useState(false)
-  const [image, setImage] = useState("")
+  const { mutateAsync: logoutMutate, isPending } = useMutation({
+    mutationFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      return logout().then(() => deleteUser())
+    }
+  })
+
+  const [avatar, setAvatar] = useState(null)
 
   useEffect(() => {
-    const initialValues = {
-      image: image,
-      username: "Luis82716",
-      name: "Luis Rodrigues",
-      email: "luisrodrigues@gmail.com",
-      phone: formatPhoneNumber("921034943"),
-      country: "Portugal",
-      address: "Rua Joaquim António de Aguiar 168 4049-005 Porto",
-      about:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu enim finibus, pretium mauris eu, finibus lorem. In tincidunt leo nisl, quis vehicula mauris vestibulum scelerisque. Nunc tempor placerat libero a efficitur. Nam aliquam, ipsum ut scelerisque aliquam, nunc tellus ultricies sem, a vulputate mi sem quis sapien. Nullam a justo mattis, feugiat tortor at, accumsan nisi. In mollis, dolor eu aliquam auctor, orci sem interdum eros, et gravida libero purus vitae nibh. Mauris vestibulum posuere neque non pulvinar. Duis varius orci nunc, ut imperdiet urna vestibulum consectetur. Ut at fermentum arcu. Aenean in urna a diam scelerisque finibus vel at quam. Sed ut volutpat purus, vitae suscipit magna. Donec in orci scelerisque, sodales massa eget, lobortis magna. In nibh mauris, venenatis eget lacinia quis, auctor quis augue."
+    const fetchAvatar = async () => {
+      getUserAvatar(user.id, { size: 120 }).then((url) => setAvatar(url))
     }
 
-    Object.keys(initialValues).forEach((key) => setValue(key, initialValues[key]))
-  }, [])
+    fetchAvatar()
+  }, [user.id])
 
   const onSubmit = (data) => {
     const newData = { ...data, image: image }
@@ -100,7 +101,7 @@ const Account = () => {
               padding: 6
             }}
           >
-            <ImagePicker image={image} setImage={setImage} alt="Luis Rodrigues" />
+            <ImagePicker image={avatar} setImage={setAvatar} alt={user.username} />
             <ListItemText
               sx={{
                 width: "100%",
@@ -114,7 +115,7 @@ const Account = () => {
                 component="h4"
                 sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
               >
-                Luis Rodrigues
+                {user.username}
               </Typography>
               <Typography
                 variant="p"
@@ -128,24 +129,19 @@ const Account = () => {
                   marginTop: 0.5
                 }}
               >
-                Administrador
+                {user.role}
               </Typography>
             </ListItemText>
-            <Button
+            <LoadingButton
+              loading={isPending}
               variant="contained"
               color="error"
-              onClick={() => {
-                showLoader()
-
-                setTimeout(() => {
-                  navigate("/auth")
-
-                  hideLoader()
-                }, 1000)
+              onClick={async () => {
+                await logoutMutate().then(() => navigate("/auth/login"))
               }}
             >
               Terminar Sessão
-            </Button>
+            </LoadingButton>
           </Stack>
         </Paper>
       </Grid>
@@ -223,7 +219,7 @@ const Account = () => {
                       <FormControl fullWidth>
                         <TextField {...register("about")} label="Sobre" multiline rows={5} />
                       </FormControl>
-                      <LoadingButton loading={load} type="submit" variant="contained">
+                      <LoadingButton loading={isPending} type="submit" variant="contained">
                         Salvar Alterações
                       </LoadingButton>
                     </Stack>

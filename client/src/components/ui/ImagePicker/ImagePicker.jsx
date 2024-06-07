@@ -31,7 +31,7 @@ const ImagePicker = ({ image, setImage, alt, size = [120, 120], sx }) => {
   }
 
   const isURL = (image) => {
-    return typeof image === "string" && image.startsWith("http")
+    return typeof image === "string" && (image.startsWith("http") || image.startsWith("blob"))
   }
 
   return (
