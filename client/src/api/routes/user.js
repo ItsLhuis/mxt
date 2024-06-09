@@ -2,20 +2,7 @@ import { api } from ".."
 
 const getUserProfile = async () => {
   const response = await api.get("/users/profile")
-  return response.data
-}
-
-const getUserAvatar = async (userId, { quality = 100, size = 40, blur = 0 } = {}) => {
-  const response = await api.get(`/users/${userId}/avatar`, {
-    responseType: "blob",
-    params: {
-      quality,
-      size,
-      blur
-    }
-  })
-
-  return URL.createObjectURL(response.data)
+  return response.data[0]
 }
 
 const getUser = async (userId) => {
@@ -23,4 +10,4 @@ const getUser = async (userId) => {
   return response.data
 }
 
-export { getUserProfile, getUserAvatar, getUser }
+export { getUserProfile, getUser }

@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 
-import { useLoader } from "@/contexts/loader"
-import { useTheme } from "@/contexts/theme"
-import { useUser } from "@/contexts/user"
+import { useAuth } from "@contexts/auth"
+import { useLoader } from "@contexts/loader"
+import { useTheme } from "@contexts/theme"
 
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 
@@ -16,9 +16,9 @@ import { Loader } from "@components/ui"
 import { AnimatePresence } from "framer-motion"
 
 function App() {
+  const { isAuth, isLoading } = useAuth()
   const { loader } = useLoader()
   const { dataTheme } = useTheme()
-  const { user, isLoadingUser } = useUser()
 
   const [sidebarSize, setSidebarSize] = useState(localStorage.getItem("sidebarSize") || "large")
 
@@ -116,9 +116,9 @@ function App() {
       <ThemeProvider theme={theme}>
         <>
           <Loader visible={loader} />
-          {!isLoadingUser && (
+          {!isLoading && (
             <>
-              {user ? (
+              {isAuth ? (
                 <>
                   <div className="app">
                     <div className="container-main">

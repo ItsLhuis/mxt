@@ -4,28 +4,28 @@ import "./styles.css"
 
 import { useNavigate } from "react-router-dom"
 
-import { useUser } from "@contexts/user"
-
-import { getUserAvatar } from "@api/routes/user"
+import { BASE_URL } from "@api"
+import { useUser } from "@hooks/server/useUser"
 
 import {
   Typography,
   Tooltip,
   IconButton,
-  Avatar,
   Box,
   Chip,
+  Skeleton,
   useTheme,
   useMediaQuery
 } from "@mui/material"
 import { Menu, Search, Settings } from "@mui/icons-material"
 
-import { CommandDialog } from "@components/ui"
+import { Loadable, Image, Avatar, CommandDialog } from "@components/ui"
 
 const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
   const navigate = useNavigate()
 
-  const { user } = useUser()
+  const { userProfile } = useUser()
+  const { data: user, isLoading: isUserLoading } = userProfile
 
   const theme = useTheme()
   const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"))
@@ -47,22 +47,13 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
     }
   }, [])
 
-  const [avatar, setAvatar] = useState(null)
-
-  useEffect(() => {
-    const fetchAvatar = async () => {
-      getUserAvatar(user.id, { size: 120 }).then((url) => setAvatar(url))
-    }
-
-    fetchAvatar()
-  }, [user.id])
-
   return (
     <>
       <Box component="header" className="navbar">
         <Box className="navbar-content">
           <Box className="navbar-content-info-container">
             <Box className="navbar-info">
+              <Image src={`${BASE_URL}/company/logo?size=80`} alt="Logo da empresa" />
               <Typography variant="h3" component="h3" className="company-name">
                 Mixtech
               </Typography>
@@ -103,25 +94,56 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
             </Box>
           </Box>
           <Box className="navbar-user-container" sx={{ gap: isMediumScreen ? 0 : 2 }}>
-            {!isMediumScreen && (
-              <>
-                <Box className="navbar-user-container-profile">
-                  <Avatar alt={user.username} src={avatar} />
-                  <Box className="navbar-user-container-profile-details">
-                    <Typography variant="h6" component="h6" sx={{ fontWeight: 600 }}>
-                      {user.username}
+            <Box
+              className="navbar-user-container-profile"
+              sx={{ display: isMediumScreen ? "none" : "flex" }}
+            >
+              <Loadable
+                isLoading={isUserLoading}
+                LoadingComponent={<Skeleton variant="circular" height={40} width={40} />}
+                LoadedComponent={
+                  <Avatar
+                    alt={isUserLoading ? "Avatar de utilizador" : user.username}
+                    src={!isUserLoading ? `${BASE_URL}/users/${user.id}/avatar?size=80` : ""}
+                    name={!isUserLoading ? user.username : ""}
+                  />
+                }
+              />
+              <Box className="navbar-user-container-profile-details">
+                <Loadable
+                  isLoading={isUserLoading}
+                  LoadingComponent={
+                    <Skeleton
+                      variant="text"
+                      sx={{ fontSize: "1rem", marginBottom: "-4px" }}
+                      width={80}
+                    />
+                  }
+                  LoadedComponent={
+                    <Typography
+                      variant="h6"
+                      component="h6"
+                      sx={{ fontWeight: 600, marginBottom: "-4px" }}
+                    >
+                      {!isUserLoading && user.username}
                     </Typography>
+                  }
+                />
+                <Loadable
+                  isLoading={isUserLoading}
+                  LoadingComponent={<Skeleton variant="text" sx={{ fontSize: 13 }} width={80} />}
+                  LoadedComponent={
                     <Typography
                       variant="p"
                       component="p"
-                      sx={{ color: "var(--outline)", fontWeight: 600 }}
+                      sx={{ color: "var(--outline)", fontWeight: 500 }}
                     >
-                      {user.role}
+                      {!isUserLoading && user.role}
                     </Typography>
-                  </Box>
-                </Box>
-              </>
-            )}
+                  }
+                />
+              </Box>
+            </Box>
             <Box className="container-but-settings">
               <Tooltip title="Definições" placement="bottom">
                 <IconButton

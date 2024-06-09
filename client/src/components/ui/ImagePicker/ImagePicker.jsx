@@ -2,19 +2,19 @@ import PropTypes from "prop-types"
 
 import React, { useState } from "react"
 
-import { Box, Avatar, Typography, IconButton } from "@mui/material"
+import { Box, Typography, IconButton, Skeleton } from "@mui/material"
 import { PhotoCamera } from "@mui/icons-material"
 
-const ImagePicker = ({ image, setImage, alt, size = [120, 120], sx }) => {
-  const [avatarWidth, avatarHeight] = size
+import { Loadable, Avatar } from ".."
 
+const ImagePicker = ({ image, setImage, alt, name, size = 120, sx }) => {
   const [error, setError] = useState(false)
 
   const handleChange = (e) => {
     const selectedFile = e.target.files[0]
     if (selectedFile) {
       if (selectedFile.type.startsWith("image/")) {
-        if (selectedFile.size <= 3 * 1024 * 1024) {
+        if (selectedFile.size <= 5 * 1024 * 1024) {
           setImage(selectedFile)
           setError(false)
         } else {
@@ -64,15 +64,29 @@ const ImagePicker = ({ image, setImage, alt, size = [120, 120], sx }) => {
             padding: 1
           }}
         >
-          <Avatar
-            alt={alt}
-            src={isURL(image) ? image : image ? URL.createObjectURL(image) : null}
-            sx={{
-              width: avatarWidth,
-              height: avatarHeight,
-              cursor: "pointer",
-              ...sx
-            }}
+          <Loadable
+            isLoading={false}
+            LoadingComponent={<Skeleton variant="circular" height={size} width={size} />}
+            LoadedComponent={
+              <Avatar
+                alt={alt}
+                src={
+                  isURL(image)
+                    ? image
+                    : typeof image === "string"
+                    ? ""
+                    : image instanceof Blob || image instanceof File
+                    ? URL.createObjectURL(image)
+                    : ""
+                }
+                name={name ? name : ""}
+                size={size}
+                sx={{
+                  cursor: "pointer",
+                  ...sx
+                }}
+              />
+            }
           />
         </Box>
         <Box

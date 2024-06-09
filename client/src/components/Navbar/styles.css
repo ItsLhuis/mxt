@@ -24,16 +24,19 @@
 
 .navbar-info {
     display: flex;
+    align-items: center;
     order: 1;
+    margin-left: 1rem;
+    gap: 1rem;
 }
 
 .company-name {
-    margin-left: 1rem !important;
     margin-right: 1rem !important;
     margin-top: auto !important;
     margin-bottom: auto !important;
     font-weight: 600 !important;
     white-space: nowrap;
+    user-select: none;
 }
 
 .logo-image {

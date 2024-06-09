@@ -1,5 +1,5 @@
 import { lazy } from "react"
 
-const Login = lazy(() => import("./Login/Login"))
+const Login = lazy(() => import("./Login"))
 
 export { Login }

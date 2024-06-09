@@ -1,21 +1,20 @@
 import React, { Suspense, useState } from "react"
 
 import { Box, Container, Tabs, Tab } from "@mui/material"
-import { Person } from "@mui/icons-material"
-import NotificationsIcon from "@mui/icons-material/Notifications"
+import { Person, Dns } from "@mui/icons-material"
 import SettingsIcon from "@mui/icons-material/Settings"
 import SecurityIcon from "@mui/icons-material/Security"
 
 import { PageLoader, HeaderPage } from "@components/ui"
-import { Account, AppSettings, Notifications, Security } from "./components"
+import { Account, AppSettings, Security, Server } from "./components"
 
 import { motion } from "framer-motion"
 
 const tabsInfo = [
   { id: 0, name: "Conta", icon: <Person />, component: <Account /> },
   { id: 1, name: "Definições", icon: <SettingsIcon />, component: <AppSettings /> },
-  { id: 2, name: "Notificações", icon: <NotificationsIcon />, component: <Notifications /> },
-  { id: 3, name: "Segurança", icon: <SecurityIcon />, component: <Security /> }
+  { id: 2, name: "Segurança", icon: <SecurityIcon />, component: <Security /> },
+  { id: 3, name: "Servidor", icon: <Dns />, component: <Server /> }
 ]
 
 const TabPanel = (props) => {

@@ -1,3 +1,5 @@
+export { default as Avatar } from "./Avatar/Avatar"
+
 export { default as ButtonDropDownSelect } from "./ButtonDropDownSelect/ButtonDropDownSelect"
 
 export { default as Caption } from "./Caption/Caption"
@@ -8,11 +10,15 @@ export { default as DatePicker } from "./DatePicker/DatePicker"
 
 export { default as HeaderPage } from "./HeaderPage/HeaderPage"
 
+export { default as Image } from "./Image/Image"
+
 export { default as ImagePicker } from "./ImagePicker/ImagePicker"
 
 export { default as ListButton } from "./ListButton/ListButton"
 
 export { default as Load } from "./Load/Load"
+
+export { default as Loadable } from "./Loadable/Loadable"
 
 export { default as Loader } from "./Loader/Loader"
 

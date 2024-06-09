@@ -33,6 +33,7 @@ const Email = {
             client.length > 0
               ? { id: client[0].id, name: client[0].name, description: client[0].description }
               : null,
+          to: email.contact,
           subject: email.subject,
           sent_by_user: sentByUser.length > 0 ? mapUser(sentByUser[0]) : null,
           created_at_datetime: email.created_at_datetime
@@ -73,7 +74,7 @@ const Email = {
             client || client.length > 0
               ? { id: client[0].id, name: client[0].name, description: client[0].description }
               : null,
-          to: emailResendData.to && emailResendData.to[0],
+          to: email[0].contact,
           subject: email[0].subject,
           html: emailResendData.html,
           text: emailResendData.text,
@@ -115,8 +116,8 @@ const Email = {
         })
         .then((data) => {
           const query =
-            "INSERT INTO emails (api_id, client_id, subject, sent_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, NOW())"
-          return dbQueryExecutor.execute(query, [data.id, clientId, subject, sentByUserId])
+            "INSERT INTO emails (api_id, client_id, contact, subject, sent_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, NOW())"
+          return dbQueryExecutor.execute(query, [data.id, clientId, contact, subject, sentByUserId])
         })
         .then((result) => {
           return revalidateCache("emails").then(() => resolve(result))

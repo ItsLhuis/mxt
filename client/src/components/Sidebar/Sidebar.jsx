@@ -4,6 +4,8 @@ import "./styles.css"
 
 import { useNavigate, useLocation } from "react-router-dom"
 
+import { BASE_URL } from "@api"
+
 import { Box, Collapse, Typography, ButtonBase, Drawer, Tooltip, IconButton } from "@mui/material"
 import {
   Dashboard,
@@ -371,6 +373,11 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
         <Box className="sidebar __drawer">
           <Box className="navbar-content-info-container __sidebar-nav">
             <Box className="navbar-info">
+            <img
+                src={`${BASE_URL}/company/logo?size=80`}
+                alt="Logo da empresa"
+                style={{ maxHeight: 40, width: "auto" }}
+              />
               <Typography variant="h3" component="h3" className="company-name">
                 Mixtech
               </Typography>

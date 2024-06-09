@@ -36,6 +36,7 @@ const Sms = {
             client.length > 0
               ? { id: client[0].id, name: client[0].name, description: client[0].description }
               : null,
+          to: sms.contact,
           message: sms.message,
           sent_by_user: sentByUser.length > 0 ? mapUser(sentByUser[0]) : null,
           created_at_datetime: sms.created_at_datetime
@@ -81,7 +82,7 @@ const Sms = {
             client || client.length > 0
               ? { id: client[0].id, name: client[0].name, description: client[0].description }
               : null,
-          to: smsReleansData.to,
+          to: sms[0].contact,
           message: sms[0].message,
           status: smsReleansData.status,
           sent_by_user: sentByUser || sentByUser.length > 0 ? mapUser(sentByUser[0]) : null,
@@ -99,8 +100,8 @@ const Sms = {
         .send(process.env.RELEANS_SENDER_ID, contact, message)
         .then((data) => {
           const query =
-            "INSERT INTO smses (api_id, client_id, message, sent_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, NOW())"
-          return dbQueryExecutor.execute(query, [data.id, clientId, message, sentByUserId])
+            "INSERT INTO smses (api_id, client_id, contact, message, sent_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, NOW())"
+          return dbQueryExecutor.execute(query, [data.id, clientId, contact, message, sentByUserId])
         })
         .then((result) => {
           return revalidateCache("smses").then(() => resolve(result))

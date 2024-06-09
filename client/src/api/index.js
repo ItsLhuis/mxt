@@ -1,13 +1,14 @@
 import axios from "axios"
 
-const BASE_URL = `${window.location.origin}/api/v1`
+//const BASE_URL = `${window.location.origin}/api/v1`
+const BASE_URL = "http://localhost:8080/api/v1"
 
 const api = axios.create({
   baseURL: BASE_URL,
   withCredentials: true
 })
 
-import { refreshToken } from "@/api/routes/auth"
+import { refreshToken } from "@api/routes/auth"
 
 api.interceptors.response.use(
   (response) => response,
@@ -31,4 +32,4 @@ api.interceptors.response.use(
   }
 )
 
-export { api }
+export { api, BASE_URL }

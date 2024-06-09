@@ -25,18 +25,13 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 app.use(helmet())
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      imgSrc: ["'self'", "blob:"]
-    }
-  })
-)
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }))
 app.use(
   cors({
-    origin: function (origin, callback) {
-      callback(null, true)
-    },
+    origin: [
+      process.env.NODE_ENV === "development" && process.env.DEVELOPMENT_DOMAIN,
+      process.env.PRODUCTION_DOMAIN
+    ].filter(Boolean),
     credentials: true
   })
 )

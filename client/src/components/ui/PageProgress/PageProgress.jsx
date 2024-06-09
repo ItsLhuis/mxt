@@ -11,7 +11,7 @@ const PageProgress = () => {
         zIndex: 9999
       }}
     >
-      <LinearProgress style={{ backgroundColor: "transparent", height: 2 }} />
+      <LinearProgress style={{ backgroundColor: "transparent", height: 3 }} />
     </div>
   )
 }
