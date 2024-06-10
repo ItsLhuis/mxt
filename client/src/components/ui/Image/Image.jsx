@@ -47,7 +47,7 @@ const Image = ({ src, alt, maxHeight = 40, maxWidth = 80, ...props }) => {
           ref={imgRef}
           src={src}
           alt={alt}
-          style={{ maxHeight, maxWidth, width: "auto" }}
+          style={{ maxHeight, maxWidth, width: "auto", userSelect: "none" }}
           {...props}
         />
       }

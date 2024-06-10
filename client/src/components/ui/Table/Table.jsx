@@ -62,7 +62,7 @@ const getDataCountText = (dataSize) => {
   return dataSize === 1 ? "resultado encontrado" : "resultados encontrados"
 }
 
-const Table = ({ columns, data, mode, actions, error, helperText }) => {
+const Table = ({ columns, data, mode, actions, error, helperText, ExpandableContentComponent }) => {
   const tableRef = useRef(null)
   const [tableHeadHeight, setTableHeadHeight] = useState(0)
 
@@ -217,7 +217,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
           state.page * state.rowsPerPage + state.rowsPerPage
         )
       : sortedData
-  const hasExpandableContent = data.some((item) => item.expandableContent)
+  const hasExpandableContent = !!ExpandableContentComponent
 
   return (
     <Box
@@ -368,25 +368,19 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
                         </TableCell>
                       )}
                       {hasExpandableContent && (
-                        <>
-                          {row.expandableContent ? (
-                            <TableCell sx={{ width: 0 }}>
-                              <Tooltip title="Expandir">
-                                <IconButton size="small" onClick={() => handleRowClick(row.id)}>
-                                  <KeyboardArrowUp
-                                    className={`arrow-but-drop-down ${
-                                      state.openRows.has(row.id) && "__arrow-but-drop-down__rotate"
-                                    }`}
-                                  />
-                                </IconButton>
-                              </Tooltip>
-                            </TableCell>
-                          ) : (
-                            <TableCell />
-                          )}
-                        </>
+                        <TableCell sx={{ width: 0 }}>
+                          <Tooltip title="Expandir">
+                            <IconButton size="small" onClick={() => handleRowClick(row.id)}>
+                              <KeyboardArrowUp
+                                className={`arrow-but-drop-down ${
+                                  state.openRows.has(row.id) && "__arrow-but-drop-down__rotate"
+                                }`}
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
                       )}
-                      {columns.map((column, index) => (
+                      {columns.map((column) => (
                         <TableCell
                           key={column.id}
                           align={column.align}
@@ -406,7 +400,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
                         </TableCell>
                       ))}
                     </TableRow>
-                    {row.expandableContent && (
+                    {hasExpandableContent && (
                       <TableRow>
                         <TableCell
                           colSpan={mode === "normal" ? columns.length + 1 : columns.length + 2}
@@ -415,6 +409,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
                           <Collapse in={state.openRows.has(row.id)} timeout="auto" unmountOnExit>
                             <Box
                               sx={{
+                                color: "var(--onSurface)",
                                 borderBottom:
                                   sortedData.length - 1 === index
                                     ? "none"
@@ -425,7 +420,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
                                     : "1px solid var(--elevation-level5)"
                               }}
                             >
-                              {row.expandableContent()}
+                              <ExpandableContentComponent row={row} />
                             </Box>
                           </Collapse>
                         </TableCell>

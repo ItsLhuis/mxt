@@ -1,10 +1,11 @@
+import { parsePhoneNumberFromString, isPossiblePhoneNumber } from "libphonenumber-js"
+
 export const formatPhoneNumber = (value) => {
-  const phoneNumberRegex = /^\d{9}$/
-  if (!phoneNumberRegex.test(value)) {
-    return value
+  const phoneNumber = parsePhoneNumberFromString(value)
+
+  if (phoneNumber && phoneNumber.isValid() && isPossiblePhoneNumber(String(phoneNumber.number))) {
+    return phoneNumber.formatInternational()
   }
 
-  const formattedPhoneNumber = `${value.slice(0, 3)} ${value.slice(3, 6)} ${value.slice(6)}`
-
-  return formattedPhoneNumber
+  return value
 }

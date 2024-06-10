@@ -53,7 +53,7 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
         <Box className="navbar-content">
           <Box className="navbar-content-info-container">
             <Box className="navbar-info">
-              <Image src={`${BASE_URL}/company/logo?size=80`} alt="Logo da empresa" />
+              <Image src={`${BASE_URL}/company/logo?size=160`} alt="Logo da empresa" />
               <Typography variant="h3" component="h3" className="company-name">
                 Mixtech
               </Typography>

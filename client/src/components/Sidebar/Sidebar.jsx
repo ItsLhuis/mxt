@@ -22,6 +22,8 @@ import {
   Close
 } from "@mui/icons-material"
 
+import { Image } from "@components/ui"
+
 const sidebarData = [
   {
     title: "DATA",
@@ -373,11 +375,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
         <Box className="sidebar __drawer">
           <Box className="navbar-content-info-container __sidebar-nav">
             <Box className="navbar-info">
-            <img
-                src={`${BASE_URL}/company/logo?size=80`}
-                alt="Logo da empresa"
-                style={{ maxHeight: 40, width: "auto" }}
-              />
+              <Image src={`${BASE_URL}/company/logo?size=160`} alt="Logo da empresa" />
               <Typography variant="h3" component="h3" className="company-name">
                 Mixtech
               </Typography>

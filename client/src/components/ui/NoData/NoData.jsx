@@ -33,8 +33,7 @@ const NoData = ({ error, onlyLottie }) => {
             borderRadius: 2,
             padding: 3,
             paddingBottom: 5,
-            color: "var(--outline)",
-            textTransform: "uppercase"
+            color: "var(--outline)"
           }}
         >
           <Lottie animationData={LottieAnimation[dataTheme]} style={{ height: 200 }} />

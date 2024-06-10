@@ -1,3 +1,5 @@
+const { produce } = require("immer")
+
 const fs = require("fs")
 const path = require("path")
 
@@ -48,9 +50,11 @@ const userController = {
 
     const users = await User.findAll()
 
-    const usersWithoutPassword = users.map((user) => {
-      const { password, avatar, ...userWithoutPassword } = user
-      return userWithoutPassword
+    const usersWithoutPassword = produce(users, (draft) => {
+      draft.forEach((user) => {
+        delete user.password
+        delete user.avatar
+      })
     })
 
     res.status(200).json(usersWithoutPassword)
@@ -63,7 +67,10 @@ const userController = {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
 
-    const { password, avatar, ...userWithoutPassword } = existingUser[0]
+    const userWithoutPassword = produce(existingUser[0], (draft) => {
+      delete draft.password
+      delete draft.avatar
+    })
 
     res.status(200).json([userWithoutPassword])
   }),
@@ -85,7 +92,10 @@ const userController = {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
 
-    const { password, ...userWithoutPassword } = existingUser[0]
+    const userWithoutPassword = produce(existingUser[0], (draft) => {
+      delete draft.password
+      delete draft.avatar
+    })
 
     res.status(200).json([userWithoutPassword])
   }),
