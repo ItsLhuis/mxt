@@ -51,8 +51,8 @@ const Account = () => {
 
   const { logout } = useAuth()
 
-  const { userProfile } = useUser()
-  const { data: user, isLoading: isUserLoading } = userProfile
+  const { findUserProfile } = useUser()
+  const { data: user, isLoading: isUserLoading } = findUserProfile
 
   const [avatar, setAvatar] = useState(null)
 
@@ -108,7 +108,7 @@ const Account = () => {
                 component="h4"
                 sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
               >
-                {user.username}
+                {!isUserLoading && user.username}
               </Typography>
               <Typography
                 variant="p"
@@ -122,7 +122,7 @@ const Account = () => {
                   marginTop: 0.5
                 }}
               >
-                {user.role}
+                {!isUserLoading && user.role}
               </Typography>
             </ListItemText>
             <LoadingButton

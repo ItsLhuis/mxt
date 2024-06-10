@@ -5,9 +5,9 @@ const getUserProfile = async () => {
   return response.data[0]
 }
 
-const getUser = async (userId) => {
+const getUserById = async (userId) => {
   const response = await api.get(`/users/${userId}`)
   return response.data
 }
 
-export { getUserProfile, getUser }
+export { getUserProfile, getUserById }

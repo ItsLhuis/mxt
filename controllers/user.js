@@ -210,7 +210,7 @@ const userController = {
         companyCity: req.company.city,
         companyCountry: req.company.country
       })
-      .catch((error) => console.log(error))
+      .catch(() => {})
     res.status(201).json({ message: "User created successfully" })
   }),
   update: tryCatch(async (req, res) => {

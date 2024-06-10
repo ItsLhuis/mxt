@@ -51,7 +51,6 @@ const processImage = async (imagePath, { size, quality, blur } = {}) => {
 
     return processedImageBuffer
   } catch (error) {
-    console.log(error)
     throw new AppError(
       500,
       IMAGE_PROCESSING_ERROR,

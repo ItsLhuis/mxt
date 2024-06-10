@@ -12,11 +12,11 @@ const TableSkeleton = ({ mode }) => {
           <Skeleton variant="text" sx={{ fontSize: 13 }} width={180} />
         </Stack>
       )}
-      <Skeleton variant="rounded" height={30} />
-      <Skeleton variant="rounded" height={30} />
-      <Skeleton variant="rounded" height={30} />
-      <Skeleton variant="rounded" height={30} />
-      <Skeleton variant="rounded" height={30} />
+      <Skeleton variant="rounded" height={40} />
+      <Skeleton variant="rounded" height={40} />
+      <Skeleton variant="rounded" height={40} />
+      <Skeleton variant="rounded" height={40} />
+      <Skeleton variant="rounded" height={40} />
       {mode === "datatable" && (
         <Stack
           sx={{ flexDirection: "row", justifyContent: "flex-end", alignItems: "center", gap: 2 }}

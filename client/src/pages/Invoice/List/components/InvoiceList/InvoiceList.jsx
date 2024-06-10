@@ -20,7 +20,7 @@ import { DeleteOutline, MoreVert } from "@mui/icons-material"
 import { Table } from "@components/ui"
 import Filters from "./components/Filters/Filters"
 
-import { getContrastColor, getStringColor } from "@utils/shared"
+import { getContrastColor, getStringColor } from "@utils"
 import { formatValueToEuro } from "@utils/format/currency"
 import { formatDate, formatTime } from "@utils/format/date"
 import { formatPhoneNumber } from "@utils/format/phone"

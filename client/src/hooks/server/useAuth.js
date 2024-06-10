@@ -17,7 +17,6 @@ export const useAuth = () => {
     mutationFn: loginApi,
     onSuccess: (data) => {
       reloadAuthStatus()
-      queryClient.invalidateQueries(["userProfile"])
       queryClient.setQueryData(["userProfile"], data[0])
       navigate("/")
     }
@@ -27,7 +26,7 @@ export const useAuth = () => {
     mutationFn: logoutApi,
     onSuccess: () => {
       reloadAuthStatus()
-      queryClient.invalidateQueries(["userProfile"])
+      queryClient.removeQueries(["userProfile"])
       navigate("/auth/login")
     }
   })

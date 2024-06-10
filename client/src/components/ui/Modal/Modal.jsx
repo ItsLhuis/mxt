@@ -126,7 +126,7 @@ const Modal = ({
               {cancelButtonText}
             </LoadingButton>
             <LoadingButton loading={load} variant="contained" color="error" onClick={handleSubmit}>
-              Eliminar
+              {!title ? "Eliminar" : title}
             </LoadingButton>
           </Box>
         </>
@@ -210,15 +210,6 @@ const Modal = ({
         setCurrentPage(value)
       }
 
-      const handleKeyDown = (event) => {
-        if (event.key === "Enter" && searchResults.length > 0) {
-          navigate(searchResults[0].link)
-          setTimeout(() => {
-            handleClose()
-          })
-        }
-      }
-
       const handleChange = (event) => {
         const searchText = event.target.value
         setCurrentPage(1)
@@ -291,7 +282,6 @@ const Modal = ({
                 sx={{ width: "100%" }}
                 value={text}
                 onChange={handleChange}
-                onKeyDown={handleKeyDown}
                 autoComplete="off"
                 InputProps={{
                   startAdornment: (

@@ -222,7 +222,8 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
   return (
     <Box
       sx={{
-        position: "relative"
+        position: "relative",
+        width: "100%"
       }}
     >
       {mode === "datatable" && (
@@ -396,7 +397,7 @@ const Table = ({ columns, data, mode, actions, error, helperText }) => {
                           }}
                         >
                           {column.renderComponent ? (
-                            <column.renderComponent data={row[column.id]} />
+                            <column.renderComponent row={row} />
                           ) : (
                             <>
                               {column.formatter ? column.formatter(row[column.id]) : row[column.id]}

@@ -24,7 +24,7 @@ const Dashboard = () => {
         <Box component="main" className="page-main">
           <Container maxWidth={false}>
             <HeaderPage title="Painel de Controlo" breadcrumbs={[{ name: "Painel de Controlo" }]} />
-            <Summary />
+{/*             <Summary />
             <Grid container spacing={3}>
               <Grid item xs={12} md={12} lg={8}>
                 <AnnualActivities />
@@ -35,7 +35,7 @@ const Dashboard = () => {
             </Grid>
             <Box sx={{ paddingTop: 3 }}>
               <FinancialStatistics />
-            </Box>
+            </Box> */}
           </Container>
         </Box>
       </motion.div>

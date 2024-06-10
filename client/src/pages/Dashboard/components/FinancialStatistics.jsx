@@ -20,7 +20,7 @@ import { KeyboardArrowRightOutlined, MoreVert } from "@mui/icons-material"
 import { ButtonDropDownSelect, ListButton, Table } from "@components/ui"
 import { BarChart } from "@components/ui/Charts"
 
-import { getContrastColor, getStringColor } from "@utils/shared"
+import { getContrastColor, getStringColor } from "@utils"
 import { formatValueToEuro } from "@utils/format/currency"
 import { formatDate, formatTime } from "@utils/format/date"
 import { formatPhoneNumber } from "@utils/format/phone"

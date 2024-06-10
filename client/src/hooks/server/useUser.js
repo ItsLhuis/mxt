@@ -5,7 +5,7 @@ import { getUserProfile } from "@api/routes/user"
 export const useUser = () => {
   const queryClient = useQueryClient()
 
-  const userProfile = useQuery({
+  const findUserProfile = useQuery({
     queryKey: ["userProfile"],
     queryFn: getUserProfile,
     onSuccess: (data) => {
@@ -13,5 +13,5 @@ export const useUser = () => {
     }
   })
 
-  return { userProfile }
+  return { findUserProfile }
 }

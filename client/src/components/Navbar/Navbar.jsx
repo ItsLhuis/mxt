@@ -24,8 +24,8 @@ import { Loadable, Image, Avatar, CommandDialog } from "@components/ui"
 const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
   const navigate = useNavigate()
 
-  const { userProfile } = useUser()
-  const { data: user, isLoading: isUserLoading } = userProfile
+  const { findUserProfile } = useUser()
+  const { data: user, isLoading: isUserLoading } = findUserProfile
 
   const theme = useTheme()
   const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"))
@@ -136,7 +136,7 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                     <Typography
                       variant="p"
                       component="p"
-                      sx={{ color: "var(--outline)", fontWeight: 500 }}
+                      sx={{ color: "var(--outline)", fontWeight: 600 }}
                     >
                       {!isUserLoading && user.role}
                     </Typography>

@@ -6,10 +6,11 @@ import { Avatar as MuiAvatar, Skeleton } from "@mui/material"
 
 import { Loadable } from "../"
 
-import { getStringColor, getContrastColor } from "@utils/shared"
+import { getStringColor, getContrastColor } from "@utils"
 
 const Avatar = ({ alt, src, name = null, size = 40, sx }) => {
   const [isLoading, setIsLoading] = useState(true)
+  const [isError, setIsError] = useState(true)
 
   useEffect(() => {
     if (!src) return
@@ -19,9 +20,15 @@ const Avatar = ({ alt, src, name = null, size = 40, sx }) => {
     const img = new window.Image()
     img.src = src
 
-    const handleLoad = () => setIsLoading(false)
+    const handleLoad = () => {
+      setIsError(false)
+      setIsLoading(false)
+    }
 
-    const handleError = () => setIsLoading(false)
+    const handleError = () => {
+      setIsError(true)
+      setIsLoading(false)
+    }
 
     img.onload = handleLoad
     img.onerror = handleError
@@ -43,7 +50,7 @@ const Avatar = ({ alt, src, name = null, size = 40, sx }) => {
         LoadedComponent={
           <MuiAvatar
             alt={alt}
-            src={src}
+            src={isError ? "" : src}
             sx={{
               backgroundColor: `${backgroundColor} !important`,
               color: textColor,

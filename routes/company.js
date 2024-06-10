@@ -10,7 +10,7 @@ router
   .route("/")
   .get(checkPermissionHandler("company", permissions.READ), companyController.find)
   .put(
-    checkPermissionHandler("employee", permissions.UPDATE),
+    checkPermissionHandler("company", permissions.UPDATE),
     companyController.uploadLogo,
     companyController.update
   )

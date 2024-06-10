@@ -23,11 +23,7 @@ const queryClient = new QueryClient({
       staleTime: 2 * 60 * 1000,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
-      retry: 3,
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 20000)
-    },
-    mutations: {
-      retry: 3,
+      retry: 2,
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 20000)
     }
   }

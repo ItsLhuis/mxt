@@ -4,9 +4,6 @@ CREATE DATABASE IF NOT EXISTS mxt CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_
 -- Use the "mxt" database
 USE mxt;
 
--- Set the default time zone to UTC
-SET time_zone = '+00:00';
-
 -- Table company
 CREATE TABLE IF NOT EXISTS company (
     enforce_one_row ENUM('only') NOT NULL PRIMARY KEY DEFAULT 'only',
@@ -125,7 +122,7 @@ CREATE TABLE IF NOT EXISTS emails (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     api_id VARCHAR(255) NOT NULL,
     client_id INT,
-    to VARCHAR(255) NOT NULL,
+    contact VARCHAR(255) NOT NULL,
     subject VARCHAR(255),
     sent_by_user_id INT,
     created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -138,7 +135,7 @@ CREATE TABLE IF NOT EXISTS smses (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     api_id VARCHAR(255) NOT NULL,
     client_id INT,
-    to VARCHAR(255) NOT NULL
+    contact VARCHAR(255) NOT NULL,
     message TEXT NOT NULL,
     sent_by_user_id INT,
     created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
