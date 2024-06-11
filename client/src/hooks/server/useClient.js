@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 import { getAllClients } from "@api/routes/clients"
 
-export const useClients = () => {
+export const useClient = () => {
   const queryClient = useQueryClient()
 
   const findAllClients = useQuery({

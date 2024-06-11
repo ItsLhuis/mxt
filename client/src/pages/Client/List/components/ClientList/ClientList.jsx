@@ -1,7 +1,7 @@
 import React from "react"
 
 import { BASE_URL } from "@api"
-import { useClients } from "@hooks/server/useClients"
+import { useClient } from "@hooks/server/useClient"
 
 import { Stack, Paper, Box, Typography, ListItemText, Divider } from "@mui/material"
 
@@ -11,7 +11,7 @@ import { formatDate, formatTime } from "@utils/format/date"
 import { formatPhoneNumber } from "@utils/format/phone"
 
 const ClientList = () => {
-  const { findAllClients } = useClients()
+  const { findAllClients } = useClient()
   const { data: clients, isLoading: isClientsLoading } = findAllClients
 
   const clientsTableColumns = [
