@@ -1,5 +1,5 @@
 import { lazy } from "react"
 
-const ClientList = lazy(() => import("./ClientList/ClientList"))
+const ClientList = lazy(() => import("./ClientList"))
 
 export { ClientList }

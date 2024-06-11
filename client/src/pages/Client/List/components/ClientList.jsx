@@ -592,9 +592,25 @@ const ClientList = () => {
 
     return (
       <Stack sx={{ color: "var(--onSurface)", margin: 3, gap: 3 }}>
-        <Typography variant="h5" component="h5">
-          {row.name}
-        </Typography>
+        <ListItemText>
+          <Typography variant="h5" component="h5">
+            {row.name}
+          </Typography>
+          {row.description && (
+            <Typography
+              variant="p"
+              component="p"
+              style={{
+                color: "var(--outline)",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                maxWidth: "180px"
+              }}
+            >
+              {row.description}
+            </Typography>
+          )}
+        </ListItemText>
         <Box
           sx={{
             border: "1px solid var(--elevation-level5)",

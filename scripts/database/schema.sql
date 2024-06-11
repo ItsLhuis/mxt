@@ -228,6 +228,170 @@ CREATE TABLE IF NOT EXISTS equipment_interactions_history (
     FOREIGN KEY (responsible_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
+-- Table repair_status
+CREATE TABLE IF NOT EXISTS repair_status (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    created_by_user_id INT,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    last_modified_by_user_id INT,
+    last_modified_datetime TIMESTAMP NULL,
+    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Table repairs
+CREATE TABLE IF NOT EXISTS repairs (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    equipment_id INT NOT NULL,
+    status_id INT NOT NULL,
+    client_os_password VARCHAR(255),
+    client_bios_password VARCHAR(255),
+    accessories TEXT,
+    reported_issues TEXT,
+    description TEXT,
+    entry_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    conclusion_datetime TIMESTAMP NULL,
+    delivery_datetime TIMESTAMP NULL,
+    created_by_user_id INT,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    last_modified_by_user_id INT,
+    last_modified_datetime TIMESTAMP NULL,
+    FOREIGN KEY (equipment_id) REFERENCES equipments(id) ON DELETE CASCADE,
+    FOREIGN KEY (status_id) REFERENCES repair_status(id) ON DELETE RESTRICT,
+    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Table repair_intervention
+CREATE TABLE IF NOT EXISTS repair_intervention (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    repair_id INT NOT NULL UNIQUE,
+    work_done TEXT,
+    accessories_used TEXT,
+    description TEXT,
+    created_by_user_id INT,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    last_modified_by_user_id INT,
+    last_modified_datetime TIMESTAMP NULL,
+    FOREIGN KEY (repair_id) REFERENCES repairs(id) ON DELETE CASCADE,
+    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Table repair_entry_accessories_options
+CREATE TABLE IF NOT EXISTS repair_entry_accessories_options (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    created_by_user_id INT,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    last_modified_by_user_id INT,
+    last_modified_datetime TIMESTAMP NULL,
+    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Table repair_entry_reported_issues_options
+CREATE TABLE IF NOT EXISTS repair_entry_reported_issues_options (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    created_by_user_id INT,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    last_modified_by_user_id INT,
+    last_modified_datetime TIMESTAMP NULL,
+    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Table repair_intervention_works_done_options
+CREATE TABLE IF NOT EXISTS repair_intervention_works_done_options (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    created_by_user_id INT,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    last_modified_by_user_id INT,
+    last_modified_datetime TIMESTAMP NULL,
+    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Table repair_intervention_accessories_used_options
+CREATE TABLE IF NOT EXISTS repair_intervention_accessories_used_options (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    created_by_user_id INT,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    last_modified_by_user_id INT,
+    last_modified_datetime TIMESTAMP NULL,
+    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Table repair_entry_accessories
+CREATE TABLE IF NOT EXISTS repair_entry_accessories (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    repair_id INT NOT NULL,
+    accessory_option_id INT,
+    FOREIGN KEY (repair_id) REFERENCES repairs(id) ON DELETE CASCADE,
+    FOREIGN KEY (accessory_option_id) REFERENCES repair_entry_accessories_options(id) ON DELETE RESTRICT,
+    UNIQUE (repair_id, accessory_option_id)
+);
+
+-- Table repair_entry_reported_issues
+CREATE TABLE IF NOT EXISTS repair_entry_reported_issues (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    repair_id INT NOT NULL,
+    reported_issue_option_id INT,
+    FOREIGN KEY (repair_id) REFERENCES repairs(id) ON DELETE CASCADE,
+    FOREIGN KEY (reported_issue_option_id) REFERENCES repair_entry_reported_issues_options(id) ON DELETE RESTRICT,
+    UNIQUE (repair_id, reported_issue_option_id)
+);
+
+-- Table repair_intervention_work_done
+CREATE TABLE IF NOT EXISTS repair_intervention_work_done (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    repair_intervention_id INT NOT NULL,
+    work_done_option_id INT,
+    FOREIGN KEY (repair_intervention_id) REFERENCES repair_intervention(id) ON DELETE CASCADE,
+    FOREIGN KEY (work_done_option_id) REFERENCES repair_intervention_works_done_options(id) ON DELETE RESTRICT,
+    UNIQUE (repair_intervention_id, work_done_option_id)
+);
+
+-- Table repair_intervention_accessories_used
+CREATE TABLE IF NOT EXISTS repair_intervention_accessories_used (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    repair_intervention_id INT NOT NULL,
+    accessories_used_option_id INT,
+    FOREIGN KEY (repair_intervention_id) REFERENCES repair_intervention(id) ON DELETE CASCADE,
+    FOREIGN KEY (accessories_used_option_id) REFERENCES repair_intervention_accessories_used_options(id) ON DELETE RESTRICT,
+    UNIQUE (repair_intervention_id, accessories_used_option_id)
+);
+
+-- Table repair_attachments
+CREATE TABLE IF NOT EXISTS repair_attachments (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    repair_id INT NOT NULL,
+    file VARCHAR(255) NOT NULL,
+    original_filename VARCHAR(255) NOT NULL,
+    type ENUM('image', 'document') NOT NULL,
+    uploaded_by_user_id INT,
+    uploaded_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    FOREIGN KEY (repair_id) REFERENCES repairs(id) ON DELETE CASCADE,
+    FOREIGN KEY (uploaded_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Table repair_interactions_history
+CREATE TABLE IF NOT EXISTS repair_interactions_history (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    repair_id INT NOT NULL,
+    type VARCHAR(255),
+    details TEXT,
+    responsible_user_id INT,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    FOREIGN KEY (repair_id) REFERENCES repairs(id) ON DELETE CASCADE,
+    FOREIGN KEY (responsible_user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
 -- Indexes
 -- Table users
 CREATE INDEX idx_users_created_at ON users (created_at_datetime);
@@ -252,3 +416,31 @@ CREATE INDEX idx_equipment_brands_name ON equipment_brands (name);
 CREATE INDEX idx_equipment_models_name ON equipment_models (name);
 CREATE INDEX idx_equipment_types_name ON equipment_types (name);
 CREATE INDEX idx_equipment_interactions_created_at ON equipment_interactions_history (created_at_datetime);
+
+-- Table repairs
+CREATE INDEX idx_repairs_created_at ON repairs (created_at_datetime);
+CREATE INDEX idx_repairs_last_modified ON repairs (last_modified_datetime);
+CREATE INDEX idx_repairs_entry_datetime ON repairs (entry_datetime);
+CREATE INDEX idx_repairs_conclusion_datetime ON repairs (conclusion_datetime);
+CREATE INDEX idx_repairs_delivery_datetime ON repairs (delivery_datetime);
+
+CREATE INDEX idx_repair_interactions_created_at ON repair_interactions_history (created_at_datetime);
+
+CREATE INDEX idx_repair_attachments_uploaded_at ON repair_attachments (uploaded_at_datetime);
+
+CREATE INDEX idx_repair_entry_accessories_repair_id ON repair_entry_accessories (repair_id);
+CREATE INDEX idx_repair_entry_accessories_option_id ON repair_entry_accessories (accessory_option_id);
+
+CREATE INDEX idx_repair_entry_reported_issues_repair_id ON repair_entry_reported_issues (repair_id);
+CREATE INDEX idx_repair_entry_reported_issues_option_id ON repair_entry_reported_issues (reported_issue_option_id);
+
+CREATE INDEX idx_repair_intervention_work_done_repair_intervention_id ON repair_intervention_work_done (repair_intervention_id);
+CREATE INDEX idx_repair_intervention_work_done_option_id ON repair_intervention_work_done (work_done_option_id);
+
+CREATE INDEX idx_repair_intervention_accessories_used_repair_intervention_id ON repair_intervention_accessories_used (repair_intervention_id);
+CREATE INDEX idx_repair_intervention_accessories_used_option_id ON repair_intervention_accessories_used (accessories_used_option_id);
+
+CREATE INDEX idx_repair_entry_accessories_options_name ON repair_entry_accessories_options (name);
+CREATE INDEX idx_repair_entry_reported_issues_options_name ON repair_entry_reported_issues_options (name);
+CREATE INDEX idx_repair_intervention_works_done_options_name ON repair_intervention_works_done_options (name);
+CREATE INDEX idx_repair_intervention_accessories_used_options_name ON repair_intervention_accessories_used_options (name)
