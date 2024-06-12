@@ -116,7 +116,7 @@ const Email = {
         })
         .then((data) => {
           const query =
-            "INSERT INTO emails (api_id, client_id, contact, subject, sent_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, NOW())"
+            "INSERT INTO emails (api_id, client_id, contact, subject, sent_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"
           return dbQueryExecutor.execute(query, [data.id, clientId, contact, subject, sentByUserId])
         })
         .then((result) => {

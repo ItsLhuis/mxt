@@ -100,7 +100,7 @@ const Sms = {
         .send(process.env.RELEANS_SENDER_ID, contact, message)
         .then((data) => {
           const query =
-            "INSERT INTO smses (api_id, client_id, contact, message, sent_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, NOW())"
+            "INSERT INTO smses (api_id, client_id, contact, message, sent_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"
           return dbQueryExecutor.execute(query, [data.id, clientId, contact, message, sentByUserId])
         })
         .then((result) => {

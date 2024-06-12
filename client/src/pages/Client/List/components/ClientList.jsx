@@ -651,7 +651,7 @@ const ClientList = () => {
           </Typography>
           <Table
             mode="datatable"
-            data={row.interactionsHistory ?? []}
+            data={row.interactions_history ?? []}
             columns={interactionsHistoryTableColumns}
           />
         </Box>

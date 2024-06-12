@@ -7,18 +7,12 @@ const repairController = require("@controllers/repair")
 
 router
   .route("/")
-  .get(
-    checkPermissionHandler("repair", permissions.READ),
-    repairController.findAll
-  )
-  .post(
-    checkPermissionHandler("repair", permissions.CREATE),
-    repairController.create
-  )
+  .get(checkPermissionHandler("repair", permissions.READ), repairController.findAll)
+  .post(checkPermissionHandler("repair", permissions.CREATE), repairController.create)
 
-router.route("/:repairId").put(
-  checkPermissionHandler("repair", permissions.UPDATE),
-  repairController.update
-)
+router
+  .route("/:repairId")
+  .get(checkPermissionHandler("repair", permissions.READ), repairController.findByRepairId)
+  .put(checkPermissionHandler("repair", permissions.UPDATE), repairController.update)
 
 module.exports = router

@@ -9,13 +9,9 @@ import { BASE_URL } from "@api"
 import { Box, Collapse, Typography, ButtonBase, Drawer, Tooltip, IconButton } from "@mui/material"
 import {
   Dashboard,
-  Inventory,
   Person,
   AppsOutlined,
   Construction,
-  TableChart,
-  Terminal,
-  ReceiptLongOutlined,
   Email,
   Sms,
   KeyboardArrowUp,
@@ -32,110 +28,9 @@ const sidebarData = [
     name: "Painel de Controlo"
   },
   {
-    icon: <TableChart fontSize="small" />,
-    path: "/table/",
-    name: "Tabela",
-    submenu: [
-      {
-        path: "/table/accessory",
-        name: "Acessório",
-        className: ""
-      },
-      {
-        path: "/table/wintouch-article",
-        name: "Artigo Wintouch",
-        className: ""
-      },
-      {
-        path: "/table/equipment-type",
-        name: "Tipo de Equipamento",
-        className: ""
-      },
-      {
-        path: "/table/brand",
-        name: "Marca",
-        className: ""
-      },
-      {
-        path: "/table/damage",
-        name: "Avaria",
-        className: ""
-      },
-      {
-        path: "/table/intervention",
-        name: "Intervenção",
-        className: ""
-      },
-      {
-        path: "/table/equipment-transfer",
-        name: "Transferência de Equipamento",
-        className: ""
-      },
-      {
-        path: "/table/checklist",
-        name: "Checklist",
-        className: ""
-      },
-      {
-        path: "/table/technician",
-        name: "Técnico",
-        className: ""
-      },
-      {
-        path: "/table/profile",
-        name: "Perfil",
-        className: ""
-      },
-      {
-        icon: <Terminal fontSize="small" />,
-        path: "/table/log/",
-        name: "Log",
-        submenu: [
-          {
-            path: "/table/log/repair",
-            name: "Log de Reparação",
-            className: "__but__lvlDown"
-          },
-          {
-            path: "/table/log/transfer",
-            name: "Log de Transferência",
-            className: "__but__lvlDown"
-          },
-          {
-            path: "/table/log/email",
-            name: "Log de E-mail",
-            className: "__but__lvlDown"
-          },
-          {
-            path: "/table/log/sms",
-            name: "Log de SMS",
-            className: "__but__lvlDown"
-          }
-        ]
-      }
-    ]
-  },
-  {
     title: "MANUTENÇÃO",
-    icon: <Inventory fontSize="small" />,
-    path: "/stock/",
-    name: "Inventário",
-    submenu: [
-      {
-        path: "/stock/list",
-        name: "Lista",
-        className: ""
-      },
-      {
-        path: "/stock/add",
-        name: "Adicionar",
-        className: ""
-      }
-    ]
-  },
-  {
     icon: <Person fontSize="small" />,
-    path: "/client/",
+    path: "/client",
     name: "Cliente",
     submenu: [
       {
@@ -151,8 +46,76 @@ const sidebarData = [
     ]
   },
   {
+    icon: <AppsOutlined fontSize="small" />,
+    path: "/equipment",
+    name: "Equipamento",
+    submenu: [
+      {
+        path: "/equipment/list",
+        name: "Lista",
+        className: ""
+      },
+      {
+        path: "/equipment/add",
+        name: "Adicionar",
+        className: ""
+      },
+      {
+        icon: <AppsOutlined fontSize="small" />,
+        path: "/equipment/type",
+        name: "Tipo",
+        submenu: [
+          {
+            path: "/equipment/type/list",
+            name: "Lista",
+            className: "__but__lvlDown"
+          },
+          {
+            path: "/equipment/type/tag",
+            name: "Adicionar",
+            className: "__but__lvlDown"
+          }
+        ]
+      },
+      {
+        icon: <AppsOutlined fontSize="small" />,
+        path: "/equipment/brand",
+        name: "Marca",
+        submenu: [
+          {
+            path: "/equipment/brand/list",
+            name: "Lista",
+            className: "__but__lvlDown"
+          },
+          {
+            path: "/equipment/brand/add",
+            name: "Adicionar",
+            className: "__but__lvlDown"
+          }
+        ]
+      },
+      {
+        icon: <AppsOutlined fontSize="small" />,
+        path: "/equipment/model",
+        name: "Modelo",
+        submenu: [
+          {
+            path: "/equipment/model/list",
+            name: "Lista",
+            className: "__but__lvlDown"
+          },
+          {
+            path: "/equipment/model/add",
+            name: "Adicionar",
+            className: "__but__lvlDown"
+          }
+        ]
+      }
+    ]
+  },
+  {
     icon: <Construction fontSize="small" />,
-    path: "/repair/",
+    path: "/repair",
     name: "Reparação",
     submenu: [
       {
@@ -167,17 +130,68 @@ const sidebarData = [
       },
       {
         icon: <AppsOutlined fontSize="small" />,
-        path: "/repair/equipment/",
-        name: "Equipamento",
+        path: "/repair/entry-accessory",
+        name: "Acessório da Entrada",
         submenu: [
           {
-            path: "/repair/equipment/list",
+            path: "/repair/entry-accessory/list",
             name: "Lista",
             className: "__but__lvlDown"
           },
           {
-            path: "/repair/equipment/tag",
-            name: "Etiqueta",
+            path: "/repair/entry-accessory/tag",
+            name: "Adicionar",
+            className: "__but__lvlDown"
+          }
+        ]
+      },
+      {
+        icon: <AppsOutlined fontSize="small" />,
+        path: "/repair/reported-issue",
+        name: "Problema Relatado",
+        submenu: [
+          {
+            path: "/repair/reported-issue/list",
+            name: "Lista",
+            className: "__but__lvlDown"
+          },
+          {
+            path: "/repair/reported-issue/add",
+            name: "Adicionar",
+            className: "__but__lvlDown"
+          }
+        ]
+      },
+      {
+        icon: <AppsOutlined fontSize="small" />,
+        path: "/repair/work-done",
+        name: "Trabalho Realizado",
+        submenu: [
+          {
+            path: "/repair/work-done/list",
+            name: "Lista",
+            className: "__but__lvlDown"
+          },
+          {
+            path: "/repair/work-done/add",
+            name: "Adicionar",
+            className: "__but__lvlDown"
+          }
+        ]
+      },
+      {
+        icon: <AppsOutlined fontSize="small" />,
+        path: "/repair/intervention-accessory",
+        name: "Acessório da Intervenção",
+        submenu: [
+          {
+            path: "/repair/intervention-accessory/list",
+            name: "Lista",
+            className: "__but__lvlDown"
+          },
+          {
+            path: "/repair/intervention-accessory/add",
+            name: "Adicionar",
             className: "__but__lvlDown"
           }
         ]
@@ -185,32 +199,39 @@ const sidebarData = [
     ]
   },
   {
-    icon: <ReceiptLongOutlined fontSize="small" />,
-    path: "/invoice/",
-    name: "Faturação",
+    title: "OUTROS",
+    path: "/email",
+    icon: <Email fontSize="small" />,
+    name: "E-mail",
     submenu: [
       {
-        path: "/invoice/list",
+        path: "/email/list",
         name: "Lista",
         className: ""
       },
       {
-        path: "/invoice/add",
-        name: "Criar",
+        path: "/email/send",
+        name: "Enviar",
         className: ""
       }
     ]
   },
   {
-    title: "OUTROS",
-    path: "/send-email",
-    icon: <Email fontSize="small" />,
-    name: "E-mail"
-  },
-  {
-    path: "/send-sms",
+    path: "/sms",
     icon: <Sms fontSize="small" />,
-    name: "SMS"
+    name: "SMS",
+    submenu: [
+      {
+        path: "/sms/list",
+        name: "Lista",
+        className: ""
+      },
+      {
+        path: "/sms/send",
+        name: "Enviar",
+        className: ""
+      }
+    ]
   }
 ]
 

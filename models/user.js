@@ -103,7 +103,7 @@ const User = {
   },
   create: (username, password, email, avatar, role, isActive, createdByUserId) => {
     const query =
-      "INSERT INTO users (username, password, email, avatar, role, is_active, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())"
+      "INSERT INTO users (username, password, email, avatar, role, is_active, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"
     return dbQueryExecutor
       .execute(query, [username, password, email, avatar, role, isActive ?? true, createdByUserId])
       .then((result) => {
@@ -144,12 +144,12 @@ const User = {
     },
     findByOtpCodeAndUserId: (otpCode, userId) => {
       const query =
-        "SELECT * FROM user_otp_codes WHERE otp_code = ? AND user_id = ? AND is_used = false AND NOW() <= expiration_datetime"
+        "SELECT * FROM user_otp_codes WHERE otp_code = ? AND user_id = ? AND is_used = false AND CURRENT_TIMESTAMP() <= expiration_datetime"
       return dbQueryExecutor.execute(query, [otpCode, userId])
     },
     create: (userId, otpCode) => {
       const query =
-        "INSERT INTO user_otp_codes (user_id, otp_code, is_used, created_at_datetime, expiration_datetime) VALUES (?, ?, false, NOW(), DATE_ADD(NOW(), INTERVAL 5 MINUTE))"
+        "INSERT INTO user_otp_codes (user_id, otp_code, is_used, created_at_datetime, expiration_datetime) VALUES (?, ?, false, CURRENT_TIMESTAMP(), DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL 5 MINUTE))"
       return dbQueryExecutor.execute(query, [userId, otpCode])
     },
     markAsUsed: (otpCode) => {

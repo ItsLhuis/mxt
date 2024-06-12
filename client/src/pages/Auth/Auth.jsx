@@ -11,16 +11,16 @@ import { Login } from "./components"
 import { TypeAnimation } from "react-type-animation"
 
 const phrases = [
-  "Otimize a gestão dos seus equipamentos informáticos",
-  "Gerencie de forma eficiente e intuitiva o estado dos seus dispositivos tecnológicos",
-  "Solução completa para o controlo de ativos informáticos empresariais",
-  "Aumente a produtividade da sua equipa de TI com a nossa ferramenta especializada",
-  "Tenha o controlo total sobre os seus equipamentos informáticos e as suas operações",
-  "Maximize a eficiência dos seus processos de manutenção de sistemas informáticos",
-  "Gerencie o seu inventário de hardware e software de forma inteligente e simplificada",
-  "Facilite a localização e monitorização dos seus ativos tecnológicos",
-  "Impulsione o crescimento do seu negócio de gestão de TI",
-  "Garanta o sucesso da sua empresa com uma gestão de ativos informáticos eficaz"
+  "Registe novos colaboradores para uma gestão eficiente da equipa",
+  "Adicione clientes para registar as suas interações e histórico de equipamentos",
+  "Controle tipos, marcas e modelos de equipamentos para melhor organização",
+  "Registe reparações detalhadas, desde o relato inicial até à entrega",
+  "Mantenha registos de interações com clientes para comunicação clara",
+  "Carregue anexos, como imagens ou documentos, para cada equipamento ou reparação",
+  "Utilize opções predefinidas para relatar problemas e trabalhos realizados",
+  "Acompanhe o estado de cada reparação para cumprir prazos estabelecidos",
+  "Notifique os clientes sobre o progresso das reparações",
+  "Analise relatórios para obter informações abrangentes sobre a plataforma"
 ]
 
 const Auth = () => {

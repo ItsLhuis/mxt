@@ -59,7 +59,7 @@ const Equipment = {
               : null,
           last_modified_datetime: equipment.last_modified_datetime,
           attachments,
-          interactionsHistory
+          interactions_history: interactionsHistory
         }
       })
     )
@@ -119,7 +119,7 @@ const Equipment = {
               : null,
           last_modified_datetime: equipment[0].last_modified_datetime,
           attachments,
-          interactionsHistory
+          interactions_history: interactionsHistory
         }
 
         return [equipmentWithDetails]
@@ -151,7 +151,7 @@ const Equipment = {
   },
   create: (clientId, brandId, modelId, typeId, sn, description, createdByUserId) => {
     const query =
-      "INSERT INTO equipments (client_id, brand_id, model_id, type_id, sn, description, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())"
+      "INSERT INTO equipments (client_id, brand_id, model_id, type_id, sn, description, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"
     return dbQueryExecutor
       .execute(query, [clientId, brandId, modelId, typeId, sn, description, createdByUserId])
       .then((result) => {
@@ -160,7 +160,7 @@ const Equipment = {
   },
   update: (equipmentId, brandId, modelId, typeId, sn, description, lastModifiedByUserId) => {
     const query =
-      "UPDATE equipments SET brand_id = ?, model_id = ?, type_id = ?, sn = ?, description = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
+      "UPDATE equipments SET brand_id = ?, model_id = ?, type_id = ?, sn = ?, description = ?, last_modified_by_user_id = ?, last_modified_datetime = CURRENT_TIMESTAMP() WHERE id = ?"
     return dbQueryExecutor
       .execute(query, [
         brandId,
@@ -172,22 +172,22 @@ const Equipment = {
         equipmentId
       ])
       .then(() => {
-        return revalidateCache(["equipments", `equipment:${equipmentId}`]).then((result) => result)
+        return clearAllCaches().then(() => result)
       })
   },
   updateClientId: (equipmentId, clientId, lastModifiedByUserId) => {
     const query =
-      "UPDATE equipments SET client_id = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
+      "UPDATE equipments SET client_id = ?, last_modified_by_user_id = ?, last_modified_datetime = CURRENT_TIMESTAMP() WHERE id = ?"
     return dbQueryExecutor
       .execute(query, [clientId, lastModifiedByUserId, equipmentId])
       .then((result) => {
-        return revalidateCache(["equipments", `equipment:${equipmentId}`]).then(() => result)
+        return clearAllCaches().then(() => result)
       })
   },
   delete: (equipmentId) => {
     const query = "DELETE FROM equipments WHERE id = ?"
     return dbQueryExecutor.execute(query, [equipmentId]).then((result) => {
-      return revalidateCache(["equipments", `equipment:${equipmentId}`]).then(() => result)
+      return clearAllCaches().then(() => result)
     })
   },
   brand: {
@@ -260,14 +260,14 @@ const Equipment = {
     },
     create: (name, createdByUserId) => {
       const query =
-        "INSERT INTO equipment_brands (name, created_by_user_id, created_at_datetime) VALUES (?, ?, NOW())"
+        "INSERT INTO equipment_brands (name, created_by_user_id, created_at_datetime) VALUES (?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor.execute(query, [name, createdByUserId]).then((result) => {
         return revalidateCache("equipmentBrands").then(() => result)
       })
     },
     update: (brandId, name, lastModifiedByUserId) => {
       const query =
-        "UPDATE equipment_brands SET name = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
+        "UPDATE equipment_brands SET name = ?, last_modified_by_user_id = ?, last_modified_datetime = CURRENT_TIMESTAMP() WHERE id = ?"
       return dbQueryExecutor
         .execute(query, [name, lastModifiedByUserId, brandId])
         .then(async (result) => {
@@ -418,7 +418,7 @@ const Equipment = {
     },
     create: (brandId, name, createdByUserId) => {
       const query =
-        "INSERT INTO equipment_models (brand_id, name, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, NOW())"
+        "INSERT INTO equipment_models (brand_id, name, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor.execute(query, [brandId, name, createdByUserId]).then((result) => {
         return revalidateCache(["equipmentModels", `equipmentModelsByBrand:${brandId}`]).then(
           () => result
@@ -427,7 +427,7 @@ const Equipment = {
     },
     update: (modelId, name, lastModifiedByUserId) => {
       const query =
-        "UPDATE equipment_models SET name = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
+        "UPDATE equipment_models SET name = ?, last_modified_by_user_id = ?, last_modified_datetime = CURRENT_TIMESTAMP() WHERE id = ?"
       return dbQueryExecutor
         .execute(query, [name, lastModifiedByUserId, modelId])
         .then(async (result) => {
@@ -541,14 +541,14 @@ const Equipment = {
     },
     create: (name, createdByUserId) => {
       const query =
-        "INSERT INTO equipment_types (name, created_by_user_id, created_at_datetime) VALUES (?, ?, NOW())"
+        "INSERT INTO equipment_types (name, created_by_user_id, created_at_datetime) VALUES (?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor.execute(query, [name, createdByUserId]).then((result) => {
         return revalidateCache("equipmentTypes").then(() => result)
       })
     },
     update: (typeId, name, lastModifiedByUserId) => {
       const query =
-        "UPDATE equipment_types SET name = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
+        "UPDATE equipment_types SET name = ?, last_modified_by_user_id = ?, last_modified_datetime = CURRENT_TIMESTAMP() WHERE id = ?"
       return dbQueryExecutor
         .execute(query, [name, lastModifiedByUserId, typeId])
         .then(async (result) => {
@@ -589,7 +589,7 @@ const Equipment = {
     },
     create: async (equipmentId, file, originalFilename, type, uploadedByUserId) => {
       const query =
-        "INSERT INTO equipment_attachments (equipment_id, file, original_filename, type, uploaded_by_user_id) VALUES (?, ?, ?, ?, ?)"
+        "INSERT INTO equipment_attachments (equipment_id, file, original_filename, type, uploaded_by_user_id, uploaded_at_datetime) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor
         .execute(query, [equipmentId, file, originalFilename, type, uploadedByUserId])
         .then((result) => {
@@ -637,7 +637,7 @@ const Equipment = {
     create: (equipmentId, interactionType, details, responsibleUserId) => {
       if (HISTORY_ENABLED) {
         const query =
-          "INSERT INTO equipment_interactions_history (equipment_id, type, details, responsible_user_id, created_at_datetime) VALUES (?, ?, ?, ?, NOW())"
+          "INSERT INTO equipment_interactions_history (equipment_id, type, details, responsible_user_id, created_at_datetime) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP())"
         return dbQueryExecutor
           .execute(query, [equipmentId, interactionType, details, responsibleUserId])
           .then((result) => {

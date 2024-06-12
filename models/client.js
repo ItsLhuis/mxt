@@ -50,7 +50,7 @@ const Client = {
           last_modified_datetime: client.last_modified_datetime,
           contacts,
           addresses,
-          interactionsHistory
+          interactions_history: interactionsHistory
         }
       })
     )
@@ -92,7 +92,7 @@ const Client = {
           last_modified_datetime: client[0].last_modified_datetime,
           contacts,
           addresses,
-          interactionsHistory
+          interactions_history: interactionsHistory
         }
 
         return [clientWithDetails]
@@ -101,14 +101,14 @@ const Client = {
     )(),
   create: (name, description, createdByUserId) => {
     const query =
-      "INSERT INTO clients (name, description, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, NOW())"
+      "INSERT INTO clients (name, description, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, CURRENT_TIMESTAMP())"
     return dbQueryExecutor.execute(query, [name, description, createdByUserId]).then((result) => {
       return revalidateCache("clients").then(() => result)
     })
   },
   update: (clientId, name, description, lastModifiedByUserId) => {
     const query =
-      "UPDATE clients SET name = ?, description = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
+      "UPDATE clients SET name = ?, description = ?, last_modified_by_user_id = ?, last_modified_datetime = CURRENT_TIMESTAMP() WHERE id = ?"
     return dbQueryExecutor
       .execute(query, [name, description, lastModifiedByUserId, clientId])
       .then((result) => {
@@ -181,7 +181,7 @@ const Client = {
     },
     create: (clientId, type, contact, description, createdByUserId) => {
       const query =
-        "INSERT INTO client_contacts (client_id, type, contact, description, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, NOW())"
+        "INSERT INTO client_contacts (client_id, type, contact, description, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor
         .execute(query, [
           clientId,
@@ -200,7 +200,7 @@ const Client = {
     },
     update: (clientId, contactId, type, contact, description, lastModifiedByUserId) => {
       const query =
-        "UPDATE client_contacts SET type = ?, contact = ?, description = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
+        "UPDATE client_contacts SET type = ?, contact = ?, description = ?, last_modified_by_user_id = ?, last_modified_datetime = CURRENT_TIMESTAMP() WHERE id = ?"
       return dbQueryExecutor
         .execute(query, [
           type,
@@ -295,7 +295,7 @@ const Client = {
     },
     create: (clientId, country, city, locality, address, postalCode, createdByUserId) => {
       const query =
-        "INSERT INTO client_addresses (client_id, country, city, locality, address, postal_code, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())"
+        "INSERT INTO client_addresses (client_id, country, city, locality, address, postal_code, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor
         .execute(query, [clientId, country, city, locality, address, postalCode, createdByUserId])
         .then((result) => {
@@ -317,7 +317,7 @@ const Client = {
       lastModifiedByUserId
     ) => {
       const query =
-        "UPDATE client_addresses SET country = ?, city = ?, locality = ?, address = ?, postal_code = ?, last_modified_by_user_id = ?, last_modified_datetime = NOW() WHERE id = ?"
+        "UPDATE client_addresses SET country = ?, city = ?, locality = ?, address = ?, postal_code = ?, last_modified_by_user_id = ?, last_modified_datetime = CURRENT_TIMESTAMP() WHERE id = ?"
       return dbQueryExecutor
         .execute(query, [
           country,
@@ -381,7 +381,7 @@ const Client = {
     create: (clientId, interactionType, details, responsibleUserId) => {
       if (HISTORY_ENABLED) {
         const query =
-          "INSERT INTO client_interactions_history (client_id, type, details, responsible_user_id, created_at_datetime) VALUES (?, ?, ?, ?, NOW())"
+          "INSERT INTO client_interactions_history (client_id, type, details, responsible_user_id, created_at_datetime) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP())"
         return dbQueryExecutor
           .execute(query, [clientId, interactionType, details, responsibleUserId])
           .then((result) => {

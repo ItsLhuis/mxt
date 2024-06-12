@@ -8,7 +8,7 @@ const Company = {
     return dbQueryExecutor.execute(query)
   }),
   initialize: () => {
-    const query = "INSERT INTO company (enforce_one_row, created_at_datetime) VALUES (?, NOW())"
+    const query = "INSERT INTO company (enforce_one_row, created_at_datetime) VALUES (?, CURRENT_TIMESTAMP())"
     return dbQueryExecutor.execute(query, ["only"]).then((result) => {
       return revalidateCache("company").then(() => result)
     })

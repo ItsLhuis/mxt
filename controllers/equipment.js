@@ -63,7 +63,7 @@ const equipmentController = {
     const filteredEquipments = produce(equipments, (draft) => {
       if (!includeInteractionsHistory) {
         draft.forEach((equipment) => {
-          delete equipment.interactionsHistory
+          delete equipment.interactions_history
         })
       }
     })
@@ -82,7 +82,7 @@ const equipmentController = {
 
     const filteredEquipment = produce(existingEquipment[0], (draft) => {
       if (!includeInteractionsHistory) {
-        delete draft.interactionsHistory
+        delete draft.interactions_history
       }
     })
 

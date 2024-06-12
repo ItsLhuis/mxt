@@ -36,7 +36,7 @@ const clientController = {
     const filteredClients = produce(clients, (draft) => {
       if (!includeInteractionsHistory) {
         draft.forEach((client) => {
-          delete client.interactionsHistory
+          delete client.interactions_history
         })
       }
     })
@@ -55,7 +55,7 @@ const clientController = {
 
     const filteredClient = produce(existingClient[0], (draft) => {
       if (!includeInteractionsHistory) {
-        delete draft.interactionsHistory
+        delete draft.interactions_history
       }
     })
 
