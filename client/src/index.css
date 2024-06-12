@@ -424,6 +424,22 @@ input[type=number]::-webkit-outer-spin-button {
   border-color: var(--outline);
 }
 
+.MuiPickersLayout-root .MuiDivider-root {
+  border-color: transparent !important;
+}
+
+.MuiPickersLayout-root .MuiList-root {
+  border-left: 2px solid var(--elevation-level5) !important;
+}
+
+.MuiPickersLayout-root .MuiList-root .MuiButtonBase-root {
+  border-radius: 8px !important;
+}
+
+.MuiMultiSectionDigitalClock-root .MuiList-root::-webkit-scrollbar {
+  display: none;
+}
+
 .MuiDialogContent-root::-webkit-scrollbar {
   background-color: var(--elevation-level2);
 }

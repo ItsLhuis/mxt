@@ -2,7 +2,7 @@ import React from "react"
 
 import { startOfDay, isBefore, isAfter } from "date-fns"
 
-import { DatePicker as MuiDatePicker } from "@mui/x-date-pickers"
+import { DateTimePicker  } from "@mui/x-date-pickers"
 import { DialogActions, Button, FormHelperText } from "@mui/material"
 import { KeyboardArrowDown } from "@mui/icons-material"
 
@@ -44,7 +44,7 @@ const DatePicker = (props) => {
 
   return (
     <>
-      <MuiDatePicker
+      <DateTimePicker
         slots={{
           switchViewIcon: KeyboardArrowDown,
           actionBar: CustomActionBar

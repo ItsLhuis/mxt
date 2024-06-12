@@ -76,5 +76,10 @@ module.exports = {
       [roles.BOSS]: [permissions.READ],
       [roles.ADMIN]: [permissions.READ]
     }
+  },
+  repair: {
+    [roles.BOSS]: [permissions.ALL],
+    [roles.ADMIN]: [permissions.ALL],
+    [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE, permissions.UPDATE]
   }
 }

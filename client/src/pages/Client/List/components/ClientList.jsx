@@ -602,9 +602,10 @@ const ClientList = () => {
               component="p"
               style={{
                 color: "var(--outline)",
+                whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
-                maxWidth: "180px"
+                maxWidth: "250px",
               }}
             >
               {row.description}

@@ -11,7 +11,7 @@ export const useClient = () => {
     onSuccess: (data) => {
       queryClient.setQueryData(["clients"], data)
     },
-    refetchInterval: 3000
+    refetchInterval: 4000
   })
 
   return { findAllClients }

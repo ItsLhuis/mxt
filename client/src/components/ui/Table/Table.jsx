@@ -217,7 +217,7 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
           state.page * state.rowsPerPage + state.rowsPerPage
         )
       : sortedData
-  const hasExpandableContent = !!ExpandableContentComponent
+  const hasExpandableContent = !!ExpandableContentComponent && data.length > 0
 
   return (
     <Box

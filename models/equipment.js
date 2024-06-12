@@ -150,10 +150,8 @@ const Equipment = {
     return dbQueryExecutor.execute(query, params)
   },
   create: (clientId, brandId, modelId, typeId, sn, description, createdByUserId) => {
-    const query = `
-      INSERT INTO equipments (client_id, brand_id, model_id, type_id, sn, description, created_by_user_id, created_at_datetime) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
-    `
+    const query =
+      "INSERT INTO equipments (client_id, brand_id, model_id, type_id, sn, description, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())"
     return dbQueryExecutor
       .execute(query, [clientId, brandId, modelId, typeId, sn, description, createdByUserId])
       .then((result) => {
@@ -281,7 +279,9 @@ const Equipment = {
             })
           }
 
-          return revalidateCache("equipmentBrands").then(() => result)
+          return revalidateCache(["equipmentBrands", `equipmentBrand:${brandId}`]).then(
+            () => result
+          )
         })
     },
     delete: (brandId) => {
@@ -295,7 +295,7 @@ const Equipment = {
           })
         }
 
-        return revalidateCache("equipmentBrands").then(() => result)
+        return revalidateCache(["equipmentBrands", `equipmentBrand:${brandId}`]).then(() => result)
       })
     }
   },

@@ -91,4 +91,14 @@ router.use(
   equipmentRouter
 )
 
+const repairRouter = require("@routes/repair")
+router.use(
+  "/repairs",
+  checkCompanyHandler,
+  initializeUserHandler,
+  authTokenHandler,
+  userRoleHandler,
+  repairRouter
+)
+
 module.exports = router
