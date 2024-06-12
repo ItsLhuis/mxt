@@ -698,7 +698,7 @@ const Repair = {
         `repair:interactionsHistory:${repairId}`,
         async () => {
           const query =
-            "SELECT * FROM repair_interactions_history WHERE repairId = ? ORDER BY created_at_datetime DESC"
+            "SELECT * FROM repair_interactions_history WHERE repair_id = ? ORDER BY created_at_datetime DESC"
           const interactions = await dbQueryExecutor.execute(query, [repairId])
 
           const interactionsWithDetails = await Promise.all(
@@ -726,7 +726,7 @@ const Repair = {
     create: (repairId, interactionType, details, responsibleUserId) => {
       if (HISTORY_ENABLED) {
         const query =
-          "INSERT INTO repair_interactions_history (repairId, type, details, responsible_user_id, created_at_datetime) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP())"
+          "INSERT INTO repair_interactions_history (repair_id, type, details, responsible_user_id, created_at_datetime) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP())"
         return dbQueryExecutor
           .execute(query, [repairId, interactionType, details, responsibleUserId])
           .then((result) => {
