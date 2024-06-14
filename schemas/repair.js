@@ -3,16 +3,16 @@ const { z } = require("zod")
 const repairSchema = z.object({
   equipmentId: z.number(),
   statusId: z.number(),
-  clientOsPassword: z.string().max(255).optional().nullable(),
-  clientBiosPassword: z.string().max(255).optional().nullable(),
+  equipmentOsPassword: z.string().max(255).optional().nullable(),
+  equipmentBiosPassword: z.string().max(255).optional().nullable(),
   entryDescription: z.string().optional().nullable(),
   entryDatetime: z.date()
 })
 
 const updateRepairSchema = z.object({
   statusId: z.number(),
-  clientOsPassword: z.string().max(255).optional().nullable(),
-  clientBiosPassword: z.string().max(255).optional().nullable(),
+  equipmentOsPassword: z.string().max(255).optional().nullable(),
+  equipmentBiosPassword: z.string().max(255).optional().nullable(),
   entryAccessoriesDescription: z.string().optional().nullable(),
   entryReportedIssuesDescription: z.string().optional().nullable(),
   entryDescription: z.string().optional().nullable(),
@@ -28,7 +28,12 @@ const updateRepairSchema = z.object({
   interventionAccessoriesUsedIds: z.array(z.number()).optional().nullable()
 })
 
+const optionsSchema = z.object({
+  name: z.string().max(255).trim()
+})
+
 module.exports = {
   repairSchema,
-  updateRepairSchema
+  updateRepairSchema,
+  optionsSchema
 }

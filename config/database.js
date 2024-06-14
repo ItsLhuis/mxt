@@ -1,5 +1,20 @@
 const mysql = require("mysql2")
 
-const connection = mysql.createConnection(process.env.DB_URI)
+const pool = mysql.createPool({
+  uri: process.env.DB_URI,
+  connectionLimit: 10
+})
 
-module.exports = connection
+const getConnection = () => {
+  return new Promise((resolve, reject) => {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(connection)
+      }
+    })
+  })
+}
+
+module.exports = { getConnection }

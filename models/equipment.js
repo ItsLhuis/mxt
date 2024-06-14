@@ -58,8 +58,8 @@ const Equipment = {
               ? mapUser(lastModifiedByUser[0])
               : null,
           last_modified_datetime: equipment.last_modified_datetime,
-          attachments,
-          interactions_history: interactionsHistory
+          interactions_history: interactionsHistory,
+          attachments
         }
       })
     )
@@ -580,21 +580,48 @@ const Equipment = {
   },
   attachment: {
     findAllByEquipmentId: async (equipmentId) => {
-      const query = "SELECT * FROM equipment_attachments WHERE equipment_id = ?"
+      const query =
+        "SELECT id, equipment_id, original_filename, file_size, type, uploaded_by_user_id, uploaded_at_datetime FROM equipment_attachments WHERE equipment_id = ?"
       return dbQueryExecutor.execute(query, [equipmentId])
     },
     findByAttachmentId: async (attachmentId) => {
       const query = "SELECT * FROM equipment_attachments WHERE id = ?"
       return dbQueryExecutor.execute(query, [attachmentId])
     },
-    create: async (equipmentId, file, originalFilename, type, uploadedByUserId) => {
-      const query =
-        "INSERT INTO equipment_attachments (equipment_id, file, original_filename, type, uploaded_by_user_id, uploaded_at_datetime) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"
-      return dbQueryExecutor
-        .execute(query, [equipmentId, file, originalFilename, type, uploadedByUserId])
-        .then((result) => {
-          return revalidateCache(["equipments", `equipment:${equipmentId}`]).then(() => result)
+    create: async (equipmentId, attachments, uploadedByUserId) => {
+      let transaction
+      
+      try {
+        transaction = await dbQueryExecutor.startTransaction()
+
+        const attachmentPromises = attachments.map(async (attachment) => {
+          const { file, fileMimeType, fileSize, originalFilename, type } = attachment
+
+          const attachmentQuery =
+            "INSERT INTO equipment_attachments (equipment_id, file, file_mime_type, file_size, original_filename, type, uploaded_by_user_id, uploaded_at_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"
+
+          const attachmentResult = await dbQueryExecutor.execute(
+            attachmentQuery,
+            [equipmentId, file, fileMimeType, fileSize, originalFilename, type, uploadedByUserId],
+            transaction
+          )
+
+          return attachmentResult
         })
+
+        const attachmentResults = await Promise.all(attachmentPromises)
+
+        await dbQueryExecutor.commitTransaction(transaction)
+
+        await revalidateCache(["equipments", `equipment:${equipmentId}`])
+
+        return attachmentResults
+      } catch (error) {
+        if (transaction) {
+          await dbQueryExecutor.rollbackTransaction(transaction)
+        }
+        throw error
+      }
     },
     delete: async (equipmentId, attachmentId) => {
       const query = "DELETE FROM equipment_attachments WHERE id = ?"

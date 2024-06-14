@@ -17,9 +17,9 @@ const checkCompany = tryCatch(async (req, res, next) => {
     )
   }
 
-  const { name, address, city, country, postal_code, phone_number, email, logo } = company[0]
+  const { name, address, city, country, postal_code, phone_number, email } = company[0]
 
-  if (!name || !address || !city || !country || !postal_code || !phone_number || !email || !logo) {
+  if (!name || !address || !city || !country || !postal_code || !phone_number || !email) {
     throw new AppError(
       400,
       NON_INITIALIZED_COMPANY,
@@ -35,8 +35,7 @@ const checkCompany = tryCatch(async (req, res, next) => {
     country,
     postalCode: postal_code,
     phoneNumber: phone_number,
-    email,
-    logo
+    email
   }
 
   next()

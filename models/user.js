@@ -6,10 +6,15 @@ const User = {
   findAll: withCache("users", async () => {
     const query = `
       SELECT 
-        u1.*, 
-        u2.id AS created_by_user_id, 
+        u1.id,
+        u1.username,
+        u1.password,
+        u1.email,
+        u1.role,
+        u1.is_active,
+        u1.created_at_datetime,
+        u2.id AS created_by_user_id,
         u2.username AS created_by_username,
-        u2.avatar AS created_by_avatar, 
         u2.role AS created_by_role 
       FROM users u1
       LEFT JOIN users u2 ON u1.created_by_user_id = u2.id
@@ -21,13 +26,11 @@ const User = {
       username: user.username,
       password: user.password,
       email: user.email,
-      avatar: user.avatar,
       role: user.role,
       is_active: user.is_active,
       created_by_user: user.created_by_user_id
         ? {
             id: user.created_by_user_id,
-            avatar: user.created_by_avatar,
             username: user.created_by_username,
             role: user.created_by_role
           }
@@ -41,11 +44,15 @@ const User = {
       async () => {
         const userQuery = `
         SELECT 
-          u1.*, 
-          u2.id AS created_by_user_id, 
-          u2.username AS created_by_username, 
-          u2.email AS created_by_email, 
-          u2.avatar AS created_by_avatar, 
+          u1.id,
+          u1.username,
+          u1.password,
+          u1.email,
+          u1.role,
+          u1.is_active,
+          u1.created_at_datetime,
+          u2.id AS created_by_user_id,
+          u2.username AS created_by_username,
           u2.role AS created_by_role 
         FROM users u1
         LEFT JOIN users u2 ON u1.created_by_user_id = u2.id
@@ -61,13 +68,11 @@ const User = {
           username: user[0].username,
           password: user[0].password,
           email: user[0].email,
-          avatar: user[0].avatar,
           role: user[0].role,
           is_active: user[0].is_active,
           created_by_user: user[0].created_by_user_id
             ? {
                 id: user[0].created_by_user_id,
-                avatar: user[0].created_by_avatar,
                 username: user[0].created_by_username,
                 role: user[0].created_by_role
               }
@@ -80,7 +85,17 @@ const User = {
       memoryOnlyCache
     )(),
   findByUsername: (username, userIdToExclude) => {
-    let query = "SELECT * FROM users WHERE username = ?"
+    let query = `
+      SELECT 
+        id,
+        username,
+        password,
+        email,
+        role,
+        is_active,
+        created_at_datetime
+      FROM users 
+      WHERE username = ?`
     let params = [username]
 
     if (userIdToExclude) {
@@ -91,7 +106,17 @@ const User = {
     return dbQueryExecutor.execute(query, params)
   },
   findByEmail: (email, userIdToExclude) => {
-    let query = "SELECT * FROM users WHERE email = ?"
+    let query = `
+      SELECT 
+        id,
+        username,
+        password,
+        email,
+        role,
+        is_active,
+        created_at_datetime
+      FROM users 
+      WHERE email = ?`
     let params = [email]
 
     if (userIdToExclude) {
@@ -101,23 +126,31 @@ const User = {
 
     return dbQueryExecutor.execute(query, params)
   },
-  create: (username, password, email, avatar, role, isActive, createdByUserId) => {
+  findAvatar: (userId) => {
+    const query = "SELECT avatar, avatar_mime_type, avatar_file_size FROM users WHERE id = ?"
+    return dbQueryExecutor.execute(query, [userId])
+  },
+  create: (username, password, email, role, isActive, createdByUserId) => {
     const query =
-      "INSERT INTO users (username, password, email, avatar, role, is_active, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"
+      "INSERT INTO users (username, password, email, role, is_active, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"
     return dbQueryExecutor
-      .execute(query, [username, password, email, avatar, role, isActive ?? true, createdByUserId])
+      .execute(query, [username, password, email, role, isActive ?? true, createdByUserId])
       .then((result) => {
         return revalidateCache("users").then(() => result)
       })
   },
-  update: (userId, username, email, avatar, role, isActive) => {
-    const query =
-      "UPDATE users SET username = ?, email = ?, avatar = ?, role = ?, is_active = ? WHERE id = ?"
+  update: (userId, username, email, role, isActive) => {
+    const query = "UPDATE users SET username = ?, email = ?, role = ?, is_active = ? WHERE id = ?"
     return dbQueryExecutor
-      .execute(query, [username, email, avatar, role, isActive, userId])
+      .execute(query, [username, email, role, isActive, userId])
       .then((result) => {
         return clearAllCaches().then(() => result)
       })
+  },
+  updateAvatar: (userId, avatar, mimitype, fileSize) => {
+    const query =
+      "UPDATE users SET avatar = ?, avatar_mime_type = ?, avatar_file_size = ? WHERE id = ?"
+    return dbQueryExecutor.execute(query, [avatar, mimitype, fileSize, userId])
   },
   updatePassword: (userId, password) => {
     const query = "UPDATE users SET password = ? WHERE id = ?"

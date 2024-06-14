@@ -1,43 +1,60 @@
-const connection = require("@config/database")
+const { getConnection } = require("@config/database")
 
 const dbQueryExecutor = {
-  execute: (query, values) => {
+  execute: (query, values, conn) => {
     return new Promise((resolve, reject) => {
-      connection.query(query, values, (erroror, results, fields) => {
-        if (erroror) {
-          return reject(erroror)
-        }
-        resolve(results)
-      })
+      ;(conn ? Promise.resolve(conn) : getConnection())
+        .then((connection) => {
+          connection.query(query, values, (error, results) => {
+            if (error) {
+              reject(error)
+            } else {
+              resolve(results)
+            }
+            if (!conn) {
+              connection.release()
+            }
+          })
+        })
+        .catch(reject)
     })
   },
   startTransaction: () => {
     return new Promise((resolve, reject) => {
-      connection.beginTransaction((error) => {
+      getConnection()
+        .then((connection) => {
+          connection.beginTransaction((error) => {
+            if (error) {
+              reject(error)
+            } else {
+              resolve(connection)
+            }
+          })
+        })
+        .catch(reject)
+    })
+  },
+  commitTransaction: (conn) => {
+    return new Promise((resolve, reject) => {
+      conn.commit((error) => {
         if (error) {
-          return reject(error)
+          reject(error)
+        } else {
+          conn.release()
+          resolve()
         }
-        resolve()
       })
     })
   },
-  commitTransaction: () => {
+  rollbackTransaction: (conn) => {
     return new Promise((resolve, reject) => {
-      connection.commit((error) => {
+      conn.rollback((error) => {
         if (error) {
-          return reject(error)
+          reject(error)
+        } else {
+          conn.release()
+          resolve()
         }
-        resolve()
-      })
-    })
-  },
-  rollbackTransaction: () => {
-    return new Promise((resolve, reject) => {
-      connection.rollback((error) => {
-        if (error) {
-          return reject(error)
-        }
-        resolve()
       })
     })
   }

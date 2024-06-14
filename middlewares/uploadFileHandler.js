@@ -1,7 +1,4 @@
-const fs = require("fs")
 const path = require("path")
-
-const { v4: uuidv4 } = require("uuid")
 
 const multer = require("multer")
 const sharp = require("sharp")
@@ -9,13 +6,15 @@ const sharp = require("sharp")
 const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
-const PUBLIC_UPLOADS_FOLDER = "uploads"
-const PRIVATE_UPLOADS_FOLDER = "uploads/private"
-
 const { INVALID_ATTACHMENT_FORMAT } = require("@constants/errors/shared/attachment")
 const { INVALID_IMAGE_FORMAT } = require("@constants/errors/shared/image")
 
 const { ATTACHMENT_ERROR_TYPE, IMAGE_ERROR_TYPE } = require("@constants/errors/shared/types")
+
+const VALID_ATTACHMENT_EXTENSIONS = [".jpeg", ".jpg", ".png", ".pdf"]
+const VALID_IMAGE_EXTENSIONS = [".jpeg", ".jpg", ".png"]
+
+const memoryStorage = multer.memoryStorage()
 
 const normalizeFileName = (fileName) => {
   const normalizedFileName = Buffer.from(fileName, "latin1").toString("utf8")
@@ -32,14 +31,11 @@ const normalizeFileName = (fileName) => {
   return normalizedFileName
 }
 
-const processFile = async (file, outputDir) => {
+const processFile = async (file) => {
   const extension = path.extname(file.originalname).toLowerCase()
-  const outputFileName = `${uuidv4()}${extension}`
-  const outputPath = path.join(outputDir, outputFileName)
-
   const normalizedOriginalFileName = normalizeFileName(file.originalname)
 
-  if ([".jpeg", ".jpg", ".png"].includes(extension)) {
+  if (VALID_IMAGE_EXTENSIONS.includes(extension)) {
     const imageInfo = await sharp(file.buffer).metadata()
     const originalWidth = imageInfo.width
 
@@ -49,163 +45,89 @@ const processFile = async (file, outputDir) => {
     }
 
     if (extension === ".png") {
-      await sharp(file.buffer)
+      file.buffer = await sharp(file.buffer)
         .resize({ width: targetWidth })
         .png({ quality: 90, force: false })
-        .toFile(outputPath)
+        .toBuffer()
     } else {
-      await sharp(file.buffer)
+      file.buffer = await sharp(file.buffer)
         .resize({ width: targetWidth })
         .jpeg({ quality: 90 })
-        .toFile(outputPath)
+        .toBuffer()
     }
-  } else if (extension === ".pdf") {
-    await new Promise((resolve, reject) => {
-      fs.writeFile(outputPath, file.buffer, (err) => {
-        if (err) reject(err)
-        else resolve()
-      })
-    })
   }
 
-  return {
-    originalname: normalizedOriginalFileName,
-    filename: outputFileName,
-    path: outputPath
-  }
+  file.originalname = normalizedOriginalFileName
+  file.size = file.buffer.length
 }
 
-const memoryStorage = multer.memoryStorage()
+const fileFilter = (validExtensions) => (req, file, cb) => {
+  const extension = path.extname(file.originalname).toLowerCase()
 
-const multerUploadAttachment = multer({
-  storage: memoryStorage,
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    const VALID_ATTACHMENT_EXTENSIONS = [".jpeg", ".jpg", ".png", ".pdf"]
-    const extension = path.extname(file.originalname).toLowerCase()
-
-    if (!VALID_ATTACHMENT_EXTENSIONS.includes(extension)) {
-      cb(
-        new AppError(
-          400,
-          INVALID_ATTACHMENT_FORMAT,
-          `Invalid file format. Only ${VALID_ATTACHMENT_EXTENSIONS.join(", ")} files are allowed`,
-          false,
-          ATTACHMENT_ERROR_TYPE
-        )
+  if (!validExtensions.includes(extension)) {
+    cb(
+      new AppError(
+        400,
+        validExtensions === VALID_IMAGE_EXTENSIONS
+          ? INVALID_IMAGE_FORMAT
+          : INVALID_ATTACHMENT_FORMAT,
+        `Invalid file format. Only ${validExtensions.join(", ")} files are allowed`,
+        false,
+        validExtensions === VALID_IMAGE_EXTENSIONS ? IMAGE_ERROR_TYPE : ATTACHMENT_ERROR_TYPE
       )
-    } else {
-      cb(null, true)
-    }
-  }
-})
-
-const multerUploadImage = multer({
-  storage: memoryStorage,
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    const VALID_IMAGE_EXTENSIONS = [".jpeg", ".jpg", ".png"]
-    const extension = path.extname(file.originalname).toLowerCase()
-
-    if (!VALID_IMAGE_EXTENSIONS.includes(extension)) {
-      cb(
-        new AppError(
-          400,
-          INVALID_IMAGE_FORMAT,
-          `Invalid image format. Only ${VALID_IMAGE_EXTENSIONS.join(", ")} files are allowed`,
-          false,
-          IMAGE_ERROR_TYPE
-        )
-      )
-    } else {
-      cb(null, true)
-    }
-  }
-})
-
-const uploadAttachment = (outputDir) => ({
-  multiple: (fieldName, maxCount) =>
-    tryCatch(async (req, res, next) => {
-      multerUploadAttachment.array(fieldName, maxCount)(req, res, async (err) => {
-        if (err) {
-          return next(err)
-        }
-
-        if (!req.files || req.files.length === 0) {
-          return next()
-        }
-
-        try {
-          for (const file of req.files) {
-            const processedFile = await processFile(file, outputDir)
-
-            file.originalname = processedFile.originalname
-            file.filename = processedFile.filename
-            file.path = processedFile.path
-          }
-
-          req.files.forEach((file) => (file.buffer = null))
-
-          next()
-        } catch (error) {
-          return next(error)
-        }
-      })
-    })
-})
-
-const uploadImage = (outputDir) => ({
-  single: (fieldName) =>
-    tryCatch(async (req, res, next) => {
-      multerUploadImage.single(fieldName)(req, res, async (err) => {
-        if (err) {
-          return next(err)
-        }
-
-        if (!req.file) {
-          return next()
-        }
-
-        try {
-          const processedFile = await processFile(req.file, outputDir)
-
-          req.file.originalname = processedFile.originalname
-          req.file.filename = processedFile.filename
-          req.file.path = processedFile.path
-
-          req.file.buffer = null
-
-          next()
-        } catch (error) {
-          return next(error)
-        }
-      })
-    })
-})
-
-const deleteFile = (filePath) => {
-  if (fs.existsSync(filePath)) {
-    fs.unlink(filePath, () => {})
+    )
+  } else {
+    cb(null, true)
   }
 }
-
-const createUploadsFolderIfNotExists = (folder) => {
-  if (!fs.existsSync(folder)) {
-    fs.mkdirSync(folder)
-  }
-}
-
-createUploadsFolderIfNotExists(PUBLIC_UPLOADS_FOLDER)
-createUploadsFolderIfNotExists(PRIVATE_UPLOADS_FOLDER)
 
 const upload = {
-  image: {
-    public: uploadImage(PUBLIC_UPLOADS_FOLDER)
-  },
-  attachment: {
-    private: uploadAttachment(PRIVATE_UPLOADS_FOLDER)
-  },
-  deleteFile
+  single: (fieldName, validExtensions = VALID_ATTACHMENT_EXTENSIONS) =>
+    tryCatch(async (req, res, next) => {
+      const upload = multer({
+        storage: memoryStorage,
+        limits: { fileSize: 5 * 1024 * 1024 },
+        fileFilter: fileFilter(validExtensions)
+      }).single(fieldName)
+
+      upload(req, res, async (err) => {
+        if (err) return next(err)
+
+        if (req.file) {
+          try {
+            await processFile(req.file)
+            next()
+          } catch (error) {
+            next(error)
+          }
+        } else {
+          next()
+        }
+      })
+    }),
+  multiple: (fieldName, maxCount, validExtensions = VALID_ATTACHMENT_EXTENSIONS) =>
+    tryCatch(async (req, res, next) => {
+      const upload = multer({
+        storage: memoryStorage,
+        limits: { fileSize: 5 * 1024 * 1024 },
+        fileFilter: fileFilter(validExtensions)
+      }).array(fieldName, maxCount)
+
+      upload(req, res, async (err) => {
+        if (err) return next(err)
+
+        if (req.files && req.files.length > 0) {
+          try {
+            await Promise.all(req.files.map(processFile))
+            next()
+          } catch (error) {
+            next(error)
+          }
+        } else {
+          next()
+        }
+      })
+    })
 }
 
 module.exports = upload

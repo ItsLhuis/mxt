@@ -7,9 +7,11 @@ const { IMAGE_PROCESSING_ERROR } = require("@constants/errors/shared/image")
 
 const { IMAGE_ERROR_TYPE } = require("@constants/errors/shared/types")
 
-const processImage = async (imagePath, { size, quality, blur } = {}) => {
+const processImage = async (imageBuffer, { size, quality, blur } = {}) => {
   try {
-    const imageInfo = await sharp(imagePath).metadata()
+    const image = sharp(imageBuffer)
+
+    const imageInfo = await image.metadata()
 
     const options = {
       size: size || imageInfo.width || 800,
@@ -20,8 +22,6 @@ const processImage = async (imagePath, { size, quality, blur } = {}) => {
     if (options.size > 1400) {
       options.size = 1400
     }
-
-    const image = sharp(imagePath)
 
     if (options.size) {
       image.resize(options.size)

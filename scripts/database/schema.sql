@@ -14,7 +14,9 @@ CREATE TABLE IF NOT EXISTS company (
     postal_code VARCHAR(20),
     phone_number VARCHAR(20),
     email VARCHAR(255),
-    logo VARCHAR(50),
+    logo MEDIUMBLOB,
+    logo_mime_type VARCHAR(50),
+    logo_file_size INT,
     created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
@@ -24,9 +26,11 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE,
-    avatar VARCHAR(50),
     role ENUM('Chefe', 'Administrador', 'Funcionário') NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT true,
+    avatar MEDIUMBLOB,
+    avatar_mime_type VARCHAR(50),
+    avatar_file_size INT,
     created_by_user_id INT,
     created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL
@@ -207,7 +211,9 @@ CREATE TABLE IF NOT EXISTS equipments (
 CREATE TABLE IF NOT EXISTS equipment_attachments (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     equipment_id INT NOT NULL,
-    file VARCHAR(255) NOT NULL,
+    file MEDIUMBLOB,
+    file_mime_type VARCHAR(50),
+    file_size INT,
     original_filename VARCHAR(255) NOT NULL,
     type ENUM('image', 'document') NOT NULL,
     uploaded_by_user_id INT,
@@ -360,7 +366,9 @@ CREATE TABLE IF NOT EXISTS repair_intervention_accessories_used (
 CREATE TABLE IF NOT EXISTS repair_attachments (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     repair_id INT NOT NULL,
-    file VARCHAR(255) NOT NULL,
+    file MEDIUMBLOB,
+    file_mime_type VARCHAR(50),
+    file_size INT,
     original_filename VARCHAR(255) NOT NULL,
     type ENUM('image', 'document') NOT NULL,
     uploaded_by_user_id INT,

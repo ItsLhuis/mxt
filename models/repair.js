@@ -184,8 +184,19 @@ const Repair = {
     entryDatetime,
     createdByUserId
   ) => {
-    const query =
-      "INSERT INTO repairs (equipment_id, status_id, equipment_os_password, equipment_bios_password, entry_description, entry_datetime, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"
+    const query = `
+    INSERT INTO repairs (
+      equipment_id, 
+      status_id, 
+      equipment_os_password, 
+      equipment_bios_password, 
+      entry_description, 
+      entry_datetime, 
+      created_by_user_id, 
+      created_at_datetime
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP()
+    )`
     return dbQueryExecutor
       .execute(query, [
         equipmentId,
@@ -223,27 +234,49 @@ const Repair = {
     } = {}
   ) => {
     return new Promise(async (resolve, reject) => {
-      try {
-        await dbQueryExecutor.startTransaction()
+      let transaction
 
-        const updateRepairQuery =
-          "UPDATE repairs SET status_id = ?, equipment_os_password = ?, equipment_bios_password = ?, entry_accessories_description = ?, entry_reported_issues_description = ?, entry_description = ?, entry_datetime = ?, intervention_works_done_description = ?, intervention_accessories_used_description = ?, intervention_description = ?, conclusion_datetime = ?, delivery_datetime = ?, last_modified_by_user_id = ?, last_modified_datetime = CURRENT_TIMESTAMP() WHERE id = ?"
-        const result = await dbQueryExecutor.execute(updateRepairQuery, [
-          statusId,
-          clientOsPassword,
-          clientBiosPassword,
-          entryAccessoriesDescription,
-          entryReportedIssuesDescription,
-          entryDescription,
-          entryDatetime,
-          interventionWorksDoneDescription,
-          interventionAccessoriesUsedDescription,
-          interventionDescription,
-          conclusionDatetime,
-          deliveryDatetime,
-          lastModifiedByUserId,
-          repairId
-        ])
+      try {
+        transaction = await dbQueryExecutor.startTransaction()
+
+        const updateRepairQuery = `
+        UPDATE repairs
+        SET 
+          status_id = ?,
+          equipment_os_password = ?,
+          equipment_bios_password = ?,
+          entry_accessories_description = ?,
+          entry_reported_issues_description = ?,
+          entry_description = ?,
+          entry_datetime = ?,
+          intervention_works_done_description = ?,
+          intervention_accessories_used_description = ?,
+          intervention_description = ?,
+          conclusion_datetime = ?,
+          delivery_datetime = ?,
+          last_modified_by_user_id = ?,
+          last_modified_datetime = CURRENT_TIMESTAMP()
+        WHERE id = ?`
+        const result = await dbQueryExecutor.execute(
+          updateRepairQuery,
+          [
+            statusId,
+            clientOsPassword,
+            clientBiosPassword,
+            entryAccessoriesDescription,
+            entryReportedIssuesDescription,
+            entryDescription,
+            entryDatetime,
+            interventionWorksDoneDescription,
+            interventionAccessoriesUsedDescription,
+            interventionDescription,
+            conclusionDatetime,
+            deliveryDatetime,
+            lastModifiedByUserId,
+            repairId
+          ],
+          transaction
+        )
 
         const optionsMap = {
           accessory_option: { table: "repair_entry_accessories", ids: entryAccessoriesIds },
@@ -263,24 +296,33 @@ const Repair = {
 
         for (const [optionType, optionData] of Object.entries(optionsMap)) {
           const deleteOptionsQuery = `DELETE FROM ${optionData.table} WHERE repair_id = ?`
-          await dbQueryExecutor.execute(deleteOptionsQuery, [repairId])
+          await dbQueryExecutor.execute(deleteOptionsQuery, [repairId], transaction)
 
-          if (optionData.ids) {
+          if (optionData.ids && optionData.ids.length > 0) {
             const insertOptionsQuery = `INSERT INTO ${optionData.table} (repair_id, ${optionType}_id) VALUES (?, ?)`
-            for (const optionId of optionData.ids) {
-              await dbQueryExecutor.execute(insertOptionsQuery, [repairId, optionId])
-            }
+            const insertPromises = optionData.ids.map((optionId) => {
+              return dbQueryExecutor.execute(insertOptionsQuery, [repairId, optionId], transaction)
+            })
+            await Promise.all(insertPromises)
           }
         }
 
-        await dbQueryExecutor.commitTransaction()
+        await dbQueryExecutor.commitTransaction(transaction)
 
         await revalidateCache(["repairs", `repair:${repairId}`])
         resolve(result)
       } catch (error) {
-        await dbQueryExecutor.rollbackTransaction()
+        if (transaction) {
+          await dbQueryExecutor.rollbackTransaction(transaction)
+        }
         reject(error)
       }
+    })
+  },
+  delete: (repairId) => {
+    const query = "DELETE FROM repairs WHERE id = ?"
+    return dbQueryExecutor.execute(query, [repairId]).then((result) => {
+      return revalidateCache(["repairs", `repair:${repairId}`]).then(() => result)
     })
   },
   findByStatusId: async (statusId) => {
@@ -288,43 +330,67 @@ const Repair = {
     return dbQueryExecutor.execute(query, [statusId])
   },
   findByEntryAccessoryId: async (entryAccessoryId) => {
-    const query =
-      "SELECT r.* FROM repairs r INNER JOIN repair_entry_accessories rea ON r.id = rea.repair_id WHERE rea.accessory_option_id = ?"
+    const query = `
+    SELECT r.*
+    FROM repairs r
+    INNER JOIN repair_entry_accessories rea ON r.id = rea.repair_id
+    WHERE rea.accessory_option_id = ?`
     return dbQueryExecutor.execute(query, [entryAccessoryId])
   },
   findByEntryReportedIssueId: async (entryReportedIssueId) => {
-    const query =
-      "SELECT r.* FROM repairs r INNER JOIN repair_entry_reported_issues reri ON r.id = reri.repair_id WHERE reri.reported_issue_option_id = ?"
+    const query = `
+    SELECT r.*
+    FROM repairs r
+    INNER JOIN repair_entry_reported_issues reri ON r.id = reri.repair_id
+    WHERE reri.reported_issue_option_id = ?`
     return dbQueryExecutor.execute(query, [entryReportedIssueId])
   },
   findByInterventionWorkDoneId: async (interventionWorkDoneId) => {
-    const query =
-      "SELECT r.* FROM repairs r INNER JOIN repair_intervention_works_done riwd ON r.id = riwd.repair_id WHERE riwd.work_done_option_id = ?"
+    const query = `
+    SELECT r.*
+    FROM repairs r
+    INNER JOIN repair_intervention_works_done riwd ON r.id = riwd.repair_id
+    WHERE riwd.work_done_option_id = ?`
     return dbQueryExecutor.execute(query, [interventionWorkDoneId])
   },
   findByInterventionAccessoryUsedId: async (interventionAccessoryUsedId) => {
-    const query =
-      "SELECT r.* FROM repairs r INNER JOIN repair_intervention_accessories_used riau ON r.id = riau.repair_id WHERE riau.accessories_used_option_id = ?"
+    const query = `
+    SELECT r.*
+    FROM repairs r
+    INNER JOIN repair_intervention_accessories_used riau ON r.id = riau.repair_id
+    WHERE riau.accessories_used_option_id = ?`
     return dbQueryExecutor.execute(query, [interventionAccessoryUsedId])
   },
   findEntryAccessoriesByRepairId: async (repairId) => {
-    const query =
-      "SELECT ro.id, ro.name FROM repair_entry_accessories rea INNER JOIN repair_entry_accessories_options ro ON rea.accessory_option_id = ro.id WHERE rea.repair_id = ?"
+    const query = `
+    SELECT ro.id, ro.name
+    FROM repair_entry_accessories rea
+    INNER JOIN repair_entry_accessories_options ro ON rea.accessory_option_id = ro.id
+    WHERE rea.repair_id = ?`
     return dbQueryExecutor.execute(query, [repairId])
   },
   findEntryReportedIssuesByRepairId: async (repairId) => {
-    const query =
-      "SELECT rio.id, rio.name FROM repair_entry_reported_issues rei INNER JOIN repair_entry_reported_issues_options rio ON rei.reported_issue_option_id = rio.id WHERE rei.repair_id = ?"
+    const query = `
+    SELECT rio.id, rio.name
+    FROM repair_entry_reported_issues rei
+    INNER JOIN repair_entry_reported_issues_options rio ON rei.reported_issue_option_id = rio.id
+    WHERE rei.repair_id = ?`
     return dbQueryExecutor.execute(query, [repairId])
   },
   findInterventionWorksDoneByRepairId: async (repairId) => {
-    const query =
-      "SELECT wdo.id, wdo.name FROM repair_intervention_works_done riw INNER JOIN repair_intervention_works_done_options wdo ON riw.work_done_option_id = wdo.id WHERE riw.repair_id = ?"
+    const query = `
+    SELECT wdo.id, wdo.name
+    FROM repair_intervention_works_done riw
+    INNER JOIN repair_intervention_works_done_options wdo ON riw.work_done_option_id = wdo.id
+    WHERE riw.repair_id = ?`
     return dbQueryExecutor.execute(query, [repairId])
   },
   findInterventionAccessoriesUsedByRepairId: async (repairId) => {
-    const query =
-      "SELECT auo.id, auo.name FROM repair_intervention_accessories_used ria INNER JOIN repair_intervention_accessories_used_options auo ON ria.accessories_used_option_id = auo.id WHERE ria.repair_id = ?"
+    const query = `
+    SELECT auo.id, auo.name
+    FROM repair_intervention_accessories_used ria
+    INNER JOIN repair_intervention_accessories_used_options auo ON ria.accessories_used_option_id = auo.id
+    WHERE ria.repair_id = ?`
     return dbQueryExecutor.execute(query, [repairId])
   },
   status: {
@@ -350,6 +416,10 @@ const Repair = {
         },
         memoryOnlyCache
       )(),
+    findByName: (name) => {
+      const query = "SELECT * FROM repair_status WHERE name = ?"
+      return dbQueryExecutor.execute(query, [name])
+    },
     create: (name, isDefault = false, createdByUserId) => {
       const query =
         "INSERT INTO repair_status (name, is_default, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, CURRENT_TIMESTAMP())"
@@ -439,6 +509,10 @@ const Repair = {
         },
         memoryOnlyCache
       )(),
+    findByName: (name) => {
+      const query = "SELECT * FROM repair_entry_accessories_options WHERE name = ?"
+      return dbQueryExecutor.execute(query, [name])
+    },
     create: (name, createdByUserId) => {
       const query =
         "INSERT INTO repair_entry_accessories_options (name, created_by_user_id, created_at_datetime) VALUES (?, ?, CURRENT_TIMESTAMP())"
@@ -498,6 +572,10 @@ const Repair = {
         },
         memoryOnlyCache
       )(),
+    findByName: (name) => {
+      const query = "SELECT * FROM repair_entry_reported_issues_options WHERE name = ?"
+      return dbQueryExecutor.execute(query, [name])
+    },
     create: (name, createdByUserId) => {
       const query =
         "INSERT INTO repair_entry_reported_issues_options (name, created_by_user_id, created_at_datetime) VALUES (?, ?, CURRENT_TIMESTAMP())"
@@ -559,6 +637,10 @@ const Repair = {
         },
         memoryOnlyCache
       )(),
+    findByName: (name) => {
+      const query = "SELECT * FROM repair_intervention_works_done_options WHERE name = ?"
+      return dbQueryExecutor.execute(query, [name])
+    },
     create: (name, createdByUserId) => {
       const query =
         "INSERT INTO repair_intervention_works_done_options (name, created_by_user_id, created_at_datetime) VALUES (?, ?, CURRENT_TIMESTAMP())"
@@ -625,6 +707,10 @@ const Repair = {
         return revalidateCache("repairInterventionAccessoriesUsed").then(() => result)
       })
     },
+    findByName: (name) => {
+      const query = "SELECT * FROM repair_intervention_accessories_used_options WHERE name = ?"
+      return dbQueryExecutor.execute(query, [name])
+    },
     update: (accessoryUsedId, name, lastModifiedByUserId) => {
       const query =
         "UPDATE repair_intervention_accessories_used_options SET name = ?, last_modified_by_user_id = ?, last_modified_datetime = CURRENT_TIMESTAMP() WHERE id = ?"
@@ -669,21 +755,48 @@ const Repair = {
   },
   attachment: {
     findAllByRepairId: async (repairId) => {
-      const query = "SELECT * FROM repair_attachments WHERE repair_id = ?"
+      const query =
+        "SELECT id, repair_id, original_filename, file_size, type, uploaded_by_user_id, uploaded_at_datetime FROM repair_attachments WHERE repair_id = ?"
       return dbQueryExecutor.execute(query, [repairId])
     },
     findByAttachmentId: async (attachmentId) => {
       const query = "SELECT * FROM repair_attachments WHERE id = ?"
       return dbQueryExecutor.execute(query, [attachmentId])
     },
-    create: async (repairId, file, originalFilename, type, uploadedByUserId) => {
-      const query =
-        "INSERT INTO repair_attachments (repair_id, file, original_filename, type, uploaded_by_user_id, uploaded_at_datetime) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"
-      return dbQueryExecutor
-        .execute(query, [repairId, file, originalFilename, type, uploadedByUserId])
-        .then((result) => {
-          return revalidateCache(["repairs", `repair:${repairId}`]).then(() => result)
+    create: async (repairId, attachments, uploadedByUserId) => {
+      let transaction
+
+      try {
+        transaction = await dbQueryExecutor.startTransaction()
+
+        const attachmentPromises = attachments.map(async (attachment) => {
+          const { file, fileMimeType, fileSize, originalFilename, type } = attachment
+
+          const attachmentQuery =
+            "INSERT INTO repair_attachments (repair_id, file, file_mime_type, file_size, original_filename, type, uploaded_by_user_id, uploaded_at_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"
+
+          const attachmentResult = await dbQueryExecutor.execute(
+            attachmentQuery,
+            [repairId, file, fileMimeType, fileSize, originalFilename, type, uploadedByUserId],
+            transaction
+          )
+
+          return attachmentResult
         })
+
+        const attachmentResults = await Promise.all(attachmentPromises)
+
+        await dbQueryExecutor.commitTransaction(transaction)
+
+        await revalidateCache(["repairs", `repair:${repairId}`])
+
+        return attachmentResults
+      } catch (error) {
+        if (transaction) {
+          await dbQueryExecutor.rollbackTransaction(transaction)
+        }
+        throw error
+      }
     },
     delete: async (repairId, attachmentId) => {
       const query = "DELETE FROM repair_attachments WHERE id = ?"

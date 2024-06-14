@@ -141,9 +141,6 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
-# Uploads folder
-uploads/
-
 # Temporary folder
 tmp/
 

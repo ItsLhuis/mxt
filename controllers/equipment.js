@@ -1,6 +1,3 @@
-const fs = require("fs")
-const path = require("path")
-
 const { PassThrough } = require("stream")
 
 const { produce } = require("immer")
@@ -12,7 +9,6 @@ const processImage = require("@utils/processImage")
 
 const {
   EQUIPMENT_NOT_FOUND,
-  NO_FILES_UPLOADED,
   ATTACHMENT_NOT_FOUND,
   BRAND_NOT_FOUND,
   MODEL_NOT_FOUND,
@@ -24,7 +20,8 @@ const {
   MODEL_NOT_MATCH_BRAND,
   EQUIPMENTS_ASSOCIATED_WITH_BRAND,
   EQUIPMENTS_ASSOCIATED_WITH_MODEL,
-  EQUIPMENTS_ASSOCIATED_WITH_TYPE
+  EQUIPMENTS_ASSOCIATED_WITH_TYPE,
+  NO_FILES_UPLOADED
 } = require("@constants/errors/equipment")
 const { CLIENT_NOT_FOUND } = require("@constants/errors/client")
 const { ATTACHMENT_STREAMING_ERROR } = require("@constants/errors/shared/attachment")
@@ -299,8 +296,8 @@ const equipmentController = {
 
       brandSchema.parse(req.body)
 
-      const existingBrand = await Equipment.brand.findByName(name)
-      if (existingBrand.length > 0) {
+      const duplicateBrand = await Equipment.brand.findByName(name)
+      if (duplicateBrand.length > 0) {
         throw new AppError(
           400,
           DUPLICATE_BRAND_NAME,
@@ -394,8 +391,8 @@ const equipmentController = {
         throw new AppError(404, BRAND_NOT_FOUND, "Brand not found", true)
       }
 
-      const existingModel = await Equipment.model.findByNameAndBrandId(name, brandId)
-      if (existingModel.length > 0) {
+      const duplicateModel = await Equipment.model.findByNameAndBrandId(name, brandId)
+      if (duplicateModel.length > 0) {
         throw new AppError(
           400,
           DUPLICATE_MODEL_NAME,
@@ -526,7 +523,7 @@ const equipmentController = {
     })
   },
   attachment: {
-    uploadAttachments: upload.attachment.private.multiple("attachments"),
+    uploadAttachments: upload.multiple("attachments"),
     sendAttachment: tryCatch(async (req, res) => {
       const { equipmentId, attachmentId } = req.params
 
@@ -541,57 +538,40 @@ const equipmentController = {
       }
 
       const attachmentType = attachment[0].type
+      const attachmentBuffer = Buffer.from(attachment[0].file)
 
-      const attachmentFilePath = path.join(
-        __dirname,
-        "..",
-        "uploads",
-        "private",
-        attachment[0].file
-      )
+      let readStream = new PassThrough()
 
-      if (fs.existsSync(attachmentFilePath)) {
-        let readStream = new PassThrough()
-
-        if (attachmentType === "image") {
-          const { size, quality, blur } = req.query
-          const options = {
-            size: parseInt(size),
-            quality: quality || "high",
-            blur: blur ? parseInt(blur) : false
-          }
-
-          const processedImageBuffer = await processImage(attachmentFilePath, options)
-          readStream.end(processedImageBuffer)
-        } else {
-          readStream = fs.createReadStream(attachmentFilePath)
+      if (attachmentType === "image") {
+        const { size, quality, blur } = req.query
+        const options = {
+          size: parseInt(size),
+          quality: quality || "high",
+          blur: blur ? parseInt(blur) : false
         }
 
-        res.setHeader("Content-Type", attachmentType === "image" ? "image/jpeg" : "application/pdf")
-        readStream.pipe(res)
-
-        readStream.on("error", () => {
-          throw new AppError(
-            500,
-            ATTACHMENT_STREAMING_ERROR,
-            "Attachment streaming error",
-            false,
-            ATTACHMENT_ERROR_TYPE
-          )
-        })
-
-        readStream.on("end", () => {
-          res.end()
-        })
+        const processedImageBuffer = await processImage(attachmentBuffer, options)
+        readStream.end(processedImageBuffer)
       } else {
+        readStream.end(attachmentBuffer)
+      }
+
+      res.setHeader("Content-Type", attachmentType === "image" ? "image/jpeg" : "application/pdf")
+      readStream.pipe(res)
+
+      readStream.on("error", () => {
         throw new AppError(
-          404,
-          ATTACHMENT_NOT_FOUND,
-          "Attachment not found",
+          500,
+          ATTACHMENT_STREAMING_ERROR,
+          "Attachment streaming error",
           false,
           ATTACHMENT_ERROR_TYPE
         )
-      }
+      })
+
+      readStream.on("end", () => {
+        res.end()
+      })
     }),
     findByEquipmentId: tryCatch(async (req, res) => {
       const { equipmentId } = req.params
@@ -617,25 +597,29 @@ const equipmentController = {
         throw new AppError(404, EQUIPMENT_NOT_FOUND, "Equipment not found", true)
       }
 
-      const createAllAttachments = files.map((file) => {
-        const type = file.mimetype.startsWith("image/") ? "image" : "document"
-        return Equipment.attachment
-          .create(equipmentId, file.filename, file.originalname, type, req.user.id)
-          .then((result) => ({
-            insertId: result.insertId,
-            file: file
-          }))
+      const attachments = files.map((file) => {
+        const type =
+          file && file.mimetype && file.mimetype.startsWith("image/") ? "image" : "document"
+
+        return {
+          file: file.buffer,
+          fileMimeType: file.mimetype,
+          fileSize: file.size,
+          originalFilename: file.originalname,
+          type: type,
+          uploadedByUserId: req.user.id
+        }
       })
 
-      const attachments = await Promise.all(createAllAttachments)
+      await Equipment.attachment.create(equipmentId, attachments, req.user.id)
 
       const changes = [
         {
           field: "Anexos",
           after: attachments.map((result) => ({
             id: result.insertId,
-            original_filename: result.file.originalname,
-            type: result.file.mimetype.startsWith("image/") ? "image" : "document"
+            original_filename: result.originalFilename,
+            type: result.type
           }))
         }
       ]
@@ -662,16 +646,6 @@ const equipmentController = {
       }
 
       await Equipment.attachment.delete(equipmentId, attachmentId)
-
-      const attachmentFilePath = path.join(
-        __dirname,
-        "..",
-        "uploads",
-        "private",
-        existingAttachment[0].file
-      )
-
-      upload.deleteFile(attachmentFilePath)
 
       const changes = [
         {

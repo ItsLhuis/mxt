@@ -1,8 +1,5 @@
 const { produce } = require("immer")
 
-const fs = require("fs")
-const path = require("path")
-
 const bcrypt = require("bcrypt")
 
 const { PassThrough } = require("stream")
@@ -14,7 +11,7 @@ const mailer = require("@utils/mailer")
 const processImage = require("@utils/processImage")
 
 const { PERMISSION_DENIED } = require("@constants/errors/permission")
-const { IMAGE_NOT_FOUND, IMAGE_STREAMING_ERROR } = require("@constants/errors/shared/image")
+const { IMAGE_STREAMING_ERROR } = require("@constants/errors/shared/image")
 const {
   USERNAME_ALREADY_EXISTS,
   EMAIL_ALREADY_EXISTS,
@@ -36,7 +33,7 @@ const Employee = require("@models/employee")
 const upload = require("@middlewares/uploadFileHandler")
 
 const userController = {
-  uploadAvatar: upload.image.public.single("avatar"),
+  uploadAvatar: upload.single("avatar"),
   findAll: tryCatch(async (req, res) => {
     if (req.user.role === roles.EMPLOYEE) {
       throw new AppError(
@@ -53,7 +50,6 @@ const userController = {
     const usersWithoutPassword = produce(users, (draft) => {
       draft.forEach((user) => {
         delete user.password
-        delete user.avatar
       })
     })
 
@@ -69,7 +65,6 @@ const userController = {
 
     const userWithoutPassword = produce(existingUser[0], (draft) => {
       delete draft.password
-      delete draft.avatar
     })
 
     res.status(200).json([userWithoutPassword])
@@ -94,7 +89,6 @@ const userController = {
 
     const userWithoutPassword = produce(existingUser[0], (draft) => {
       delete draft.password
-      delete draft.avatar
     })
 
     res.status(200).json([userWithoutPassword])
@@ -108,45 +102,41 @@ const userController = {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
 
-    if (!existingUser[0].avatar) {
+    const userAvatar = await User.findAvatar(existingUser[0].id)
+
+    if (!userAvatar[0].avatar) {
       res.status(200).json({ username: existingUser[0].username })
       return
     }
 
-    const imagePath = path.join(__dirname, "..", "uploads", existingUser[0].avatar)
-
-    if (fs.existsSync(imagePath)) {
-      const options = {
-        size: parseInt(size),
-        quality: quality || "high",
-        blur: blur ? parseInt(blur) : false
-      }
-
-      res.setHeader("Content-Type", "image/jpeg")
-
-      const readStream = new PassThrough()
-
-      const processedImageBuffer = await processImage(imagePath, options)
-
-      readStream.end(processedImageBuffer)
-      readStream.pipe(res)
-
-      readStream.on("error", () => {
-        throw new AppError(
-          500,
-          IMAGE_STREAMING_ERROR,
-          "Image streaming error",
-          false,
-          IMAGE_ERROR_TYPE
-        )
-      })
-
-      readStream.on("end", () => {
-        res.end()
-      })
-    } else {
-      throw new AppError(404, IMAGE_NOT_FOUND, "Image not found", false, IMAGE_ERROR_TYPE)
+    const options = {
+      size: parseInt(size),
+      quality: quality || "high",
+      blur: blur ? parseInt(blur) : false
     }
+
+    res.setHeader("Content-Type", userAvatar[0].avatar_mime_type)
+
+    const readStream = new PassThrough()
+
+    const processedImageBuffer = await processImage(Buffer.from(userAvatar[0].avatar), options)
+
+    readStream.end(processedImageBuffer)
+    readStream.pipe(res)
+
+    readStream.on("error", () => {
+      throw new AppError(
+        500,
+        IMAGE_STREAMING_ERROR,
+        "Image streaming error",
+        false,
+        IMAGE_ERROR_TYPE
+      )
+    })
+
+    readStream.on("end", () => {
+      res.end()
+    })
   }),
   create: tryCatch(async (req, res) => {
     const { username, password, email, role, isActive } = req.body
@@ -179,20 +169,7 @@ const userController = {
 
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
 
-    let avatar
-    if (req.file) {
-      avatar = req.file.filename
-    }
-
-    const user = await User.create(
-      username,
-      hashedPassword,
-      email,
-      avatar,
-      role,
-      isActive,
-      req.user.id
-    )
+    const user = await User.create(username, hashedPassword, email, role, isActive, req.user.id)
     await Employee.create(user.insertId)
 
     await mailer
@@ -249,7 +226,7 @@ const userController = {
         )
       }
     } else {
-      if (role || isActive !== undefined) {
+      if (role !== undefined || isActive !== undefined) {
         throw new AppError(
           403,
           PERMISSION_DENIED,
@@ -275,25 +252,15 @@ const userController = {
       throw new AppError(400, EMAIL_ALREADY_EXISTS, "The e-mail already exists", true)
     }
 
-    let avatar
+    const finalRole = isCurrentUser ? existingUser[0].role : role ?? existingUser[0].role
+    const finalIsActive = isCurrentUser
+      ? existingUser[0].is_active
+      : isActive ?? existingUser[0].is_active
+
+    await User.update(userId, username, email, finalRole, finalIsActive)
+
     if (req.file) {
-      avatar = req.file.filename
-    } else {
-      avatar = existingUser[0].avatar
-    }
-
-    await User.update(
-      userId,
-      username,
-      email,
-      avatar,
-      isCurrentUser ? existingUser[0].role : role ?? existingUser[0].role,
-      isCurrentUser ? existingUser[0].is_active : isActive ?? existingUser[0].is_active
-    )
-
-    if (req.file && existingUser[0].avatar) {
-      const oldAvatarPath = path.join(__dirname, "..", "uploads", existingUser[0].avatar)
-      upload.deleteFile(oldAvatarPath)
+      await User.updateAvatar(existingUser[0].id, req.file.buffer, req.file.mimetype, req.file.size)
     }
     res.status(204).json({ message: "User updated successfully" })
   }),
@@ -351,11 +318,6 @@ const userController = {
     }
 
     await User.delete(userId)
-
-    if (existingUser[0].avatar) {
-      const avatarPath = path.join(__dirname, "..", "uploads", existingUser[0].avatar)
-      upload.deleteFile(avatarPath)
-    }
     res.status(204).json({ message: "User removed successfully" })
   })
 }
