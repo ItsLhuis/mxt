@@ -22,6 +22,7 @@ const updateRepairSchema = z.object({
   interventionDescription: z.string().optional().nullable(),
   conclusionDatetime: z.date().optional().nullable(),
   deliveryDatetime: z.date().optional().nullable(),
+  isClientNotified: z.boolean(),
   entryAccessoriesIds: z.array(z.number()).optional().nullable(),
   entryReportedIssuesIds: z.array(z.number()).optional().nullable(),
   interventionWorksDoneIds: z.array(z.number()).optional().nullable(),

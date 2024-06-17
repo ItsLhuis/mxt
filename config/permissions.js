@@ -80,6 +80,40 @@ module.exports = {
   repair: {
     [roles.BOSS]: [permissions.ALL],
     [roles.ADMIN]: [permissions.ALL],
-    [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE, permissions.UPDATE]
+    [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE, permissions.UPDATE],
+    status: {
+      [roles.BOSS]: [permissions.ALL],
+      [roles.ADMIN]: [permissions.ALL],
+      [roles.EMPLOYEE]: [permissions.READ]
+    },
+    entryAccessory: {
+      [roles.BOSS]: [permissions.ALL],
+      [roles.ADMIN]: [permissions.ALL],
+      [roles.EMPLOYEE]: [permissions.READ]
+    },
+    entryReportedIssue: {
+      [roles.BOSS]: [permissions.ALL],
+      [roles.ADMIN]: [permissions.ALL],
+      [roles.EMPLOYEE]: [permissions.READ]
+    },
+    interventionWorkDone: {
+      [roles.BOSS]: [permissions.ALL],
+      [roles.ADMIN]: [permissions.ALL],
+      [roles.EMPLOYEE]: [permissions.READ]
+    },
+    interventionAccessoryUsed: {
+      [roles.BOSS]: [permissions.ALL],
+      [roles.ADMIN]: [permissions.ALL],
+      [roles.EMPLOYEE]: [permissions.READ]
+    },
+    attachment: {
+      [roles.BOSS]: [permissions.ALL],
+      [roles.ADMIN]: [permissions.ALL],
+      [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE]
+    },
+    interactionsHistory: {
+      [roles.BOSS]: [permissions.READ],
+      [roles.ADMIN]: [permissions.READ]
+    }
   }
 }

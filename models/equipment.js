@@ -1,6 +1,6 @@
 const dbQueryExecutor = require("@utils/dbQueryExecutor")
 
-const { withCache, revalidateCache, memoryOnlyCache } = require("@utils/cache")
+const { withCache, revalidateCache, clearAllCaches, memoryOnlyCache } = require("@utils/cache")
 
 const Client = require("@models/client")
 
@@ -171,7 +171,7 @@ const Equipment = {
         lastModifiedByUserId,
         equipmentId
       ])
-      .then(() => {
+      .then((result) => {
         return clearAllCaches().then(() => result)
       })
   },
@@ -581,7 +581,7 @@ const Equipment = {
   attachment: {
     findAllByEquipmentId: async (equipmentId) => {
       const query =
-        "SELECT id, equipment_id, original_filename, file_size, type, uploaded_by_user_id, uploaded_at_datetime FROM equipment_attachments WHERE equipment_id = ?"
+        "SELECT id, equipment_id, original_filename, file_size, type, uploaded_by_user_id, uploaded_at_datetime FROM equipment_attachments WHERE equipment_id = ? ORDER BY uploaded_at_datetime DESC"
       return dbQueryExecutor.execute(query, [equipmentId])
     },
     findByAttachmentId: async (attachmentId) => {
@@ -590,7 +590,7 @@ const Equipment = {
     },
     create: async (equipmentId, attachments, uploadedByUserId) => {
       let transaction
-      
+
       try {
         transaction = await dbQueryExecutor.startTransaction()
 

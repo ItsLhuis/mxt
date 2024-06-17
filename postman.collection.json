@@ -1,0 +1,2756 @@
+{
+	"info": {
+		"_postman_id": "85481db3-af16-4863-8baf-b62850a700fb",
+		"name": "Mxt",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n``` antlr4\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Tests\" tab**\n\nTests help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/b5f280a7-4b09-48ec-857f-0a7ed99d7ef8/U2NyZWVuc2hvdCAyMDIzLTAzLTI3IGF0IDkuNDcuMjggUE0ucG5n\" width=\"616\" height=\"433\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) in \"Tests\" to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33393698"
+	},
+	"item": [
+		{
+			"name": "Cache",
+			"item": [
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cache",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cache"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "ResetPassword",
+					"item": [
+						{
+							"name": "Request",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"itslhuis.dev@gmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/resetPassword/request",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"resetPassword",
+										"request"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"otp\": \"BUqNMK\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/resetPassword/verify/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Iml0c2xodWlzLmRldkBnbWFpbC5jb20iLCJpYXQiOjE3MTgwMjM4NTUsImV4cCI6MTcxODAyNDE1NX0.QxytH429oHTtqRG6peeNhCGcLU1Ohozm1_zlT-lOkr8",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"resetPassword",
+										"verify",
+										"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Iml0c2xodWlzLmRldkBnbWFpbC5jb20iLCJpYXQiOjE3MTgwMjM4NTUsImV4cCI6MTcxODAyNDE1NX0.QxytH429oHTtqRG6peeNhCGcLU1Ohozm1_zlT-lOkr8"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"newPassword\": \"123123\",\r\n    \"confirmPassword\": \"123123\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/resetPassword/confirm/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwib3RwIjoiQlVxTk1LIiwiaWF0IjoxNzE4MDIzODkxLCJleHAiOjE3MTgwMjQxOTF9.T26vsF8-qFtruYOHUC64PFVaZNrWoFDah-N6Z6SRpr4",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"resetPassword",
+										"confirm",
+										"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwib3RwIjoiQlVxTk1LIiwiaWF0IjoxNzE4MDIzODkxLCJleHAiOjE3MTgwMjQxOTF9.T26vsF8-qFtruYOHUC64PFVaZNrWoFDah-N6Z6SRpr4"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "payload",
+									"value": "{}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Admin\",\r\n    \"password\": \"adminboss\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Company",
+			"item": [
+				{
+					"name": "Find",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/company",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindLogo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/company/logo?size=180",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"company",
+								"logo"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "180"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Mixtura",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "R. 15 751",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Espinho",
+									"type": "text"
+								},
+								{
+									"key": "country",
+									"value": "Portugal",
+									"type": "text"
+								},
+								{
+									"key": "postalCode",
+									"value": "4500-159",
+									"type": "text"
+								},
+								{
+									"key": "phoneNumber",
+									"value": "+351 99999999 9",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "test@mxt.com",
+									"type": "text"
+								},
+								{
+									"key": "logo",
+									"type": "file",
+									"src": "postman-cloud:///1ef27296-e4d8-4050-9685-193f61876086"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/company",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "FindAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "FindById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindProfile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindAvatarByUserId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/2/avatar?size=180",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"2",
+								"avatar"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "180"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "Luis",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "itslhuis.dev@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123123",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "Administrador",
+									"type": "text"
+								},
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "postman-cloud:///1ef2189e-4330-4600-83ab-411fff462ba7"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "Admin",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "itslhuis.dev@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "postman-cloud:///1ef2189e-4330-4600-83ab-411fff462ba7"
+								},
+								{
+									"key": "role",
+									"value": "Administrador",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/users/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						},
+						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Password",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"password\": \"312312\",\r\n  \"newPassword\": \"312312\",\r\n  \"confirmPassword\": \"312312\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/12/password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"12",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/17",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"17"
+							]
+						},
+						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Employee",
+			"item": [
+				{
+					"name": "FindAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/employees",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "FindByUserId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/employees/3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Nome do Funcionário\",\n    \"phoneNumber\": \"123456789\",\n    \"country\": \"País\",\n    \"city\": \"Cidade\",\n    \"locality\": \"Localidade\",\n    \"address\": \"Endereço\",\n    \"postalCode\": \"1234-123\",\n    \"description\": \"Descrição (opcional)\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/employees/10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"10"
+							]
+						},
+						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Email",
+			"item": [
+				{
+					"name": "FindAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/emails",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"emails"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/emails/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"emails",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clientId\": 1,\r\n    \"contactId\": 1,\r\n    \"subject\": \"Assunto do e-mail\",\r\n    \"title\": \"Título do e-mail\",\r\n    \"message\": \"Conteúdo do e-mail\",\r\n    \"text\": \"Texto alternativo do e-mail (opcional)\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/emails",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"emails"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sms",
+			"item": [
+				{
+					"name": "FindAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/smses",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"smses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/smses/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"smses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clientId\": 1,\r\n    \"contactId\": 2,\r\n    \"message\": \"Ola\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/smses",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"smses"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Client",
+			"item": [
+				{
+					"name": "Contact",
+					"item": [
+						{
+							"name": "FindAll",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/clients/6/contacts",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"clients",
+										"6",
+										"contacts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successful POST request\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type\": \"Telefone\",\n    \"contact\": \"+351927654321\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/clients/3/contacts",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"clients",
+										"3",
+										"contacts"
+									]
+								},
+								"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"type\": \"E-mail\",\r\n    \"contact\": \"ana123123@gmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/clients/3/contacts/2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"clients",
+										"3",
+										"contacts",
+										"2"
+									]
+								},
+								"description": "This endpoint allows updating client information by making an HTTP PUT request to the specified URL. The request should include a payload in raw JSON format with the \"name\" and \"description\" fields.\n\n### Request Body\n\n- `name` (string, required): The name of the client.\n- `description` (string, required): Description of the client.\n    \n\n### Response\n\nThe endpoint returns a status code of 401 and a JSON object with the following properties:\n\n- `code` (number): Error code.\n- `message` (string): Error message.\n- `isOperational` (boolean): Indicates if the error is operational."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/clients/1/contacts/3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"clients",
+										"1",
+										"contacts",
+										"3"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Address",
+					"item": [
+						{
+							"name": "FindAll",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/clients/1/addresses",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"clients",
+										"1",
+										"addresses"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successful POST request\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"country\": \"Portugal\",\n    \"city\": \" Lisbon\",\n    \"locality\": \"Downtown\",\n    \"address\": \"123 Main Street\",\n    \"postalCode\": \"1000-001\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/clients/6/addresses",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"clients",
+										"6",
+										"addresses"
+									]
+								},
+								"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"country\": \"Portugal\",\r\n    \"city\": \"Lisbon\",\r\n    \"locality\": \"Downtown\",\r\n    \"address\": \"123 Main Street\",\r\n    \"postalCode\": \"1001-001\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/clients/4/addresses/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"clients",
+										"4",
+										"addresses",
+										"1"
+									]
+								},
+								"description": "This endpoint allows updating client information by making an HTTP PUT request to the specified URL. The request should include a payload in raw JSON format with the \"name\" and \"description\" fields.\n\n### Request Body\n\n- `name` (string, required): The name of the client.\n- `description` (string, required): Description of the client.\n    \n\n### Response\n\nThe endpoint returns a status code of 401 and a JSON object with the following properties:\n\n- `code` (number): Error code.\n- `message` (string): Error message.\n- `isOperational` (boolean): Indicates if the error is operational."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/clients/contacts/23",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"clients",
+										"contacts",
+										"23"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Interactions",
+					"item": [
+						{
+							"name": "FindAll",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/clients/1/interactionsHistory",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"clients",
+										"1",
+										"interactionsHistory"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "FindAll",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clients",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clients/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clients",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Luis\",\n    \"description\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/clients",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clients"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Ana\",\r\n    \"description\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/clients/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clients",
+								"2"
+							]
+						},
+						"description": "This endpoint allows updating client information by making an HTTP PUT request to the specified URL. The request should include a payload in raw JSON format with the \"name\" and \"description\" fields.\n\n### Request Body\n\n- `name` (string, required): The name of the client.\n- `description` (string, required): Description of the client.\n    \n\n### Response\n\nThe endpoint returns a status code of 401 and a JSON object with the following properties:\n\n- `code` (number): Error code.\n- `message` (string): Error message.\n- `isOperational` (boolean): Indicates if the error is operational."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clients/5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clients",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Equipment",
+			"item": [
+				{
+					"name": "Type",
+					"item": [
+						{
+							"name": "FindAll",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/equipments/types",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"types"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindByTypeId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/equipments/types/2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"types",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Telemóvel\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/equipments/types",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"types"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Laptop\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/equipments/types/2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"types",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/equipments/types/2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"types",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Brand",
+					"item": [
+						{
+							"name": "FindAll",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/equipments/brands",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"brands"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindByBrandId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/equipments/brands/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"brands",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Apple\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/equipments/brands",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"brands"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Xiaomi\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/equipments/brands/3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"brands",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/equipments/brands/3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"brands",
+										"3"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Model",
+					"item": [
+						{
+							"name": "FindAll",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/equipments/models",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"models"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindByModelId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/equipments/models/12",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"models",
+										"12"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindByBrandId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/equipments/models/brands/3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"models",
+										"brands",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"brandId\": 1,\r\n    \"name\": \"iPhone 15\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/equipments/models",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"models"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"10T\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/equipments/models/12",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"models",
+										"12"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/equipments/models/12",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"models",
+										"12"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Attachments",
+					"item": [
+						{
+							"name": "FindByAttachmentId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/equipments/1/attachments/32",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"1",
+										"attachments",
+										"32"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "attachments",
+											"type": "file",
+											"src": [
+												"postman-cloud:///1ef27296-e4d8-4050-9685-193f61876086",
+												"postman-cloud:///1ef2189e-4330-4600-83ab-411fff462ba7",
+												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/PAP/TesteFatura.pdf",
+												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/PAP/Relatório - Gestão de Stocks.pdf",
+												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/OUTROS/porsche.png",
+												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/OUTROS/peakpx.jpg",
+												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/react-app-template/src/assets/img/users/user-profile1.png",
+												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/react-app-template/src/assets/img/users/user-profile2.png"
+											]
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/equipments/1/attachments",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"1",
+										"attachments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/equipments/1/attachments/4",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"1",
+										"attachments",
+										"4"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Interactions",
+					"item": [
+						{
+							"name": "FindAll",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/equipments/2/interactionsHistory",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"2",
+										"interactionsHistory"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "FindAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/equipments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"equipments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindByEquipmentId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/equipments/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"equipments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clientId\": 1,\r\n    \"brandId\": 1,\r\n    \"modelId\": 1,\r\n    \"typeId\": 1,\r\n    \"sn\": \"SN123456\",\r\n    \"description\": \"\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/equipments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"equipments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"brandId\": 1,\r\n    \"modelId\": 1,\r\n    \"typeId\": 1,\r\n    \"sn\": \"SN123456\",\r\n    \"description\": \"\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/equipments/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"equipments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateClient",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clientId\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/equipments/2/client",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"equipments",
+								"2",
+								"client"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/equipments/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"equipments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Repair",
+			"item": [
+				{
+					"name": "Status",
+					"item": [
+						{
+							"name": "FindAll",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/status",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindByDefaultStatus",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/status/default",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"status",
+										"default"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindByStatusId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/status/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"status",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Aberto\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/repairs/status",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Xiaomi\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/repairs/status/4",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"status",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateDefault",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/repairs/status/1/default",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"status",
+										"1",
+										"default"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/status/4",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"status",
+										"4"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "EntryAccessories",
+					"item": [
+						{
+							"name": "FindAll",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/entry-accessories",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"entry-accessories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindByEntryAccessoryId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/entry-accessories/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"entry-accessories",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Transformador\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/repairs/entry-accessories",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"entry-accessories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"A\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/repairs/entry-accessories/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"entry-accessories",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/entry-accessories/2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"entry-accessories",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "EntryReportedIssues",
+					"item": [
+						{
+							"name": "FindAll",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/entry-reported-issues",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"entry-reported-issues"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindByEntryReportedIssueId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/entry-reported-issues/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"entry-reported-issues",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Ecrã partido\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/repairs/entry-reported-issues",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"entry-reported-issues"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Aaskdjasdkl\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/repairs/entry-reported-issues/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"entry-reported-issues",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/entry-reported-issues/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"entry-reported-issues",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "InterventionWorksDone",
+					"item": [
+						{
+							"name": "FindAll",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/intervention-works-done",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"intervention-works-done"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindByInterventionWorkDoneId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/intervention-works-done/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"intervention-works-done",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Limpeza no disco\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/repairs/intervention-works-done",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"intervention-works-done"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"1\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/repairs/intervention-works-done/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"intervention-works-done",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/intervention-works-done/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"intervention-works-done",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "InterventionAccessoriesUsed",
+					"item": [
+						{
+							"name": "FindAll",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/intervention-accessories-used",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"intervention-accessories-used"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FindByInterventionAccessoriesUsedId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/intervention-accessories-used/2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"intervention-accessories-used",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Bateria\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/repairs/intervention-accessories-used",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"intervention-accessories-used"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"1\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/repairs/intervention-accessories-used/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"intervention-accessories-used",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/intervention-accessories-used/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"intervention-accessories-used",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Attachments",
+					"item": [
+						{
+							"name": "FindByAttachmentId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/1/attachments/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"1",
+										"attachments",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "attachments",
+											"type": "file",
+											"src": "postman-cloud:///1ef2189e-4330-4600-83ab-411fff462ba7"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/repairs/1/attachments",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"1",
+										"attachments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/1/attachments/4",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"1",
+										"attachments",
+										"4"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Interactions",
+					"item": [
+						{
+							"name": "FindAll",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/2/interactionsHistory",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"2",
+										"interactionsHistory"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "FindAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/repairs",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"repairs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/repairs/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"repairs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"equipmentId\": 1,\r\n    \"statusId\": 1,\r\n    \"equipmentOsPassword\": \"\",\r\n    \"equipmentBiosPassword\": \"\",\r\n    \"entryDescription\": \"Descrição da entrada\",\r\n    \"entryDatetime\": \"2024-06-17T14:45:11.000Z\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/repairs",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"repairs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"statusId\": 1,\r\n  \"equipmentOsPassword\": \"updatedOSPassword123\",\r\n  \"equipmentBiosPassword\": \"updatedBIOSPassword456\",\r\n  \"entryAccessoriesDescription\": \"Updated accessories description.\",\r\n  \"entryReportedIssuesDescription\": \"Updated reported issues description.\",\r\n  \"entryDescription\": \"Updated description of the repair entry.\",\r\n  \"entryDatetime\": \"2024-06-17T14:45:11.000Z\",\r\n  \"interventionWorksDoneDescription\": \"Updated description of the works done.\",\r\n  \"interventionAccessoriesUsedDescription\": \"Updated description of the accessories used.\",\r\n  \"interventionDescription\": \"Updated intervention description.\",\r\n  \"conclusionDatetime\": \"2024-06-17T15:45:11.000Z\",\r\n  \"deliveryDatetime\": \"2024-06-17T15:45:11.000Z\",\r\n  \"isClientNotified\": true,\r\n  \"entryAccessoriesIds\": [1],\r\n  \"entryReportedIssuesIds\": [1],\r\n  \"interventionWorksDoneIds\": [1],\r\n  \"interventionAccessoriesUsedIds\": [1]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/repairs/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"repairs",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/repairs/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"repairs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080/api/v1"
+		}
+	]
+}

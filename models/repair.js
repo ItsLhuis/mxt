@@ -11,7 +11,7 @@ const { HISTORY_ENABLED } = require("@constants/config")
 
 const Repair = {
   findAll: withCache("repairs", async () => {
-    const repairsQuery = "SELECT * FROM repairs"
+    const repairsQuery = "SELECT * FROM repairs ORDER BY COALESCE(last_modified_datetime, created_at_datetime) DESC"
     const repairs = await dbQueryExecutor.execute(repairsQuery)
 
     const repairsWithDetails = await Promise.all(
@@ -226,12 +226,10 @@ const Repair = {
     conclusionDatetime,
     deliveryDatetime,
     lastModifiedByUserId,
-    {
-      entryAccessoriesIds,
-      entryReportedIssuesIds,
-      interventionWorksDoneIds,
-      interventionAccessoriesUsedIds
-    } = {}
+    entryAccessoriesIds,
+    entryReportedIssuesIds,
+    interventionWorksDoneIds,
+    interventionAccessoriesUsedIds
   ) => {
     return new Promise(async (resolve, reject) => {
       let transaction
@@ -279,27 +277,34 @@ const Repair = {
         )
 
         const optionsMap = {
-          accessory_option: { table: "repair_entry_accessories", ids: entryAccessoriesIds },
-          reported_issue_option: {
+          entryAccessoriesIds: {
+            table: "repair_entry_accessories",
+            column: "accessory_option_id",
+            ids: entryAccessoriesIds
+          },
+          entryReportedIssuesIds: {
             table: "repair_entry_reported_issues",
+            column: "reported_issue_option_id",
             ids: entryReportedIssuesIds
           },
-          work_done_option: {
+          interventionWorksDoneIds: {
             table: "repair_intervention_works_done",
+            column: "work_done_option_id",
             ids: interventionWorksDoneIds
           },
-          accessories_used_option: {
+          interventionAccessoriesUsedIds: {
             table: "repair_intervention_accessories_used",
+            column: "accessories_used_option_id",
             ids: interventionAccessoriesUsedIds
           }
         }
 
-        for (const [optionType, optionData] of Object.entries(optionsMap)) {
+        for (const [_, optionData] of Object.entries(optionsMap)) {
           const deleteOptionsQuery = `DELETE FROM ${optionData.table} WHERE repair_id = ?`
           await dbQueryExecutor.execute(deleteOptionsQuery, [repairId], transaction)
 
           if (optionData.ids && optionData.ids.length > 0) {
-            const insertOptionsQuery = `INSERT INTO ${optionData.table} (repair_id, ${optionType}_id) VALUES (?, ?)`
+            const insertOptionsQuery = `INSERT INTO ${optionData.table} (repair_id, ${optionData.column}) VALUES (?, ?)`
             const insertPromises = optionData.ids.map((optionId) => {
               return dbQueryExecutor.execute(insertOptionsQuery, [repairId, optionId], transaction)
             })
@@ -395,15 +400,65 @@ const Repair = {
   },
   status: {
     findAll: withCache("repairStatus", async () => {
-      const query = "SELECT * FROM repair_status"
-      return dbQueryExecutor.execute(query)
+      const statusQuery = "SELECT * FROM repair_status ORDER BY name"
+      const status = await dbQueryExecutor.execute(statusQuery)
+
+      const statusWithDetails = await Promise.all(
+        status.map(async (status) => {
+          const [createdByUser, lastModifiedByUser] = await Promise.all([
+            User.findByUserId(status.created_by_user_id),
+            status.last_modified_by_user_id
+              ? User.findByUserId(status.last_modified_by_user_id)
+              : null
+          ])
+
+          return {
+            id: status.id,
+            name: status.name,
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: status.created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: status.last_modified_datetime
+          }
+        })
+      )
+
+      return statusWithDetails
     }),
     findByStatusId: (statusId) =>
       withCache(
         `repairStatus:${statusId}`,
         async () => {
-          const query = "SELECT * FROM repair_status WHERE id = ?"
-          return dbQueryExecutor.execute(query, [statusId])
+          const statusQuery = "SELECT * FROM repair_status WHERE id = ?"
+          const status = await dbQueryExecutor.execute(statusQuery, [statusId])
+
+          if (!status || status.length <= 0) {
+            return []
+          }
+
+          const [createdByUser, lastModifiedByUser] = await Promise.all([
+            User.findByUserId(status[0].created_by_user_id),
+            status[0].last_modified_by_user_id
+              ? User.findByUserId(status[0].last_modified_by_user_id)
+              : null
+          ])
+
+          const statusWithDetails = {
+            id: status[0].id,
+            name: status[0].name,
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: status[0].created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: status[0].last_modified_datetime
+          }
+
+          return [statusWithDetails]
         },
         memoryOnlyCache
       )(),
@@ -411,8 +466,33 @@ const Repair = {
       withCache(
         "repairDefaultStatus",
         async () => {
-          const query = "SELECT * FROM repair_status WHERE is_default = true"
-          return dbQueryExecutor.execute(query)
+          const statusQuery = "SELECT * FROM repair_status WHERE is_default = true"
+          const status = await dbQueryExecutor.execute(statusQuery)
+
+          if (!status || status.length <= 0) {
+            return []
+          }
+
+          const [createdByUser, lastModifiedByUser] = await Promise.all([
+            User.findByUserId(status[0].created_by_user_id),
+            status[0].last_modified_by_user_id
+              ? User.findByUserId(status[0].last_modified_by_user_id)
+              : null
+          ])
+
+          const statusWithDetails = {
+            id: status[0].id,
+            name: status[0].name,
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: status[0].created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: status[0].last_modified_datetime
+          }
+
+          return [statusWithDetails]
         },
         memoryOnlyCache
       )(),
@@ -420,12 +500,14 @@ const Repair = {
       const query = "SELECT * FROM repair_status WHERE name = ?"
       return dbQueryExecutor.execute(query, [name])
     },
-    create: (name, isDefault = false, createdByUserId) => {
+    create: (name, isDefault, createdByUserId) => {
       const query =
         "INSERT INTO repair_status (name, is_default, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, CURRENT_TIMESTAMP())"
-      return dbQueryExecutor.execute(query, [name, isDefault, createdByUserId]).then((result) => {
-        return revalidateCache(["repairStatus", "repairDefaultStatus"]).then(() => result)
-      })
+      return dbQueryExecutor
+        .execute(query, [name, isDefault ?? false, createdByUserId])
+        .then((result) => {
+          return revalidateCache(["repairStatus", "repairDefaultStatus"]).then(() => result)
+        })
     },
     update: (statusId, name, lastModifiedByUserId) => {
       const query =
@@ -477,7 +559,7 @@ const Repair = {
         })
     },
     delete: (statusId) => {
-      const query = "DELETE FROM repair_status WHERE id = "
+      const query = "DELETE FROM repair_status WHERE id = ?"
       return dbQueryExecutor.execute(query, [statusId]).then(async (result) => {
         const allRepairsByStatusId = await Repair.findByStatusId(statusId)
 
@@ -497,21 +579,82 @@ const Repair = {
   },
   entryAccessory: {
     findAll: withCache("repairEntryAccessories", async () => {
-      const query = "SELECT * FROM repair_entry_accessories_options"
-      return dbQueryExecutor.execute(query)
+      const entryAccessoriesQuery = "SELECT * FROM repair_entry_accessories_options ORDER BY name"
+      const entryAccessories = await dbQueryExecutor.execute(entryAccessoriesQuery)
+
+      const entryAccessoriesWithDetails = await Promise.all(
+        entryAccessories.map(async (entryAccessory) => {
+          const [createdByUser, lastModifiedByUser] = await Promise.all([
+            User.findByUserId(entryAccessory.created_by_user_id),
+            entryAccessory.last_modified_by_user_id
+              ? User.findByUserId(entryAccessory.last_modified_by_user_id)
+              : null
+          ])
+
+          return {
+            id: entryAccessory.id,
+            name: entryAccessory.name,
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: entryAccessory.created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: entryAccessory.last_modified_datetime
+          }
+        })
+      )
+
+      return entryAccessoriesWithDetails
     }),
     findByAccessoryId: (accessoryId) =>
       withCache(
         `repairEntryAccessory:${accessoryId}`,
         async () => {
-          const query = "SELECT * FROM repair_entry_accessories_options WHERE id = ?"
-          return dbQueryExecutor.execute(query, [accessoryId])
+          const entryAccessoryQuery = "SELECT * FROM repair_entry_accessories_options WHERE id = ?"
+          const entryAccessory = await dbQueryExecutor.execute(entryAccessoryQuery, [accessoryId])
+
+          if (!entryAccessory || entryAccessory.length <= 0) {
+            return []
+          }
+
+          const [createdByUser, lastModifiedByUser] = await Promise.all([
+            User.findByUserId(entryAccessory[0].created_by_user_id),
+            entryAccessory[0].last_modified_by_user_id
+              ? User.findByUserId(entryAccessory[0].last_modified_by_user_id)
+              : null
+          ])
+
+          const entryAccessoryWithDetails = {
+            id: entryAccessory[0].id,
+            name: entryAccessory[0].name,
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: entryAccessory[0].created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: entryAccessory[0].last_modified_datetime
+          }
+
+          return [entryAccessoryWithDetails]
         },
         memoryOnlyCache
       )(),
     findByName: (name) => {
       const query = "SELECT * FROM repair_entry_accessories_options WHERE name = ?"
       return dbQueryExecutor.execute(query, [name])
+    },
+    findByRepairId: (repairId) => {
+      const query = `
+        SELECT 
+          rea.id AS repair_entry_accessory_id, 
+          rea.accessory_option_id, 
+          reao.name AS accessory_name 
+        FROM repair_entry_accessories rea
+        JOIN repair_entry_accessories_options reao ON rea.accessory_option_id = reao.id
+        WHERE rea.repair_id = ?`
+      return dbQueryExecutor.execute(query, [repairId])
     },
     create: (name, createdByUserId) => {
       const query =
@@ -524,7 +667,7 @@ const Repair = {
       const query =
         "UPDATE repair_entry_accessories_options SET name = ?, last_modified_by_user_id = ?, last_modified_datetime = CURRENT_TIMESTAMP() WHERE id = ?"
       return dbQueryExecutor
-        .execute(query, [name, lastModifiedByUserId, brandId])
+        .execute(query, [name, lastModifiedByUserId, accessoryId])
         .then(async (result) => {
           const allRepairsByEntryAccessoryId = await Repair.findByEntryAccessoryId(accessoryId)
 
@@ -541,7 +684,7 @@ const Repair = {
         })
     },
     delete: (accessoryId) => {
-      const query = "DELETE FROM repair_entry_accessories_options WHERE id = "
+      const query = "DELETE FROM repair_entry_accessories_options WHERE id = ?"
       return dbQueryExecutor.execute(query, [accessoryId]).then(async (result) => {
         const allRepairsByEntryAccessoryId = await Repair.findByEntryAccessoryId(accessoryId)
 
@@ -560,21 +703,86 @@ const Repair = {
   },
   entryReportedIssue: {
     findAll: withCache("repairEntryReportedIssues", async () => {
-      const query = "SELECT * FROM repair_entry_reported_issues_options"
-      return dbQueryExecutor.execute(query)
+      const entryReportedIssuesQuery =
+        "SELECT * FROM repair_entry_reported_issues_options ORDER BY name"
+      const entryReportedIssues = await dbQueryExecutor.execute(entryReportedIssuesQuery)
+
+      const entryReportedIssuesWithDetails = await Promise.all(
+        entryReportedIssues.map(async (entryReportedIssue) => {
+          const [createdByUser, lastModifiedByUser] = await Promise.all([
+            User.findByUserId(entryReportedIssue.created_by_user_id),
+            entryReportedIssue.last_modified_by_user_id
+              ? User.findByUserId(entryReportedIssue.last_modified_by_user_id)
+              : null
+          ])
+
+          return {
+            id: entryReportedIssue.id,
+            name: entryReportedIssue.name,
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: entryReportedIssue.created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: entryReportedIssue.last_modified_datetime
+          }
+        })
+      )
+
+      return entryReportedIssuesWithDetails
     }),
     findByReportedIssueId: (reportedIssueId) =>
       withCache(
         `repairEntryReportedIssue:${reportedIssueId}`,
         async () => {
-          const query = "SELECT * FROM repair_entry_reported_issues_options WHERE id = ?"
-          return dbQueryExecutor.execute(query, [reportedIssueId])
+          const entryReportedIssueQuery =
+            "SELECT * FROM repair_entry_reported_issues_options WHERE id = ?"
+          const entryReportedIssue = await dbQueryExecutor.execute(entryReportedIssueQuery, [
+            reportedIssueId
+          ])
+
+          if (!entryReportedIssue || entryReportedIssue.length <= 0) {
+            return []
+          }
+
+          const [createdByUser, lastModifiedByUser] = await Promise.all([
+            User.findByUserId(entryReportedIssue[0].created_by_user_id),
+            entryReportedIssue[0].last_modified_by_user_id
+              ? User.findByUserId(entryReportedIssue[0].last_modified_by_user_id)
+              : null
+          ])
+
+          const entryReportedIssueWithDetails = {
+            id: entryReportedIssue[0].id,
+            name: entryReportedIssue[0].name,
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: entryReportedIssue[0].created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: entryReportedIssue[0].last_modified_datetime
+          }
+
+          return [entryReportedIssueWithDetails]
         },
         memoryOnlyCache
       )(),
     findByName: (name) => {
       const query = "SELECT * FROM repair_entry_reported_issues_options WHERE name = ?"
       return dbQueryExecutor.execute(query, [name])
+    },
+    findByRepairId: (repairId) => {
+      const query = `
+        SELECT 
+          reri.id AS repair_entry_reported_issue_id, 
+          reri.reported_issue_option_id, 
+          rerio.name AS reported_issue_name 
+        FROM repair_entry_reported_issues reri
+        JOIN repair_entry_reported_issues_options rerio ON reri.reported_issue_option_id = rerio.id
+        WHERE reri.repair_id = ?`
+      return dbQueryExecutor.execute(query, [repairId])
     },
     create: (name, createdByUserId) => {
       const query =
@@ -606,7 +814,7 @@ const Repair = {
         })
     },
     delete: (reportedIssueId) => {
-      const query = "DELETE FROM repair_entry_reported_issues_options WHERE id = "
+      const query = "DELETE FROM repair_entry_reported_issues_options WHERE id = ?"
       return dbQueryExecutor.execute(query, [reportedIssueId]).then(async (result) => {
         const allRepairsByReportedIssueId = await Repair.findByEntryReportedIssueId(reportedIssueId)
 
@@ -625,21 +833,86 @@ const Repair = {
   },
   interventionWorkDone: {
     findAll: withCache("repairInterventionWorksDone", async () => {
-      const query = "SELECT * FROM repair_intervention_works_done_options"
-      return dbQueryExecutor.execute(query)
+      const interventionWorksDoneQuery =
+        "SELECT * FROM repair_intervention_works_done_options ORDER BY name"
+      const interventionWorksDone = await dbQueryExecutor.execute(interventionWorksDoneQuery)
+
+      const interventionWorksDoneWithDetails = await Promise.all(
+        interventionWorksDone.map(async (interventionWorkDone) => {
+          const [createdByUser, lastModifiedByUser] = await Promise.all([
+            User.findByUserId(interventionWorkDone.created_by_user_id),
+            interventionWorkDone.last_modified_by_user_id
+              ? User.findByUserId(interventionWorkDone.last_modified_by_user_id)
+              : null
+          ])
+
+          return {
+            id: interventionWorkDone.id,
+            name: interventionWorkDone.name,
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: interventionWorkDone.created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: interventionWorkDone.last_modified_datetime
+          }
+        })
+      )
+
+      return interventionWorksDoneWithDetails
     }),
     findByInterventionWorkDoneId: (interventionWorkDoneId) =>
       withCache(
         `repairInterventionWorkDone:${interventionWorkDoneId}`,
         async () => {
-          const query = "SELECT * FROM repair_intervention_works_done_options WHERE id = ?"
-          return dbQueryExecutor.execute(query, [interventionWorkDoneId])
+          const interventionWorkDoneQuery =
+            "SELECT * FROM repair_intervention_works_done_options WHERE id = ?"
+          const interventionWorkDone = await dbQueryExecutor.execute(interventionWorkDoneQuery, [
+            interventionWorkDoneId
+          ])
+
+          if (!interventionWorkDone || interventionWorkDone.length === 0) {
+            return []
+          }
+
+          const [createdByUser, lastModifiedByUser] = await Promise.all([
+            User.findByUserId(interventionWorkDone[0].created_by_user_id),
+            interventionWorkDone[0].last_modified_by_user_id
+              ? User.findByUserId(interventionWorkDone[0].last_modified_by_user_id)
+              : null
+          ])
+
+          const interventionWorkDoneWithDetails = {
+            id: interventionWorkDone[0].id,
+            name: interventionWorkDone[0].name,
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: interventionWorkDone[0].created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: interventionWorkDone[0].last_modified_datetime
+          }
+
+          return [interventionWorkDoneWithDetails]
         },
         memoryOnlyCache
       )(),
     findByName: (name) => {
       const query = "SELECT * FROM repair_intervention_works_done_options WHERE name = ?"
       return dbQueryExecutor.execute(query, [name])
+    },
+    findByRepairId: (repairId) => {
+      const query = `
+        SELECT 
+          riwd.id AS repair_intervention_work_done_id, 
+          riwd.work_done_option_id, 
+          riwdo.name AS work_done_name 
+        FROM repair_intervention_works_done riwd
+        JOIN repair_intervention_works_done_options riwdo ON riwd.work_done_option_id = riwdo.id
+        WHERE riwd.repair_id = ?`
+      return dbQueryExecutor.execute(query, [repairId])
     },
     create: (name, createdByUserId) => {
       const query =
@@ -669,7 +942,7 @@ const Repair = {
         })
     },
     delete: (workDoneId) => {
-      const query = "DELETE FROM repair_intervention_works_done_options WHERE id = "
+      const query = "DELETE FROM repair_intervention_works_done_options WHERE id = ?"
       return dbQueryExecutor.execute(query, [workDoneId]).then(async (result) => {
         const allRepairsByWorkDoneId = await Repair.findByInterventionWorkDoneId(workDoneId)
 
@@ -688,28 +961,96 @@ const Repair = {
   },
   interventionAccessoryUsed: {
     findAll: withCache("repairInterventionAccessoriesUsed", async () => {
-      const query = "SELECT * FROM repair_intervention_accessories_used_options"
-      return dbQueryExecutor.execute(query)
+      const interventionAccessoriesUsedQuery =
+        "SELECT * FROM repair_intervention_accessories_used_options ORDER BY name"
+      const interventionAccessoriesUsed = await dbQueryExecutor.execute(
+        interventionAccessoriesUsedQuery
+      )
+
+      const interventionAccessoriesUsedWithDetails = await Promise.all(
+        interventionAccessoriesUsed.map(async (interventionAccessoryUsed) => {
+          const [createdByUser, lastModifiedByUser] = await Promise.all([
+            User.findByUserId(interventionAccessoryUsed.created_by_user_id),
+            interventionAccessoryUsed.last_modified_by_user_id
+              ? User.findByUserId(interventionAccessoryUsed.last_modified_by_user_id)
+              : null
+          ])
+
+          return {
+            id: interventionAccessoryUsed.id,
+            name: interventionAccessoryUsed.name,
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: interventionAccessoryUsed.created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: interventionAccessoryUsed.last_modified_datetime
+          }
+        })
+      )
+
+      return interventionAccessoriesUsedWithDetails
     }),
-    findByInterventionWorkDoneId: (interventionAccessoryUsedId) =>
+    findByInterventionAccessoryUsedId: (interventionAccessoryUsedId) =>
       withCache(
         `repairInterventionAccessoryUsed:${interventionAccessoryUsedId}`,
         async () => {
-          const query = "SELECT * FROM repair_intervention_accessories_used_options WHERE id = ?"
-          return dbQueryExecutor.execute(query, [interventionAccessoryUsedId])
+          const interventionAccessoryUsedQuery =
+            "SELECT * FROM repair_intervention_accessories_used_options WHERE id = ?"
+          const interventionAccessoryUsed = await dbQueryExecutor.execute(
+            interventionAccessoryUsedQuery,
+            [interventionAccessoryUsedId]
+          )
+
+          if (!interventionAccessoryUsed || interventionAccessoryUsed.length === 0) {
+            return []
+          }
+
+          const [createdByUser, lastModifiedByUser] = await Promise.all([
+            User.findByUserId(interventionAccessoryUsed[0].created_by_user_id),
+            interventionAccessoryUsed[0].last_modified_by_user_id
+              ? User.findByUserId(interventionAccessoryUsed[0].last_modified_by_user_id)
+              : null
+          ])
+
+          const interventionAccessoryUsedWithDetails = {
+            id: interventionAccessoryUsed[0].id,
+            name: interventionAccessoryUsed[0].name,
+            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
+            created_at_datetime: interventionAccessoryUsed[0].created_at_datetime,
+            last_modified_by_user:
+              lastModifiedByUser && lastModifiedByUser.length > 0
+                ? mapUser(lastModifiedByUser[0])
+                : null,
+            last_modified_datetime: interventionAccessoryUsed[0].last_modified_datetime
+          }
+
+          return [interventionAccessoryUsedWithDetails]
         },
         memoryOnlyCache
       )(),
+    findByName: (name) => {
+      const query = "SELECT * FROM repair_intervention_accessories_used_options WHERE name = ?"
+      return dbQueryExecutor.execute(query, [name])
+    },
+    findByRepairId: (repairId) => {
+      const query = `
+          SELECT 
+            ria.id AS repair_intervention_accessory_used_id, 
+            ria.accessories_used_option_id, 
+            riauo.name AS accessories_used_name 
+          FROM repair_intervention_accessories_used ria
+          JOIN repair_intervention_accessories_used_options riauo ON ria.accessories_used_option_id = riauo.id
+          WHERE ria.repair_id = ?`
+      return dbQueryExecutor.execute(query, [repairId])
+    },
     create: (name, createdByUserId) => {
       const query =
         "INSERT INTO repair_intervention_accessories_used_options (name, created_by_user_id, created_at_datetime) VALUES (?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor.execute(query, [name, createdByUserId]).then((result) => {
         return revalidateCache("repairInterventionAccessoriesUsed").then(() => result)
       })
-    },
-    findByName: (name) => {
-      const query = "SELECT * FROM repair_intervention_accessories_used_options WHERE name = ?"
-      return dbQueryExecutor.execute(query, [name])
     },
     update: (accessoryUsedId, name, lastModifiedByUserId) => {
       const query =
@@ -734,7 +1075,7 @@ const Repair = {
         })
     },
     delete: (accessoryUsedId) => {
-      const query = "DELETE FROM repair_intervention_accessories_used_options WHERE id = "
+      const query = "DELETE FROM repair_intervention_accessories_used_options WHERE id = ?"
       return dbQueryExecutor.execute(query, [accessoryUsedId]).then(async (result) => {
         const allRepairsByAccessoryUsedId = await Repair.findByInterventionAccessoryUsedId(
           accessoryUsedId
@@ -756,7 +1097,7 @@ const Repair = {
   attachment: {
     findAllByRepairId: async (repairId) => {
       const query =
-        "SELECT id, repair_id, original_filename, file_size, type, uploaded_by_user_id, uploaded_at_datetime FROM repair_attachments WHERE repair_id = ?"
+        "SELECT id, repair_id, original_filename, file_size, type, uploaded_by_user_id, uploaded_at_datetime FROM repair_attachments WHERE repair_id = ? ORDER BY uploaded_at_datetime DESC"
       return dbQueryExecutor.execute(query, [repairId])
     },
     findByAttachmentId: async (attachmentId) => {

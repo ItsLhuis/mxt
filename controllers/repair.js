@@ -138,8 +138,9 @@ const repairController = {
           is_default: existingStatus[0].is_default
         }
       },
-      { field: "Password SO", after: equipmentOsPassword },
-      { field: "Password BIOS", after: equipmentBiosPassword },
+      { field: "Data de entrada", after: entryDatetime },
+      { field: "Password SO", after: !equipmentOsPassword ? null : equipmentOsPassword },
+      { field: "Password BIOS", after: !equipmentBiosPassword ? null : equipmentBiosPassword },
       { field: "Descrição da entrada", after: !entryDescription ? null : entryDescription }
     ]
 
@@ -150,8 +151,8 @@ const repairController = {
     const { repairId } = req.params
     const {
       statusId,
-      clientOsPassword,
-      clientBiosPassword,
+      equipmentOsPassword,
+      equipmentBiosPassword,
       entryAccessoriesDescription,
       entryReportedIssuesDescription,
       entryDescription,
@@ -161,6 +162,7 @@ const repairController = {
       interventionDescription,
       conclusionDatetime,
       deliveryDatetime,
+      isClientNotified,
       entryAccessoriesIds,
       entryReportedIssuesIds,
       interventionWorksDoneIds,
@@ -179,13 +181,23 @@ const repairController = {
       throw new AppError(404, REPAIR_STATUS_NOT_FOUND, "Repair status not found", true)
     }
 
+    const entryAccessoriesOld = await Repair.entryAccessory.findByRepairId(repairId)
+    const entryReportedIssuesOld = await Repair.entryReportedIssue.findByRepairId(repairId)
+    const interventionWorksDoneOld = await Repair.interventionWorkDone.findByRepairId(repairId)
+    const interventionAccessoriesUsedOld = await Repair.interventionAccessoryUsed.findByRepairId(
+      repairId
+    )
+
+    const entryAccessoriesNew = []
     for (const entryAccessoryId of entryAccessoriesIds) {
       const existingEntryAccessory = await Repair.entryAccessory.findByAccessoryId(entryAccessoryId)
       if (existingEntryAccessory.length <= 0) {
         throw new AppError(404, ENTRY_ACCESSORY_NOT_FOUND, "Entry accessory not found", true)
       }
+      entryAccessoriesNew.push({ id: entryAccessoryId, name: existingEntryAccessory[0].name })
     }
 
+    const entryReportedIssuesNew = []
     for (const entryReportedIssueId of entryReportedIssuesIds) {
       const existingEntryReportedIssue = await Repair.entryReportedIssue.findByReportedIssueId(
         entryReportedIssueId
@@ -198,8 +210,13 @@ const repairController = {
           true
         )
       }
+      entryReportedIssuesNew.push({
+        id: entryReportedIssueId,
+        name: existingEntryReportedIssue[0].name
+      })
     }
 
+    const interventionWorksDoneNew = []
     for (const interventionWorkDoneId of interventionWorksDoneIds) {
       const existingInterventionWorkDone =
         await Repair.interventionWorkDone.findByInterventionWorkDoneId(interventionWorkDoneId)
@@ -211,11 +228,16 @@ const repairController = {
           true
         )
       }
+      interventionWorksDoneNew.push({
+        id: interventionWorkDoneId,
+        name: existingInterventionWorkDone[0].name
+      })
     }
 
+    const interventionAccessoriesUsedNew = []
     for (const interventionAccessoryUsedId of interventionAccessoriesUsedIds) {
       const existingInterventionAccessoryUsed =
-        await Repair.interventionAccessoryUsed.findByInterventionWorkDoneId(
+        await Repair.interventionAccessoryUsed.findByInterventionAccessoryUsedId(
           interventionAccessoryUsedId
         )
       if (existingInterventionAccessoryUsed.length <= 0) {
@@ -226,13 +248,17 @@ const repairController = {
           true
         )
       }
+      interventionAccessoriesUsedNew.push({
+        id: interventionAccessoryUsedId,
+        name: existingInterventionAccessoryUsed[0].name
+      })
     }
 
     await Repair.update(
       repairId,
       statusId,
-      clientOsPassword,
-      clientBiosPassword,
+      equipmentOsPassword,
+      equipmentBiosPassword,
       entryAccessoriesDescription,
       entryReportedIssuesDescription,
       entryDescription,
@@ -242,14 +268,27 @@ const repairController = {
       interventionDescription,
       conclusionDatetime,
       deliveryDatetime,
+      isClientNotified,
       req.user.id,
-      {
-        entryAccessoriesIds,
-        entryReportedIssuesIds,
-        interventionWorksDoneIds,
-        interventionAccessoriesUsedIds
-      }
+      entryAccessoriesIds,
+      entryReportedIssuesIds,
+      interventionWorksDoneIds,
+      interventionAccessoriesUsedIds
     )
+
+    const compareAndPushArrayChanges = (oldArray, newArray, fieldName) => {
+      const before = oldArray.map((item) => ({ id: item.id, name: item.name }))
+      const after = newArray.map((item) => ({ id: item.id, name: item.name }))
+
+      const changed = JSON.stringify(before) !== JSON.stringify(after)
+
+      changes.push({
+        field: fieldName,
+        before: before,
+        after: after,
+        changed: changed
+      })
+    }
 
     const changes = [
       {
@@ -275,16 +314,79 @@ const repairController = {
       {
         field: "Password SO",
         before: existingRepair[0].equipment_os_password,
-        after: clientOsPassword,
-        changed: existingRepair[0].equipment_os_password !== clientOsPassword
+        after: !equipmentOsPassword ? null : equipmentOsPassword,
+        changed: existingRepair[0].equipment_os_password !== equipmentOsPassword
       },
       {
         field: "Password BIOS",
         before: existingRepair[0].equipment_bios_password,
-        after: clientBiosPassword,
-        changed: existingRepair[0].equipment_bios_password !== clientBiosPassword
+        after: !equipmentBiosPassword ? null : equipmentBiosPassword,
+        changed: existingRepair[0].equipment_bios_password !== equipmentBiosPassword
       },
-      //
+      {
+        field: "Descrição da entrada",
+        before: existingRepair[0].entry_description,
+        after: !entryDescription ? null : entryDescription,
+        changed:
+          existingRepair[0].entry_description !== (!entryDescription ? null : entryDescription)
+      }
+    ]
+
+    compareAndPushArrayChanges(entryAccessoriesOld, entryAccessoriesNew, "Acessórios da entrada")
+
+    changes.push({
+      field: "Descrição dos acessórios da entrada",
+      before: existingRepair[0].entry_accessories_description,
+      after: !entryAccessoriesDescription ? null : entryAccessoriesDescription,
+      changed:
+        existingRepair[0].entry_accessories_description !==
+        (!entryAccessoriesDescription ? null : entryAccessoriesDescription)
+    })
+
+    compareAndPushArrayChanges(entryReportedIssuesOld, entryReportedIssuesNew, "Avarias relatadas")
+
+    changes.push({
+      field: "Descrição das avarias relatadas",
+      before: existingRepair[0].entry_reported_issues_description,
+      after: !entryReportedIssuesDescription ? null : entryReportedIssuesDescription,
+      changed:
+        existingRepair[0].entry_reported_issues_description !==
+        (!entryReportedIssuesDescription ? null : entryReportedIssuesDescription)
+    })
+
+    compareAndPushArrayChanges(
+      interventionWorksDoneOld,
+      interventionWorksDoneNew,
+      "Trabalhos realizados"
+    )
+
+    changes.push({
+      field: "Descrição dos trabalhos realizados",
+      before: existingRepair[0].intervention_works_done_description,
+      after: !interventionWorksDoneDescription ? null : interventionWorksDoneDescription,
+      changed:
+        existingRepair[0].intervention_works_done_description !==
+        (!interventionWorksDoneDescription ? null : interventionWorksDoneDescription)
+    })
+
+    compareAndPushArrayChanges(
+      interventionAccessoriesUsedOld,
+      interventionAccessoriesUsedNew,
+      "Acessórios da intervenção"
+    )
+
+    changes.push({
+      field: "Descrição dos acessórios da intervenção",
+      before: existingRepair[0].intervention_accessories_used_description,
+      after: !interventionAccessoriesUsedDescription
+        ? null
+        : interventionAccessoriesUsedDescription,
+      changed:
+        existingRepair[0].intervention_accessories_used_description !==
+        (!interventionAccessoriesUsedDescription ? null : interventionAccessoriesUsedDescription)
+    })
+
+    changes.push(
       {
         field: "Data de conclusão",
         before: existingRepair[0].conclusion_datetime,
@@ -296,9 +398,16 @@ const repairController = {
         before: existingRepair[0].delivery_datetime,
         after: deliveryDatetime,
         changed: existingRepair[0].delivery_datetime !== deliveryDatetime
+      },
+      {
+        field: "Cliente notificado",
+        before: existingRepair[0].is_client_notified,
+        after: isClientNotified,
+        changed: existingRepair[0].is_client_notified !== isClientNotified
       }
-    ]
+    )
 
+    await createInteractionHistory(repairId, REPAIR_UPDATED, changes, req.user.id)
     res.status(201).json({ message: "Repair updated successfully" })
   }),
   delete: tryCatch(async (req, res) => {
@@ -329,6 +438,10 @@ const repairController = {
     }),
     findByDefaultStatus: tryCatch(async (req, res) => {
       const defaultStatus = await Repair.status.findByDefaultStatus()
+      if (defaultStatus.length <= 0) {
+        throw new AppError(404, REPAIR_STATUS_NOT_FOUND, "Status not found", true)
+      }
+
       res.status(200).json(defaultStatus)
     }),
     create: tryCatch(async (req, res) => {
@@ -346,7 +459,7 @@ const repairController = {
         )
       }
 
-      await Repair.status.create(name, req.user.id)
+      await Repair.status.create(name, false, req.user.id)
       res.status(201).json({ message: "Status created successfully" })
     }),
     update: tryCatch(async (req, res) => {
@@ -387,7 +500,7 @@ const repairController = {
     delete: tryCatch(async (req, res) => {
       const { statusId } = req.params
 
-      const existingStatus = await Repair.status.findByStatusId(brandId)
+      const existingStatus = await Repair.status.findByStatusId(statusId)
       if (existingStatus.length <= 0) {
         throw new AppError(404, REPAIR_STATUS_NOT_FOUND, "Status not found", true)
       }
@@ -438,7 +551,7 @@ const repairController = {
         )
       }
 
-      await Repair.status.create(name, req.user.id)
+      await Repair.entryAccessory.create(name, req.user.id)
       res.status(201).json({ message: "Entry accessory created successfully" })
     }),
     update: tryCatch(async (req, res) => {
@@ -487,7 +600,7 @@ const repairController = {
         )
       }
 
-      await Repair.status.delete(statusId)
+      await Repair.entryAccessory.delete(entryAccessoryId)
       res.status(204).json({ message: "Entry accessory deleted successfully" })
     })
   },
@@ -697,7 +810,7 @@ const repairController = {
       const { interventionAccessoryUsedId } = req.params
 
       const existingInterventionAccessoryUsed =
-        await Repair.interventionAccessoryUsed.findByInterventionWorkDoneId(
+        await Repair.interventionAccessoryUsed.findByInterventionAccessoryUsedId(
           interventionAccessoryUsedId
         )
       if (existingInterventionAccessoryUsed.length <= 0) {
@@ -738,7 +851,7 @@ const repairController = {
       optionsSchema.parse(req.body)
 
       const existingInterventionAccessoryUsed =
-        await Repair.interventionAccessoryUsed.findByInterventionWorkDoneId(
+        await Repair.interventionAccessoryUsed.findByInterventionAccessoryUsedId(
           interventionAccessoryUsedId
         )
       if (existingInterventionAccessoryUsed.length <= 0) {
@@ -769,7 +882,7 @@ const repairController = {
       const { interventionAccessoryUsedId } = req.params
 
       const existingInterventionAccessoryUsed =
-        await Repair.interventionAccessoryUsed.findByInterventionWorkDoneId(
+        await Repair.interventionAccessoryUsed.findByInterventionAccessoryUsedId(
           interventionAccessoryUsedId
         )
       if (existingInterventionAccessoryUsed.length <= 0) {
