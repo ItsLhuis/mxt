@@ -2,7 +2,7 @@ import React, { Suspense } from "react"
 
 import { Box, Container } from "@mui/material"
 
-import { PageLoader, HeaderPage } from "@components/ui"
+import { PageLoader, HeaderPage, RichEditor } from "@components/ui"
 
 import { motion } from "framer-motion"
 
@@ -16,6 +16,9 @@ const Add = () => {
               title="Adicionar Cliente"
               breadcrumbs={[{ name: "Cliente" }, { name: "Adicionar" }]}
             />
+            <Box marginBlock={3}>
+              <RichEditor />
+            </Box>
           </Container>
         </Box>
       </motion.div>

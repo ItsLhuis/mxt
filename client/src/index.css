@@ -2,7 +2,6 @@
 
 * {
   margin: 0;
-  padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Oxygen",
     "Ubuntu", "Cantarell", "Open Sans", sans-serif !important;
@@ -90,7 +89,7 @@ p {
 }
 
 .MuiTooltip-tooltip {
-  background-color: var(--elevation-level5) !important;
+  background-color: var(--elevation-level6) !important;
   color: var(--onSurface) !important;
   box-shadow: 0 0 0.465rem var(--boxShadow) !important;
   padding: 8px 12px !important;
@@ -104,6 +103,10 @@ p {
 
 .MuiButton-containedPrimary .MuiLoadingButton-loadingIndicator {
   color: rgb(228, 225, 230) !important;
+}
+
+.MuiButton-containedSecondary:hover {
+  background-color: var(--elevation-level6) !important;
 }
 
 .MuiButton-containedSecondary.MuiLoadingButton-loading {
@@ -144,7 +147,7 @@ p {
 }
 
 .MuiIconButton-root:hover {
-  background-color: var(--secondaryContainer) !important;
+  background-color: var(--elevation-level6) !important;
 }
 
 .MuiIconButton-root.primary {
@@ -524,4 +527,34 @@ input[type=number]::-webkit-outer-spin-button {
 
 .apexcharts-xcrosshairs {
   fill: var(--secondaryContainer);
+}
+
+.tiptap {
+  padding: 16px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border: 2px solid var(--elevation-level5);
+  outline: none;
+  background-color: var(--elevation-level1);
+  min-height: 240px;
+  max-height: 480px;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.tiptap:hover {
+  border-color: var(--outline);
+}
+
+.tiptap:focus-visible {
+  border-color: var(--primary);
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: var(--outline);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  font-weight: 400;
 }

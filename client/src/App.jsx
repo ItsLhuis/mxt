@@ -29,7 +29,7 @@ function App() {
   }
 
   const secondaryButtonBackgroundColor =
-    dataTheme === "dark" ? "rgb(68, 69, 89)" : "rgb(225, 224, 249)"
+    dataTheme === "dark" ? "rgb(45, 45, 56)" : "rgb(235, 232, 248)"
 
   const theme = createTheme({
     palette: {
@@ -94,10 +94,11 @@ function App() {
           root: {
             fontSize: "13px",
             color: "var(--outline)",
-            fontWeight: 550
+            fontWeight: 400
           },
           shrink: {
-            fontSize: "1rem"
+            fontSize: "1rem",
+            fontWeight: 550
           }
         }
       },

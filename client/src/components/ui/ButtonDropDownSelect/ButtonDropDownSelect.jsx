@@ -30,6 +30,8 @@ const ButtonDropDownSelect = ({
     <>
       {mode === "normal" ? (
         <Button
+          variant="contained"
+          color="secondary"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -38,18 +40,15 @@ const ButtonDropDownSelect = ({
             padding: "8px 14px !important",
             paddingRight: "8px !important",
             width: "100%",
-            backgroundColor: "var(--elevation-level3)",
+            minHeight: "40px !important",
             borderRadius: 2,
-            color: "var(--onSurface)",
-            "&:hover": {
-              backgroundColor: "var(--elevation-level5)"
-            }
+            color: "var(--onSurface)"
           }}
           onClick={handleClick}
         >
-          <Box display="flex" alignItems="center" gap="8px">
+          <Box display="flex" alignItems="center" gap={1}>
             {title && (
-              <Typography variant="body3" textAlign="left" fontWeight={500}>
+              <Typography variant="p" component="p" textAlign="left">
                 {title}
               </Typography>
             )}
@@ -62,18 +61,16 @@ const ButtonDropDownSelect = ({
         <>
           {mode === "advanced" ? (
             <Button
+              variant="contained"
+              color="secondary"
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "flex-start",
                 width: "100%",
-                backgroundColor: "var(--elevation-level3)",
                 borderRadius: 2,
-                color: "var(--onSurface)",
-                "&:hover": {
-                  backgroundColor: "var(--elevation-level5)"
-                }
+                color: "var(--onSurface)"
               }}
               onClick={handleClick}
             >

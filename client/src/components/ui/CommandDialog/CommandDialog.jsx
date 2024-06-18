@@ -407,6 +407,8 @@ const CommandDialog = ({ open, handleClose }) => {
           <Stack sx={{ gap: 1 }}>
             {searchResults.map((item, index) => (
               <Button
+                variant="contained"
+                color="secondary"
                 key={index}
                 onClick={() => {
                   navigate(item.link)
@@ -419,15 +421,13 @@ const CommandDialog = ({ open, handleClose }) => {
                   alignItems: "flex-start",
                   padding: "16px !important",
                   width: "100%",
-                  backgroundColor: "var(--elevation-level2)",
                   border: 2,
-                  borderColor: "var(--elevation-level2)",
+                  borderColor: "var(--elevation-level3)",
                   borderRadius: 2,
                   color: "var(--onSurface)",
                   lineHeight: 1.5,
                   fontWeight: 400,
                   "&:hover": {
-                    backgroundColor: "var(--elevation-level4)",
                     borderColor: "var(--primary)"
                   }
                 }}

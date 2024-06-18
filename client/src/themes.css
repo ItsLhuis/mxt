@@ -33,6 +33,7 @@
     --elevation-level3: rgb(235, 232, 248);
     --elevation-level4: rgb(233, 231, 248);
     --elevation-level5: rgb(229, 227, 247);
+    --elevation-level6: rgb(213, 211, 228);
     --surfaceDisabled: rgba(27, 27, 31, 0.12);
     --onSurfaceDisabled: rgba(27, 27, 31, 0.38);
     --backdrop: rgba(48, 48, 56, 0.4);
@@ -75,6 +76,7 @@
     --elevation-level3: rgb(45, 45, 56);
     --elevation-level4: rgb(46, 47, 58);
     --elevation-level5: rgb(50, 50, 62);
+    --elevation-level6: rgb(66, 67, 78);
     --surfaceDisabled: rgba(228, 225, 230, 0.12);
     --onSurfaceDisabled: rgba(228, 225, 230, 0.38);
     --backdrop: rgba(48, 48, 56, 0.4);
@@ -117,6 +119,7 @@
     --elevation-level3: rgb(235, 232, 248);
     --elevation-level4: rgb(233, 231, 248);
     --elevation-level5: rgb(229, 227, 247);
+    --elevation-level6: rgb(213, 211, 228);
     --surfaceDisabled: rgba(27, 27, 31, 0.12);
     --onSurfaceDisabled: rgba(27, 27, 31, 0.38);
     --backdrop: rgba(48, 48, 56, 0.4);

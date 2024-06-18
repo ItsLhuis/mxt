@@ -32,6 +32,8 @@ export { default as PageLoader } from "./PageLoader/PageLoader"
 
 export { default as PageProgress } from "./PageProgress/PageProgress"
 
+export { default as RichEditor } from "./RichEditor/RichEditor"
+
 export { default as Select } from "./Select/Select"
 
 export { default as Table } from "./Table/Table"
