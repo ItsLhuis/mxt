@@ -45,18 +45,18 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         datePickerToolbarTitle: "Selecione uma data"
       }}
     >
-      <ThemeProvider>
-        <LoaderProvider>
-          <QueryClientProvider client={queryClient}>
-            <AuthProvider>
-              <BrowserRouter>
+      <BrowserRouter>
+        <ThemeProvider>
+          <LoaderProvider>
+            <QueryClientProvider client={queryClient}>
+              <AuthProvider>
                 <App />
                 <ReactQueryDevtools initialIsOpen={false} position="bottom" />
-              </BrowserRouter>
-            </AuthProvider>
-          </QueryClientProvider>
-        </LoaderProvider>
-      </ThemeProvider>
+              </AuthProvider>
+            </QueryClientProvider>
+          </LoaderProvider>
+        </ThemeProvider>
+      </BrowserRouter>
     </LocalizationProvider>
   </React.StrictMode>
 )

@@ -640,7 +640,11 @@ const Equipment = {
     delete: async (equipmentId, attachmentId) => {
       const query = "DELETE FROM equipment_attachments WHERE id = ?"
       return dbQueryExecutor.execute(query, [attachmentId]).then((result) => {
-        return revalidateCache(["equipments", `equipment:${equipmentId}`]).then(() => result)
+        return revalidateCache([
+          "equipments",
+          `equipment:${equipmentId}`,
+          `equipment:attachment:${attachmentId}`
+        ]).then(() => result)
       })
     }
   },

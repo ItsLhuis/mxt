@@ -162,7 +162,9 @@ const User = {
   updateAvatar: (userId, avatar, mimitype, fileSize) => {
     const query =
       "UPDATE users SET avatar = ?, avatar_mime_type = ?, avatar_file_size = ? WHERE id = ?"
-    return dbQueryExecutor.execute(query, [avatar, mimitype, fileSize, userId])
+    return dbQueryExecutor.execute(query, [avatar, mimitype, fileSize, userId]).then((result) => {
+      return revalidateCache(`user:avatar:${userId}`).then(() => result)
+    })
   },
   updatePassword: (userId, password) => {
     const query = "UPDATE users SET password = ? WHERE id = ?"

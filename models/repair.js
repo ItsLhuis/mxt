@@ -1148,7 +1148,11 @@ const Repair = {
     delete: async (repairId, attachmentId) => {
       const query = "DELETE FROM repair_attachments WHERE id = ?"
       return dbQueryExecutor.execute(query, [attachmentId]).then((result) => {
-        return revalidateCache(["repairs", `repair:${repairId}`]).then(() => result)
+        return revalidateCache([
+          "repairs",
+          `repair:${repairId}`,
+          `repair:attachment:${attachmentId}`
+        ]).then(() => result)
       })
     }
   },
