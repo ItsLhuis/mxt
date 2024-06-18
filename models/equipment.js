@@ -1,6 +1,13 @@
 const dbQueryExecutor = require("@utils/dbQueryExecutor")
 
-const { withCache, revalidateCache, clearAllCaches, memoryOnlyCache } = require("@utils/cache")
+const {
+  withCache,
+  revalidateCache,
+  clearAllCaches,
+  multiCache,
+  memoryOnlyCache,
+  diskOnlyCache
+} = require("@utils/cache")
 
 const Client = require("@models/client")
 
@@ -118,8 +125,8 @@ const Equipment = {
               ? mapUser(lastModifiedByUser[0])
               : null,
           last_modified_datetime: equipment[0].last_modified_datetime,
-          attachments,
-          interactions_history: interactionsHistory
+          interactions_history: interactionsHistory,
+          attachments
         }
 
         return [equipmentWithDetails]
@@ -172,7 +179,7 @@ const Equipment = {
         equipmentId
       ])
       .then((result) => {
-        return clearAllCaches().then(() => result)
+        return clearAllCaches([multiCache, memoryOnlyCache]).then(() => result)
       })
   },
   updateClientId: (equipmentId, clientId, lastModifiedByUserId) => {
@@ -181,17 +188,17 @@ const Equipment = {
     return dbQueryExecutor
       .execute(query, [clientId, lastModifiedByUserId, equipmentId])
       .then((result) => {
-        return clearAllCaches().then(() => result)
+        return clearAllCaches([multiCache, memoryOnlyCache]).then(() => result)
       })
   },
   delete: (equipmentId) => {
     const query = "DELETE FROM equipments WHERE id = ?"
     return dbQueryExecutor.execute(query, [equipmentId]).then((result) => {
-      return clearAllCaches().then(() => result)
+      return clearAllCaches([multiCache, memoryOnlyCache]).then(() => result)
     })
   },
   brand: {
-    findAll: withCache("equipmentBrands", async () => {
+    findAll: withCache("equipment:brands", async () => {
       const brandsQuery = "SELECT * FROM equipment_brands ORDER BY name"
       const brands = await dbQueryExecutor.execute(brandsQuery)
 
@@ -222,7 +229,7 @@ const Equipment = {
     }),
     findByBrandId: async (brandId) =>
       withCache(
-        `equipmentBrand:${brandId}`,
+        `equipment:brand:${brandId}`,
         async () => {
           const brandQuery = "SELECT * FROM equipment_brands WHERE id = ?"
           const brand = await dbQueryExecutor.execute(brandQuery, [brandId])
@@ -262,7 +269,7 @@ const Equipment = {
       const query =
         "INSERT INTO equipment_brands (name, created_by_user_id, created_at_datetime) VALUES (?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor.execute(query, [name, createdByUserId]).then((result) => {
-        return revalidateCache("equipmentBrands").then(() => result)
+        return revalidateCache("equipment:brands").then(() => result)
       })
     },
     update: (brandId, name, lastModifiedByUserId) => {
@@ -279,7 +286,7 @@ const Equipment = {
             })
           }
 
-          return revalidateCache(["equipmentBrands", `equipmentBrand:${brandId}`]).then(
+          return revalidateCache(["equipment:brands", `equipment:brand:${brandId}`]).then(
             () => result
           )
         })
@@ -295,12 +302,14 @@ const Equipment = {
           })
         }
 
-        return revalidateCache(["equipmentBrands", `equipmentBrand:${brandId}`]).then(() => result)
+        return revalidateCache(["equipment:brands", `equipment:brand:${brandId}`]).then(
+          () => result
+        )
       })
     }
   },
   model: {
-    findAll: withCache("equipmentModels", async () => {
+    findAll: withCache("equipment:models", async () => {
       const modelsQuery = "SELECT * FROM equipment_models ORDER BY name"
       const models = await dbQueryExecutor.execute(modelsQuery)
 
@@ -336,7 +345,7 @@ const Equipment = {
     }),
     findByModelId: async (modelId) =>
       withCache(
-        `equipmentModel:${modelId}`,
+        `equipment:model:${modelId}`,
         async () => {
           const modelQuery = "SELECT * FROM equipment_models WHERE id = ?"
           const model = await dbQueryExecutor.execute(modelQuery, [modelId])
@@ -375,7 +384,7 @@ const Equipment = {
       )(),
     findByBrandId: async (brandId) =>
       withCache(
-        `equipmentModelsByBrand:${brandId}`,
+        `equipment:modelsByBrand:${brandId}`,
         async () => {
           const modelsQuery = "SELECT * FROM equipment_models WHERE brand_id = ? ORDER BY name"
           const models = await dbQueryExecutor.execute(modelsQuery, [brandId])
@@ -420,7 +429,7 @@ const Equipment = {
       const query =
         "INSERT INTO equipment_models (brand_id, name, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor.execute(query, [brandId, name, createdByUserId]).then((result) => {
-        return revalidateCache(["equipmentModels", `equipmentModelsByBrand:${brandId}`]).then(
+        return revalidateCache(["equipment:models", `equipment:modelsByBrand:${brandId}`]).then(
           () => result
         )
       })
@@ -443,9 +452,9 @@ const Equipment = {
           }
 
           const cacheKeys = [
-            "equipmentModels",
-            `equipmentModel:${modelId}`,
-            modelDetails.length > 0 && `equipmentModelsByBrand:${modelDetails[0].brand.id}`
+            "equipment:models",
+            `equipment:model:${modelId}`,
+            modelDetails.length > 0 && `equipment:modelsByBrand:${modelDetails[0].brand.id}`
           ].filter(Boolean)
           return revalidateCache(cacheKeys).then(() => result)
         })
@@ -465,16 +474,16 @@ const Equipment = {
         }
 
         const cacheKeys = [
-          "equipmentModels",
-          `equipmentModel:${modelId}`,
-          modelDetails.length > 0 && `equipmentModelsByBrand:${modelDetails[0].brand.id}`
+          "equipment:models",
+          `equipment:model:${modelId}`,
+          modelDetails.length > 0 && `equipment:modelsByBrand:${modelDetails[0].brand.id}`
         ].filter(Boolean)
         return revalidateCache(cacheKeys).then(() => result)
       })
     }
   },
   type: {
-    findAll: withCache("equipmentTypes", async () => {
+    findAll: withCache("equipment:types", async () => {
       const typesQuery = "SELECT * FROM equipment_types ORDER BY name"
       const types = await dbQueryExecutor.execute(typesQuery)
 
@@ -503,7 +512,7 @@ const Equipment = {
     }),
     findByTypeId: async (typeId) =>
       withCache(
-        `equipmentType:${typeId}`,
+        `equipment:type:${typeId}`,
         async () => {
           const typeQuery = "SELECT * FROM equipment_types WHERE id = ?"
           const type = await dbQueryExecutor.execute(typeQuery, [typeId])
@@ -543,7 +552,7 @@ const Equipment = {
       const query =
         "INSERT INTO equipment_types (name, created_by_user_id, created_at_datetime) VALUES (?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor.execute(query, [name, createdByUserId]).then((result) => {
-        return revalidateCache("equipmentTypes").then(() => result)
+        return revalidateCache("equipment:types").then(() => result)
       })
     },
     update: (typeId, name, lastModifiedByUserId) => {
@@ -560,7 +569,7 @@ const Equipment = {
             })
           }
 
-          return revalidateCache(["equipmentTypes", `equipmentType:${typeId}`]).then(() => result)
+          return revalidateCache(["equipment:types", `equipment:type:${typeId}`]).then(() => result)
         })
     },
     delete: (typeId) => {
@@ -574,7 +583,7 @@ const Equipment = {
           })
         }
 
-        return revalidateCache(["equipmentTypes", `equipmentType:${typeId}`]).then(() => result)
+        return revalidateCache(["equipment:types", `equipment:type:${typeId}`]).then(() => result)
       })
     }
   },
@@ -584,10 +593,15 @@ const Equipment = {
         "SELECT id, equipment_id, original_filename, file_size, type, uploaded_by_user_id, uploaded_at_datetime FROM equipment_attachments WHERE equipment_id = ? ORDER BY uploaded_at_datetime DESC"
       return dbQueryExecutor.execute(query, [equipmentId])
     },
-    findByAttachmentId: async (attachmentId) => {
-      const query = "SELECT * FROM equipment_attachments WHERE id = ?"
-      return dbQueryExecutor.execute(query, [attachmentId])
-    },
+    findByAttachmentId: (attachmentId) =>
+      withCache(
+        `equipment:attachment:${attachmentId}`,
+        async () => {
+          const query = "SELECT * FROM equipment_attachments WHERE id = ?"
+          return dbQueryExecutor.execute(query, [attachmentId])
+        },
+        diskOnlyCache
+      )(),
     create: async (equipmentId, attachments, uploadedByUserId) => {
       let transaction
 

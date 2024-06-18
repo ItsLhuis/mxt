@@ -1,6 +1,12 @@
 const dbQueryExecutor = require("@utils/dbQueryExecutor")
 
-const { withCache, revalidateCache, clearAllCaches, memoryOnlyCache } = require("@utils/cache")
+const {
+  withCache,
+  revalidateCache,
+  clearAllCaches,
+  multiCache,
+  memoryOnlyCache
+} = require("@utils/cache")
 
 const User = require("@models/user")
 const mapUser = require("@utils/mapUser")
@@ -112,13 +118,13 @@ const Client = {
     return dbQueryExecutor
       .execute(query, [name, description, lastModifiedByUserId, clientId])
       .then((result) => {
-        return clearAllCaches().then(() => result)
+        return clearAllCaches([multiCache, memoryOnlyCache]).then(() => result)
       })
   },
   delete: (clientId) => {
     const query = "DELETE FROM clients WHERE id = ?"
     return dbQueryExecutor.execute(query, [clientId]).then((result) => {
-      return clearAllCaches().then(() => result)
+      return clearAllCaches([multiCache, memoryOnlyCache]).then(() => result)
     })
   },
   contact: {

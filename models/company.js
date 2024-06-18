@@ -1,6 +1,6 @@
 const dbQueryExecutor = require("@utils/dbQueryExecutor")
 
-const { withCache, revalidateCache } = require("@utils/cache")
+const { withCache, revalidateCache, diskOnlyCache } = require("@utils/cache")
 
 const Company = {
   find: withCache("company", async () => {
@@ -18,10 +18,15 @@ const Company = {
       FROM company`
     return dbQueryExecutor.execute(query)
   }),
-  findLogo: () => {
-    const query = "SELECT logo, logo_mime_type, logo_file_size FROM company"
-    return dbQueryExecutor.execute(query)
-  },
+  findLogo: () =>
+    withCache(
+      "company:logo",
+      async () => {
+        const query = "SELECT logo, logo_mime_type, logo_file_size FROM company"
+        return dbQueryExecutor.execute(query)
+      },
+      diskOnlyCache
+    )(),
   initialize: () => {
     const query =
       "INSERT INTO company (enforce_one_row, created_at_datetime) VALUES (?, CURRENT_TIMESTAMP())"

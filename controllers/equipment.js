@@ -9,7 +9,6 @@ const processImage = require("@utils/processImage")
 
 const {
   EQUIPMENT_NOT_FOUND,
-  ATTACHMENT_NOT_FOUND,
   BRAND_NOT_FOUND,
   MODEL_NOT_FOUND,
   TYPE_NOT_FOUND,
@@ -21,7 +20,8 @@ const {
   EQUIPMENTS_ASSOCIATED_WITH_BRAND,
   EQUIPMENTS_ASSOCIATED_WITH_MODEL,
   EQUIPMENTS_ASSOCIATED_WITH_TYPE,
-  NO_FILES_UPLOADED
+  NO_FILES_UPLOADED,
+  ATTACHMENT_NOT_FOUND
 } = require("@constants/errors/equipment")
 const { CLIENT_NOT_FOUND } = require("@constants/errors/client")
 const { ATTACHMENT_STREAMING_ERROR } = require("@constants/errors/shared/attachment")

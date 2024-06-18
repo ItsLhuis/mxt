@@ -1,6 +1,13 @@
 const dbQueryExecutor = require("@utils/dbQueryExecutor")
 
-const { withCache, revalidateCache, clearAllCaches, memoryOnlyCache } = require("@utils/cache")
+const {
+  withCache,
+  revalidateCache,
+  clearAllCaches,
+  multiCache,
+  memoryOnlyCache,
+  diskOnlyCache
+} = require("@utils/cache")
 
 const User = {
   findAll: withCache("users", async () => {
@@ -126,10 +133,15 @@ const User = {
 
     return dbQueryExecutor.execute(query, params)
   },
-  findAvatar: (userId) => {
-    const query = "SELECT avatar, avatar_mime_type, avatar_file_size FROM users WHERE id = ?"
-    return dbQueryExecutor.execute(query, [userId])
-  },
+  findAvatar: (userId) =>
+    withCache(
+      `user:avatar:${userId}`,
+      async () => {
+        const query = "SELECT avatar, avatar_mime_type, avatar_file_size FROM users WHERE id = ?"
+        return dbQueryExecutor.execute(query, [userId])
+      },
+      diskOnlyCache
+    )(),
   create: (username, password, email, role, isActive, createdByUserId) => {
     const query =
       "INSERT INTO users (username, password, email, role, is_active, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"
@@ -144,7 +156,7 @@ const User = {
     return dbQueryExecutor
       .execute(query, [username, email, role, isActive, userId])
       .then((result) => {
-        return clearAllCaches().then(() => result)
+        return clearAllCaches([multiCache, memoryOnlyCache]).then(() => result)
       })
   },
   updateAvatar: (userId, avatar, mimitype, fileSize) => {
@@ -155,19 +167,19 @@ const User = {
   updatePassword: (userId, password) => {
     const query = "UPDATE users SET password = ? WHERE id = ?"
     return dbQueryExecutor.execute(query, [password, userId]).then((result) => {
-      return clearAllCaches().then(() => result)
+      return clearAllCaches([multiCache, memoryOnlyCache]).then(() => result)
     })
   },
   updatePasswordByEmail: (email, password) => {
     const query = "UPDATE users SET password = ? WHERE email = ?"
     return dbQueryExecutor.execute(query, [password, email]).then(async (result) => {
-      return clearAllCaches().then(() => result)
+      return clearAllCaches([multiCache, memoryOnlyCache]).then(() => result)
     })
   },
   delete: (userId) => {
     const query = "DELETE FROM users WHERE id = ?"
     return dbQueryExecutor.execute(query, [userId]).then((result) => {
-      return clearAllCaches().then(() => result)
+      return clearAllCaches([multiCache, memoryOnlyCache]).then(() => result)
     })
   },
   otpCode: {

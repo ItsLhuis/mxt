@@ -28,7 +28,8 @@ const {
   REPAIR_INTERVENTION_ACCESSORY_USED_NOT_FOUND,
   DUPLICATE_INTERVENTION_ACCESSORY_USED_NAME,
   REPAIRS_ASSOCIATED_WITH_INTERVENTION_ACCESSORY_USED,
-  NO_FILES_UPLOADED
+  NO_FILES_UPLOADED,
+  ATTACHMENT_NOT_FOUND
 } = require("@constants/errors/repair")
 const { EQUIPMENT_NOT_FOUND } = require("@constants/errors/equipment")
 const { ATTACHMENT_STREAMING_ERROR } = require("@constants/errors/shared/attachment")

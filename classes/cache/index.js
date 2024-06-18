@@ -8,23 +8,21 @@ const path = require("path")
 const locks = new Map()
 
 class Cache {
-  constructor({ memoryTTL = 0, diskTTL = 0, storage = "both" } = {}) {
+  constructor({ memoryTTL = 0, diskTTL = 0, storage = "both", cacheDir = "data" } = {}) {
     this.memoryCache = new NodeCache({ stdTTL: memoryTTL })
     this.memoryTTL = memoryTTL
-    Object.defineProperty(this, "cacheDir", {
-      value: "tmp/cache",
-      writable: false,
-      configurable: false,
-      enumerable: true
-    })
     this.diskTTL = diskTTL
     this.storage = storage.toLowerCase().trim()
+
+    const baseDir = "tmp/cache"
+    const safeCacheDir = path.normalize(cacheDir).replace(/^(\.\.[\/\\])+/, "")
+    this.cacheDir = path.join(baseDir, safeCacheDir)
 
     if (!fs.existsSync(this.cacheDir)) {
       fs.mkdirSync(this.cacheDir, { recursive: true })
     }
 
-    if (this.storage === "both" && this.diskTTL > 0) {
+    if ((this.storage === "both" || this.storage === "disk") && this.diskTTL > 0) {
       const cleaningInterval = (this.diskTTL * 1000) / 2 + this.diskTTL * 1000 * 0.1
 
       setInterval(() => {
@@ -47,12 +45,14 @@ class Cache {
         level: zlib.constants.Z_BEST_COMPRESSION
       })
 
-      if (this.storage === "both") {
+      if (this.storage === "both" || this.storage === "disk") {
         fs.promises
           .unlink(filePath)
           .catch((error) => {
             if (error.code !== "ENOENT") {
-              this.memoryCache.set(key, data, this.memoryTTL)
+              if (this.storage !== "both" && this.storage !== "disk") {
+                this.memoryCache.set(key, data, this.memoryTTL)
+              }
               reject(error)
             }
           })
@@ -60,11 +60,15 @@ class Cache {
             return fs.promises.writeFile(filePath, serializedData)
           })
           .then(() => {
-            this.memoryCache.set(key, data, this.memoryTTL)
+            if (this.storage !== "both" && this.storage !== "disk") {
+              this.memoryCache.set(key, data, this.memoryTTL)
+            }
             resolve()
           })
           .catch((error) => {
-            this.memoryCache.set(key, data, this.memoryTTL)
+            if (this.storage !== "both" && this.storage !== "disk") {
+              this.memoryCache.set(key, data, this.memoryTTL)
+            }
             reject(error)
           })
           .finally(() => {
@@ -82,13 +86,15 @@ class Cache {
     await this._acquireLock(key)
 
     return new Promise((resolve, reject) => {
-      const memoryData = this.memoryCache.get(key)
-      if (memoryData) {
-        this._releaseLock(key)
-        return resolve(memoryData)
+      if (this.storage !== "disk") {
+        const memoryData = this.memoryCache.get(key)
+        if (memoryData) {
+          this._releaseLock(key)
+          return resolve(memoryData)
+        }
       }
 
-      if (this.storage === "both") {
+      if (this.storage === "both" || this.storage === "disk") {
         if (!fs.existsSync(this.cacheDir)) {
           fs.mkdirSync(this.cacheDir, { recursive: true })
         }
@@ -137,7 +143,7 @@ class Cache {
       }
 
       const filePath = path.join(this.cacheDir, key)
-      if (this.storage === "both") {
+      if (this.storage === "both" || this.storage === "disk") {
         fs.promises
           .access(filePath, fs.constants.F_OK)
           .then(() => {
@@ -178,7 +184,9 @@ class Cache {
           return Promise.all(promises)
         })
         .then(() => {
-          this.memoryCache.flushAll()
+          if (this.storage === "both" || this.storage !== "disk") {
+            this.memoryCache.flushAll()
+          }
           resolve()
         })
         .catch((error) => {

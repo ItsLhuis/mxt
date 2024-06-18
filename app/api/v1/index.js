@@ -8,7 +8,7 @@ const userRoleHandler = require("@middlewares/userRoleHandler")
 
 const checkPermissionHandler = require("@middlewares/checkPermissionHandler")
 const permissions = require("@constants/permissions")
-const { clearAllCaches } = require("@utils/cache")
+const { clearAllCaches, multiCache, memoryOnlyCache, diskOnlyCache } = require("@utils/cache")
 router.delete(
   "/cache",
   checkCompanyHandler,
@@ -17,7 +17,7 @@ router.delete(
   userRoleHandler,
   checkPermissionHandler("cache", permissions.DELETE),
   (req, res) => {
-    clearAllCaches()
+    clearAllCaches([multiCache, memoryOnlyCache, diskOnlyCache])
       .then(() => res.send({ message: "Cache removed" }))
       .catch(() => {
         res.status(500).send({ message: "An error occurred while clearing the cache" })

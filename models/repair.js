@@ -1,6 +1,6 @@
 const dbQueryExecutor = require("@utils/dbQueryExecutor")
 
-const { withCache, revalidateCache, memoryOnlyCache } = require("@utils/cache")
+const { withCache, revalidateCache, memoryOnlyCache, diskOnlyCache } = require("@utils/cache")
 
 const Equipment = require("@models/equipment")
 
@@ -11,7 +11,8 @@ const { HISTORY_ENABLED } = require("@constants/config")
 
 const Repair = {
   findAll: withCache("repairs", async () => {
-    const repairsQuery = "SELECT * FROM repairs ORDER BY COALESCE(last_modified_datetime, created_at_datetime) DESC"
+    const repairsQuery =
+      "SELECT * FROM repairs ORDER BY COALESCE(last_modified_datetime, created_at_datetime) DESC"
     const repairs = await dbQueryExecutor.execute(repairsQuery)
 
     const repairsWithDetails = await Promise.all(
@@ -399,7 +400,7 @@ const Repair = {
     return dbQueryExecutor.execute(query, [repairId])
   },
   status: {
-    findAll: withCache("repairStatus", async () => {
+    findAll: withCache("repair:status", async () => {
       const statusQuery = "SELECT * FROM repair_status ORDER BY name"
       const status = await dbQueryExecutor.execute(statusQuery)
 
@@ -430,7 +431,7 @@ const Repair = {
     }),
     findByStatusId: (statusId) =>
       withCache(
-        `repairStatus:${statusId}`,
+        `repair:status:${statusId}`,
         async () => {
           const statusQuery = "SELECT * FROM repair_status WHERE id = ?"
           const status = await dbQueryExecutor.execute(statusQuery, [statusId])
@@ -464,7 +465,7 @@ const Repair = {
       )(),
     findByDefaultStatus: () =>
       withCache(
-        "repairDefaultStatus",
+        "repair:defaultStatus",
         async () => {
           const statusQuery = "SELECT * FROM repair_status WHERE is_default = true"
           const status = await dbQueryExecutor.execute(statusQuery)
@@ -506,7 +507,7 @@ const Repair = {
       return dbQueryExecutor
         .execute(query, [name, isDefault ?? false, createdByUserId])
         .then((result) => {
-          return revalidateCache(["repairStatus", "repairDefaultStatus"]).then(() => result)
+          return revalidateCache(["repair:status", "repair:defaultStatus"]).then(() => result)
         })
     },
     update: (statusId, name, lastModifiedByUserId) => {
@@ -524,9 +525,9 @@ const Repair = {
           }
 
           return revalidateCache([
-            "repairStatus",
-            "repairDefaultStatus",
-            `repairStatus:${statusId}`
+            "repair:status",
+            "repair:defaultStatus",
+            `repair:status:${statusId}`
           ]).then(() => result)
         })
     },
@@ -552,9 +553,9 @@ const Repair = {
           }
 
           return revalidateCache([
-            "repairStatus",
-            "repairDefaultStatus",
-            `repairStatus:${statusId}`
+            "repair:status",
+            "repair:defaultStatus",
+            `repair:status:${statusId}`
           ]).then(() => result)
         })
     },
@@ -570,15 +571,15 @@ const Repair = {
         }
 
         return revalidateCache([
-          "repairStatus",
-          "repairDefaultStatus",
-          `repairStatus:${statusId}`
+          "repair:status",
+          "repair:defaultStatus",
+          `repair:status:${statusId}`
         ]).then(() => result)
       })
     }
   },
   entryAccessory: {
-    findAll: withCache("repairEntryAccessories", async () => {
+    findAll: withCache("repair:entryAccessories", async () => {
       const entryAccessoriesQuery = "SELECT * FROM repair_entry_accessories_options ORDER BY name"
       const entryAccessories = await dbQueryExecutor.execute(entryAccessoriesQuery)
 
@@ -609,7 +610,7 @@ const Repair = {
     }),
     findByAccessoryId: (accessoryId) =>
       withCache(
-        `repairEntryAccessory:${accessoryId}`,
+        `repair:entryAccessory:${accessoryId}`,
         async () => {
           const entryAccessoryQuery = "SELECT * FROM repair_entry_accessories_options WHERE id = ?"
           const entryAccessory = await dbQueryExecutor.execute(entryAccessoryQuery, [accessoryId])
@@ -660,7 +661,7 @@ const Repair = {
       const query =
         "INSERT INTO repair_entry_accessories_options (name, created_by_user_id, created_at_datetime) VALUES (?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor.execute(query, [name, createdByUserId]).then((result) => {
-        return revalidateCache("repairEntryAccessories").then(() => result)
+        return revalidateCache("repair:entryAccessories").then(() => result)
       })
     },
     update: (accessoryId, name, lastModifiedByUserId) => {
@@ -678,8 +679,8 @@ const Repair = {
           }
 
           return revalidateCache([
-            "repairEntryAccessories",
-            `repairEntryAccessory:${accessoryId}`
+            "repair:entryAccessories",
+            `repair:entryAccessory:${accessoryId}`
           ]).then(() => result)
         })
     },
@@ -695,14 +696,14 @@ const Repair = {
         }
 
         return revalidateCache([
-          "repairEntryAccessories",
-          `repairEntryAccessory:${accessoryId}`
+          "repair:entryAccessories",
+          `repair:entryAccessory:${accessoryId}`
         ]).then(() => result)
       })
     }
   },
   entryReportedIssue: {
-    findAll: withCache("repairEntryReportedIssues", async () => {
+    findAll: withCache("repair:entryReportedIssues", async () => {
       const entryReportedIssuesQuery =
         "SELECT * FROM repair_entry_reported_issues_options ORDER BY name"
       const entryReportedIssues = await dbQueryExecutor.execute(entryReportedIssuesQuery)
@@ -734,7 +735,7 @@ const Repair = {
     }),
     findByReportedIssueId: (reportedIssueId) =>
       withCache(
-        `repairEntryReportedIssue:${reportedIssueId}`,
+        `repair:entryReportedIssue:${reportedIssueId}`,
         async () => {
           const entryReportedIssueQuery =
             "SELECT * FROM repair_entry_reported_issues_options WHERE id = ?"
@@ -788,7 +789,7 @@ const Repair = {
       const query =
         "INSERT INTO repair_entry_reported_issues_options (name, created_by_user_id, created_at_datetime) VALUES (?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor.execute(query, [name, createdByUserId]).then((result) => {
-        return revalidateCache("repairEntryReportedIssues").then(() => result)
+        return revalidateCache("repair:entryReportedIssues").then(() => result)
       })
     },
     update: (reportedIssueId, name, lastModifiedByUserId) => {
@@ -808,8 +809,8 @@ const Repair = {
           }
 
           return revalidateCache([
-            "repairEntryReportedIssues",
-            `repairEntryReportedIssue:${reportedIssueId}`
+            "repair:entryReportedIssues",
+            `repair:entryReportedIssue:${reportedIssueId}`
           ]).then(() => result)
         })
     },
@@ -825,14 +826,14 @@ const Repair = {
         }
 
         return revalidateCache([
-          "repairEntryReportedIssues",
-          `repairEntryReportedIssue:${reportedIssueId}`
+          "repair:entryReportedIssues",
+          `repair:entryReportedIssue:${reportedIssueId}`
         ]).then(() => result)
       })
     }
   },
   interventionWorkDone: {
-    findAll: withCache("repairInterventionWorksDone", async () => {
+    findAll: withCache("repair:interventionWorksDone", async () => {
       const interventionWorksDoneQuery =
         "SELECT * FROM repair_intervention_works_done_options ORDER BY name"
       const interventionWorksDone = await dbQueryExecutor.execute(interventionWorksDoneQuery)
@@ -864,7 +865,7 @@ const Repair = {
     }),
     findByInterventionWorkDoneId: (interventionWorkDoneId) =>
       withCache(
-        `repairInterventionWorkDone:${interventionWorkDoneId}`,
+        `repair:interventionWorkDone:${interventionWorkDoneId}`,
         async () => {
           const interventionWorkDoneQuery =
             "SELECT * FROM repair_intervention_works_done_options WHERE id = ?"
@@ -918,7 +919,7 @@ const Repair = {
       const query =
         "INSERT INTO repair_intervention_works_done_options (name, created_by_user_id, created_at_datetime) VALUES (?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor.execute(query, [name, createdByUserId]).then((result) => {
-        return revalidateCache("repairInterventionWorksDone").then(() => result)
+        return revalidateCache("repair:interventionWorksDone").then(() => result)
       })
     },
     update: (workDoneId, name, lastModifiedByUserId) => {
@@ -936,8 +937,8 @@ const Repair = {
           }
 
           return revalidateCache([
-            "repairInterventionWorksDone",
-            `repairInterventionWorkDone:${workDoneId}`
+            "repair:interventionWorksDone",
+            `repair:interventionWorkDone:${workDoneId}`
           ]).then(() => result)
         })
     },
@@ -953,14 +954,14 @@ const Repair = {
         }
 
         return revalidateCache([
-          "repairInterventionWorksDone",
-          `repairInterventionWorkDone:${workDoneId}`
+          "repair:interventionWorksDone",
+          `repair:interventionWorkDone:${workDoneId}`
         ]).then(() => result)
       })
     }
   },
   interventionAccessoryUsed: {
-    findAll: withCache("repairInterventionAccessoriesUsed", async () => {
+    findAll: withCache("repair:interventionAccessoriesUsed", async () => {
       const interventionAccessoriesUsedQuery =
         "SELECT * FROM repair_intervention_accessories_used_options ORDER BY name"
       const interventionAccessoriesUsed = await dbQueryExecutor.execute(
@@ -994,7 +995,7 @@ const Repair = {
     }),
     findByInterventionAccessoryUsedId: (interventionAccessoryUsedId) =>
       withCache(
-        `repairInterventionAccessoryUsed:${interventionAccessoryUsedId}`,
+        `repair:interventionAccessoryUsed:${interventionAccessoryUsedId}`,
         async () => {
           const interventionAccessoryUsedQuery =
             "SELECT * FROM repair_intervention_accessories_used_options WHERE id = ?"
@@ -1049,7 +1050,7 @@ const Repair = {
       const query =
         "INSERT INTO repair_intervention_accessories_used_options (name, created_by_user_id, created_at_datetime) VALUES (?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor.execute(query, [name, createdByUserId]).then((result) => {
-        return revalidateCache("repairInterventionAccessoriesUsed").then(() => result)
+        return revalidateCache("repair:interventionAccessoriesUsed").then(() => result)
       })
     },
     update: (accessoryUsedId, name, lastModifiedByUserId) => {
@@ -1069,8 +1070,8 @@ const Repair = {
           }
 
           return revalidateCache([
-            "repairInterventionAccessoriesUsed",
-            `repairInterventionAccessoryUsed:${accessoryUsedId}`
+            "repair:interventionAccessoriesUsed",
+            `repair:interventionAccessoryUsed:${accessoryUsedId}`
           ]).then(() => result)
         })
     },
@@ -1088,8 +1089,8 @@ const Repair = {
         }
 
         return revalidateCache([
-          "repairInterventionAccessoriesUsed",
-          `repairInterventionAccessoryUsed:${accessoryUsedId}`
+          "repair:interventionAccessoriesUsed",
+          `repair:interventionAccessoryUsed:${accessoryUsedId}`
         ]).then(() => result)
       })
     }
@@ -1100,10 +1101,15 @@ const Repair = {
         "SELECT id, repair_id, original_filename, file_size, type, uploaded_by_user_id, uploaded_at_datetime FROM repair_attachments WHERE repair_id = ? ORDER BY uploaded_at_datetime DESC"
       return dbQueryExecutor.execute(query, [repairId])
     },
-    findByAttachmentId: async (attachmentId) => {
-      const query = "SELECT * FROM repair_attachments WHERE id = ?"
-      return dbQueryExecutor.execute(query, [attachmentId])
-    },
+    findByAttachmentId: (attachmentId) =>
+      withCache(
+        `repair:attachment:${attachmentId}`,
+        async () => {
+          const query = "SELECT * FROM repair_attachments WHERE id = ?"
+          return dbQueryExecutor.execute(query, [attachmentId])
+        },
+        diskOnlyCache
+      )(),
     create: async (repairId, attachments, uploadedByUserId) => {
       let transaction
 
