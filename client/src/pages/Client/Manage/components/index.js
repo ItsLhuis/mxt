@@ -1,6 +1,6 @@
 import { lazy } from "react"
 
-const AddClientForm = lazy(() => import("./AddClientForm"))
-const EditClientForm = lazy(() => import("./EditClientForm"))
+const AddClientForm = lazy(() => import("./Add/AddClientForm"))
+const EditClient = lazy(() => import("./Edit/EditClient"))
 
-export { AddClientForm, EditClientForm }
+export { AddClientForm, EditClient }

@@ -1,182 +1,75 @@
-import React from "react"
+import React, { useState, useMemo } from "react"
+
+import { useNavigate } from "react-router-dom"
 
 import { BASE_URL } from "@api"
 import { useClient } from "@hooks/server/useClient"
 
-import { Stack, Paper, Box, Typography, ListItemText, Divider } from "@mui/material"
+import { Link } from "react-router-dom"
+import {
+  Stack,
+  Paper,
+  Box,
+  Typography,
+  ListItemText,
+  Divider,
+  Tooltip,
+  IconButton
+} from "@mui/material"
+import { MoreVert, Edit, Delete } from "@mui/icons-material"
 
-import { Loadable, Table, TableSkeleton, Avatar } from "@components/ui"
+import {
+  Loadable,
+  Table,
+  TableSkeleton,
+  Avatar,
+  ButtonDropDownSelect,
+  ListButton,
+  Modal
+} from "@components/ui"
 
 import { formatDate, formatTime } from "@utils/format/date"
 import { formatPhoneNumber } from "@utils/format/phone"
-import { formatHTML } from "@utils/format/formatHTML"
 
 const ClientTable = () => {
-  const { findAllClients } = useClient()
+  const navigate = useNavigate()
+
+  const { findAllClients, deleteClient } = useClient()
   const { data: clients, isLoading: isClientsLoading } = findAllClients
 
-  const clientsTableColumns = [
-    {
-      id: "name",
-      label: "Nome",
-      align: "left",
-      sortable: true,
-      renderComponent: ({ row }) => (
-        <Typography variant="p" component="p">
-          {row.name}
-        </Typography>
-      )
-    },
-    {
-      id: "created_by_user",
-      label: "Criado por",
-      align: "left",
-      sortable: false,
-      renderComponent: ({ row }) => (
-        <Stack
-          sx={{
-            flexDirection: "row",
-            gap: 2
-          }}
-        >
-          <Stack
-            sx={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 1
-            }}
-          >
-            <Avatar
-              alt={row.created_by_user.username}
-              src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
-              name={row.created_by_user.username}
-            />
-            <ListItemText
-              sx={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis"
-              }}
-            >
-              <Typography variant="p" component="p" fontWeight={500}>
-                {row.created_by_user.username}
-              </Typography>
-              <Typography variant="p" component="p" color="var(--outline)">
-                {row.created_by_user.role}
-              </Typography>
-            </ListItemText>
-          </Stack>
-          <Divider
-            sx={{
-              borderColor: "var(--elevation-level5)",
-              borderWidth: 1
-            }}
-          />
-          <ListItemText
-            sx={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis"
-            }}
-          >
-            <Typography variant="p" component="p" fontWeight={500}>
-              {formatDate(row.created_at_datetime)}
-            </Typography>
-            <Typography variant="p" component="p" color="var(--outline)">
-              {formatTime(row.created_at_datetime)}
-            </Typography>
-          </ListItemText>
-        </Stack>
-      )
-    },
-    {
-      id: "last_modified_by_user",
-      label: "Modificado pela última vez por",
-      align: "left",
-      sortable: false,
-      renderComponent: ({ row }) => (
-        <>
-          {row.last_modified_by_user ? (
-            <Stack
-              sx={{
-                flexDirection: "row",
-                gap: 2
-              }}
-            >
-              <Stack
-                sx={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: 1
-                }}
-              >
-                <Avatar
-                  alt={row.last_modified_by_user.username}
-                  src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
-                  name={row.last_modified_by_user.username}
-                />
-                <ListItemText
-                  sx={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis"
-                  }}
-                >
-                  <Typography variant="p" component="p" fontWeight={500}>
-                    {row.last_modified_by_user.username}
-                  </Typography>
-                  <Typography variant="p" component="p" color="var(--outline)">
-                    {row.last_modified_by_user.role}
-                  </Typography>
-                </ListItemText>
-              </Stack>
-              <Divider
-                sx={{
-                  borderColor: "var(--elevation-level5)",
-                  borderWidth: 1
-                }}
-              />
-              <ListItemText
-                sx={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis"
-                }}
-              >
-                <Typography variant="p" component="p" fontWeight={500}>
-                  {formatDate(row.last_modified_datetime)}
-                </Typography>
-                <Typography variant="p" component="p" color="var(--outline)">
-                  {formatTime(row.last_modified_datetime)}
-                </Typography>
-              </ListItemText>
-            </Stack>
-          ) : (
-            <Typography variant="p" component="p" color="var(--outline)">
-              Ainda não foi modificado
-            </Typography>
-          )}
-        </>
-      )
-    }
-  ]
+  const [deleteClientModal, setDeleteClientModal] = useState({ isOpen: false, clientId: null })
+  const openDeleteClientModal = (id) => {
+    setDeleteClientModal({ isOpen: true, clientId: id })
+  }
+  const closeDeleteClientModal = () => {
+    setDeleteClientModal({ isOpen: false, clientId: null })
+  }
 
-  const ExpandableClientsTableContent = ({ row }) => {
-    const contactsTableColumns = [
+  const handleDeleteClient = () => {
+    return new Promise((resolve, reject) => {
+      if (deleteClientModal.clientId) {
+        deleteClient
+          .mutateAsync({ clientId: deleteClientModal.clientId })
+          .then(() => {
+            resolve()
+          })
+          .catch(() => {
+            reject()
+          })
+      } else {
+        reject()
+      }
+    })
+  }
+
+  const clientsTableColumns = useMemo(
+    () => [
       {
-        id: "type",
-        label: "Tipo",
-        align: "left",
-        sortable: true
-      },
-      {
-        id: "contact",
-        label: "Contacto",
+        id: "name",
+        label: "Nome",
         align: "left",
         sortable: true,
-        formatter: formatPhoneNumber
+        renderComponent: ({ row }) => <Link to={`/client/${row.id}`}>{row.name}</Link>
       },
       {
         id: "created_by_user",
@@ -311,123 +204,108 @@ const ClientTable = () => {
             )}
           </>
         )
-      }
-    ]
-
-    const addressesTableColumns = [
-      {
-        id: "country",
-        label: "País",
-        align: "left",
-        sortable: true
       },
       {
-        id: "city",
-        label: "Cidade",
-        align: "left",
-        sortable: true
-      },
-      {
-        id: "locality",
-        label: "Localidade",
-        align: "left",
-        sortable: true
-      },
-      {
-        id: "postal_code",
-        label: "Código postal",
-        align: "left",
-        sortable: true
-      },
-      {
-        id: "created_by_user",
-        label: "Criado por",
-        align: "left",
+        id: "moreOptions",
+        align: "right",
         sortable: false,
         renderComponent: ({ row }) => (
-          <Stack
-            sx={{
-              flexDirection: "row",
-              gap: 2
-            }}
+          <ButtonDropDownSelect
+            mode="custom"
+            customButton={
+              <Tooltip title="Mais opções" placement="bottom" sx={{ margin: -1 }}>
+                <IconButton>
+                  <MoreVert fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
+            }
           >
-            <Stack
-              sx={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 1
-              }}
-            >
-              <Avatar
-                alt={row.created_by_user.username}
-                src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
-                name={row.created_by_user.username}
-              />
-              <ListItemText
-                sx={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis"
-                }}
-              >
-                <Typography variant="p" component="p" fontWeight={500}>
-                  {row.created_by_user.username}
-                </Typography>
-                <Typography variant="p" component="p" color="var(--outline)">
-                  {row.created_by_user.role}
-                </Typography>
-              </ListItemText>
-            </Stack>
-            <Divider
-              sx={{
-                borderColor: "var(--elevation-level5)",
-                borderWidth: 1
-              }}
+            <ListButton
+              buttons={[
+                {
+                  label: "Editar",
+                  icon: <Edit fontSize="small" />,
+                  onClick: () => navigate(`/client/${row.id}`)
+                },
+                {
+                  label: "Eliminar",
+                  icon: <Delete fontSize="small" color="error" />,
+                  color: "error",
+                  divider: true,
+                  onClick: () => openDeleteClientModal(row.id)
+                }
+              ]}
             />
-            <ListItemText
-              sx={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis"
-              }}
-            >
-              <Typography variant="p" component="p" fontWeight={500}>
-                {formatDate(row.created_at_datetime)}
-              </Typography>
-              <Typography variant="p" component="p" color="var(--outline)">
-                {formatTime(row.created_at_datetime)}
-              </Typography>
-            </ListItemText>
-          </Stack>
+          </ButtonDropDownSelect>
         )
-      },
-      {
-        id: "last_modified_by_user",
-        label: "Modificado pela última vez por",
-        align: "left",
-        sortable: false,
-        renderComponent: ({ row }) => (
-          <>
-            {row.last_modified_by_user ? (
-              <Stack
-                sx={{
-                  flexDirection: "row",
-                  gap: 2
-                }}
-              >
+      }
+    ],
+    []
+  )
+
+  const ExpandableClientsTableContent = useMemo(
+    () =>
+      ({ row }) => {
+        const contactsTableColumns = useMemo(
+          () => [
+            {
+              id: "type",
+              label: "Tipo",
+              align: "left",
+              sortable: true
+            },
+            {
+              id: "contact",
+              label: "Contacto",
+              align: "left",
+              sortable: true,
+              formatter: formatPhoneNumber
+            },
+            {
+              id: "created_by_user",
+              label: "Criado por",
+              align: "left",
+              sortable: false,
+              renderComponent: ({ row }) => (
                 <Stack
                   sx={{
                     flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: 1
+                    gap: 2
                   }}
                 >
-                  <Avatar
-                    alt={row.last_modified_by_user.username}
-                    src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
-                    name={row.last_modified_by_user.username}
+                  <Stack
+                    sx={{
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: 1
+                    }}
+                  >
+                    <Avatar
+                      alt={row.created_by_user.username}
+                      src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
+                      name={row.created_by_user.username}
+                    />
+                    <ListItemText
+                      sx={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis"
+                      }}
+                    >
+                      <Typography variant="p" component="p" fontWeight={500}>
+                        {row.created_by_user.username}
+                      </Typography>
+                      <Typography variant="p" component="p" color="var(--outline)">
+                        {row.created_by_user.role}
+                      </Typography>
+                    </ListItemText>
+                  </Stack>
+                  <Divider
+                    sx={{
+                      borderColor: "var(--elevation-level5)",
+                      borderWidth: 1
+                    }}
                   />
                   <ListItemText
                     sx={{
@@ -437,173 +315,388 @@ const ClientTable = () => {
                     }}
                   >
                     <Typography variant="p" component="p" fontWeight={500}>
-                      {row.last_modified_by_user.username}
+                      {formatDate(row.created_at_datetime)}
                     </Typography>
                     <Typography variant="p" component="p" color="var(--outline)">
-                      {row.last_modified_by_user.role}
+                      {formatTime(row.created_at_datetime)}
                     </Typography>
                   </ListItemText>
                 </Stack>
-                <Divider
+              )
+            },
+            {
+              id: "last_modified_by_user",
+              label: "Modificado pela última vez por",
+              align: "left",
+              sortable: false,
+              renderComponent: ({ row }) => (
+                <>
+                  {row.last_modified_by_user ? (
+                    <Stack
+                      sx={{
+                        flexDirection: "row",
+                        gap: 2
+                      }}
+                    >
+                      <Stack
+                        sx={{
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: 1
+                        }}
+                      >
+                        <Avatar
+                          alt={row.last_modified_by_user.username}
+                          src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
+                          name={row.last_modified_by_user.username}
+                        />
+                        <ListItemText
+                          sx={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis"
+                          }}
+                        >
+                          <Typography variant="p" component="p" fontWeight={500}>
+                            {row.last_modified_by_user.username}
+                          </Typography>
+                          <Typography variant="p" component="p" color="var(--outline)">
+                            {row.last_modified_by_user.role}
+                          </Typography>
+                        </ListItemText>
+                      </Stack>
+                      <Divider
+                        sx={{
+                          borderColor: "var(--elevation-level5)",
+                          borderWidth: 1
+                        }}
+                      />
+                      <ListItemText
+                        sx={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis"
+                        }}
+                      >
+                        <Typography variant="p" component="p" fontWeight={500}>
+                          {formatDate(row.last_modified_datetime)}
+                        </Typography>
+                        <Typography variant="p" component="p" color="var(--outline)">
+                          {formatTime(row.last_modified_datetime)}
+                        </Typography>
+                      </ListItemText>
+                    </Stack>
+                  ) : (
+                    <Typography variant="p" component="p" color="var(--outline)">
+                      Ainda não foi modificado
+                    </Typography>
+                  )}
+                </>
+              )
+            }
+          ],
+          []
+        )
+
+        const addressesTableColumns = useMemo(
+          () => [
+            {
+              id: "country",
+              label: "País",
+              align: "left",
+              sortable: true
+            },
+            {
+              id: "city",
+              label: "Cidade",
+              align: "left",
+              sortable: true
+            },
+            {
+              id: "locality",
+              label: "Localidade",
+              align: "left",
+              sortable: true
+            },
+            {
+              id: "postal_code",
+              label: "Código postal",
+              align: "left",
+              sortable: true
+            },
+            {
+              id: "created_by_user",
+              label: "Criado por",
+              align: "left",
+              sortable: false,
+              renderComponent: ({ row }) => (
+                <Stack
                   sx={{
-                    borderColor: "var(--elevation-level5)",
-                    borderWidth: 1
-                  }}
-                />
-                <ListItemText
-                  sx={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis"
+                    flexDirection: "row",
+                    gap: 2
                   }}
                 >
-                  <Typography variant="p" component="p" fontWeight={500}>
-                    {formatDate(row.last_modified_datetime)}
-                  </Typography>
-                  <Typography variant="p" component="p" color="var(--outline)">
-                    {formatTime(row.last_modified_datetime)}
-                  </Typography>
-                </ListItemText>
-              </Stack>
-            ) : (
-              <Typography variant="p" component="p" color="var(--outline)">
-                Ainda não foi modificado
-              </Typography>
-            )}
-          </>
+                  <Stack
+                    sx={{
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: 1
+                    }}
+                  >
+                    <Avatar
+                      alt={row.created_by_user.username}
+                      src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
+                      name={row.created_by_user.username}
+                    />
+                    <ListItemText
+                      sx={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis"
+                      }}
+                    >
+                      <Typography variant="p" component="p" fontWeight={500}>
+                        {row.created_by_user.username}
+                      </Typography>
+                      <Typography variant="p" component="p" color="var(--outline)">
+                        {row.created_by_user.role}
+                      </Typography>
+                    </ListItemText>
+                  </Stack>
+                  <Divider
+                    sx={{
+                      borderColor: "var(--elevation-level5)",
+                      borderWidth: 1
+                    }}
+                  />
+                  <ListItemText
+                    sx={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis"
+                    }}
+                  >
+                    <Typography variant="p" component="p" fontWeight={500}>
+                      {formatDate(row.created_at_datetime)}
+                    </Typography>
+                    <Typography variant="p" component="p" color="var(--outline)">
+                      {formatTime(row.created_at_datetime)}
+                    </Typography>
+                  </ListItemText>
+                </Stack>
+              )
+            },
+            {
+              id: "last_modified_by_user",
+              label: "Modificado pela última vez por",
+              align: "left",
+              sortable: false,
+              renderComponent: ({ row }) => (
+                <>
+                  {row.last_modified_by_user ? (
+                    <Stack
+                      sx={{
+                        flexDirection: "row",
+                        gap: 2
+                      }}
+                    >
+                      <Stack
+                        sx={{
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: 1
+                        }}
+                      >
+                        <Avatar
+                          alt={row.last_modified_by_user.username}
+                          src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
+                          name={row.last_modified_by_user.username}
+                        />
+                        <ListItemText
+                          sx={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis"
+                          }}
+                        >
+                          <Typography variant="p" component="p" fontWeight={500}>
+                            {row.last_modified_by_user.username}
+                          </Typography>
+                          <Typography variant="p" component="p" color="var(--outline)">
+                            {row.last_modified_by_user.role}
+                          </Typography>
+                        </ListItemText>
+                      </Stack>
+                      <Divider
+                        sx={{
+                          borderColor: "var(--elevation-level5)",
+                          borderWidth: 1
+                        }}
+                      />
+                      <ListItemText
+                        sx={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis"
+                        }}
+                      >
+                        <Typography variant="p" component="p" fontWeight={500}>
+                          {formatDate(row.last_modified_datetime)}
+                        </Typography>
+                        <Typography variant="p" component="p" color="var(--outline)">
+                          {formatTime(row.last_modified_datetime)}
+                        </Typography>
+                      </ListItemText>
+                    </Stack>
+                  ) : (
+                    <Typography variant="p" component="p" color="var(--outline)">
+                      Ainda não foi modificado
+                    </Typography>
+                  )}
+                </>
+              )
+            }
+          ],
+          []
         )
-      }
-    ]
 
-    const interactionsHistoryTableColumns = [
-      {
-        id: "type",
-        label: "Atividade",
-        align: "left",
-        sortable: true
-      } /* 
+        const interactionsHistoryTableColumns = useMemo(
+          () => [
+            {
+              id: "type",
+              label: "Atividade",
+              align: "left",
+              sortable: true
+            } /* 
       {
         id: "details",
         label: "Detalhes",
         align: "left",
         sortable: true
       }, */,
-      {
-        id: "responsible_user",
-        label: "Responsável",
-        align: "left",
-        sortable: false,
-        renderComponent: ({ row }) => (
-          <Stack
-            sx={{
-              flexDirection: "row",
-              gap: 2
-            }}
-          >
-            <Stack
+            {
+              id: "responsible_user",
+              label: "Responsável",
+              align: "left",
+              sortable: false,
+              renderComponent: ({ row }) => (
+                <Stack
+                  sx={{
+                    flexDirection: "row",
+                    gap: 2
+                  }}
+                >
+                  <Stack
+                    sx={{
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: 1
+                    }}
+                  >
+                    <Avatar
+                      alt={row.responsible_user.username}
+                      src={`${BASE_URL}/users/${row.responsible_user.id}/avatar?size=80`}
+                      name={row.responsible_user.username}
+                    />
+                    <ListItemText
+                      sx={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis"
+                      }}
+                    >
+                      <Typography variant="p" component="p" fontWeight={500}>
+                        {row.responsible_user.username}
+                      </Typography>
+                      <Typography variant="p" component="p" color="var(--outline)">
+                        {row.responsible_user.role}
+                      </Typography>
+                    </ListItemText>
+                  </Stack>
+                  <Divider
+                    sx={{
+                      borderColor: "var(--elevation-level5)",
+                      borderWidth: 1
+                    }}
+                  />
+                  <ListItemText
+                    sx={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis"
+                    }}
+                  >
+                    <Typography variant="p" component="p" fontWeight={500}>
+                      {formatDate(row.created_at_datetime)}
+                    </Typography>
+                    <Typography variant="p" component="p" color="var(--outline)">
+                      {formatTime(row.created_at_datetime)}
+                    </Typography>
+                  </ListItemText>
+                </Stack>
+              )
+            }
+          ],
+          []
+        )
+
+        return (
+          <Stack sx={{ color: "var(--onSurface)", margin: 3, gap: 3 }}>
+            <Typography variant="h5" component="h5">
+              {row.name}
+            </Typography>
+            <Box
               sx={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 1
-              }}
-            >
-              <Avatar
-                alt={row.responsible_user.username}
-                src={`${BASE_URL}/users/${row.responsible_user.id}/avatar?size=80`}
-                name={row.responsible_user.username}
-              />
-              <ListItemText
-                sx={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis"
-                }}
-              >
-                <Typography variant="p" component="p" fontWeight={500}>
-                  {row.responsible_user.username}
-                </Typography>
-                <Typography variant="p" component="p" color="var(--outline)">
-                  {row.responsible_user.role}
-                </Typography>
-              </ListItemText>
-            </Stack>
-            <Divider
-              sx={{
-                borderColor: "var(--elevation-level5)",
-                borderWidth: 1
-              }}
-            />
-            <ListItemText
-              sx={{
-                whiteSpace: "nowrap",
+                border: "1px solid var(--elevation-level5)",
+                borderRadius: 2,
                 overflow: "hidden",
-                textOverflow: "ellipsis"
+                paddingBottom: 3
               }}
             >
-              <Typography variant="p" component="p" fontWeight={500}>
-                {formatDate(row.created_at_datetime)}
+              <Typography variant="h6" component="h6" margin={3}>
+                Contactos
               </Typography>
-              <Typography variant="p" component="p" color="var(--outline)">
-                {formatTime(row.created_at_datetime)}
+              <Table mode="datatable" data={row.contacts ?? []} columns={contactsTableColumns} />
+            </Box>
+            <Box
+              sx={{
+                border: "1px solid var(--elevation-level5)",
+                borderRadius: 2,
+                overflow: "hidden",
+                paddingBottom: 3
+              }}
+            >
+              <Typography variant="h6" component="h6" margin={3}>
+                Moradas
               </Typography>
-            </ListItemText>
+              <Table mode="datatable" data={row.addresses ?? []} columns={addressesTableColumns} />
+            </Box>
+            <Box
+              sx={{
+                border: "1px solid var(--elevation-level5)",
+                borderRadius: 2,
+                overflow: "hidden",
+                paddingBottom: 3
+              }}
+            >
+              <Typography variant="h6" component="h6" margin={3}>
+                Histórico de Atividades
+              </Typography>
+              <Table
+                mode="datatable"
+                data={row.interactions_history ?? []}
+                columns={interactionsHistoryTableColumns}
+              />
+            </Box>
           </Stack>
         )
-      }
-    ]
-
-    return (
-      <Stack sx={{ color: "var(--onSurface)", margin: 3, gap: 3 }}>
-        <Typography variant="h5" component="h5">
-          {row.name}
-        </Typography>
-        <Box
-          sx={{
-            border: "1px solid var(--elevation-level5)",
-            borderRadius: 2,
-            overflow: "hidden",
-            paddingBottom: 3
-          }}
-        >
-          <Typography variant="h6" component="h6" margin={3}>
-            Contactos
-          </Typography>
-          <Table mode="datatable" data={row.contacts ?? []} columns={contactsTableColumns} />
-        </Box>
-        <Box
-          sx={{
-            border: "1px solid var(--elevation-level5)",
-            borderRadius: 2,
-            overflow: "hidden",
-            paddingBottom: 3
-          }}
-        >
-          <Typography variant="h6" component="h6" margin={3}>
-            Moradas
-          </Typography>
-          <Table mode="datatable" data={row.addresses ?? []} columns={addressesTableColumns} />
-        </Box>
-        <Box
-          sx={{
-            border: "1px solid var(--elevation-level5)",
-            borderRadius: 2,
-            overflow: "hidden",
-            paddingBottom: 3
-          }}
-        >
-          <Typography variant="h6" component="h6" margin={3}>
-            Histórico de Atividades
-          </Typography>
-          <Table
-            mode="datatable"
-            data={row.interactions_history ?? []}
-            columns={interactionsHistoryTableColumns}
-          />
-        </Box>
-      </Stack>
-    )
-  }
+      },
+    []
+  )
 
   return (
     <Paper elevation={1}>
@@ -619,6 +712,15 @@ const ClientTable = () => {
               ExpandableContentComponent={ExpandableClientsTableContent}
             />
           }
+        />
+        <Modal
+          mode="delete"
+          title="Eliminar Cliente"
+          open={deleteClientModal.isOpen}
+          onClose={closeDeleteClientModal}
+          onSubmit={handleDeleteClient}
+          description="Tem a certeza que deseja eliminar este cliente?"
+          subDescription="Ao eliminar este cliente, todos os dados relacionados, incluindo contactos, moradas, equipamentos e reparações associadas, serão removidos permanentemente."
         />
       </Box>
     </Paper>

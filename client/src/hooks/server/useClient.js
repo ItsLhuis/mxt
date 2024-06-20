@@ -4,8 +4,11 @@ import {
   getAllClients,
   createClient,
   addContactClient,
-  addAddressClient
+  addAddressClient,
+  deleteClient as deleteClientApi
 } from "@api/routes/clients"
+
+import { showSuccessToast, showErrorToast } from "@config/toast"
 
 export const useClient = () => {
   const queryClient = useQueryClient()
@@ -16,7 +19,7 @@ export const useClient = () => {
     onSuccess: (data) => {
       queryClient.setQueryData(["clients"], data)
     },
-    refetchInterval: 5000
+    refetchInterval: 10000
   })
 
   const createNewClient = useMutation({
@@ -40,5 +43,16 @@ export const useClient = () => {
     }
   })
 
-  return { findAllClients, createNewClient, addNewContactClient, addNewAddressClient }
+  const deleteClient = useMutation({
+    mutationFn: deleteClientApi,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["clients"])
+      showSuccessToast("Cliente eliminado com sucesso!")
+    },
+    onError: () => {
+      showErrorToast("Erro ao eliminar cliente!")
+    }
+  })
+
+  return { findAllClients, createNewClient, addNewContactClient, addNewAddressClient, deleteClient }
 }

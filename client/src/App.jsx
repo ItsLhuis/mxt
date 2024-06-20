@@ -48,6 +48,11 @@ function App() {
         styleOverrides: {
           containedPrimary: {
             color: "color: rgb(228, 225, 230)"
+          },
+          textError: {
+            "&:hover": {
+              backgroundColor: "rgba(211, 47, 47, 0.16)"
+            }
           }
         }
       },
@@ -99,13 +104,6 @@ function App() {
           shrink: {
             fontSize: "1rem",
             fontWeight: 550
-          }
-        }
-      },
-      MuiSvgIcon: {
-        styleOverrides: {
-          root: {
-            color: "var(--onSurface)"
           }
         }
       }

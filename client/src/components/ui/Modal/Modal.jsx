@@ -30,6 +30,7 @@ const Modal = ({
   onClose,
   title,
   description,
+  subDescription,
   mode = "normal",
   cancelButtonText = "Cancelar",
   submitButtonText = "Ok",
@@ -55,13 +56,14 @@ const Modal = ({
     setLoad(true)
 
     try {
-      const result = await onSubmit()
-
-      setLoad(false)
-      if (result) {
-        onClose()
-      }
+      await onSubmit()
+      
+      onClose()
+      setTimeout(() => {
+        setLoad(false)
+      }, 200)
     } catch (error) {
+      onClose()
       setLoad(false)
     }
   }
@@ -95,18 +97,30 @@ const Modal = ({
               </IconButton>
             </Tooltip>
           </Box>
-          <Typography
-            variant="p"
-            component="p"
-            sx={{
-              padding: 3,
-              paddingTop: 0,
-              paddingBottom: 0,
-              height: fullScreen ? "100%" : "auto"
-            }}
-          >
-            {description}
-          </Typography>
+          <Stack sx={{ display: "flex", gap: 1, height: fullScreen ? "100%" : "auto" }}>
+            <Typography
+              variant="h6"
+              component="h6"
+              sx={{
+                padding: 3,
+                paddingTop: 0,
+                paddingBottom: 0
+              }}
+            >
+              {description}
+            </Typography>
+            <Typography
+              variant="p"
+              component="p"
+              sx={{
+                padding: 3,
+                paddingTop: 0,
+                paddingBottom: 0
+              }}
+            >
+              {subDescription}
+            </Typography>
+          </Stack>
           <Box
             sx={{
               width: "100%",

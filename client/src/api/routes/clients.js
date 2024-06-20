@@ -26,4 +26,9 @@ const addAddressClient = async ({ clientId, country, city, locality, address, po
   return response.data
 }
 
-export { getAllClients, createClient, addContactClient, addAddressClient }
+const deleteClient = async ({ clientId }) => {
+  const response = await api.delete(`/clients/${clientId}`)
+  return response.data
+}
+
+export { getAllClients, createClient, addContactClient, addAddressClient, deleteClient }

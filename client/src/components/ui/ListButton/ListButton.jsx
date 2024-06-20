@@ -2,7 +2,7 @@ import PropTypes from "prop-types"
 
 import React from "react"
 
-import { List, ListItem, Divider, Button, Typography } from "@mui/material"
+import { List, ListItem, Divider, Button, Typography, Stack } from "@mui/material"
 
 const ListButton = ({ buttons, onClose }) => {
   return (
@@ -33,6 +33,7 @@ const ListButton = ({ buttons, onClose }) => {
                 alignItems: "flex-start",
                 margin: "0 8px !important",
                 padding: "8px 14px !important",
+                paddingLeft: button.icon && "8px !important",
                 width: "100%",
                 color: button.color ?? "inherit",
                 marginBottom: index !== buttons.length - 1 && "4px",
@@ -45,9 +46,12 @@ const ListButton = ({ buttons, onClose }) => {
                 }
               }}
             >
-              <Typography variant="p" component="p" sx={{ fontWeight: 400 }}>
-                {button.label}
-              </Typography>
+              <Stack sx={{ flexDirection: "row", alignItems: "flex-start", justifyContent: "center", gap: 1 }}>
+                {button.icon}
+                <Typography variant="p" component="p" sx={{ fontWeight: 400 }}>
+                  {button.label}
+                </Typography>
+              </Stack>
             </Button>
           </ListItem>
         </React.Fragment>
@@ -60,6 +64,7 @@ ListButton.propTypes = {
   buttons: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
+      icon: PropTypes.node,
       onClick: PropTypes.func.isRequired,
       selected: PropTypes.bool
     })

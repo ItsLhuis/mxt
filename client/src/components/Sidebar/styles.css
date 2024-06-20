@@ -9,7 +9,7 @@
     user-select: none;
     transition: width 0.3s ease;
     overflow: hidden !important;
-    z-index: 100;
+    z-index: 5;
 }
 
 .sidebar.__drawer {

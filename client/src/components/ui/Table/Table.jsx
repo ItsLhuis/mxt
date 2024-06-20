@@ -433,7 +433,7 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
               <TableRow>
                 <TableCell
                   colSpan={mode === "normal" ? columns.length + 1 : columns.length + 2}
-                  sx={{ padding: 3, borderBottom: "1px solid var(--elevation-level5) !important" }}
+                  sx={{ padding: 3, paddingBottom: 0 }}
                 >
                   <NoData error={error} />
                 </TableCell>

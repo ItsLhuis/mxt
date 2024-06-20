@@ -32,16 +32,16 @@ module.exports = {
   client: {
     [roles.BOSS]: [permissions.ALL],
     [roles.ADMIN]: [permissions.ALL],
-    [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE],
+    [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE, permissions.UPDATE],
     contact: {
       [roles.BOSS]: [permissions.ALL],
       [roles.ADMIN]: [permissions.ALL],
-      [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE]
+      [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE, permissions.UPDATE]
     },
     address: {
       [roles.BOSS]: [permissions.ALL],
       [roles.ADMIN]: [permissions.ALL],
-      [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE]
+      [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE, permissions.UPDATE]
     },
     interactionsHistory: {
       [roles.BOSS]: [permissions.READ],
@@ -51,7 +51,7 @@ module.exports = {
   equipment: {
     [roles.BOSS]: [permissions.ALL],
     [roles.ADMIN]: [permissions.ALL],
-    [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE],
+    [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE, permissions.UPDATE],
     brand: {
       [roles.BOSS]: [permissions.ALL],
       [roles.ADMIN]: [permissions.ALL],

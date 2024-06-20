@@ -7,7 +7,7 @@ import { AddClientForm } from "./components"
 
 import { motion } from "framer-motion"
 
-const AddCLient = () => {
+const AddCLientPage = () => {
   return (
     <Suspense fallback={<PageLoader />}>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
@@ -25,4 +25,4 @@ const AddCLient = () => {
   )
 }
 
-export default AddCLient
+export default AddCLientPage

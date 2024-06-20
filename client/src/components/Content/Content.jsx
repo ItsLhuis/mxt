@@ -8,7 +8,7 @@ import { Box } from "@mui/material"
 
 import { PageLoader } from "@components/ui"
 
-import { Dashboard, ClientList, AddClient, InvoiceList, CreateInvoice, Settings } from "@pages"
+import { Dashboard, ClientList, AddClient, EditClient, InvoiceList, CreateInvoice, Settings } from "@pages"
 
 const Content = () => {
   const location = useLocation()
@@ -34,6 +34,7 @@ const Content = () => {
             {/* Client */}
             <Route path="/client/list" element={<ClientList />} />
             <Route path="/client/add" element={<AddClient />} />
+            <Route path="/client/:clientId" element={<EditClient />} />
             {/* ---------------------------------------------------------- */}
 
             {/* Invoice */}

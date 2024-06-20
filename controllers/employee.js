@@ -53,6 +53,16 @@ const employeeController = {
 
     employeeSchema.parse(req.body)
 
+    if (req.user.id !== Number(userId)) {
+      throw new AppError(
+        403,
+        PERMISSION_DENIED,
+        "You don't have permission to change your own role or active status",
+        true,
+        PERMISSION_DENIED_ERROR_TYPE
+      )
+    }
+
     const existingUser = await Employee.findByUserId(userId)
     if (existingUser.length <= 0) {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)

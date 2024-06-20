@@ -10,7 +10,7 @@ import { ClientTable } from "./components"
 
 import { motion } from "framer-motion"
 
-const ClientList = () => {
+const ClientListPage = () => {
   const navigate = useNavigate()
 
   return (
@@ -35,4 +35,4 @@ const ClientList = () => {
   )
 }
 
-export default ClientList
+export default ClientListPage

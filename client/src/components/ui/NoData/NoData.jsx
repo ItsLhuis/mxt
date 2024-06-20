@@ -37,7 +37,7 @@ const NoData = ({ error, onlyLottie }) => {
           }}
         >
           <Lottie animationData={LottieAnimation[dataTheme]} style={{ height: 200 }} />
-          <Typography variant="h6" component="h6" sx={{ textAlign: "center", fontWeight: 600 }}>
+          <Typography variant="h6" component="h6" sx={{ textAlign: "center" }}>
             Oops! Nenhuma informação encontrada!
           </Typography>
         </Stack>
