@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "85481db3-af16-4863-8baf-b62850a700fb",
 		"name": "Mxt",
-		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n``` antlr4\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Tests\" tab**\n\nTests help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/b5f280a7-4b09-48ec-857f-0a7ed99d7ef8/U2NyZWVuc2hvdCAyMDIzLTAzLTI3IGF0IDkuNDcuMjggUE0ucG5n\" width=\"616\" height=\"433\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) in \"Tests\" to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n``` antlr4\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Tests\" tab**\n\nTests help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/b5f280a7-4b09-48ec-857f-0a7ed99d7ef8/U2NyZWVuc2hvdCAyMDIzLTAzLTI3IGF0IDkuNDcuMjggUE0ucG5n\" width=\"616\" height=\"433\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n    \n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) in \"Tests\" to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "33393698"
 	},
@@ -457,13 +457,8 @@
 								},
 								{
 									"key": "role",
-									"value": "Administrador",
+									"value": "Funcionário",
 									"type": "text"
-								},
-								{
-									"key": "avatar",
-									"type": "file",
-									"src": "postman-cloud:///1ef2189e-4330-4600-83ab-411fff462ba7"
 								}
 							]
 						},
@@ -505,7 +500,7 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "Admin",
+									"value": "Luis",
 									"type": "text"
 								},
 								{
@@ -514,26 +509,26 @@
 									"type": "text"
 								},
 								{
-									"key": "avatar",
-									"type": "file",
-									"src": "postman-cloud:///1ef2189e-4330-4600-83ab-411fff462ba7"
-								},
-								{
 									"key": "role",
 									"value": "Administrador",
 									"type": "text",
 									"disabled": true
+								},
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "postman-cloud:///1ef2189e-4330-4600-83ab-411fff462ba7"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{base_url}}/users/1",
+							"raw": "{{base_url}}/users/2",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"users",
-								"1"
+								"2"
 							]
 						},
 						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
@@ -870,13 +865,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/clients/6/contacts",
+									"raw": "{{base_url}}/clients/1/contacts",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"clients",
-										"6",
+										"1",
 										"contacts"
 									]
 								}
@@ -913,13 +908,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/clients/3/contacts",
+									"raw": "{{base_url}}/clients/1/contacts",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"clients",
-										"3",
+										"1",
 										"contacts"
 									]
 								},
@@ -1655,7 +1650,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/equipments/1/attachments/32",
+									"raw": "{{base_url}}/equipments/1/attachments/3",
 									"host": [
 										"{{base_url}}"
 									],
@@ -1663,7 +1658,7 @@
 										"equipments",
 										"1",
 										"attachments",
-										"32"
+										"3"
 									]
 								}
 							},
@@ -1680,16 +1675,7 @@
 										{
 											"key": "attachments",
 											"type": "file",
-											"src": [
-												"postman-cloud:///1ef27296-e4d8-4050-9685-193f61876086",
-												"postman-cloud:///1ef2189e-4330-4600-83ab-411fff462ba7",
-												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/PAP/TesteFatura.pdf",
-												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/PAP/Relatório - Gestão de Stocks.pdf",
-												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/OUTROS/porsche.png",
-												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/OUTROS/peakpx.jpg",
-												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/react-app-template/src/assets/img/users/user-profile1.png",
-												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/react-app-template/src/assets/img/users/user-profile2.png"
-											]
+											"src": "/C:/Users/luisr/OneDrive/Ambiente de Trabalho/PAP/Relatório - Gestão de Stocks.pdf"
 										}
 									]
 								},

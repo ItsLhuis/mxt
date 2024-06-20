@@ -9,8 +9,9 @@ import { Loadable, Table, TableSkeleton, Avatar } from "@components/ui"
 
 import { formatDate, formatTime } from "@utils/format/date"
 import { formatPhoneNumber } from "@utils/format/phone"
+import { formatHTML } from "@utils/format/formatHTML"
 
-const ClientList = () => {
+const ClientTable = () => {
   const { findAllClients } = useClient()
   const { data: clients, isLoading: isClientsLoading } = findAllClients
 
@@ -24,25 +25,6 @@ const ClientList = () => {
         <Typography variant="p" component="p">
           {row.name}
         </Typography>
-      )
-    },
-    {
-      id: "description",
-      label: "Descrição",
-      align: "left",
-      sortable: true,
-      renderComponent: ({ row }) => (
-        <>
-          {row.description ? (
-            <Typography variant="p" component="p">
-              {row.description}
-            </Typography>
-          ) : (
-            <Typography variant="p" component="p" color="var(--outline)">
-              Sem descrição
-            </Typography>
-          )}
-        </>
       )
     },
     {
@@ -195,25 +177,6 @@ const ClientList = () => {
         align: "left",
         sortable: true,
         formatter: formatPhoneNumber
-      },
-      {
-        id: "description",
-        label: "Descrição",
-        align: "left",
-        sortable: true,
-        renderComponent: ({ row }) => (
-          <>
-            {row.description ? (
-              <Typography variant="p" component="p">
-                {row.description}
-              </Typography>
-            ) : (
-              <Typography variant="p" component="p" color="var(--outline)">
-                Sem descrição
-              </Typography>
-            )}
-          </>
-        )
       },
       {
         id: "created_by_user",
@@ -592,26 +555,9 @@ const ClientList = () => {
 
     return (
       <Stack sx={{ color: "var(--onSurface)", margin: 3, gap: 3 }}>
-        <ListItemText>
-          <Typography variant="h5" component="h5">
-            {row.name}
-          </Typography>
-          {row.description && (
-            <Typography
-              variant="p"
-              component="p"
-              style={{
-                color: "var(--outline)",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                maxWidth: "250px",
-              }}
-            >
-              {row.description}
-            </Typography>
-          )}
-        </ListItemText>
+        <Typography variant="h5" component="h5">
+          {row.name}
+        </Typography>
         <Box
           sx={{
             border: "1px solid var(--elevation-level5)",
@@ -679,4 +625,4 @@ const ClientList = () => {
   )
 }
 
-export default ClientList
+export default ClientTable

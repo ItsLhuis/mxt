@@ -282,7 +282,8 @@ input[type=number]::-webkit-outer-spin-button {
 .MuiPaper-elevation2,
 .MuiPaper-elevation3,
 .MuiPaper-elevation4,
-.MuiPaper-elevation5 {
+.MuiPaper-elevation5,
+.MuiPaper-elevation6 {
   box-shadow: 0 0 0.465rem var(--boxShadow) !important;
 }
 
@@ -304,6 +305,10 @@ input[type=number]::-webkit-outer-spin-button {
 
 .MuiPaper-elevation5 {
   background-color: var(--elevation-level5) !important;
+}
+
+.MuiPaper-elevation6 {
+  background-color: var(--elevation-level6) !important;
 }
 
 .MuiAlert-root {
@@ -542,6 +547,17 @@ input[type=number]::-webkit-outer-spin-button {
   overflow-y: auto;
 }
 
+.tiptap-editor {
+  flex: 1;
+  overflow: hidden;
+}
+
+.tiptap-editor.fullscreen .tiptap {
+  height: 100%;
+  min-height: unset;
+  max-height: unset;
+}
+
 .tiptap:hover {
   border-color: var(--outline);
 }
@@ -557,4 +573,18 @@ input[type=number]::-webkit-outer-spin-button {
   height: 0;
   pointer-events: none;
   font-weight: 400;
+}
+
+.tiptap hr {
+  border: 1px solid var(--elevation-level6);
+  margin: 16px 0;
+}
+
+.tiptap blockquote {
+  border-left: 2px solid var(--elevation-level6);
+  padding-left: 16px;
+}
+
+.tiptap a {
+  color: var(--primary);
 }

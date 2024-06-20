@@ -2,11 +2,12 @@ import React, { Suspense } from "react"
 
 import { Box, Container } from "@mui/material"
 
-import { PageLoader, HeaderPage, RichEditor } from "@components/ui"
+import { PageLoader, HeaderPage } from "@components/ui"
+import { AddClientForm } from "./components"
 
 import { motion } from "framer-motion"
 
-const Add = () => {
+const AddCLient = () => {
   return (
     <Suspense fallback={<PageLoader />}>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
@@ -16,9 +17,7 @@ const Add = () => {
               title="Adicionar Cliente"
               breadcrumbs={[{ name: "Cliente" }, { name: "Adicionar" }]}
             />
-            <Box marginBlock={3}>
-              <RichEditor />
-            </Box>
+            <AddClientForm />
           </Container>
         </Box>
       </motion.div>
@@ -26,4 +25,4 @@ const Add = () => {
   )
 }
 
-export default Add
+export default AddCLient

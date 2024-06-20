@@ -6,7 +6,8 @@ const Dashboard = lazy(() => import("./Dashboard/Dashboard"))
 
 //Client
 const ClientList = lazy(() => import("./Client/List/List"))
-const AddClient = lazy(() => import("./Client/Add/Add"))
+const AddClient = lazy(() => import("./Client/Manage/Add"))
+const EditClient = lazy(() => import("./Client/Manage/Edit"))
 //----------------------------------------------------------------------
 
 //Invoice
@@ -16,4 +17,4 @@ const CreateInvoice = lazy(() => import("./Invoice/Create/Create"))
 
 const Settings = lazy(() => import("./Settings/Settings"))
 
-export { Auth, Dashboard, ClientList, AddClient, InvoiceList, CreateInvoice, Settings }
+export { Auth, Dashboard, ClientList, AddClient, EditClient, InvoiceList, CreateInvoice, Settings }

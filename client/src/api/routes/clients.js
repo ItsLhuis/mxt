@@ -5,4 +5,25 @@ const getAllClients = async () => {
   return response.data
 }
 
-export { getAllClients }
+const createClient = async ({ name, description }) => {
+  const response = await api.post("/clients", { name, description })
+  return response.data
+}
+
+const addContactClient = async ({ clientId, type, contact, description }) => {
+  const response = await api.post(`/clients/${clientId}/contacts`, { type, contact, description })
+  return response.data
+}
+
+const addAddressClient = async ({ clientId, country, city, locality, address, postalCode }) => {
+  const response = await api.post(`/clients/${clientId}/addresses`, {
+    country,
+    city,
+    locality,
+    address,
+    postalCode
+  })
+  return response.data
+}
+
+export { getAllClients, createClient, addContactClient, addAddressClient }

@@ -1,33 +1,23 @@
 import React, { Suspense } from "react"
 
-import { useNavigate } from "react-router-dom"
-
 import { Box, Container } from "@mui/material"
-import { Add } from "@mui/icons-material"
 
 import { PageLoader, HeaderPage } from "@components/ui"
-import { ClientTable } from "./components"
+import { EditClientForm } from "./components"
 
 import { motion } from "framer-motion"
 
-const ClientList = () => {
-  const navigate = useNavigate()
-
+const EditClient = () => {
   return (
     <Suspense fallback={<PageLoader />}>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
         <Box component="main" className="page-main">
           <Container maxWidth={false}>
             <HeaderPage
-              title="Lista de Clientes"
-              breadcrumbs={[{ name: "Cliente" }, { name: "Lista" }]}
-              button={{
-                startIcon: <Add fontSize="large" />,
-                title: "Adicionar Cliente",
-                onClick: () => navigate("/client/add")
-              }}
+              title="Adicionar Cliente"
+              breadcrumbs={[{ name: "Cliente" }, { name: "Adicionar" }]}
             />
-            <ClientTable />
+            <EditClientForm />
           </Container>
         </Box>
       </motion.div>
@@ -35,4 +25,4 @@ const ClientList = () => {
   )
 }
 
-export default ClientList
+export default EditClient

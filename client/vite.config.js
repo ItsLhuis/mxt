@@ -13,6 +13,7 @@ export default defineConfig({
       "@contexts": "/src/contexts",
       "@hooks": "/src/hooks",
       "@pages": "/src/pages",
+      "@schemas": "/src/schemas",
       "@utils": "/src/utils"
     }
   }

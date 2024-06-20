@@ -2,7 +2,7 @@ import React, { useState } from "react"
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
+import { authSchema } from "@schemas/user"
 
 import { useAuth } from "@hooks/server/useAuth"
 
@@ -20,11 +20,6 @@ import {
 
 import { motion } from "framer-motion"
 
-const schema = z.object({
-  username: z.string().trim().min(1, { message: "O nome de utilizador é obrigatório" }),
-  password: z.string().trim().min(1, { message: "A senha é obrigatória" })
-})
-
 const Login = () => {
   const {
     register,
@@ -32,7 +27,7 @@ const Login = () => {
     setFocus,
     formState: { errors }
   } = useForm({
-    resolver: zodResolver(schema)
+    resolver: zodResolver(authSchema)
   })
 
   const [loginError, setLoginError] = useState("")

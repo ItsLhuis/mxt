@@ -10,6 +10,8 @@ export { default as DatePicker } from "./DatePicker/DatePicker"
 
 export { default as HeaderPage } from "./HeaderPage/HeaderPage"
 
+export { default as HeaderSection } from "./HeaderSection/HeaderSection"
+
 export { default as Image } from "./Image/Image"
 
 export { default as ImagePicker } from "./ImagePicker/ImagePicker"

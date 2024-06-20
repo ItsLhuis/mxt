@@ -28,8 +28,8 @@ const Select = forwardRef(
           {label}
         </InputLabel>
         <MuiSelect
-          labelId="status-select-label"
-          id="status-select"
+          labelId="select-label"
+          id="select"
           label={label + "o"}
           value={value}
           onChange={handleChange}

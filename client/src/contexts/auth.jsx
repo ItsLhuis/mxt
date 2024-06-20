@@ -14,13 +14,17 @@ export const AuthProvider = ({ children }) => {
   const { showLoader, hideLoader } = useLoader()
 
   const [isAuth, setIsAuth] = useState(false)
+  const [role, setRole] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
   const fetchAuthStatus = () => {
     setIsLoading(true)
 
     getUserProfile()
-      .then((data) => setIsAuth(!!data))
+      .then((data) => {
+        setRole(data.role)
+        setIsAuth(!!data)
+      })
       .catch((error) => {
         if (error.error.code === "COMP-001") {
           navigate("/company")
@@ -44,6 +48,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     isAuth,
+    role,
     isLoading,
     reloadAuthStatus
   }

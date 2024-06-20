@@ -8,11 +8,7 @@ const userController = require("@controllers/user")
 router
   .route("/")
   .get(checkPermissionHandler("user", permissions.READ), userController.findAll)
-  .post(
-    checkPermissionHandler("user", permissions.CREATE),
-    userController.uploadAvatar,
-    userController.create
-  )
+  .post(checkPermissionHandler("user", permissions.CREATE), userController.create)
 
 router
   .route("/profile")

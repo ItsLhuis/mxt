@@ -16,6 +16,7 @@ api.interceptors.response.use(
     const originalRequest = error.config
 
     if (
+      error.response.data.error.code &&
       (error.response.data.error.code === "USR-007" ||
         error.response.data.error.code === "USR-008") &&
       !originalRequest._retry

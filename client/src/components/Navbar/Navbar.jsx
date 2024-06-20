@@ -103,6 +103,7 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                 LoadingComponent={<Skeleton variant="circular" height={40} width={40} />}
                 LoadedComponent={
                   <Avatar
+                    withBorderAnimation
                     alt={isUserLoading ? "Avatar de utilizador" : user.username}
                     src={!isUserLoading ? `${BASE_URL}/users/${user.id}/avatar?size=80` : ""}
                     name={!isUserLoading ? user.username : ""}

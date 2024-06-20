@@ -1,6 +1,11 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
-import { getAllClients } from "@api/routes/clients"
+import {
+  getAllClients,
+  createClient,
+  addContactClient,
+  addAddressClient
+} from "@api/routes/clients"
 
 export const useClient = () => {
   const queryClient = useQueryClient()
@@ -11,8 +16,29 @@ export const useClient = () => {
     onSuccess: (data) => {
       queryClient.setQueryData(["clients"], data)
     },
-    refetchInterval: 4000
+    refetchInterval: 5000
   })
 
-  return { findAllClients }
+  const createNewClient = useMutation({
+    mutationFn: createClient,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["clients"])
+    }
+  })
+
+  const addNewContactClient = useMutation({
+    mutationFn: addContactClient,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["clients"])
+    }
+  })
+
+  const addNewAddressClient = useMutation({
+    mutationFn: addAddressClient,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["clients"])
+    }
+  })
+
+  return { findAllClients, createNewClient, addNewContactClient, addNewAddressClient }
 }

@@ -12,7 +12,6 @@ const Loadable = ({ isLoading, LoadingComponent, LoadedComponent }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
-      style={{ display: "flex" }}
     >
       {LoadedComponent}
     </motion.div>
