@@ -1,0 +1,72 @@
+.rings {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.circle-ring {
+    position: absolute;
+    border-radius: 50%;
+}
+
+.circle-ring._1 {
+    border: 1px solid var(--elevation-level6);
+    height: 20vh;
+    width: 20vh;
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.circle-ring._2 {
+    border: 1px solid var(--elevation-level6);
+    height: 30vh;
+    width: 30vh;
+}
+
+.circle-ring._3 {
+    border: 1px solid var(--elevation-level6);
+    height: 40vh;
+    width: 40vh;
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping {
+
+    75%,
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+.circle-ring._4 {
+    border: 2px solid var(--primary);
+    height: 50vh;
+    width: 50vh;
+    opacity: 0.2;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .5;
+    }
+}
+
+.circle-ring._5 {
+    border: 1px solid var(--elevation-level6);
+    height: 70vh;
+    width: 70vh;
+}

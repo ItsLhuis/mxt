@@ -1,5 +1,7 @@
 import React, { useState } from "react"
 
+import { useLocation } from "react-router-dom"
+
 import { useAuth } from "@contexts/auth"
 import { useLoader } from "@contexts/loader"
 import { useTheme } from "@contexts/theme"
@@ -8,6 +10,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles"
 
 import { Toaster } from "react-hot-toast"
 
+import { NotFound } from "@components/ui"
 import { Body } from "@components"
 import { Auth } from "@pages"
 
@@ -16,6 +19,8 @@ import { Loader } from "@components/ui"
 import { AnimatePresence } from "framer-motion"
 
 function App() {
+  const location = useLocation()
+
   const { isAuth, isLoading } = useAuth()
   const { loader } = useLoader()
   const { dataTheme } = useTheme()
@@ -53,7 +58,7 @@ function App() {
             "&:hover": {
               backgroundColor: "rgba(211, 47, 47, 0.16)"
             }
-          }          
+          }
         }
       },
       MuiOutlinedInput: {
@@ -117,7 +122,9 @@ function App() {
           <Loader visible={loader} />
           {!isLoading && (
             <>
-              {isAuth ? (
+              {location.pathname === "/404" ? (
+                <NotFound />
+              ) : isAuth ? (
                 <>
                   <div className="app">
                     <div className="container-main">

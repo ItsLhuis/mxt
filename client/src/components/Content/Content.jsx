@@ -43,6 +43,8 @@ const Content = () => {
             {/* ---------------------------------------------------------- */}
 
             <Route path="/settings" element={<Settings />} />
+
+            <Route path="*" element={<Navigate replace to="/404" />} />
           </Routes>
         </Suspense>
       </Box>

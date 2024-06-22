@@ -1,53 +1,91 @@
 import React from "react"
 
+import { useNavigate } from "react-router-dom"
+
 import notFoundEmoji from "./img/emoji.png"
 
-import { Divider, Stack, Typography, useTheme, useMediaQuery } from "@mui/material"
+import { Box, Button, Stack, Typography } from "@mui/material"
+
+import { Navbar } from "@components"
+import { Image } from ".."
+import Rings from "./Rings/Rings"
 
 import { motion } from "framer-motion"
 
-const NotFound = ({ message }) => {
-  const theme = useTheme()
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"))
+const NotFound = () => {
+  const navigate = useNavigate()
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
-      <Stack
-        sx={{
-          flexDirection: isSmallScreen ? "column" : "row",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 3,
-          marginTop: 6
-        }}
-      >
-        <Stack sx={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-          <Typography variant="h1" component="h1" sx={{ fontWeight: 800 }}>
-            4
-          </Typography>
-          <img
-            src={notFoundEmoji}
-            alt="Não encontrado"
-            style={{ width: "90px", height: "90px", transform: "scale(1.4)" }}
-          />
-          <Typography variant="h1" component="h1" sx={{ fontWeight: 800 }}>
-            4
-          </Typography>
+      <Rings />
+      <Box sx={{ height: "100vh", width: "100vw", overflow: "hidden", overflowY: "auto" }}>
+        <Stack sx={{ height: "100%", width: "100%", zIndex: 10 }}>
+          <Navbar isNotFound />
+          <Box sx={{ margin: "auto", maxWidth: "520px", padding: 3 }}>
+            <Stack
+              sx={{
+                flexDirection: "collumn",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                gap: 4
+              }}
+            >
+              <Stack
+                sx={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+              >
+                <Typography
+                  variant="h1"
+                  component="h1"
+                  sx={{ fontSize: 146, fontWeight: 800, zIndex: 10 }}
+                >
+                  4
+                </Typography>
+                <Image
+                  src={notFoundEmoji}
+                  alt="Não encontrado"
+                  maxWidth={120}
+                  maxHeight={120}
+                  style={{
+                    width: "120px",
+                    height: "120px",
+                    transform: "scale(1.4)",
+                    zIndex: 1,
+                    userSelect: "none"
+                  }}
+                />
+                <Typography
+                  variant="h1"
+                  component="h1"
+                  sx={{ fontSize: 146, fontWeight: 800, zIndex: 10 }}
+                >
+                  4
+                </Typography>
+              </Stack>
+              <Stack sx={{ gap: 1.5 }}>
+                <Typography variant="h3" component="h3" sx={{ fontWeight: 800 }}>
+                  Página não encontrada!
+                </Typography>
+                <Typography
+                  variant="p"
+                  component="p"
+                  sx={{ color: "var(--outline)", fontSize: 14 }}
+                >
+                  Desculpe, mas a página que você procura não existe, foi removida, o nome foi
+                  alterado ou está temporariamente indisponível
+                </Typography>
+              </Stack>
+              <Button variant="contained" onClick={() => navigate("/dashboard")}>
+                Voltar ao Painel de Controlo
+              </Button>
+            </Stack>
+          </Box>
         </Stack>
-        <Divider
-          orientation="vertical"
-          flexItem={!isSmallScreen}
-          variant="middle"
-          sx={{
-            borderColor: "var(--elevation-level5)",
-            borderWidth: 1,
-            width: isSmallScreen && 90
-          }}
-        />
-        <Typography variant="h5" component="h5">
-          {message}
-        </Typography>
-      </Stack>
+      </Box>
     </motion.div>
   )
 }

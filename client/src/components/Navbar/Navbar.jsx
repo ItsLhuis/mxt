@@ -21,7 +21,7 @@ import { Menu, Search, Settings } from "@mui/icons-material"
 
 import { Loadable, Image, Avatar, CommandDialog } from "@components/ui"
 
-const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
+const Navbar = ({ toggleSidebarSize, setDrawerOpen, isNotFound = false }) => {
   const navigate = useNavigate()
 
   const { findUserProfile } = useUser()
@@ -49,7 +49,15 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
 
   return (
     <>
-      <Box component="header" className="navbar">
+      <Box
+        component="header"
+        className="navbar"
+        style={{
+          position: isNotFound && "initial",
+          backgroundColor: isNotFound && "transparent",
+          boxShadow: isNotFound && "none"
+        }}
+      >
         <Box className="navbar-content">
           <Box className="navbar-content-info-container">
             <Box className="navbar-info">
@@ -58,40 +66,42 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                 Mixtech
               </Typography>
             </Box>
-            <Box className="container-but-menu">
-              <Tooltip title="Menu" placement="bottom">
-                <IconButton
-                  aria-label="Menu"
-                  size="normal"
-                  className="but-menu"
-                  onClick={() => {
-                    window.dispatchEvent(new Event("resize"))
-
-                    const screenWidth = window.innerWidth
-                    if (screenWidth < 900) {
-                      setDrawerOpen(true)
-                    } else {
-                      toggleSidebarSize()
-                    }
-                  }}
-                >
-                  <Menu />
-                </IconButton>
-              </Tooltip>
-              <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <Tooltip title="Pesquisar" placement="bottom">
+            {!isNotFound && (
+              <Box className="container-but-menu">
+                <Tooltip title="Menu" placement="bottom">
                   <IconButton
-                    aria-label="Pesquisar"
+                    aria-label="Menu"
                     size="normal"
                     className="but-menu"
-                    onClick={() => setCommandDialogOpen(true)}
+                    onClick={() => {
+                      window.dispatchEvent(new Event("resize"))
+
+                      const screenWidth = window.innerWidth
+                      if (screenWidth < 900) {
+                        setDrawerOpen(true)
+                      } else {
+                        toggleSidebarSize()
+                      }
+                    }}
                   >
-                    <Search />
+                    <Menu />
                   </IconButton>
                 </Tooltip>
-                {!isSmallScreen && <Chip label="Alt + p" />}
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <Tooltip title="Pesquisar" placement="bottom">
+                    <IconButton
+                      aria-label="Pesquisar"
+                      size="normal"
+                      className="but-menu"
+                      onClick={() => setCommandDialogOpen(true)}
+                    >
+                      <Search />
+                    </IconButton>
+                  </Tooltip>
+                  {!isSmallScreen && <Chip label="Alt + p" />}
+                </Box>
               </Box>
-            </Box>
+            )}
           </Box>
           <Box className="navbar-user-container" sx={{ gap: isMediumScreen ? 0 : 2 }}>
             <Box
@@ -145,18 +155,20 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen }) => {
                 />
               </Box>
             </Box>
-            <Box className="container-but-settings">
-              <Tooltip title="Definições" placement="bottom">
-                <IconButton
-                  aria-label="Definições"
-                  size="normal"
-                  className="but-settings"
-                  onClick={() => navigate("/settings")}
-                >
-                  <Settings />
-                </IconButton>
-              </Tooltip>
-            </Box>
+            {!isNotFound && (
+              <Box className="container-but-settings">
+                <Tooltip title="Definições" placement="bottom">
+                  <IconButton
+                    aria-label="Definições"
+                    size="normal"
+                    className="but-settings"
+                    onClick={() => navigate("/settings")}
+                  >
+                    <Settings />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            )}
           </Box>
         </Box>
       </Box>
