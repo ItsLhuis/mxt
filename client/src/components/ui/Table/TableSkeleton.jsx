@@ -6,7 +6,7 @@ import { Stack, Skeleton } from "@mui/material"
 
 const TableSkeleton = ({ mode }) => {
   return (
-    <Stack sx={{ gap: 2, paddingInline: 3 }}>
+    <Stack sx={{ gap: 2, padding: 3 }}>
       {mode === "datatable" && (
         <Stack sx={{ flexDirection: "row" }}>
           <Skeleton variant="text" sx={{ fontSize: 13 }} width={180} />

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useRef, useEffect, forwardRef } from "react"
 
 import { EditorContent, useEditor } from "@tiptap/react"
 
@@ -11,7 +11,7 @@ import TextAlign from "@tiptap/extension-text-align"
 import Underline from "@tiptap/extension-underline"
 import Link from "@tiptap/extension-link"
 
-import { Box, Stack, Typography, CircularProgress } from "@mui/material"
+import { Box, Stack, Typography, Skeleton } from "@mui/material"
 
 import { Loadable } from ".."
 
@@ -19,7 +19,11 @@ import MenuBar from "./MenuBar"
 
 import { debounce } from "@utils/debounce"
 
-const RichEditor = ({ label, value, onChange }) => {
+const RichEditor = ({ label, value, onChange, isLoading = false }) => {
+  const [isFinished, setIsFinished] = useState(false)
+  const isFirstRender = useRef(true)
+  const timeoutRef = useRef(null)
+
   const [fullscreen, setFullscreen] = useState(false)
 
   const toggleFullscreen = () => {
@@ -68,24 +72,39 @@ const RichEditor = ({ label, value, onChange }) => {
     }, 100)
   })
 
+  useEffect(() => {
+    if (isFinished && value) {
+      if (isFirstRender.current) {
+        isFirstRender.current = false
+        editor.commands.setContent(value || "")
+      }
+    }
+  }, [value, isFinished])
+
+  useEffect(() => {
+    timeoutRef.current = setTimeout(() => {
+      if (editor && !isLoading) {
+        setIsFinished(true)
+      }
+    }, 200)
+
+    return () => {
+      clearTimeout(timeoutRef.current)
+    }
+  }, [editor, isLoading])
+
+  useEffect(() => {
+    if (!isFinished) return
+
+    if (!value) {
+      editor.commands.setContent("")
+    }
+  }, [value])
+
   return (
     <Loadable
-      isLoading={!editor}
-      LoadingComponent={
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "var(--elevation-level2)",
-            width: "100%",
-            height: 360,
-            borderRadius: "8px"
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      }
+      isLoading={!isFinished}
+      LoadingComponent={<Skeleton variant="rounded" width="100%" height={442} />}
       LoadedComponent={
         <Box>
           <Typography variant="p" component="p" sx={{ marginBottom: 1.5 }}>
@@ -98,7 +117,7 @@ const RichEditor = ({ label, value, onChange }) => {
                 position: "fixed",
                 top: 14,
                 left: 14,
-                zIndex: 1300,
+                zIndex: 900,
                 width: "calc(100% - 28px)",
                 height: "calc(100% - 28px)",
                 overflow: "hidden"

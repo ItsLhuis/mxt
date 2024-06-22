@@ -132,8 +132,16 @@ const Client = {
       withCache(
         `client:contacts:${clientId}`,
         async () => {
-          const contactsQuery =
-            "SELECT * FROM client_contacts WHERE client_id = ? ORDER BY created_at_datetime DESC"
+          const contactsQuery = `
+          SELECT *,
+                 GREATEST(
+                     COALESCE(last_modified_datetime, created_at_datetime),
+                     created_at_datetime
+                 ) AS last_modified
+          FROM client_contacts
+          WHERE client_id = ?
+          ORDER BY last_modified DESC, created_at_datetime DESC
+        `
           const contacts = await dbQueryExecutor.execute(contactsQuery, [clientId])
 
           const contactsWithDetails = await Promise.all(
@@ -175,7 +183,11 @@ const Client = {
       const params = [
         clientId,
         type,
-        type === "Telefone" || type === "Telemóvel" ? contact.replace(/\s/g, "") : contact
+        type === "Telefone" || type === "Telemóvel"
+          ? contact.replace(/\s/g, "")
+          : type === "E-mail"
+          ? contact.toLowerCase()
+          : contact
       ]
 
       if (contactIdToExclude) {
@@ -192,7 +204,11 @@ const Client = {
         .execute(query, [
           clientId,
           type,
-          type === "Telefone" || type === "Telemóvel" ? contact.replace(/\s/g, "") : contact,
+          type === "Telefone" || type === "Telemóvel"
+            ? contact.replace(/\s/g, "")
+            : type === "E-mail"
+            ? contact.toLowerCase()
+            : contact,
           description,
           createdByUserId
         ])
@@ -210,7 +226,11 @@ const Client = {
       return dbQueryExecutor
         .execute(query, [
           type,
-          type === "Telefone" || type === "Telemóvel" ? contact.replace(/\s/g, "") : contact,
+          type === "Telefone" || type === "Telemóvel"
+            ? contact.replace(/\s/g, "")
+            : type === "E-mail"
+            ? contact.toLowerCase()
+            : contact,
           description,
           lastModifiedByUserId,
           contactId
@@ -239,8 +259,16 @@ const Client = {
       withCache(
         `client:addresses:${clientId}`,
         async () => {
-          const addressesQuery =
-            "SELECT * FROM client_addresses WHERE client_id = ? ORDER BY created_at_datetime DESC"
+          const addressesQuery = `
+          SELECT *,
+                 GREATEST(
+                     COALESCE(last_modified_datetime, created_at_datetime),
+                     created_at_datetime
+                 ) AS last_modified
+          FROM client_addresses
+          WHERE client_id = ?
+          ORDER BY last_modified DESC, created_at_datetime DESC
+        `
           const addresses = await dbQueryExecutor.execute(addressesQuery, [clientId])
 
           const addressesWithDetails = await Promise.all(

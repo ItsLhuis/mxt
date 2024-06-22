@@ -223,7 +223,8 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
     <Box
       sx={{
         position: "relative",
-        width: "100%"
+        width: "100%",
+        paddingTop: 3
       }}
     >
       {mode === "datatable" && (
@@ -433,7 +434,7 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
               <TableRow>
                 <TableCell
                   colSpan={mode === "normal" ? columns.length + 1 : columns.length + 2}
-                  sx={{ padding: 3, paddingBottom: 0 }}
+                  sx={{ padding: 3 }}
                 >
                   <NoData error={error} />
                 </TableCell>
@@ -443,7 +444,7 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
         </MuiTable>
       </TableContainer>
       {mode === "datatable" && data.length !== 0 && (
-        <Box sx={{ padding: 2, paddingBottom: 0, borderTop: "1px solid var(--elevation-level5)" }}>
+        <Box sx={{ padding: 2, paddingBottom: 2, borderTop: "1px solid var(--elevation-level5)" }}>
           <TablePagination
             labelRowsPerPage="Itens por página"
             labelDisplayedRows={({ from, to, count }) => {

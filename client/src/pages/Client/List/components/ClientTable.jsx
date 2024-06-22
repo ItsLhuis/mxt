@@ -215,7 +215,7 @@ const ClientTable = () => {
             customButton={
               <Tooltip title="Mais opções" placement="bottom" sx={{ margin: -1 }}>
                 <IconButton>
-                  <MoreVert fontSize="inherit" />
+                  <MoreVert />
                 </IconButton>
               </Tooltip>
             }
@@ -653,11 +653,10 @@ const ClientTable = () => {
               sx={{
                 border: "1px solid var(--elevation-level5)",
                 borderRadius: 2,
-                overflow: "hidden",
-                paddingBottom: 3
+                overflow: "hidden"
               }}
             >
-              <Typography variant="h6" component="h6" margin={3}>
+              <Typography variant="h6" component="h6" sx={{ margin: 3, marginBottom: 0 }}>
                 Contactos
               </Typography>
               <Table mode="datatable" data={row.contacts ?? []} columns={contactsTableColumns} />
@@ -666,11 +665,10 @@ const ClientTable = () => {
               sx={{
                 border: "1px solid var(--elevation-level5)",
                 borderRadius: 2,
-                overflow: "hidden",
-                paddingBottom: 3
+                overflow: "hidden"
               }}
             >
-              <Typography variant="h6" component="h6" margin={3}>
+              <Typography variant="h6" component="h6" sx={{ margin: 3, marginBottom: 0 }}>
                 Moradas
               </Typography>
               <Table mode="datatable" data={row.addresses ?? []} columns={addressesTableColumns} />
@@ -679,11 +677,10 @@ const ClientTable = () => {
               sx={{
                 border: "1px solid var(--elevation-level5)",
                 borderRadius: 2,
-                overflow: "hidden",
-                paddingBottom: 3
+                overflow: "hidden"
               }}
             >
-              <Typography variant="h6" component="h6" margin={3}>
+              <Typography variant="h6" component="h6" sx={{ margin: 3, marginBottom: 0 }}>
                 Histórico de Atividades
               </Typography>
               <Table
@@ -700,7 +697,7 @@ const ClientTable = () => {
 
   return (
     <Paper elevation={1}>
-      <Box sx={{ marginTop: 3, paddingBlock: 3 }}>
+      <Box sx={{ marginTop: 3 }}>
         <Loadable
           isLoading={isClientsLoading}
           LoadingComponent={<TableSkeleton mode="datatable" />}

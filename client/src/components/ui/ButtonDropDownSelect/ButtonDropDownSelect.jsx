@@ -2,7 +2,7 @@ import PropTypes from "prop-types"
 
 import React, { useState } from "react"
 
-import { Button, Box, ListItemText, Typography, Popover } from "@mui/material"
+import { Button, Box, ListItemText, Typography, Popover, Stack } from "@mui/material"
 import { KeyboardArrowUp } from "@mui/icons-material"
 
 const ButtonDropDownSelect = ({
@@ -39,23 +39,29 @@ const ButtonDropDownSelect = ({
             alignItems: "flex-start",
             padding: "8px 14px !important",
             paddingRight: "8px !important",
-            width: "100%",
             minHeight: "40px !important",
             borderRadius: 2,
             color: "var(--onSurface)"
           }}
           onClick={handleClick}
         >
-          <Box display="flex" alignItems="center" gap={1}>
+          <Stack
+            sx={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}
+            gap={1}
+          >
             {title && (
-              <Typography variant="p" component="p" textAlign="left">
+              <Typography
+                variant="p"
+                component="p"
+                sx={{ textAlign: "left", whiteSpace: "nowrap" }}
+              >
                 {title}
               </Typography>
             )}
             <KeyboardArrowUp
               className={`arrow-but-drop-down ${open && "__arrow-but-drop-down__rotate"}`}
             />
-          </Box>
+          </Stack>
         </Button>
       ) : (
         <>
@@ -74,9 +80,9 @@ const ButtonDropDownSelect = ({
               }}
               onClick={handleClick}
             >
-              <Box
+              <Stack
                 sx={{
-                  display: "flex",
+                  flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "space-between",
                   width: "100%",
@@ -100,7 +106,14 @@ const ButtonDropDownSelect = ({
                     </Typography>
                   )}
                 </ListItemText>
-                <Box display="flex" alignItems="center" gap="8px">
+                <Stack
+                  sx={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "8px"
+                  }}
+                >
                   {description && (
                     <Typography
                       variant="p"
@@ -113,8 +126,8 @@ const ButtonDropDownSelect = ({
                   <KeyboardArrowUp
                     className={`arrow-but-drop-down ${open && "__arrow-but-drop-down__rotate"}`}
                   />
-                </Box>
-              </Box>
+                </Stack>
+              </Stack>
             </Button>
           ) : (
             <>{mode === "custom" && <Box onClick={handleClick}>{customButton}</Box>}</>

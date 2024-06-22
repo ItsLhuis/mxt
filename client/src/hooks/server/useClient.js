@@ -2,11 +2,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
 import {
   getAllClients,
+  getClientById,
   createClient,
   addContactClient,
   addAddressClient,
   deleteClient as deleteClientApi
-} from "@api/routes/clients"
+} from "@api/routes/client"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
@@ -21,6 +22,17 @@ export const useClient = () => {
     },
     refetchInterval: 10000
   })
+
+  const findClientById = (clientId) => {
+    return useQuery({
+      queryKey: ["clients", clientId],
+      queryFn: () => getClientById({ clientId }),
+      onSuccess: (data) => {
+        queryClient.setQueryData(["clients", clientId], data)
+      },
+      enabled: !!clientId
+    })
+  }
 
   const createNewClient = useMutation({
     mutationFn: createClient,
@@ -54,5 +66,12 @@ export const useClient = () => {
     }
   })
 
-  return { findAllClients, createNewClient, addNewContactClient, addNewAddressClient, deleteClient }
+  return {
+    findAllClients,
+    findClientById,
+    createNewClient,
+    addNewContactClient,
+    addNewAddressClient,
+    deleteClient
+  }
 }

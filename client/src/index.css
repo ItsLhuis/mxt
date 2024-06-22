@@ -68,6 +68,7 @@ p {
 }
 
 ::-webkit-scrollbar {
+  cursor: pointer !important;
   width: 16px;
   height: 16px;
 }
@@ -98,6 +99,11 @@ p {
   box-shadow: 0 0 0.465rem var(--boxShadow) !important;
   padding: 8px 12px !important;
   border-radius: 10px !important;
+}
+
+.MuiLoadingButton-loading {
+  pointer-events: all !important;
+  cursor: not-allowed !important;
 }
 
 .MuiButton-containedPrimary.MuiLoadingButton-loading {
@@ -192,6 +198,11 @@ p {
 .MuiFormLabel-root.Mui-disabled {
   color: var(--outline) !important;
   opacity: .5;
+}
+
+.MuiTelInput-Flag img {
+  border-radius: 4px !important;
+  border: 1px solid var(--elevation-level6);
 }
 
 input,
@@ -350,6 +361,13 @@ input[type=number]::-webkit-outer-spin-button {
   transition: background-color 0.3s ease !important;
 }
 
+.MuiButtonBase-root.Mui-disabled:not(.MuiLoadingButton-loading) {
+  opacity: .6;
+  pointer-events: all !important;
+  cursor: not-allowed !important;
+  color: var(--onSurface) !important;
+}
+
 .MuiButtonBase-root.MuiTab-root {
   color: var(--outline) !important;
   min-height: 48px;
@@ -484,6 +502,10 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: var(--outlineVariant) !important;
 }
 
+.MuiSkeleton-rounded {
+  border-radius: 8px !important;
+}
+
 .apexcharts-xaxistooltip-bottom {
   padding: 8px 12px !important;
 }
@@ -545,8 +567,8 @@ input[type=number]::-webkit-outer-spin-button {
   border: 2px solid var(--elevation-level5);
   outline: none;
   background-color: var(--elevation-level1);
-  min-height: 240px;
-  max-height: 480px;
+  min-height: 320px;
+  max-height: 320px;
   overflow: hidden;
   overflow-y: auto;
 }

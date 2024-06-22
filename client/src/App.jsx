@@ -53,7 +53,7 @@ function App() {
             "&:hover": {
               backgroundColor: "rgba(211, 47, 47, 0.16)"
             }
-          }
+          }          
         }
       },
       MuiOutlinedInput: {
@@ -127,18 +127,22 @@ function App() {
                   <Toaster
                     position="top-right"
                     containerStyle={{
+                      zIndex: 1000,
                       inset: "24px"
                     }}
                     toastOptions={{
-                      duration: 3000,
+                      duration: 4000,
                       style: {
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        alignItems: "flex-start",
                         background: "var(--elevation-level5)",
                         color: "var(--onSurface)",
                         fontWeight: 600,
                         fontSize: ".875rem",
                         padding: 0,
-                        paddingLeft: 20,
-                        paddingBlock: 8
+                        paddingLeft: 16,
+                        paddingBlock: 16
                       }
                     }}
                   />

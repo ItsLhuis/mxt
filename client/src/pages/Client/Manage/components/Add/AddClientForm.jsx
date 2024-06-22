@@ -10,6 +10,7 @@ import { useClient } from "@hooks/server/useClient"
 
 import { LoadingButton } from "@mui/lab"
 import { Paper, Box, Stack, FormControl, TextField } from "@mui/material"
+import { Person } from "@mui/icons-material"
 
 import { HeaderSection, RichEditor } from "@components/ui"
 
@@ -43,27 +44,29 @@ const AddClientForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack sx={{ marginTop: 3, gap: 3, marginLeft: "auto", marginRight: "auto", maxWidth: 900 }}>
         <Paper elevation={1}>
-          <Box>
-            <HeaderSection title="Detalhes" description="Nome e descrição do cliente" />
-            <Stack sx={{ padding: 3, gap: 3 }}>
-              <FormControl fullWidth>
-                <TextField
-                  {...register("name")}
-                  label="Nome"
-                  error={!!errors.name}
-                  helperText={errors.name?.message}
-                />
-              </FormControl>
-              <Controller
-                name="description"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <RichEditor label="Descrição" value={field.value} onChange={field.onChange} />
-                )}
+          <HeaderSection
+            title="Detalhes"
+            description="Nome e descrição do cliente"
+            icon={<Person />}
+          />
+          <Stack sx={{ padding: 3, gap: 3 }}>
+            <FormControl fullWidth>
+              <TextField
+                {...register("name")}
+                label="Nome"
+                error={!!errors.name}
+                helperText={errors.name?.message}
               />
-            </Stack>
-          </Box>
+            </FormControl>
+            <Controller
+              name="description"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <RichEditor label="Descrição" value={field.value} onChange={field.onChange} />
+              )}
+            />
+          </Stack>
         </Paper>
         <Box sx={{ marginLeft: "auto" }}>
           <LoadingButton loading={createNewClient.isPending} type="submit" variant="contained">

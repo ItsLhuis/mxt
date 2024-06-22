@@ -21,7 +21,7 @@ const Caption = ({ title }) => {
         }
       }}
     >
-      <Info sx={{ color: "var(--outline)" }} fontSize="inherit" />
+      <Info sx={{ color: "var(--outline)" }} />
     </Tooltip>
   )
 }

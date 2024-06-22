@@ -5,6 +5,11 @@ const getAllClients = async () => {
   return response.data
 }
 
+const getClientById = async ({ clientId }) => {
+  const response = await api.get(`/clients/${clientId}`)
+  return response.data
+}
+
 const createClient = async ({ name, description }) => {
   const response = await api.post("/clients", { name, description })
   return response.data
@@ -31,4 +36,11 @@ const deleteClient = async ({ clientId }) => {
   return response.data
 }
 
-export { getAllClients, createClient, addContactClient, addAddressClient, deleteClient }
+export {
+  getAllClients,
+  getClientById,
+  createClient,
+  addContactClient,
+  addAddressClient,
+  deleteClient
+}

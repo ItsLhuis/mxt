@@ -47,6 +47,7 @@ const Image = ({ src, alt, maxHeight = 40, maxWidth = 80, ...props }) => {
           ref={imgRef}
           src={src}
           alt={alt}
+          loading="lazy"
           style={{ maxHeight, maxWidth, width: "auto", userSelect: "none" }}
           {...props}
         />

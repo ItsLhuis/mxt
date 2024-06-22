@@ -26,7 +26,7 @@ export const clientContactSchema = z
       }
       return true
     },
-    { message: "Invalid contact format", path: ["contact"] }
+    { message: "Contacto inválido", path: ["contact"] }
   )
 
 export const clientAddressSchema = z.object({

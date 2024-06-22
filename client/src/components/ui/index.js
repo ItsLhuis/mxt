@@ -30,6 +30,8 @@ export { default as MultipleSelectCheckmarks } from "./MultipleSelectCheckmarks/
 
 export { default as NoData } from "./NoData/NoData"
 
+export { default as NotFound } from "./NotFound/NotFound"
+
 export { default as PageLoader } from "./PageLoader/PageLoader"
 
 export { default as PageProgress } from "./PageProgress/PageProgress"
