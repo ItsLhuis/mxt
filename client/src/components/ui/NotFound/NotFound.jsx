@@ -6,7 +6,7 @@ import { useLoader } from "@contexts/loader"
 
 import notFoundEmoji from "./img/emoji.png"
 
-import { Box, Button, Stack, Typography } from "@mui/material"
+import { Box, Button, Stack, Typography, useTheme, useMediaQuery } from "@mui/material"
 
 import { Navbar } from "@components"
 import { Image } from ".."
@@ -19,12 +19,23 @@ const NotFound = () => {
 
   const { showLoader, hideLoader } = useLoader()
 
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"))
+
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
       <Rings />
       <Box sx={{ height: "100vh", width: "100vw", overflow: "hidden", overflowY: "auto" }}>
         <Stack sx={{ height: "100%", width: "100%", zIndex: 10 }}>
-          <Navbar isNotFound />
+          <Box
+            sx={{
+              "@media (max-height: 620px)": {
+                display: "none"
+              }
+            }}
+          >
+            <Navbar isNotFound />
+          </Box>
           <Box sx={{ margin: "auto", maxWidth: "520px", padding: 3 }}>
             <Stack
               sx={{
@@ -45,18 +56,18 @@ const NotFound = () => {
                 <Typography
                   variant="h1"
                   component="h1"
-                  sx={{ fontSize: 146, fontWeight: 800, zIndex: 10 }}
+                  sx={{ fontSize: isSmallScreen ? 116 : 146, fontWeight: 800, zIndex: 10 }}
                 >
                   4
                 </Typography>
                 <Image
                   src={notFoundEmoji}
                   alt="Não encontrado"
-                  maxWidth={120}
-                  maxHeight={120}
+                  maxWidth={isSmallScreen ? 90 : 120}
+                  maxHeight={isSmallScreen ? 90 : 120}
                   style={{
-                    width: "120px",
-                    height: "120px",
+                    width: isSmallScreen ? "90px" : "120px",
+                    height: isSmallScreen ? "90px" : "120px",
                     transform: "scale(1.4)",
                     zIndex: 1,
                     userSelect: "none"
@@ -65,7 +76,7 @@ const NotFound = () => {
                 <Typography
                   variant="h1"
                   component="h1"
-                  sx={{ fontSize: 146, fontWeight: 800, zIndex: 10 }}
+                  sx={{ fontSize: isSmallScreen ? 116 : 146, fontWeight: 800, zIndex: 10 }}
                 >
                   4
                 </Typography>
