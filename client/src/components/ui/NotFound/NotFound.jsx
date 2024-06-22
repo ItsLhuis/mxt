@@ -2,6 +2,8 @@ import React from "react"
 
 import { useNavigate } from "react-router-dom"
 
+import { useLoader } from "@contexts/loader"
+
 import notFoundEmoji from "./img/emoji.png"
 
 import { Box, Button, Stack, Typography } from "@mui/material"
@@ -14,6 +16,8 @@ import { motion } from "framer-motion"
 
 const NotFound = () => {
   const navigate = useNavigate()
+
+  const { showLoader, hideLoader } = useLoader()
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
@@ -79,7 +83,16 @@ const NotFound = () => {
                   alterado ou está temporariamente indisponível
                 </Typography>
               </Stack>
-              <Button variant="contained" onClick={() => navigate("/dashboard")}>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  showLoader()
+                  setTimeout(() => {
+                    navigate("/dashboard")
+                    hideLoader()
+                  }, 200)
+                }}
+              >
                 Voltar ao Painel de Controlo
               </Button>
             </Stack>
