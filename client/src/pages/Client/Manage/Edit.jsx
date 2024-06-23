@@ -15,7 +15,7 @@ const EditClientPage = () => {
           <Container maxWidth={false} sx={{height: "100%"}}>
             <HeaderPage
               title="Editar Cliente"
-              breadcrumbs={[{ name: "Cliente" }, { name: "Editar" }]}
+              breadcrumbs={[{ name: "Cliente", link: "/client/list" }, { name: "Editar" }]}
             />
             <EditClient />
           </Container>

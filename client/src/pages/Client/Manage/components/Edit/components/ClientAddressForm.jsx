@@ -9,13 +9,13 @@ import { useClient } from "@hooks/server/useClient"
 import { MuiTelInput } from "mui-tel-input"
 import { LoadingButton } from "@mui/lab"
 import { Box, Stack, FormControl, TextField } from "@mui/material"
-import { Phone } from "@mui/icons-material"
+import { Place } from "@mui/icons-material"
 
 import { HeaderSection, Select, RichEditor } from "@components/ui"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
-const ClientContactForm = ({ client, isLoading, isError }) => {
+const ClientAddressForm = ({ client, isLoading, isError }) => {
   const isClientFinished = !isLoading && !isError
 
   const {
@@ -71,7 +71,7 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
 
   return (
     <Stack>
-      <HeaderSection title="Contacto" description="Adicionar novo contacto ao cliente" icon={<Phone />} />
+      <HeaderSection title="Morada" description="Adicionar nova morada ao cliente" icon={<Place />} />
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack sx={{ padding: 3, gap: 3 }}>
           <FormControl fullWidth>
@@ -151,7 +151,7 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
               variant="contained"
               disabled={!isClientFinished}
             >
-              Adicionar Contacto
+              Adicionar Morada
             </LoadingButton>
           </Box>
         </Stack>
@@ -160,4 +160,4 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
   )
 }
 
-export default ClientContactForm
+export default ClientAddressForm

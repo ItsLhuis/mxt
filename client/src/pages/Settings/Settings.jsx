@@ -1,4 +1,6 @@
-import React, { Suspense, useState } from "react"
+import React, { Suspense, useState, useLayoutEffect } from "react"
+
+import { useAuth } from "@contexts/auth"
 
 import { Box, Container, Tabs, Tab } from "@mui/material"
 import { Person, Dns } from "@mui/icons-material"
@@ -10,7 +12,7 @@ import { Account, AppSettings, Security, Server } from "./components"
 
 import { motion } from "framer-motion"
 
-const tabsInfo = [
+const allTabsInfo = [
   { id: 0, name: "Conta", icon: <Person />, component: <Account /> },
   { id: 1, name: "Definições", icon: <SettingsIcon />, component: <AppSettings /> },
   { id: 2, name: "Segurança", icon: <SecurityIcon />, component: <Security /> },
@@ -42,11 +44,24 @@ const tabProps = (index) => {
 }
 
 const Settings = () => {
+  const { role } = useAuth()
+
+  const [tabsInfo, setTabsInfo] = useState(allTabsInfo)
+
   const [value, setValue] = useState(0)
 
   const handleChange = (_, newValue) => {
     setValue(newValue)
   }
+
+  useLayoutEffect(() => {
+    if (role === "Funcionário") {
+      setTabsInfo(allTabsInfo.filter((tab) => tab.name !== "Servidor"))
+    } else {
+      setTabsInfo(allTabsInfo)
+    }
+    setValue(0)
+  }, [role])
 
   return (
     <Suspense fallback={<PageLoader />}>

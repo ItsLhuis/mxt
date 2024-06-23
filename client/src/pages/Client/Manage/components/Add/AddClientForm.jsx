@@ -42,7 +42,7 @@ const AddClientForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack sx={{ marginTop: 3, gap: 3, marginLeft: "auto", marginRight: "auto", maxWidth: 900 }}>
+      <Stack sx={{ marginTop: 3, gap: 3 }}>
         <Paper elevation={1}>
           <HeaderSection
             title="Detalhes"

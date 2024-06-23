@@ -2,7 +2,8 @@ import PropTypes from "prop-types"
 
 import React from "react"
 
-import { Box, Typography, Breadcrumbs, Link, Button } from "@mui/material"
+import { Link } from "react-router-dom"
+import { Box, Typography, Breadcrumbs, Button } from "@mui/material"
 import { Home } from "@mui/icons-material"
 
 const HeaderPage = ({ title, breadcrumbs, button }) => {
@@ -38,9 +39,7 @@ const HeaderPage = ({ title, breadcrumbs, button }) => {
           {breadcrumbs.map((breadcrumb, index) => (
             <Box key={index}>
               {breadcrumb.link ? (
-                <Link underline="hover" href={breadcrumb.link} sx={{ color: "var(--onSurface)" }}>
-                  {breadcrumb.name}
-                </Link>
+                <Link to={breadcrumb.link}>{breadcrumb.name}</Link>
               ) : (
                 <Typography
                   variant="p"

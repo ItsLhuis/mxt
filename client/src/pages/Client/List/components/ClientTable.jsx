@@ -2,6 +2,8 @@ import React, { useState, useMemo } from "react"
 
 import { useNavigate } from "react-router-dom"
 
+import { useAuth } from "@contexts/auth"
+
 import { BASE_URL } from "@api"
 import { useClient } from "@hooks/server/useClient"
 
@@ -16,9 +18,10 @@ import {
   Tooltip,
   IconButton
 } from "@mui/material"
-import { MoreVert, Edit, Delete } from "@mui/icons-material"
+import { MoreVert, Edit, Delete, Phone, Place, History, Check, Close } from "@mui/icons-material"
 
 import {
+  HeaderSection,
   Loadable,
   Table,
   TableSkeleton,
@@ -28,11 +31,14 @@ import {
   Modal
 } from "@components/ui"
 
+import { formatHTML } from "@utils/format/formatHTML"
 import { formatDate, formatTime } from "@utils/format/date"
 import { formatPhoneNumber } from "@utils/format/phone"
 
 const ClientTable = () => {
   const navigate = useNavigate()
+
+  const { role } = useAuth()
 
   const { findAllClients, deleteClient } = useClient()
   const { data: clients, isLoading: isClientsLoading } = findAllClients
@@ -570,13 +576,7 @@ const ClientTable = () => {
               label: "Atividade",
               align: "left",
               sortable: true
-            } /* 
-      {
-        id: "details",
-        label: "Detalhes",
-        align: "left",
-        sortable: true
-      }, */,
+            },
             {
               id: "responsible_user",
               label: "Responsável",
@@ -644,11 +644,118 @@ const ClientTable = () => {
           []
         )
 
+        const ExpandableClientsInteractionsHistoryTableContent = useMemo(
+          () =>
+            ({ row }) => {
+              const interactionsHistoryDetailsTableColumns = useMemo(
+                () => [
+                  {
+                    id: "field",
+                    label: "Campo",
+                    align: "left",
+                    sortable: true
+                  },
+                  {
+                    id: "before",
+                    label: "Antes",
+                    align: "left",
+                    sortable: true,
+                    renderComponent: ({ row }) => {
+                      if (row.field === "Descrição") {
+                        if (row.before) {
+                          return (
+                            <Box
+                              sx={{
+                                maxHeight: 300,
+                                overflow: "hidden",
+                                overflowY: "auto",
+                                borderRadius: "8px",
+                                border: "1px solid var(--elevation-level5)",
+                                padding: 2
+                              }}
+                            >
+                              <Box dangerouslySetInnerHTML={formatHTML(row.before)} />
+                            </Box>
+                          )
+                        }
+                      }
+
+                      if (row.field === "Contacto") {
+                        if (row.before) {
+                          return formatPhoneNumber(row.before)
+                        }
+                      }
+
+                      return row.before
+                    }
+                  },
+                  {
+                    id: "after",
+                    label: "Depois",
+                    align: "left",
+                    sortable: true,
+                    renderComponent: ({ row }) => {
+                      if (row.field === "Descrição") {
+                        if (row.after) {
+                          return (
+                            <Box
+                              sx={{
+                                maxHeight: 300,
+                                overflow: "hidden",
+                                overflowY: "auto",
+                                borderRadius: "8px",
+                                border: "1px solid var(--elevation-level5)",
+                                padding: 2
+                              }}
+                            >
+                              <Box dangerouslySetInnerHTML={formatHTML(row.after)} />
+                            </Box>
+                          )
+                        }
+                      }
+
+                      if (row.field === "Contacto") {
+                        if (row.after) {
+                          return formatPhoneNumber(row.after)
+                        }
+                      }
+                      return row.after
+                    }
+                  },
+                  {
+                    id: "changed",
+                    label: "Alterado",
+                    align: "left",
+                    sortable: true,
+                    renderComponent: ({ row }) => (
+                      <>{row.changed ? <Check color="success" /> : <Close color="error" />}</>
+                    )
+                  }
+                ],
+                []
+              )
+
+              return (
+                <Box
+                  sx={{
+                    border: "1px solid var(--elevation-level5)",
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    margin: 3
+                  }}
+                >
+                  <Table
+                    data={row.details ?? []}
+                    columns={interactionsHistoryDetailsTableColumns}
+                  />
+                </Box>
+              )
+            },
+          []
+        )
+
         return (
-          <Stack sx={{ color: "var(--onSurface)", margin: 3, gap: 3 }}>
-            <Typography variant="h5" component="h5">
-              {row.name}
-            </Typography>
+          <Stack sx={{ margin: 3, gap: 3 }}>
             <Box
               sx={{
                 border: "1px solid var(--elevation-level5)",
@@ -656,9 +763,11 @@ const ClientTable = () => {
                 overflow: "hidden"
               }}
             >
-              <Typography variant="h6" component="h6" sx={{ margin: 3, marginBottom: 0 }}>
-                Contactos
-              </Typography>
+              <HeaderSection
+                title="Contactos"
+                description="Contactos do cliente"
+                icon={<Phone />}
+              />
               <Table mode="datatable" data={row.contacts ?? []} columns={contactsTableColumns} />
             </Box>
             <Box
@@ -668,27 +777,30 @@ const ClientTable = () => {
                 overflow: "hidden"
               }}
             >
-              <Typography variant="h6" component="h6" sx={{ margin: 3, marginBottom: 0 }}>
-                Moradas
-              </Typography>
+              <HeaderSection title="Moradas" description="Moradas do cliente" icon={<Place />} />
               <Table mode="datatable" data={row.addresses ?? []} columns={addressesTableColumns} />
             </Box>
-            <Box
-              sx={{
-                border: "1px solid var(--elevation-level5)",
-                borderRadius: 2,
-                overflow: "hidden"
-              }}
-            >
-              <Typography variant="h6" component="h6" sx={{ margin: 3, marginBottom: 0 }}>
-                Histórico de Atividades
-              </Typography>
-              <Table
-                mode="datatable"
-                data={row.interactions_history ?? []}
-                columns={interactionsHistoryTableColumns}
-              />
-            </Box>
+            {role !== "Funcionário" && (
+              <Box
+                sx={{
+                  border: "1px solid var(--elevation-level5)",
+                  borderRadius: 2,
+                  overflow: "hidden"
+                }}
+              >
+                <HeaderSection
+                  title="Histórico de Atividades"
+                  description="Histórico de atividades sobre os clientes"
+                  icon={<History />}
+                />
+                <Table
+                  mode="datatable"
+                  data={row.interactions_history ?? []}
+                  columns={interactionsHistoryTableColumns}
+                  ExpandableContentComponent={ExpandableClientsInteractionsHistoryTableContent}
+                />
+              </Box>
+            )}
           </Stack>
         )
       },

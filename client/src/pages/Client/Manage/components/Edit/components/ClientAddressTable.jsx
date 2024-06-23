@@ -3,7 +3,7 @@ import React, { useMemo } from "react"
 import { BASE_URL } from "@api"
 
 import { Box, Stack, Divider, ListItemText, Typography, Tooltip, IconButton } from "@mui/material"
-import { Phone, MoreVert, Edit, Delete } from "@mui/icons-material"
+import { Place, MoreVert, Edit, Delete } from "@mui/icons-material"
 
 import {
   HeaderSection,
@@ -16,25 +16,35 @@ import {
 } from "@components/ui"
 
 import { formatDate, formatTime } from "@utils/format/date"
-import { formatPhoneNumber } from "@utils/format/phone"
 
-const ClientContactTable = ({ client, isLoading, isError }) => {
+const ClientAddressTable = ({ client, isLoading, isError }) => {
   const isClientFinished = !isLoading && !isError
 
-  const clientContactsTableColumns = useMemo(
+  const clientAddressesTableColumns = useMemo(
     () => [
       {
-        id: "type",
-        label: "Tipo",
+        id: "country",
+        label: "País",
         align: "left",
         sortable: true
       },
       {
-        id: "contact",
-        label: "Contacto",
+        id: "city",
+        label: "Cidade",
         align: "left",
-        sortable: true,
-        formatter: formatPhoneNumber
+        sortable: true
+      },
+      {
+        id: "locality",
+        label: "Localidade",
+        align: "left",
+        sortable: true
+      },
+      {
+        id: "postal_code",
+        label: "Código postal",
+        align: "left",
+        sortable: true
       },
       {
         id: "created_by_user",
@@ -169,40 +179,6 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
             )}
           </>
         )
-      },
-      {
-        id: "moreOptions",
-        align: "right",
-        sortable: false,
-        renderComponent: ({ row }) => (
-          <ButtonDropDownSelect
-            mode="custom"
-            customButton={
-              <Tooltip title="Mais opções" placement="bottom" sx={{ margin: -1 }}>
-                <IconButton>
-                  <MoreVert />
-                </IconButton>
-              </Tooltip>
-            }
-          >
-            <ListButton
-              buttons={[
-                {
-                  label: "Editar",
-                  icon: <Edit fontSize="small" />,
-                  onClick: () => console.log(row)
-                },
-                {
-                  label: "Eliminar",
-                  icon: <Delete fontSize="small" color="error" />,
-                  color: "error",
-                  divider: true,
-                  onClick: () => console.log(row)
-                }
-              ]}
-            />
-          </ButtonDropDownSelect>
-        )
       }
     ],
     []
@@ -210,7 +186,7 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
 
   return (
     <Stack>
-      <HeaderSection title="Contactos" description="Contactos do cliente" icon={<Phone />} />
+      <HeaderSection title="Moradas" description="Moradas do cliente" icon={<Place />} />
       <Loadable
         isLoading={!isClientFinished}
         LoadingComponent={<TableSkeleton mode="datatable" />}
@@ -225,8 +201,8 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
           >
             <Table
               mode="datatable"
-              data={isClientFinished ? client[0].contacts : []}
-              columns={clientContactsTableColumns}
+              data={isClientFinished ? client[0].addresses : []}
+              columns={clientAddressesTableColumns}
             />
           </Box>
         }
@@ -241,4 +217,4 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
   )
 }
 
-export default ClientContactTable
+export default ClientAddressTable

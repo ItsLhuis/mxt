@@ -8,6 +8,8 @@ export { default as CommandDialog } from "./CommandDialog/CommandDialog"
 
 export { default as DatePicker } from "./DatePicker/DatePicker"
 
+export { default as FileUpload } from "./FileUpload/FileUpload"
+
 export { default as HeaderPage } from "./HeaderPage/HeaderPage"
 
 export { default as HeaderSection } from "./HeaderSection/HeaderSection"

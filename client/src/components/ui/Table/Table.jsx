@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, useMemo } from "react"
 
 import { produce } from "immer"
 
@@ -20,9 +20,12 @@ import {
   TablePagination,
   Checkbox,
   Tooltip,
-  Stack
+  Stack,
+  Grid
 } from "@mui/material"
 import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material"
+
+import TableSearch from "./TableSearch"
 
 import { NoData } from "../"
 
@@ -66,23 +69,7 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
   const tableRef = useRef(null)
   const [tableHeadHeight, setTableHeadHeight] = useState(0)
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (tableRef.current) {
-        const tableHead = tableRef.current.querySelector("thead")
-        if (tableHead) {
-          setTableHeadHeight(tableHead.getBoundingClientRect().height)
-        }
-      }
-    }
-
-    handleResize()
-    window.addEventListener("resize", handleResize)
-
-    return () => {
-      window.removeEventListener("resize", handleResize)
-    }
-  }, [tableRef.current])
+  const [filteredData, setFilteredData] = useState(data)
 
   const [state, setState] = useState({
     order: "asc",
@@ -91,7 +78,8 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
     page: 0,
     rowsPerPage: 5,
     rowsPerPageOptions: [],
-    selected: new Set()
+    selected: new Set(),
+    searchQuery: ""
   })
 
   useEffect(() => {
@@ -206,10 +194,43 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
     )
   }
 
+  const handleSearchChange = (value) => {
+    setState(
+      produce((draft) => {
+        draft.searchQuery = value.toLowerCase().trim()
+      })
+    )
+  }
+
+  const formatValueForSearch = (value) => {
+    if (Array.isArray(value)) {
+      return value.map((item) => formatValueForSearch(item)).join(" ")
+    } else if (typeof value === "object") {
+      return JSON.stringify(value)
+    } else {
+      return String(value)
+    }
+  }
+
+  useEffect(() => {
+    setFilteredData(
+      data.filter((item) =>
+        columns.some((column) => {
+          if (column.id !== "moreOptions") {
+            const value = item[column.id]
+            const formattedValue = typeof value === "object" ? JSON.stringify(value) : String(value)
+            return formattedValue.toLowerCase().includes(state.searchQuery.toLowerCase())
+          }
+          return false
+        })
+      )
+    )
+  }, [state.searchQuery, data])
+
   const hasSelectedRows = state.selected.size > 0
   const isSelected = (id) => state.selected.has(id)
 
-  const sortedData = stableSort(data, getComparator(state.order, state.orderBy))
+  const sortedData = stableSort(filteredData, getComparator(state.order, state.orderBy))
   const slicedData =
     mode === "datatable"
       ? sortedData.slice(
@@ -217,7 +238,26 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
           state.page * state.rowsPerPage + state.rowsPerPage
         )
       : sortedData
+
   const hasExpandableContent = !!ExpandableContentComponent && data.length > 0
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (tableRef.current) {
+        const tableHead = tableRef.current.querySelector("thead")
+        if (tableHead) {
+          setTableHeadHeight(tableHead.getBoundingClientRect().height)
+        }
+      }
+    }
+
+    handleResize()
+    window.addEventListener("resize", handleResize)
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [tableRef.current, handleRowClick])
 
   return (
     <Box
@@ -227,11 +267,18 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
         paddingTop: 3
       }}
     >
-      {mode === "datatable" && (
-        <Typography variant="p" component="p" sx={{ marginLeft: 3, marginBottom: 3 }}>
-          <b>{formatNumber(data.length)}</b> {getDataCountText(data.length)}
-        </Typography>
-      )}
+      <Stack
+        sx={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          marginInline: 3,
+          marginBottom: 3,
+          gap: 3
+        }}
+      >
+        <TableSearch onSearch={handleSearchChange} />
+      </Stack>
       {hasSelectedRows && (
         <Stack
           sx={{
@@ -340,10 +387,10 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.length !== 0 ? (
+            {sortedData.length !== 0 ? (
               <>
                 {slicedData.map((row, index) => (
-                  <React.Fragment key={row.id}>
+                  <React.Fragment key={row.id ? row.id : index}>
                     <TableRow
                       sx={{
                         transition: "background-color 0.3s ease",
@@ -370,7 +417,7 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
                       )}
                       {hasExpandableContent && (
                         <TableCell sx={{ width: 0 }}>
-                          <Tooltip title="Expandir">
+                          <Tooltip title={state.openRows.has(row.id) ? "Diminuir" : "Expandir"}>
                             <IconButton size="small" onClick={() => handleRowClick(row.id)}>
                               <KeyboardArrowUp
                                 className={`arrow-but-drop-down ${
@@ -402,7 +449,7 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
                       ))}
                     </TableRow>
                     {hasExpandableContent && (
-                      <TableRow>
+                      <TableRow key={`${row.id}-expandable`}>
                         <TableCell
                           colSpan={mode === "normal" ? columns.length + 1 : columns.length + 2}
                           sx={{ padding: 0, border: "none" }}
@@ -444,50 +491,70 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
         </MuiTable>
       </TableContainer>
       {mode === "datatable" && data.length !== 0 && (
-        <Box sx={{ padding: 2, paddingBottom: 2, borderTop: "1px solid var(--elevation-level5)" }}>
-          <TablePagination
-            labelRowsPerPage="Itens por página"
-            labelDisplayedRows={({ from, to, count }) => {
-              return `${formatNumber(from)}–${formatNumber(to)} de ${
-                count !== -1 ? formatNumber(count) : `mais do que ${formatNumber(to)}`
-              }`
-            }}
-            rowsPerPageOptions={state.rowsPerPageOptions}
-            component="div"
-            count={data.length}
-            rowsPerPage={state.rowsPerPage}
-            page={state.page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            showLastButton
-            showFirstButton
-            slotProps={{
-              select: {
-                IconComponent: KeyboardArrowDown,
-                MenuProps: {
-                  sx: {
-                    "& .MuiPaper-root": {
-                      padding: "8px"
-                    },
-                    "& .MuiPaper-root .MuiList-root": {
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "4px",
-                      padding: 0
-                    },
-                    "& .MuiPaper-root .MuiList-root .MuiButtonBase-root": {
-                      borderRadius: 2,
-                      fontSize: 13
-                    },
-                    "& .MuiPaper-root .MuiList-root .MuiButtonBase-root:hover": {
-                      backgroundColor: "var(--secondaryContainer)"
+        <Grid
+          container
+          sx={{
+            padding: 2,
+            paddingBottom: 2,
+            borderTop: "1px solid var(--elevation-level5)"
+          }}
+        >
+          <Grid
+            item
+            xs={12}
+            md={6}
+            lg={6}
+            sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+          >
+            <Typography variant="p" component="p" sx={{ paddingLeft: 1 }}>
+              <b>{formatNumber(sortedData.length)}</b> {getDataCountText(sortedData.length)}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6} lg={6}>
+            <TablePagination
+              labelRowsPerPage="Itens por página"
+              labelDisplayedRows={({ from, to, count }) => {
+                return `${formatNumber(from)}–${formatNumber(to)} de ${
+                  count !== -1 ? formatNumber(count) : `mais do que ${formatNumber(to)}`
+                }`
+              }}
+              rowsPerPageOptions={state.rowsPerPageOptions}
+              component="div"
+              count={sortedData.length}
+              rowsPerPage={state.rowsPerPage}
+              page={state.page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              showLastButton
+              showFirstButton
+              slotProps={{
+                select: {
+                  IconComponent: KeyboardArrowDown,
+                  MenuProps: {
+                    sx: {
+                      "& .MuiPaper-root": {
+                        padding: "8px"
+                      },
+                      "& .MuiPaper-root .MuiList-root": {
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "4px",
+                        padding: 0
+                      },
+                      "& .MuiPaper-root .MuiList-root .MuiButtonBase-root": {
+                        borderRadius: 2,
+                        fontSize: 13
+                      },
+                      "& .MuiPaper-root .MuiList-root .MuiButtonBase-root:hover": {
+                        backgroundColor: "var(--secondaryContainer)"
+                      }
                     }
                   }
                 }
-              }
-            }}
-          />
-        </Box>
+              }}
+            />
+          </Grid>
+        </Grid>
       )}
       {error && (
         <FormHelperText sx={{ marginLeft: 3, marginTop: 1, color: error && "rgb(211, 47, 47)" }}>
@@ -510,12 +577,7 @@ Table.propTypes = {
       renderComponent: PropTypes.elementType
     })
   ).isRequired,
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      expandableContent: PropTypes.func
-    })
-  ).isRequired,
+  data: PropTypes.array.isRequired,
   mode: PropTypes.oneOf(["normal", "datatable"]),
   actions: function (props, propName, componentName) {
     if (props.mode === "datatable" && props[propName]) {
@@ -539,7 +601,10 @@ Table.propTypes = {
         }
       }
     }
-  }
+  },
+  error: PropTypes.string,
+  helperText: PropTypes.string,
+  ExpandableContentComponent: PropTypes.elementType
 }
 
 export default Table

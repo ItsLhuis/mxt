@@ -122,7 +122,7 @@ function App() {
           <Loader visible={loader} />
           {!isLoading && (
             <>
-              {location.pathname === "/404" ? (
+              {location.pathname === "/404" && isAuth ? (
                 <NotFound />
               ) : isAuth ? (
                 <>

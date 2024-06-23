@@ -12,34 +12,38 @@ import { Paper, Box, Stack, FormControl, TextField, Skeleton } from "@mui/materi
 import { HeaderSection, Loadable, RichEditor } from "@components/ui"
 import { Person } from "@mui/icons-material"
 
-import { showSuccessToast, showErrorToast } from "@config/toast"
-
 const ClientDetailsForm = ({ client, isLoading, isError }) => {
-  const isFinished = !isLoading && !isError
+  const isClientFinished = !isLoading && !isError
 
   const {
     control,
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
+    watch
   } = useForm({
     resolver: zodResolver(clientSchema)
   })
 
+  const initialValues = {
+    name: client?.[0]?.name || "",
+    description: client?.[0]?.description || ""
+  }
+
+  const isFormUnchanged =
+    watch().name === initialValues.name && watch().description === initialValues.description
+
   useEffect(() => {
-    if (isFinished && client && client[0]) {
-      reset({
-        name: client[0].name || "",
-        description: client[0].description || ""
-      })
+    if (isClientFinished && client && client[0]) {
+      reset(initialValues)
     }
-  }, [isFinished, client])
+  }, [isClientFinished, client])
 
   const { createNewClient } = useClient()
 
   const onSubmit = async (data) => {
-    if (!isFinished) return
+    if (!isClientFinished || isFormUnchanged) return
 
     /*     await createNewClient
       .mutateAsync(data)
@@ -57,7 +61,7 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack sx={{ padding: 3, gap: 3 }}>
           <Loadable
-            isLoading={!isFinished}
+            isLoading={!isClientFinished}
             LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
             LoadedComponent={
               <FormControl fullWidth>
@@ -78,7 +82,7 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
                 label="Descrição"
                 value={field.value}
                 onChange={field.onChange}
-                isLoading={!isFinished}
+                isLoading={!isClientFinished}
               />
             )}
           />
@@ -87,7 +91,7 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
               /* loading={createNewClient.isPending} */
               type="submit"
               variant="contained"
-              disabled={!isFinished}
+              disabled={!isClientFinished || isFormUnchanged}
             >
               Atualizar Detalhes
             </LoadingButton>

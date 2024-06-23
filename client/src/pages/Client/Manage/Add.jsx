@@ -15,7 +15,7 @@ const AddCLientPage = () => {
           <Container maxWidth={false}>
             <HeaderPage
               title="Adicionar Cliente"
-              breadcrumbs={[{ name: "Cliente" }, { name: "Adicionar" }]}
+              breadcrumbs={[{ name: "Cliente", link: "/client/list" }, { name: "Adicionar" }]}
             />
             <AddClientForm />
           </Container>

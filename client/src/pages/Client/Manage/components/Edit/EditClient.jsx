@@ -2,17 +2,26 @@ import React, { Suspense } from "react"
 
 import { useParams } from "react-router-dom"
 
+import { useAuth } from "@contexts/auth"
+
 import { useClient } from "@hooks/server/useClient"
 
 import { Stack, Alert } from "@mui/material"
 
 import { PageLoader } from "@components/ui"
-import { ClientDetailsForm, ClientContact } from "./components"
+import {
+  ClientDetailsForm,
+  ClientContact,
+  ClientAddress,
+  ClientInteractionsHistoryTable
+} from "./components"
 
 import { motion } from "framer-motion"
 
 const EditClient = () => {
   const { clientId } = useParams()
+
+  const { role } = useAuth()
 
   const { findClientById } = useClient()
   const {
@@ -28,10 +37,7 @@ const EditClient = () => {
         sx={{
           marginTop: 3,
           paddingBottom: 3,
-          gap: 3,
-          marginLeft: "auto",
-          marginRight: "auto",
-          maxWidth: 900
+          gap: 3
         }}
       >
         {isClientError && clientError.error.code === "CLI-001" && (
@@ -48,6 +54,14 @@ const EditClient = () => {
         )}
         <ClientDetailsForm client={client} isLoading={isClientLoading} isError={isClientError} />
         <ClientContact client={client} isLoading={isClientLoading} isError={isClientError} />
+        <ClientAddress client={client} isLoading={isClientLoading} isError={isClientError} />
+        {role !== "Funcionário" && (
+          <ClientInteractionsHistoryTable
+            client={client}
+            isLoading={isClientLoading}
+            isError={isClientError}
+          />
+        )}
       </Stack>
     </Suspense>
   )

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, forwardRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 
 import { EditorContent, useEditor } from "@tiptap/react"
 
@@ -104,7 +104,7 @@ const RichEditor = ({ label, value, onChange, isLoading = false }) => {
   return (
     <Loadable
       isLoading={!isFinished}
-      LoadingComponent={<Skeleton variant="rounded" width="100%" height={442} />}
+      LoadingComponent={<Skeleton variant="rounded" width="100%" height={426} />}
       LoadedComponent={
         <Box>
           <Typography variant="p" component="p" sx={{ marginBottom: 1.5 }}>
