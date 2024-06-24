@@ -1,6 +1,8 @@
 import PropTypes from "prop-types"
 
-import React, { useState, useEffect, useRef, useMemo } from "react"
+import React, { useState, useEffect, useRef } from "react"
+
+import { useTheme } from "@contexts/theme"
 
 import { produce } from "immer"
 
@@ -66,6 +68,8 @@ const getDataCountText = (dataSize) => {
 }
 
 const Table = ({ columns, data, mode, actions, error, helperText, ExpandableContentComponent }) => {
+  const { dataTheme } = useTheme()
+
   const tableRef = useRef(null)
   const [tableHeadHeight, setTableHeadHeight] = useState(0)
 
@@ -227,6 +231,7 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
     )
   }, [state.searchQuery, data])
 
+  const selectedCount = filteredData.filter((item) => state.selected.has(item.id)).length
   const hasSelectedRows = state.selected.size > 0
   const isSelected = (id) => state.selected.has(id)
 
@@ -301,7 +306,7 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
           </Box>
           <Box sx={{ border: "none", paddingLeft: 3 }}>
             <Typography variant="body2" component="p" sx={{ fontWeight: 600 }}>
-              {formatNumber(state.selected.size)} {getSelectedText(state.selected.size)}
+              {formatNumber(selectedCount)} {getSelectedText(selectedCount)}
             </Typography>
           </Box>
           {actions && (
@@ -395,7 +400,7 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
                       sx={{
                         transition: "background-color 0.3s ease",
                         "&:hover": {
-                          backgroundColor: "rgba(0, 0, 0, 0.1)"
+                          backgroundColor: dataTheme === "dark" ? "rgba(0, 0, 0, 0.1)" : "rgba(0, 0, 0, 0.02)"
                         },
                         "& .MuiTableCell-root": {
                           border: sortedData.length - 1 === index && "none"

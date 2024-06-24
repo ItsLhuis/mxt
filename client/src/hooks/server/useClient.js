@@ -4,6 +4,7 @@ import {
   getAllClients,
   getClientById,
   createClient,
+  updateClient as updateClientApi,
   addContactClient,
   addAddressClient,
   deleteClient as deleteClientApi
@@ -41,6 +42,13 @@ export const useClient = () => {
     }
   })
 
+  const updateClient = useMutation({
+    mutationFn: updateClientApi,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["clients"])
+    }
+  })
+
   const addNewContactClient = useMutation({
     mutationFn: addContactClient,
     onSuccess: async () => {
@@ -70,6 +78,7 @@ export const useClient = () => {
     findAllClients,
     findClientById,
     createNewClient,
+    updateClient,
     addNewContactClient,
     addNewAddressClient,
     deleteClient

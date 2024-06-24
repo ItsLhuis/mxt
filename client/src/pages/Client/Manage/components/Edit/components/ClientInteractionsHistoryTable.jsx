@@ -136,7 +136,7 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                           padding: 2
                         }}
                       >
-                        <Box dangerouslySetInnerHTML={formatHTML(row.before)} />
+                        <span className="table-cell-tiptap-editor" dangerouslySetInnerHTML={formatHTML(row.before)} />
                       </Box>
                     )
                   }
@@ -148,7 +148,13 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                   }
                 }
 
-                return row.before
+                return row.before ? (
+                  row.before
+                ) : (
+                  <Typography variant="p" component="p" color="var(--outline)">
+                    Sem valor
+                  </Typography>
+                )
               }
             },
             {
@@ -170,7 +176,7 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                           padding: 2
                         }}
                       >
-                        <Box dangerouslySetInnerHTML={formatHTML(row.after)} />
+                        <span className="table-cell-tiptap-editor" dangerouslySetInnerHTML={formatHTML(row.after)} />
                       </Box>
                     )
                   }
@@ -181,7 +187,14 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                     return formatPhoneNumber(row.after)
                   }
                 }
-                return row.after
+
+                return row.after ? (
+                  row.after
+                ) : (
+                  <Typography variant="p" component="p" color="var(--outline)">
+                    Sem valor
+                  </Typography>
+                )
               }
             },
             {

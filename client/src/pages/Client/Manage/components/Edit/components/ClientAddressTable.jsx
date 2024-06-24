@@ -41,6 +41,12 @@ const ClientAddressTable = ({ client, isLoading, isError }) => {
         sortable: true
       },
       {
+        id: "address",
+        label: "Morada",
+        align: "left",
+        sortable: true
+      },
+      {
         id: "postal_code",
         label: "Código postal",
         align: "left",

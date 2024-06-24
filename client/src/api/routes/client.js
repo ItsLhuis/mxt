@@ -15,6 +15,11 @@ const createClient = async ({ name, description }) => {
   return response.data
 }
 
+const updateClient = async ({ clientId, name, description }) => {
+  const response = await api.put(`/clients/${clientId}`, { name, description })
+  return response.data
+}
+
 const addContactClient = async ({ clientId, type, contact, description }) => {
   const response = await api.post(`/clients/${clientId}/contacts`, { type, contact, description })
   return response.data
@@ -40,6 +45,7 @@ export {
   getAllClients,
   getClientById,
   createClient,
+  updateClient,
   addContactClient,
   addAddressClient,
   deleteClient

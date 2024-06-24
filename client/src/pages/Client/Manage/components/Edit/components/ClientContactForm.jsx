@@ -44,7 +44,7 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
       })
       .then(() => {
         reset()
-        showSuccessToast("Contacto criado com sucesso!")
+        showSuccessToast("Contacto adicionado com sucesso!")
       })
       .catch((error) => {
         if (error.error.code === "CLI-002") {
@@ -55,7 +55,7 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
           return
         }
 
-        showErrorToast("Erro ao criar contacto!")
+        showErrorToast("Erro ao adicionar contacto!")
       })
   }
 

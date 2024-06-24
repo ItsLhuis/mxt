@@ -12,6 +12,8 @@ import { Paper, Box, Stack, FormControl, TextField, Skeleton } from "@mui/materi
 import { HeaderSection, Loadable, RichEditor } from "@components/ui"
 import { Person } from "@mui/icons-material"
 
+import { showSuccessToast, showErrorToast } from "@config/toast"
+
 const ClientDetailsForm = ({ client, isLoading, isError }) => {
   const isClientFinished = !isLoading && !isError
 
@@ -40,19 +42,18 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
     }
   }, [isClientFinished, client])
 
-  const { createNewClient } = useClient()
+  const { updateClient } = useClient()
 
   const onSubmit = async (data) => {
     if (!isClientFinished || isFormUnchanged) return
 
-    /*     await createNewClient
-      .mutateAsync(data)
-      .then(() => {
-        navigate("/client/list")
-        showSuccessToast("Cliente criado com sucesso!")
+    await updateClient
+      .mutateAsync({
+        clientId: client[0].id,
+        ...data
       })
-      .catch(() => showErrorToast("Erro ao criar cliente!")) */
-    console.log(client)
+      .then(() => showSuccessToast("Cliente atualizado com sucesso!"))
+      .catch(() => showErrorToast("Erro ao atualizar cliente!"))
   }
 
   return (
@@ -88,7 +89,7 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
           />
           <Box sx={{ marginLeft: "auto" }}>
             <LoadingButton
-              /* loading={createNewClient.isPending} */
+              loading={updateClient.isPending}
               type="submit"
               variant="contained"
               disabled={!isClientFinished || isFormUnchanged}

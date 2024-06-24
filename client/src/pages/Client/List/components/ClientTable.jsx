@@ -426,6 +426,12 @@ const ClientTable = () => {
               sortable: true
             },
             {
+              id: "address",
+              label: "Morada",
+              align: "left",
+              sortable: true
+            },
+            {
               id: "postal_code",
               label: "Código postal",
               align: "left",
@@ -674,7 +680,10 @@ const ClientTable = () => {
                                 padding: 2
                               }}
                             >
-                              <Box dangerouslySetInnerHTML={formatHTML(row.before)} />
+                              <span
+                                className="table-cell-tiptap-editor"
+                                dangerouslySetInnerHTML={formatHTML(row.before)}
+                              />
                             </Box>
                           )
                         }
@@ -686,7 +695,13 @@ const ClientTable = () => {
                         }
                       }
 
-                      return row.before
+                      return row.before ? (
+                        row.before
+                      ) : (
+                        <Typography variant="p" component="p" color="var(--outline)">
+                          Sem valor
+                        </Typography>
+                      )
                     }
                   },
                   {
@@ -708,7 +723,10 @@ const ClientTable = () => {
                                 padding: 2
                               }}
                             >
-                              <Box dangerouslySetInnerHTML={formatHTML(row.after)} />
+                              <span
+                                className="table-cell-tiptap-editor"
+                                dangerouslySetInnerHTML={formatHTML(row.after)}
+                              />
                             </Box>
                           )
                         }
@@ -719,7 +737,14 @@ const ClientTable = () => {
                           return formatPhoneNumber(row.after)
                         }
                       }
-                      return row.after
+
+                      return row.after ? (
+                        row.after
+                      ) : (
+                        <Typography variant="p" component="p" color="var(--outline)">
+                          Sem valor
+                        </Typography>
+                      )
                     }
                   },
                   {
