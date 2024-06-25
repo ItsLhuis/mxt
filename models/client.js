@@ -67,7 +67,20 @@ const Client = {
     withCache(
       `client:${clientId}`,
       async () => {
-        const clientQuery = "SELECT * FROM clients WHERE id = ?"
+        const clientQuery = `
+          SELECT c.*, 
+          GREATEST(
+              COALESCE(c.last_modified_datetime, c.created_at_datetime), 
+              COALESCE(MAX(cc.last_modified_datetime), MAX(cc.created_at_datetime), c.created_at_datetime), 
+              COALESCE(MAX(ca.last_modified_datetime), MAX(ca.created_at_datetime), c.created_at_datetime)
+          ) AS last_modified
+          FROM clients c
+          LEFT JOIN client_contacts cc ON c.id = cc.client_id
+          LEFT JOIN client_addresses ca ON c.id = ca.client_id
+          WHERE c.id = ?
+          GROUP BY c.id
+        `
+
         const client = await dbQueryExecutor.execute(clientQuery, [clientId])
 
         if (!client || client.length <= 0) {
@@ -95,7 +108,7 @@ const Client = {
             lastModifiedByUser && lastModifiedByUser.length > 0
               ? mapUser(lastModifiedByUser[0])
               : null,
-          last_modified_datetime: client[0].last_modified_datetime,
+          last_modified_datetime: client[0].last_modified,
           contacts,
           addresses,
           interactions_history: interactionsHistory
