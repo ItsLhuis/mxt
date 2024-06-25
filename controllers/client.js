@@ -249,7 +249,7 @@ const clientController = {
         throw new AppError(404, CONTACT_NOT_FOUND, "Contact not found", true)
       }
 
-      if (existingContact[0].client_id !== clientId) {
+      if (existingContact[0].client_id !== Number(clientId)) {
         throw new AppError(404, CONTACT_NOT_FOUND, "Contact not found", true)
       }
 
