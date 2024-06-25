@@ -53,7 +53,7 @@ const Client = {
             lastModifiedByUser && lastModifiedByUser.length > 0
               ? mapUser(lastModifiedByUser[0])
               : null,
-          last_modified_datetime: client.last_modified_datetime,
+          last_modified_datetime: client.last_modified,
           contacts,
           addresses,
           interactions_history: interactionsHistory
