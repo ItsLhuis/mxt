@@ -1,9 +1,19 @@
 const express = require("express")
 const router = express.Router()
 
+const checkCompanyHandler = require("@middlewares/checkCompanyHandler")
 const checkPermissionHandler = require("@middlewares/checkPermissionHandler")
 const permissions = require("@constants/permissions")
 const userController = require("@controllers/user")
+
+const applyCompanyCheck = (req, res, next) => {
+  if (req.path !== "/profile") {
+    return checkCompanyHandler(req, res, next)
+  }
+  next()
+}
+
+router.use(applyCompanyCheck)
 
 router
   .route("/")

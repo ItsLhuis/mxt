@@ -1,7 +1,6 @@
 const express = require("express")
 const router = express.Router()
 
-const checkCompanyHandler = require("@middlewares/checkCompanyHandler")
 const checkPermissionHandler = require("@middlewares/checkPermissionHandler")
 const permissions = require("@constants/permissions")
 const companyController = require("@controllers/company")
@@ -15,6 +14,6 @@ router
     companyController.update
   )
 
-router.route("/logo").get(checkCompanyHandler, companyController.findLogo)
+router.route("/logo").get(companyController.findLogo)
 
 module.exports = router

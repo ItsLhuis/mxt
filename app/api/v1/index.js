@@ -34,7 +34,6 @@ router.use("/company", initializeUserHandler, authTokenHandler, userRoleHandler,
 const userRouter = require("@routes/user")
 router.use(
   "/users",
-  checkCompanyHandler,
   initializeUserHandler,
   authTokenHandler,
   userRoleHandler,
