@@ -8,6 +8,7 @@ const companySchema = z
     name: z.string().max(255).trim(),
     address: z.string().max(255).trim(),
     city: z.string().max(255).trim(),
+    locality: z.string().max(255).trim(),
     country: z.string().max(255).trim(),
     postalCode: z.string().max(20).regex(POSTAL_CODE_REGEX).trim(),
     phoneNumber: z.string().max(20).trim(),
