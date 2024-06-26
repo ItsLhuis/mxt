@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS company (
     name VARCHAR(255),
     address VARCHAR(255),
     city VARCHAR(255),
+    locality VARCHAR(255),
     country VARCHAR(255),
     postal_code VARCHAR(20),
     phone_number VARCHAR(20),

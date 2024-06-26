@@ -8,6 +8,7 @@ const { tryCatch } = require("@utils/tryCatch")
 
 const processImage = require("@utils/processImage")
 
+const { COMPANY_LOGO_IS_REQUIRED } = require("@constants/errors/company")
 const { IMAGE_NOT_FOUND, IMAGE_STREAMING_ERROR } = require("@constants/errors/shared/image")
 
 const { IMAGE_ERROR_TYPE } = require("@constants/errors/shared/types")
@@ -62,14 +63,16 @@ const companyController = {
     })
   }),
   update: tryCatch(async (req, res) => {
-    const { name, address, city, country, postalCode, phoneNumber, email } = req.body
+    const { name, address, city, locality, country, postalCode, phoneNumber, email } = req.body
 
     companySchema.parse(req.body)
 
-    await Company.update(name, address, city, country, postalCode, phoneNumber, email)
+    await Company.update(name, address, city, locality, country, postalCode, phoneNumber, email)
 
     if (req.file) {
       await Company.updateLogo(req.file.buffer, req.file.mimetype, req.file.size)
+    } else {
+      throw new AppError(400, COMPANY_LOGO_IS_REQUIRED, "Company logo is required", false)
     }
 
     res.status(204).json({ message: "Company updated successfully" })
