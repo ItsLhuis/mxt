@@ -10,11 +10,22 @@ import { motion } from "framer-motion"
 
 import { getStringColor, getContrastColor } from "@utils"
 
-const Avatar = ({ alt, src, name = null, size = 40, withBorderAnimation = false, sx }) => {
-  const [isLoading, setIsLoading] = useState(true)
+const Avatar = ({
+  alt,
+  src,
+  name = null,
+  size = 40,
+  circular = true,
+  withLoadingEffect = true,
+  withBorderAnimation = false,
+  sx
+}) => {
+  const [isLoading, setIsLoading] = useState(withLoadingEffect)
   const [isError, setIsError] = useState(true)
 
   useEffect(() => {
+    if (!withLoadingEffect) return
+
     if (!src) return
 
     setIsLoading(true)
@@ -48,7 +59,9 @@ const Avatar = ({ alt, src, name = null, size = 40, withBorderAnimation = false,
     return (
       <Loadable
         isLoading={isLoading}
-        LoadingComponent={<Skeleton variant="circular" width={size} height={size} />}
+        LoadingComponent={
+          <Skeleton variant={circular ? "circular" : "rounded"} width={size} height={size} />
+        }
         LoadedComponent={
           <Box
             sx={{
@@ -56,7 +69,9 @@ const Avatar = ({ alt, src, name = null, size = 40, withBorderAnimation = false,
               justifyContent: "center",
               alignItems: "center",
               position: "relative",
-              borderRadius: "50%"
+              width: size,
+              height: size,
+              borderRadius: circular ? "50%" : "8px"
             }}
           >
             <MuiAvatar
@@ -65,28 +80,14 @@ const Avatar = ({ alt, src, name = null, size = 40, withBorderAnimation = false,
               sx={{
                 backgroundColor: `${backgroundColor} !important`,
                 color: textColor,
+                border: !withBorderAnimation && "0.1px solid var(--elevation-level6)",
+                borderRadius: circular ? "50%" : "8px",
                 ...sx
               }}
               style={{ width: size, height: size }}
             >
               {name.charAt(0)}
             </MuiAvatar>
-            {!withBorderAnimation && (
-              <Box
-                style={{
-                  position: "absolute",
-                  top: -2,
-                  left: -2,
-                  width: size + 2 * 2,
-                  height: size + 2 * 2,
-                  border: `${1}px solid var(--elevation-level6)`,
-                  borderRadius: "50%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
-              />
-            )}
             {withBorderAnimation && (
               <motion.div
                 style={{
@@ -95,7 +96,7 @@ const Avatar = ({ alt, src, name = null, size = 40, withBorderAnimation = false,
                   left: -4,
                   width: size + 4 * 2,
                   height: size + 4 * 2,
-                  borderRadius: "50%",
+                  borderRadius: circular ? "50%" : "8px",
                   background:
                     "conic-gradient(from 10deg, var(--primary), var(--elevation-level6), var(--primary), var(--elevation-level6), var(--primary))",
                   mask: `radial-gradient(circle, transparent 64%, black 70%)`
@@ -113,7 +114,9 @@ const Avatar = ({ alt, src, name = null, size = 40, withBorderAnimation = false,
   return (
     <Loadable
       isLoading={isLoading}
-      LoadingComponent={<Skeleton variant="circular" width={size} height={size} />}
+      LoadingComponent={
+        <Skeleton variant={circular ? "circular" : "rounded"} width={size} height={size} />
+      }
       LoadedComponent={
         <Box
           sx={{
@@ -121,26 +124,17 @@ const Avatar = ({ alt, src, name = null, size = 40, withBorderAnimation = false,
             justifyContent: "center",
             alignItems: "center",
             position: "relative",
-            borderRadius: "50%"
+            width: size,
+            height: size,
+            borderRadius: circular ? "50%" : "8px"
           }}
         >
-          <MuiAvatar alt={alt} src={src} style={{ width: size, height: size }} />
-          {!withBorderAnimation && (
-            <Box
-              style={{
-                position: "absolute",
-                top: -2,
-                left: -2,
-                width: size + 2 * 2,
-                height: size + 2 * 2,
-                border: `${1}px solid var(--elevation-level6)`,
-                borderRadius: "50%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-              }}
-            />
-          )}
+          <MuiAvatar
+            alt={alt}
+            src={src}
+            sx={{ ...sx }}
+            style={{ width: size, height: size, borderRadius: circular ? "50%" : "8px" }}
+          />
           {withBorderAnimation && (
             <motion.div
               style={{
@@ -149,7 +143,7 @@ const Avatar = ({ alt, src, name = null, size = 40, withBorderAnimation = false,
                 left: -4,
                 width: size + 4 * 2,
                 height: size + 4 * 2,
-                borderRadius: "50%",
+                borderRadius: circular ? "50%" : "8px",
                 background:
                   "conic-gradient(from 10deg, var(--primary), var(--elevation-level6), var(--primary), var(--elevation-level6), var(--primary))",
                 mask: `radial-gradient(circle, transparent 64%, black 70%)`
@@ -165,10 +159,13 @@ const Avatar = ({ alt, src, name = null, size = 40, withBorderAnimation = false,
 }
 
 Avatar.propTypes = {
-  alt: PropTypes.string.isRequired,
+  alt: PropTypes.string,
   src: PropTypes.string,
   name: PropTypes.string,
   size: PropTypes.number,
+  circular: PropTypes.bool,
+  withLoadingEffect: PropTypes.bool,
+  withBorderAnimation: PropTypes.bool,
   sx: PropTypes.object
 }
 

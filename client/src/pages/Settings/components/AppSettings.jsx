@@ -2,9 +2,10 @@ import React from "react"
 
 import { useTheme } from "@contexts/theme"
 
-import { Paper, Box, Typography } from "@mui/material"
+import { Paper, Box } from "@mui/material"
+import SettingsIcon from "@mui/icons-material/Settings"
 
-import { ButtonDropDownSelect, ListButton } from "@components/ui"
+import { HeaderSection, ButtonDropDownSelect, ListButton } from "@components/ui"
 
 const themeLabel = {
   system: "Sistema",
@@ -17,10 +18,12 @@ const AppSettings = () => {
 
   return (
     <Paper elevation={1}>
-      <Box sx={{ padding: 3 }}>
-        <Typography variant="h5" component="h5">
-          Definições
-        </Typography>
+      <HeaderSection
+        title="Definições"
+        description="Definições da aplicação"
+        icon={<SettingsIcon />}
+      />
+      <Box sx={{ padding: 3, paddingTop: 0 }}>
         <Box sx={{ marginTop: 2 }}>
           <ButtonDropDownSelect
             mode="advanced"

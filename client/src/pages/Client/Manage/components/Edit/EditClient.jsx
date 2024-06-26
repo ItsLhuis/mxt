@@ -45,7 +45,7 @@ const EditClient = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.2 }}
-            style={{ position: "sticky", top: 16, zIndex: 5 }}
+            style={{ position: "sticky", top: 16, zIndex: 1 }}
           >
             <Alert severity="error" elevation={1} sx={{ width: "100%" }}>
               Cliente não encontrado!

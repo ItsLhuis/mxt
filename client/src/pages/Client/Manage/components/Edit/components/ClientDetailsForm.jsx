@@ -33,8 +33,10 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
     description: client?.[0]?.description || ""
   }
 
-  const isFormUnchanged =
-    watch().name === initialValues.name && watch().description === initialValues.description
+  const isFormUnchanged = () => {
+    const values = watch()
+    return values.name === initialValues.name && values.description === initialValues.description
+  }
 
   useEffect(() => {
     if (isClientFinished && client && client[0]) {
@@ -45,7 +47,7 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
   const { updateClient } = useClient()
 
   const onSubmit = async (data) => {
-    if (!isClientFinished || isFormUnchanged) return
+    if (!isClientFinished || isFormUnchanged()) return
 
     await updateClient
       .mutateAsync({
@@ -92,7 +94,7 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
               loading={updateClient.isPending}
               type="submit"
               variant="contained"
-              disabled={!isClientFinished || isFormUnchanged}
+              disabled={!isClientFinished || isFormUnchanged()}
             >
               Atualizar Detalhes
             </LoadingButton>

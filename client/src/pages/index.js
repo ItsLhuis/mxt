@@ -2,6 +2,8 @@ import { lazy } from "react"
 
 import Auth from "./Auth/Auth"
 
+import Company from "./Company/Company"
+
 const Dashboard = lazy(() => import("./Dashboard/Dashboard"))
 
 //Client
@@ -17,4 +19,14 @@ const CreateInvoice = lazy(() => import("./Invoice/Create/Create"))
 
 const Settings = lazy(() => import("./Settings/Settings"))
 
-export { Auth, Dashboard, ClientList, AddClient, EditClient, InvoiceList, CreateInvoice, Settings }
+export {
+  Auth,
+  Company,
+  Dashboard,
+  ClientList,
+  AddClient,
+  EditClient,
+  InvoiceList,
+  CreateInvoice,
+  Settings
+}

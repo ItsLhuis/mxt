@@ -293,12 +293,7 @@ input[type=number]::-webkit-outer-spin-button {
   box-shadow: rgba(0, 0, 0, 0.24) -40px 40px 80px -8px !important
 }
 
-.MuiPaper-elevation1,
-.MuiPaper-elevation2,
-.MuiPaper-elevation3,
-.MuiPaper-elevation4,
-.MuiPaper-elevation5,
-.MuiPaper-elevation6 {
+.MuiPaper-elevation {
   box-shadow: 0 0 0.465rem var(--boxShadow) !important;
 }
 
@@ -571,6 +566,11 @@ input[type=number]::-webkit-outer-spin-button {
   max-height: 320px;
   overflow: hidden;
   overflow-y: auto;
+}
+
+.tiptap-fullscreen .tiptap,
+.tiptap-fullscreen .tiptap-menubar {
+  border-radius: 0;
 }
 
 .tiptap-editor {

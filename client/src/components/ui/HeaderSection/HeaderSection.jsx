@@ -12,7 +12,7 @@ const HeaderSection = ({ title, description, icon }) => {
         alignItems: "center",
         gap: 1,
         padding: 3,
-        paddingBottom: 0
+        paddingBottom: 1
       }}
     >
       {icon}

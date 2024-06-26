@@ -38,12 +38,27 @@ const Modal = ({
   data,
   placeholder,
   buttonStructure,
+  disabled = false,
   children
 }) => {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"))
 
   const [load, setLoad] = useState(false)
+
+  const removeButtonRef = useRef(null)
+
+  useEffect(() => {
+    if (!open && mode !== "delete") return
+
+    const timer = setTimeout(() => {
+      if (open && removeButtonRef.current) {
+        removeButtonRef.current.focus()
+      }
+    }, 100)
+
+    return () => clearTimeout(timer)
+  }, [open])
 
   const handleClose = () => {
     if (!load) {
@@ -57,13 +72,9 @@ const Modal = ({
 
     try {
       await onSubmit()
-      
-      onClose()
-      setTimeout(() => {
-        setLoad(false)
-      }, 200)
+
+      setLoad(false)
     } catch (error) {
-      onClose()
       setLoad(false)
     }
   }
@@ -139,7 +150,13 @@ const Modal = ({
             >
               {cancelButtonText}
             </LoadingButton>
-            <LoadingButton loading={load} variant="contained" color="error" onClick={handleSubmit}>
+            <LoadingButton
+              ref={removeButtonRef}
+              loading={load}
+              variant="contained"
+              color="error"
+              onClick={handleSubmit}
+            >
               {!title ? "Eliminar" : title}
             </LoadingButton>
           </Box>
@@ -204,7 +221,13 @@ const Modal = ({
             >
               {cancelButtonText}
             </LoadingButton>
-            <LoadingButton loading={load} type="submit" variant="contained" onClick={handleSubmit}>
+            <LoadingButton
+              loading={load}
+              type="submit"
+              variant="contained"
+              onClick={handleSubmit}
+              disabled={disabled}
+            >
               {submitButtonText}
             </LoadingButton>
           </Box>
@@ -450,6 +473,7 @@ Modal.propTypes = {
       )
     }
   },
+  disabled: PropTypes.bool,
   children: function (props, propName, componentName) {
     if (props.mode !== "delete" && props.mode !== "data" && props[propName] === undefined) {
       return new Error(

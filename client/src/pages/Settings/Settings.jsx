@@ -3,12 +3,12 @@ import React, { Suspense, useState, useLayoutEffect } from "react"
 import { useAuth } from "@contexts/auth"
 
 import { Box, Container, Tabs, Tab } from "@mui/material"
-import { Person, Dns } from "@mui/icons-material"
+import { Person, Business, Dns } from "@mui/icons-material"
 import SettingsIcon from "@mui/icons-material/Settings"
 import SecurityIcon from "@mui/icons-material/Security"
 
 import { PageLoader, HeaderPage } from "@components/ui"
-import { Account, AppSettings, Security, Server } from "./components"
+import { Account, AppSettings, Company, Security, Server } from "./components"
 
 import { motion } from "framer-motion"
 
@@ -16,7 +16,8 @@ const allTabsInfo = [
   { id: 0, name: "Conta", icon: <Person />, component: <Account /> },
   { id: 1, name: "Definições", icon: <SettingsIcon />, component: <AppSettings /> },
   { id: 2, name: "Segurança", icon: <SecurityIcon />, component: <Security /> },
-  { id: 3, name: "Servidor", icon: <Dns />, component: <Server /> }
+  { id: 3, name: "Empresa", icon: <Business />, component: <Company /> },
+  { id: 4, name: "Servidor", icon: <Dns />, component: <Server /> }
 ]
 
 const TabPanel = (props) => {
@@ -55,12 +56,17 @@ const Settings = () => {
   }
 
   useLayoutEffect(() => {
+    let filteredTabs = allTabsInfo
+
     if (role === "Funcionário") {
-      setTabsInfo(allTabsInfo.filter((tab) => tab.name !== "Servidor"))
-    } else {
-      setTabsInfo(allTabsInfo)
+      filteredTabs = allTabsInfo.filter((tab) => tab.name !== "Empresa" && tab.name !== "Servidor")
     }
-    setValue(0)
+
+    if (role === "Administrador") {
+      filteredTabs = allTabsInfo.filter((tab) => tab.name !== "Empresa")
+    }
+
+    setTabsInfo(filteredTabs)
   }, [role])
 
   return (

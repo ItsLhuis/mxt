@@ -10,14 +10,6 @@ import { AnnualActivities, FinancialStatistics, Summary, ReparationsStates } fro
 import { motion } from "framer-motion"
 
 const Dashboard = () => {
-  const { hideLoader } = useLoader()
-
-  useEffect(() => {
-    setTimeout(() => {
-      hideLoader()
-    }, 1000)
-  }, [])
-
   return (
     <Suspense fallback={<PageLoader />}>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>

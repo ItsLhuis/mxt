@@ -7,8 +7,9 @@ const Company = require("@models/company")
 
 const checkCompany = tryCatch(async (req, res, next) => {
   const company = await Company.find()
+  const companyLogo = await Company.findLogo()
 
-  if (company.length <= 0) {
+  if (company.length <= 0 || !companyLogo[0].logo) {
     throw new AppError(
       400,
       NON_INITIALIZED_COMPANY,

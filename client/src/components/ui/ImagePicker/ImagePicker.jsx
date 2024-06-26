@@ -1,27 +1,41 @@
 import PropTypes from "prop-types"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
-import { Box, Typography, IconButton, Skeleton } from "@mui/material"
+import { Box, Typography, IconButton, Skeleton, Stack } from "@mui/material"
 import { PhotoCamera } from "@mui/icons-material"
 
 import { Loadable, Avatar } from ".."
 
-const ImagePicker = ({ image, setImage, alt, name, size = 120, sx }) => {
-  const [error, setError] = useState(false)
+const ImagePicker = ({
+  image,
+  onChange,
+  error,
+  withLoadingEffect = true,
+  alt,
+  name,
+  size = 120,
+  circular = true,
+  sx
+}) => {
+  const [imageError, setImageError] = useState(false)
+
+  useEffect(() => {
+    setImageError(error)
+  }, [error])
 
   const handleChange = (e) => {
     const selectedFile = e.target.files[0]
     if (selectedFile) {
       if (selectedFile.type.startsWith("image/")) {
         if (selectedFile.size <= 5 * 1024 * 1024) {
-          setImage(selectedFile)
-          setError(false)
+          onChange(selectedFile)
+          setImageError(false)
         } else {
-          setError(true)
+          setImageError(true)
         }
       } else {
-        setError(true)
+        setImageError(true)
       }
     }
   }
@@ -35,7 +49,14 @@ const ImagePicker = ({ image, setImage, alt, name, size = 120, sx }) => {
   }
 
   return (
-    <Box>
+    <Stack
+      sx={{
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center"
+      }}
+    >
       <input
         type="file"
         id="image-input"
@@ -49,18 +70,17 @@ const ImagePicker = ({ image, setImage, alt, name, size = 120, sx }) => {
         sx={{
           position: "relative",
           display: "inline-block",
-          borderRadius: "50%",
+          borderRadius: circular ? "50%" : "8px",
           "&:hover > .hover-upload-image": { opacity: 1 },
           cursor: "pointer"
         }}
       >
-        <Box
+        <Stack
           sx={{
-            display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            borderRadius: "50%",
-            border: error ? "2px dashed rgb(211, 47, 47)" : "2px dashed var(--outline)",
+            borderRadius: circular ? "50%" : "8px",
+            border: imageError ? "2px dashed rgb(211, 47, 47)" : "2px dashed var(--outline)",
             padding: 1
           }}
         >
@@ -69,6 +89,8 @@ const ImagePicker = ({ image, setImage, alt, name, size = 120, sx }) => {
             LoadingComponent={<Skeleton variant="circular" height={size} width={size} />}
             LoadedComponent={
               <Avatar
+                circular={circular}
+                withLoadingEffect={withLoadingEffect}
                 alt={alt}
                 src={
                   isURL(image)
@@ -88,7 +110,7 @@ const ImagePicker = ({ image, setImage, alt, name, size = 120, sx }) => {
               />
             }
           />
-        </Box>
+        </Stack>
         <Box
           className="hover-upload-image"
           sx={{
@@ -105,7 +127,7 @@ const ImagePicker = ({ image, setImage, alt, name, size = 120, sx }) => {
             alignItems: "center",
             textAlign: "center",
             color: "rgb(228, 225, 230)",
-            borderRadius: "50%",
+            borderRadius: circular ? "50%" : "8px",
             cursor: "pointer",
             margin: 1,
             transition: "opacity 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
@@ -117,15 +139,15 @@ const ImagePicker = ({ image, setImage, alt, name, size = 120, sx }) => {
             component="p"
             sx={{ paddingLeft: 1.5, paddingRight: 1.5, fontSize: 11, fontWeight: 600 }}
           >
-            Mudar Imagem
+            Selecionar Imagem
           </Typography>
         </Box>
         <IconButton
           className="primary"
           sx={{
             position: "absolute",
-            right: 0,
-            bottom: 0
+            right: circular ? 0 : -8,
+            bottom: circular ? 0 : -8
           }}
           onClick={handleClick}
         >
@@ -139,21 +161,23 @@ const ImagePicker = ({ image, setImage, alt, name, size = 120, sx }) => {
           marginLeft: 3,
           marginRight: 3,
           marginTop: 2,
-          color: error ? "rgb(211, 47, 47)" : "var(--outline)",
+          color: imageError ? "rgb(211, 47, 47)" : "var(--outline)",
           fontSize: "0.70rem"
         }}
       >
         Permitido *.jpeg, *.jpg e *.png <br></br> Tamanho máximo de 5 Mb
       </Typography>
-    </Box>
+    </Stack>
   )
 }
 
 ImagePicker.propTypes = {
   image: PropTypes.any,
-  setImage: PropTypes.func.isRequired,
-  alt: PropTypes.string.isRequired,
-  size: PropTypes.arrayOf(PropTypes.number),
+  onChange: PropTypes.func.isRequired,
+  error: PropTypes.bool,
+  alt: PropTypes.string,
+  size: PropTypes.number,
+  circular: PropTypes.bool,
   sx: PropTypes.object
 }
 

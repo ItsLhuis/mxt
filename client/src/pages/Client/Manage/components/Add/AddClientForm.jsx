@@ -70,7 +70,7 @@ const AddClientForm = () => {
         </Paper>
         <Box sx={{ marginLeft: "auto" }}>
           <LoadingButton loading={createNewClient.isPending} type="submit" variant="contained">
-            Criar Cliente
+            Adicionar Cliente
           </LoadingButton>
         </Box>
       </Stack>

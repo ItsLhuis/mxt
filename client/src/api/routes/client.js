@@ -25,6 +25,20 @@ const addContactClient = async ({ clientId, type, contact, description }) => {
   return response.data
 }
 
+const updateContactClient = async ({ clientId, contactId, type, contact, description }) => {
+  const response = await api.put(`/clients/${clientId}/contacts/${contactId}`, {
+    type,
+    contact,
+    description
+  })
+  return response.data
+}
+
+const deleteContactClient = async ({ clientId, contactId }) => {
+  const response = await api.delete(`/clients/${clientId}/contacts/${contactId}`)
+  return response.data
+}
+
 const addAddressClient = async ({ clientId, country, city, locality, address, postalCode }) => {
   const response = await api.post(`/clients/${clientId}/addresses`, {
     country,
@@ -33,6 +47,30 @@ const addAddressClient = async ({ clientId, country, city, locality, address, po
     address,
     postalCode
   })
+  return response.data
+}
+
+const updateAddressClient = async ({
+  clientId,
+  addressId,
+  country,
+  city,
+  locality,
+  address,
+  postalCode
+}) => {
+  const response = await api.put(`/clients/${clientId}/addresses/${addressId}`, {
+    country,
+    city,
+    locality,
+    address,
+    postalCode
+  })
+  return response.data
+}
+
+const deleteAddressClient = async ({ clientId, addressId }) => {
+  const response = await api.delete(`/clients/${clientId}/addresses/${addressId}`)
   return response.data
 }
 
@@ -47,6 +85,10 @@ export {
   createClient,
   updateClient,
   addContactClient,
+  updateContactClient,
+  deleteContactClient,
   addAddressClient,
+  updateAddressClient,
+  deleteAddressClient,
   deleteClient
 }

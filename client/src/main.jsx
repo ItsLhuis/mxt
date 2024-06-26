@@ -23,7 +23,7 @@ const queryClient = new QueryClient({
       staleTime: 2 * 60 * 1000,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
-      retry: 2,
+      retry: 1,
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 20000)
     }
   }

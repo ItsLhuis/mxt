@@ -81,7 +81,6 @@ const Account = () => {
         <Paper elevation={1}>
           <Stack
             sx={{
-              display: "flex",
               alignItems: "center",
               justifyContent: "center",
               textAlign: "center",
@@ -91,7 +90,7 @@ const Account = () => {
           >
             <ImagePicker
               image={avatar}
-              setImage={setAvatar}
+              onChange={setAvatar}
               alt={isUserLoading ? "Avatar de utilizador" : user.username}
               name={!isUserLoading ? user.username : ""}
             />

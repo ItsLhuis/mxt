@@ -4,6 +4,9 @@ import { useCache } from "@hooks/server/useCache"
 
 import { LoadingButton } from "@mui/lab"
 import { Paper, Box, ListItemText, Typography } from "@mui/material"
+import { Dns } from "@mui/icons-material"
+
+import { HeaderSection } from "@components/ui"
 
 const Notifications = () => {
   const { deleteCache } = useCache()
@@ -15,10 +18,12 @@ const Notifications = () => {
 
   return (
     <Paper elevation={1}>
-      <Box sx={{ padding: 3 }}>
-        <Typography variant="h5" component="h5">
-          Servidor
-        </Typography>
+      <HeaderSection
+        title="Servidor"
+        description="Definições do servidor"
+        icon={<Dns />}
+      />
+      <Box sx={{ padding: 3, paddingTop: 0 }}>
         <Box sx={{ marginTop: 2 }}>
           <Box
             sx={{

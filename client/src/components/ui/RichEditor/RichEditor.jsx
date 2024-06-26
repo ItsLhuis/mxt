@@ -104,7 +104,7 @@ const RichEditor = ({ label, value, onChange, isLoading = false }) => {
   return (
     <Loadable
       isLoading={!isFinished}
-      LoadingComponent={<Skeleton variant="rounded" width="100%" height={426} />}
+      LoadingComponent={<Skeleton variant="rounded" width="100%" height={425} />}
       LoadedComponent={
         <Box>
           <Typography variant="p" component="p" sx={{ marginBottom: 1.5 }}>
@@ -113,13 +113,14 @@ const RichEditor = ({ label, value, onChange, isLoading = false }) => {
           <MenuBar editor={editor} fullscreen={fullscreen} toggleFullscreen={toggleFullscreen} />
           {fullscreen && (
             <Stack
+              className="tiptap-fullscreen"
               sx={{
                 position: "fixed",
-                top: 14,
-                left: 14,
+                top: 0,
+                left: 0,
                 zIndex: 900,
-                width: "calc(100% - 28px)",
-                height: "calc(100% - 28px)",
+                height: "100%",
+                width: "100%",
                 overflow: "hidden"
               }}
             >

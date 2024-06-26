@@ -7,7 +7,7 @@ import { clientAddressSchema } from "@schemas/client"
 import { useClient } from "@hooks/server/useClient"
 
 import { LoadingButton } from "@mui/lab"
-import { Grid, Box, Stack, FormControl, TextField } from "@mui/material"
+import { Grid, Box, Stack, FormControl, TextField, useTheme, useMediaQuery } from "@mui/material"
 import { Place } from "@mui/icons-material"
 
 import { HeaderSection } from "@components/ui"
@@ -16,6 +16,9 @@ import { showSuccessToast, showErrorToast } from "@config/toast"
 
 const ClientAddressForm = ({ client, isLoading, isError }) => {
   const isClientFinished = !isLoading && !isError
+
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"))
 
   const {
     register,
@@ -98,27 +101,23 @@ const ClientAddressForm = ({ client, isLoading, isError }) => {
               </FormControl>
             </Grid>
             <Grid item xs={12} md={12} lg={6}>
-              <Stack sx={{ flexDirection: "row", gap: 2 }}>
-                <Grid item xs={12} md={12} lg={8}>
-                  <FormControl fullWidth>
-                    <TextField
-                      {...register("address")}
-                      label="Morada"
-                      error={!!errors.address}
-                      helperText={errors.address?.message}
-                    />
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} md={12} lg={4}>
-                  <FormControl fullWidth>
-                    <TextField
-                      {...register("postalCode")}
-                      label="Código Postal"
-                      error={!!errors.postalCode}
-                      helperText={errors.postalCode?.message}
-                    />
-                  </FormControl>
-                </Grid>
+              <Stack sx={{ flexDirection: isSmallScreen ? "column" : "row", gap: 2 }}>
+                <FormControl fullWidth>
+                  <TextField
+                    {...register("address")}
+                    label="Morada"
+                    error={!!errors.address}
+                    helperText={errors.address?.message}
+                  />
+                </FormControl>
+                <FormControl fullWidth>
+                  <TextField
+                    {...register("postalCode")}
+                    label="Código Postal"
+                    error={!!errors.postalCode}
+                    helperText={errors.postalCode?.message}
+                  />
+                </FormControl>
               </Stack>
             </Grid>
           </Grid>

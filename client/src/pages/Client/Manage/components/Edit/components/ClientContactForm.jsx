@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -61,17 +61,13 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
 
   const watchType = watch("type", "")
 
-  useEffect(() => {
-    if (watchType === "Telefone" || watchType === "Telemóvel") {
-      setValue("contact", "+351")
-    } else {
-      resetField("contact")
-    }
-  }, [watchType, setValue, resetField])
-
   return (
     <Stack>
-      <HeaderSection title="Contacto" description="Adicionar novo contacto ao cliente" icon={<Phone />} />
+      <HeaderSection
+        title="Contacto"
+        description="Adicionar novo contacto ao cliente"
+        icon={<Phone />}
+      />
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack sx={{ padding: 3, gap: 3 }}>
           <FormControl fullWidth>
@@ -112,7 +108,7 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
                     render={({ field }) => (
                       <MuiTelInput
                         {...field}
-                        value={field.value || "+"}
+                        value={field.value || "+351"}
                         defaultCountry={"pt"}
                         label={watchType}
                         variant="outlined"

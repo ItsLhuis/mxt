@@ -57,12 +57,15 @@ const ClientTable = () => {
         deleteClient
           .mutateAsync({ clientId: deleteClientModal.clientId })
           .then(() => {
+            closeDeleteClientModal()
             resolve()
           })
           .catch(() => {
+            closeDeleteClientModal()
             reject()
           })
       } else {
+        closeDeleteClientModal()
         reject()
       }
     })
@@ -854,7 +857,7 @@ const ClientTable = () => {
           onClose={closeDeleteClientModal}
           onSubmit={handleDeleteClient}
           description="Tem a certeza que deseja eliminar este cliente?"
-          subDescription="Ao eliminar este cliente, todos os dados relacionados, incluindo contactos, moradas, equipamentos e reparações associadas, serão removidos permanentemente."
+          subDescription="Ao eliminar este cliente, todos os dados relacionados, incluindo contactos, moradas, equipamentos e reparações associadas, serão removidos de forma permanente."
         />
       </Box>
     </Paper>

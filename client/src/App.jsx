@@ -12,7 +12,7 @@ import { Toaster } from "react-hot-toast"
 
 import { NotFound } from "@components/ui"
 import { Body } from "@components"
-import { Auth } from "@pages"
+import { Auth, Company } from "@pages"
 
 import { Loader } from "@components/ui"
 
@@ -21,7 +21,7 @@ import { AnimatePresence } from "framer-motion"
 function App() {
   const location = useLocation()
 
-  const { isAuth, isLoading } = useAuth()
+  const { isAuth, isAuthCompany, isLoading } = useAuth()
   const { loader } = useLoader()
   const { dataTheme } = useTheme()
 
@@ -115,51 +115,55 @@ function App() {
     }
   })
 
+  const renderApp = () => {
+    if (isAuthCompany) {
+      return <Company />
+    }
+
+    if (!isAuth) {
+      return <Auth />
+    }
+
+    if (location.pathname === "/404") {
+      return <NotFound />
+    }
+
+    return (
+      <div className="app">
+        <div className="container-main">
+          <Body toggleSidebarSize={toggleSidebarSize} sidebarSize={sidebarSize} />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <AnimatePresence>
       <ThemeProvider theme={theme}>
-        <>
-          <Loader visible={loader} />
-          {!isLoading && (
-            <>
-              {location.pathname === "/404" && isAuth ? (
-                <NotFound />
-              ) : isAuth ? (
-                <>
-                  <div className="app">
-                    <div className="container-main">
-                      <Body toggleSidebarSize={toggleSidebarSize} sidebarSize={sidebarSize} />
-                    </div>
-                  </div>
-                  <Toaster
-                    position="top-right"
-                    containerStyle={{
-                      zIndex: 1000,
-                      inset: "24px"
-                    }}
-                    toastOptions={{
-                      duration: 4000,
-                      style: {
-                        display: "flex",
-                        justifyContent: "flex-start",
-                        alignItems: "flex-start",
-                        background: "var(--elevation-level5)",
-                        color: "var(--onSurface)",
-                        fontWeight: 600,
-                        fontSize: ".875rem",
-                        padding: 0,
-                        paddingLeft: 16,
-                        paddingBlock: 16
-                      }
-                    }}
-                  />
-                </>
-              ) : (
-                <Auth />
-              )}
-            </>
-          )}
-        </>
+        <Loader visible={loader} />
+        {!isLoading && <> {renderApp()} </>}
+        <Toaster
+          position="top-right"
+          containerStyle={{
+            zIndex: 1000,
+            inset: "24px"
+          }}
+          toastOptions={{
+            duration: 4000,
+            style: {
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+              background: "var(--elevation-level5)",
+              color: "var(--onSurface)",
+              fontWeight: 600,
+              fontSize: ".875rem",
+              padding: 0,
+              paddingLeft: 16,
+              paddingBlock: 16
+            }
+          }}
+        />
       </ThemeProvider>
     </AnimatePresence>
   )

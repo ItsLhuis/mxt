@@ -1,6 +1,9 @@
-import React, { useMemo } from "react"
+import React, { useState, useMemo } from "react"
+
+import { useAuth } from "@contexts/auth"
 
 import { BASE_URL } from "@api"
+import { useClient } from "@hooks/server/useClient"
 
 import { Box, Stack, Divider, ListItemText, Typography, Tooltip, IconButton } from "@mui/material"
 import { Phone, MoreVert, Edit, Delete } from "@mui/icons-material"
@@ -12,14 +15,65 @@ import {
   TableSkeleton,
   Avatar,
   ButtonDropDownSelect,
-  ListButton
+  ListButton,
+  Modal
 } from "@components/ui"
+import ClientContactEditModal from "./ClientContactEditModal"
 
 import { formatDate, formatTime } from "@utils/format/date"
 import { formatPhoneNumber } from "@utils/format/phone"
 
 const ClientContactTable = ({ client, isLoading, isError }) => {
   const isClientFinished = !isLoading && !isError
+
+  const { role } = useAuth()
+
+  const { deleteContactClient } = useClient()
+
+  const [clientEditContactModal, setClientContactEditModal] = useState({
+    isOpen: false,
+    clientContact: null
+  })
+  const openClientContactEditModal = (clientContact) => {
+    setClientContactEditModal({ isOpen: true, clientContact: clientContact })
+  }
+  const closeClientContactEditModal = () => {
+    setClientContactEditModal({ isOpen: false, clientContact: null })
+  }
+
+  const [clientDeleteContactModal, setClientDeleteContactModal] = useState({
+    isOpen: false,
+    clientContact: null
+  })
+  const openClientDeleteContactModal = (clientContact) => {
+    setClientDeleteContactModal({ isOpen: true, clientContact: clientContact })
+  }
+  const closeClientDeleteContactModal = () => {
+    setClientDeleteContactModal({ isOpen: false, clientContact: null })
+  }
+
+  const handleDeleteClientContact = () => {
+    return new Promise((resolve, reject) => {
+      if (clientDeleteContactModal.clientContact) {
+        deleteContactClient
+          .mutateAsync({
+            clientId: clientDeleteContactModal.clientContact.client_id,
+            contactId: clientDeleteContactModal.clientContact.id
+          })
+          .then(() => {
+            closeClientDeleteContactModal()
+            resolve()
+          })
+          .catch(() => {
+            closeClientDeleteContactModal()
+            reject()
+          })
+      } else {
+        closeClientDeleteContactModal()
+        reject()
+      }
+    })
+  }
 
   const clientContactsTableColumns = useMemo(
     () => [
@@ -190,15 +244,19 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
                 {
                   label: "Editar",
                   icon: <Edit fontSize="small" />,
-                  onClick: () => console.log(row)
+                  onClick: () => openClientContactEditModal(row)
                 },
-                {
-                  label: "Eliminar",
-                  icon: <Delete fontSize="small" color="error" />,
-                  color: "error",
-                  divider: true,
-                  onClick: () => console.log(row)
-                }
+                ...(role !== "Funcionário"
+                  ? [
+                      {
+                        label: "Eliminar",
+                        icon: <Delete fontSize="small" color="error" />,
+                        color: "error",
+                        divider: true,
+                        onClick: () => openClientDeleteContactModal(row)
+                      }
+                    ]
+                  : [])
               ]}
             />
           </ButtonDropDownSelect>
@@ -236,6 +294,20 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
           borderColor: "var(--elevation-level5)",
           borderWidth: 1
         }}
+      />
+      <ClientContactEditModal
+        clientContact={clientEditContactModal.clientContact}
+        open={clientEditContactModal.isOpen}
+        onClose={closeClientContactEditModal}
+      />
+      <Modal
+        mode="delete"
+        title="Eliminar Contacto"
+        open={clientDeleteContactModal.isOpen}
+        onClose={closeClientDeleteContactModal}
+        onSubmit={handleDeleteClientContact}
+        description="Tem a certeza que deseja eliminar este contacto?"
+        subDescription="Ao eliminar este contacto, os dados serão removidos de forma permanente."
       />
     </Stack>
   )

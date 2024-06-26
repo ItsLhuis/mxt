@@ -8,7 +8,7 @@
     </mj-attributes>
   </mj-head>
   <mj-body background-color="rgb(245, 243, 255)">
-    <mj-wrapper padding="24px">
+    <mj-wrapper padding="16px">
       <mj-section padding-top="16px" background-color="rgb(235, 232, 248)" border-radius="8px 8px 0 0">
         <mj-column width="100%">
           <mj-text font-weight="700" font-size="32px" padding="24px">{{ data.companyName }}</mj-text>

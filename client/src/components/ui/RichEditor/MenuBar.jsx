@@ -124,6 +124,7 @@ const MenuBar = ({ editor, fullscreen, toggleFullscreen }) => {
 
   return (
     <Stack
+      className="tiptap-menubar"
       sx={{
         borderInline: "2px solid var(--elevation-level5)",
         borderTop: "2px solid var(--elevation-level5)",

@@ -6,7 +6,11 @@ import {
   createClient,
   updateClient as updateClientApi,
   addContactClient,
+  updateContactClient as updateContactClientApi,
+  deleteContactClient as deleteContactClientApi,
   addAddressClient,
+  updateAddressClient as updateAddressClientApi,
+  deleteAddressClient as deleteAddressClientApi,
   deleteClient as deleteClientApi
 } from "@api/routes/client"
 
@@ -21,7 +25,7 @@ export const useClient = () => {
     onSuccess: (data) => {
       queryClient.setQueryData(["clients"], data)
     },
-    refetchInterval: 10000
+    refetchInterval: 60000
   })
 
   const findClientById = (clientId) => {
@@ -44,29 +48,81 @@ export const useClient = () => {
 
   const updateClient = useMutation({
     mutationFn: updateClientApi,
-    onSuccess: async () => {
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
       await queryClient.invalidateQueries(["clients"])
+      await queryClient.invalidateQueries(["clients", clientId])
     }
   })
 
   const addNewContactClient = useMutation({
     mutationFn: addContactClient,
-    onSuccess: async () => {
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
       await queryClient.invalidateQueries(["clients"])
+      await queryClient.invalidateQueries(["clients", clientId])
+    }
+  })
+
+  const updateContactClient = useMutation({
+    mutationFn: updateContactClientApi,
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
+      await queryClient.invalidateQueries(["clients"])
+      await queryClient.invalidateQueries(["clients", clientId])
+    }
+  })
+
+  const deleteContactClient = useMutation({
+    mutationFn: deleteContactClientApi,
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
+      await queryClient.invalidateQueries(["clients"])
+      await queryClient.invalidateQueries(["clients", clientId])
+      showSuccessToast("Contato removido com sucesso!")
+    },
+    onError: () => {
+      showErrorToast("Erro ao remover contato!")
     }
   })
 
   const addNewAddressClient = useMutation({
     mutationFn: addAddressClient,
-    onSuccess: async () => {
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
       await queryClient.invalidateQueries(["clients"])
+      await queryClient.invalidateQueries(["clients", clientId])
+    }
+  })
+
+  const updateAddressClient = useMutation({
+    mutationFn: updateAddressClientApi,
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
+      await queryClient.invalidateQueries(["clients"])
+      await queryClient.invalidateQueries(["clients", clientId])
+    }
+  })
+
+  const deleteAddressClient = useMutation({
+    mutationFn: deleteAddressClientApi,
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
+      await queryClient.invalidateQueries(["clients"])
+      await queryClient.invalidateQueries(["clients", clientId])
+      showSuccessToast("Morada eliminada com sucesso!")
+    },
+    onError: () => {
+      showErrorToast("Erro ao eliminar morada!")
     }
   })
 
   const deleteClient = useMutation({
     mutationFn: deleteClientApi,
-    onSuccess: async () => {
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
       await queryClient.invalidateQueries(["clients"])
+      await queryClient.removeQueries(["clients", clientId])
       showSuccessToast("Cliente eliminado com sucesso!")
     },
     onError: () => {
@@ -80,7 +136,11 @@ export const useClient = () => {
     createNewClient,
     updateClient,
     addNewContactClient,
+    updateContactClient,
+    deleteContactClient,
     addNewAddressClient,
+    updateAddressClient,
+    deleteAddressClient,
     deleteClient
   }
 }

@@ -10,8 +10,9 @@ import {
   TextField,
   Stack
 } from "@mui/material"
+import SecurityIcon from "@mui/icons-material/Security"
 
-import { Modal } from "@components/ui"
+import { HeaderSection, Modal } from "@components/ui"
 
 import { showSuccessToast } from "@config/toast"
 
@@ -33,10 +34,12 @@ const Security = () => {
   return (
     <>
       <Paper elevation={1}>
-        <Box sx={{ padding: 3 }}>
-          <Typography variant="h5" component="h5">
-            Segurança
-          </Typography>
+        <HeaderSection
+          title="Segurança"
+          description="Definições de Segurança"
+          icon={<SecurityIcon />}
+        />
+        <Box sx={{ padding: 3, paddingTop: 0 }}>
           <Box sx={{ marginTop: 2 }}>
             <Box
               sx={{
@@ -55,7 +58,7 @@ const Security = () => {
                   Altere a sua senha
                 </Typography>
               </ListItemText>
-              <Button variant="contained" onClick={() => setOpen(true)}>
+              <Button variant="contained" color="error" onClick={() => setOpen(true)}>
                 Alterar Senha
               </Button>
             </Box>

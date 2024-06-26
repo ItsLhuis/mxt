@@ -1,6 +1,9 @@
-import React, { useMemo } from "react"
+import React, { useState, useMemo } from "react"
+
+import { useAuth } from "@contexts/auth"
 
 import { BASE_URL } from "@api"
+import { useClient } from "@hooks/server/useClient"
 
 import { Box, Stack, Divider, ListItemText, Typography, Tooltip, IconButton } from "@mui/material"
 import { Place, MoreVert, Edit, Delete } from "@mui/icons-material"
@@ -12,13 +15,64 @@ import {
   TableSkeleton,
   Avatar,
   ButtonDropDownSelect,
-  ListButton
+  ListButton,
+  Modal
 } from "@components/ui"
+import ClientAddressEditModal from "./ClientAddressEditModal"
 
 import { formatDate, formatTime } from "@utils/format/date"
 
 const ClientAddressTable = ({ client, isLoading, isError }) => {
   const isClientFinished = !isLoading && !isError
+
+  const { role } = useAuth()
+
+  const { deleteAddressClient } = useClient()
+
+  const [clientEditAddressModal, setClientAddressEditModal] = useState({
+    isOpen: false,
+    clientAddress: null
+  })
+  const openClientAddressEditModal = (clientAddress) => {
+    setClientAddressEditModal({ isOpen: true, clientAddress: clientAddress })
+  }
+  const closeClientAddressEditModal = () => {
+    setClientAddressEditModal({ isOpen: false, clientAddress: null })
+  }
+
+  const [clientDeleteAddressModal, setClientDeleteAddressModal] = useState({
+    isOpen: false,
+    clientAddress: null
+  })
+  const openClientDeleteAddressModal = (clientAddress) => {
+    setClientDeleteAddressModal({ isOpen: true, clientAddress: clientAddress })
+  }
+  const closeClientDeleteAddressModal = () => {
+    setClientDeleteAddressModal({ isOpen: false, clientAddress: null })
+  }
+
+  const handleDeleteClientAddress = () => {
+    return new Promise((resolve, reject) => {
+      if (clientDeleteAddressModal.clientAddress) {
+        deleteAddressClient
+          .mutateAsync({
+            clientId: clientDeleteAddressModal.clientAddress.client_id,
+            addressId: clientDeleteAddressModal.clientAddress.id
+          })
+          .then(() => {
+            closeClientDeleteAddressModal()
+            resolve()
+          })
+          .catch(() => {
+            closeClientDeleteAddressModal()
+            reject()
+          })
+      } else {
+        closeClientDeleteAddressModal()
+        reject()
+      }
+    })
+  }
 
   const clientAddressesTableColumns = useMemo(
     () => [
@@ -185,6 +239,44 @@ const ClientAddressTable = ({ client, isLoading, isError }) => {
             )}
           </>
         )
+      },
+      {
+        id: "moreOptions",
+        align: "right",
+        sortable: false,
+        renderComponent: ({ row }) => (
+          <ButtonDropDownSelect
+            mode="custom"
+            customButton={
+              <Tooltip title="Mais opções" placement="bottom" sx={{ margin: -1 }}>
+                <IconButton>
+                  <MoreVert />
+                </IconButton>
+              </Tooltip>
+            }
+          >
+            <ListButton
+              buttons={[
+                {
+                  label: "Editar",
+                  icon: <Edit fontSize="small" />,
+                  onClick: () => openClientAddressEditModal(row)
+                },
+                ...(role !== "Funcionário"
+                  ? [
+                      {
+                        label: "Eliminar",
+                        icon: <Delete fontSize="small" color="error" />,
+                        color: "error",
+                        divider: true,
+                        onClick: () => openClientDeleteAddressModal(row)
+                      }
+                    ]
+                  : [])
+              ]}
+            />
+          </ButtonDropDownSelect>
+        )
       }
     ],
     []
@@ -218,6 +310,20 @@ const ClientAddressTable = ({ client, isLoading, isError }) => {
           borderColor: "var(--elevation-level5)",
           borderWidth: 1
         }}
+      />
+      <ClientAddressEditModal
+        clientAddress={clientEditAddressModal.clientAddress}
+        open={clientEditAddressModal.isOpen}
+        onClose={closeClientAddressEditModal}
+      />
+      <Modal
+        mode="delete"
+        title="Eliminar Morada"
+        open={clientDeleteAddressModal.isOpen}
+        onClose={closeClientDeleteAddressModal}
+        onSubmit={handleDeleteClientAddress}
+        description="Tem a certeza que deseja eliminar esta morada?"
+        subDescription="Ao eliminar esta morada, os dados serão removidos de forma permanente."
       />
     </Stack>
   )

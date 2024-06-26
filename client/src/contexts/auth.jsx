@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 
 import { useLoader } from "@contexts/loader"
 
-import { getUserProfile } from "@api/routes/user"
+import { getUserProfile, getUserById } from "@api/routes/user"
 
 const AuthContext = createContext()
 
@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
   const { showLoader, hideLoader } = useLoader()
 
   const [isAuth, setIsAuth] = useState(false)
+  const [isAuthCompany, setIsAuthCompany] = useState(false)
   const [role, setRole] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -24,14 +25,22 @@ export const AuthProvider = ({ children }) => {
       .then((data) => {
         setRole(data.role)
         setIsAuth(!!data)
+        getUserById(data.id)
+          .then(() => setIsAuthCompany(false))
+          .catch((error) => {
+            if (error.error.code === "COMP-001") {
+              navigate("/company")
+              setIsAuthCompany(true)
+              return
+            }
+
+            setIsAuth(false)
+          })
       })
-      .catch((error) => {
-        if (error.error.code === "COMP-001") {
-          navigate("/company")
-        }
+      .catch(() => {
         setIsAuth(false)
       })
-      .finally(() => setIsLoading(false))
+      .finally(() => setTimeout(() => setIsLoading(false), 200))
   }
 
   useLayoutEffect(() => {
@@ -48,6 +57,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     isAuth,
+    isAuthCompany,
     role,
     isLoading,
     reloadAuthStatus

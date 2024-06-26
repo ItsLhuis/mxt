@@ -281,6 +281,11 @@
 									"type": "text"
 								},
 								{
+									"key": "locality",
+									"value": "Espinho",
+									"type": "text"
+								},
+								{
 									"key": "country",
 									"value": "Portugal",
 									"type": "text"
@@ -292,7 +297,7 @@
 								},
 								{
 									"key": "phoneNumber",
-									"value": "+351 99999999 9",
+									"value": "+351 928055801",
 									"type": "text"
 								},
 								{
@@ -438,29 +443,13 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "username",
-									"value": "Luis",
-									"type": "text"
-								},
-								{
-									"key": "email",
-									"value": "itslhuis.dev@gmail.com",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "123123",
-									"type": "text"
-								},
-								{
-									"key": "role",
-									"value": "Funcionário",
-									"type": "text"
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"Luis\",\r\n    \"email\":\"itslhuis.dev@gmail.com\",\r\n    \"password\":\"123123\",\r\n    \"role\":\"Administrador\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
 							"raw": "{{base_url}}/users",
@@ -517,7 +506,7 @@
 								{
 									"key": "avatar",
 									"type": "file",
-									"src": "postman-cloud:///1ef2189e-4330-4600-83ab-411fff462ba7"
+									"src": "/C:/Users/luisr/OneDrive/Ambiente de Trabalho/react-app-template/src/assets/img/users/user-profile1.png"
 								}
 							]
 						},
@@ -593,13 +582,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/users/17",
+							"raw": "{{base_url}}/users/2",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"users",
-								"17"
+								"2"
 							]
 						},
 						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
@@ -929,7 +918,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"type\": \"E-mail\",\r\n    \"contact\": \"ana123123@gmail.com\"\r\n}",
+									"raw": "{\r\n    \"type\": \"Outro\",\r\n    \"contact\": \"asdadsdad\",\r\n    \"description\": \"Test\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -937,15 +926,15 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/clients/3/contacts/2",
+									"raw": "{{base_url}}/clients/2/contacts/3",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"clients",
-										"3",
+										"2",
 										"contacts",
-										"2"
+										"3"
 									]
 								},
 								"description": "This endpoint allows updating client information by making an HTTP PUT request to the specified URL. The request should include a payload in raw JSON format with the \"name\" and \"description\" fields.\n\n### Request Body\n\n- `name` (string, required): The name of the client.\n- `description` (string, required): Description of the client.\n    \n\n### Response\n\nThe endpoint returns a status code of 401 and a JSON object with the following properties:\n\n- `code` (number): Error code.\n- `message` (string): Error message.\n- `isOperational` (boolean): Indicates if the error is operational."
@@ -958,15 +947,15 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/clients/1/contacts/3",
+									"raw": "{{base_url}}/clients/9/contacts/4",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"clients",
-										"1",
+										"9",
 										"contacts",
-										"3"
+										"4"
 									]
 								}
 							},
@@ -1033,7 +1022,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"country\": \"Portugal\",\n    \"city\": \" Lisbon\",\n    \"locality\": \"Downtown\",\n    \"address\": \"123 Main Street\",\n    \"postalCode\": \"1000-001\"\n}\n",
+									"raw": "{\n    \"country\": \"Portugal\",\n    \"city\": \"Lisboa\",\n    \"locality\": \"Bairro Alto\",\n    \"address\": \"Travessa da Queimada, 12\",\n    \"postalCode\": \"1200-365\"\n}\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1041,13 +1030,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/clients/6/addresses",
+									"raw": "{{base_url}}/clients/1/addresses",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"clients",
-										"6",
+										"1",
 										"addresses"
 									]
 								},
@@ -1091,14 +1080,15 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/clients/contacts/23",
+									"raw": "{{base_url}}/clients/9/addresses/5",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"clients",
-										"contacts",
-										"23"
+										"9",
+										"addresses",
+										"5"
 									]
 								}
 							},

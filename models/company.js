@@ -10,6 +10,7 @@ const Company = {
         name,
         address,
         city,
+        locality,
         country,
         postal_code,
         phone_number,

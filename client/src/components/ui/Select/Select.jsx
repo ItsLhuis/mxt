@@ -14,7 +14,7 @@ import {
 import { KeyboardArrowDown } from "@mui/icons-material"
 
 const Select = forwardRef(
-  ({ label, data, value, size, shrink, error, helperText, onChange }, ref) => {
+  ({ label, data, value, size, shrink, error, helperText, onChange, ...props }, ref) => {
     const handleChange = (event) => {
       const value = event.target.value
       if (onChange) {
@@ -40,6 +40,7 @@ const Select = forwardRef(
           )}
           size={size}
           error={error}
+          {...props}
         >
           {data.map((item, index) => [
             <MenuItem
