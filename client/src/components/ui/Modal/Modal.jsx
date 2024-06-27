@@ -34,6 +34,7 @@ const Modal = ({
   mode = "normal",
   cancelButtonText = "Cancelar",
   submitButtonText = "Ok",
+  color = "primary",
   onSubmit,
   data,
   placeholder,
@@ -225,6 +226,7 @@ const Modal = ({
               loading={load}
               type="submit"
               variant="contained"
+              color={color}
               onClick={handleSubmit}
               disabled={disabled}
             >
@@ -442,6 +444,7 @@ Modal.propTypes = {
   mode: PropTypes.oneOf(["normal", "delete", "form", "data"]),
   cancelButtonText: PropTypes.string,
   submitButtonText: PropTypes.string,
+  color: PropTypes.string,
   onSubmit: function (props, propName, componentName) {
     if (
       props.mode === "form" &&

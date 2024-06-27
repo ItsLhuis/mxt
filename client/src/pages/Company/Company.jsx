@@ -6,7 +6,7 @@ import { useAuth } from "@contexts/auth"
 
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { companySchema } from "@schemas/company"
+import { initialCompanySchema } from "@schemas/company"
 
 import { useCompany } from "@hooks/server/useCompany"
 
@@ -22,9 +22,9 @@ import {
   useTheme,
   useMediaQuery
 } from "@mui/material"
-import { Business } from "@mui/icons-material"
 
 import { HeaderSection, ImagePicker } from "@components/ui"
+import { showErrorToast } from "@/config/toast"
 
 const Company = () => {
   const navigate = useNavigate()
@@ -40,7 +40,7 @@ const Company = () => {
     handleSubmit,
     formState: { errors }
   } = useForm({
-    resolver: zodResolver(companySchema)
+    resolver: zodResolver(initialCompanySchema)
   })
 
   const { updateCompany } = useCompany()
@@ -52,9 +52,7 @@ const Company = () => {
         reloadAuthStatus()
         navigate("/dashboard")
       })
-      .catch((error) => {
-        console.log(error)
-      })
+      .catch(() => showErrorToast("Erro ao atualizar empresa!"))
   }
 
   return (
@@ -72,7 +70,6 @@ const Company = () => {
           <HeaderSection
             title="Para continuar, precisa de atualizar os dados sobre a empresa"
             description="Posteriormente, poderá alterar estes dados"
-            icon={<Business />}
           />
           <form onSubmit={handleSubmit(onSubmit)}>
             <Stack>
@@ -95,13 +92,10 @@ const Company = () => {
                             withLoadingEffect={false}
                             circular={false}
                             size={110}
-                            image={
-                              field.value instanceof File
-                                ? URL.createObjectURL(field.value)
-                                : field.value
-                            }
+                            image={field.value}
                             onChange={field.onChange}
                             error={!!errors.logo}
+                            errorMessage={errors.logo?.message}
                             sx={{ "& img": { objectFit: "contain !important" } }}
                           />
                         )}

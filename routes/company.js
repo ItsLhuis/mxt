@@ -14,6 +14,13 @@ router
     companyController.update
   )
 
-router.route("/logo").get(companyController.findLogo)
+router
+  .route("/logo")
+  .get(companyController.findLogo)
+  .put(
+    checkPermissionHandler("company", permissions.UPDATE),
+    companyController.uploadLogo,
+    companyController.updateLogo
+  )
 
 module.exports = router

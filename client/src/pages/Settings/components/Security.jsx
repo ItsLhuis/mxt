@@ -1,13 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 
-import {
-  Paper,
-  Box,
-  Button,
-  FormControl,
-  TextField,
-  Stack
-} from "@mui/material"
+import { Paper, Box, Button, FormControl, TextField, Stack } from "@mui/material"
 import SecurityIcon from "@mui/icons-material/Security"
 
 import { HeaderSection, Modal } from "@components/ui"
@@ -49,10 +42,10 @@ const Security = () => {
           }}
         >
           <HeaderSection title="Senha" description="Altere a sua senha" />
-          <Box sx={{paddingTop: 2}}>
-          <Button variant="contained" color="error" onClick={() => setChangePasswordModal(true)}>
-            Alterar Senha
-          </Button>
+          <Box sx={{ paddingTop: 2 }}>
+            <Button variant="contained" color="error" onClick={() => setChangePasswordModal(true)}>
+              Alterar Senha
+            </Button>
           </Box>
         </Box>
       </Paper>
@@ -62,6 +55,7 @@ const Security = () => {
         mode="form"
         title="Alterar Senha"
         submitButtonText="Alterar Senha"
+        color="error"
         onSubmit={() => {
           return new Promise((resolve, reject) => {
             setTimeout(() => {

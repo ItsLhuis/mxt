@@ -85,6 +85,15 @@ const companyController = {
     }
 
     res.status(204).json({ message: "Company updated successfully" })
+  }),
+  updateLogo: tryCatch(async (req, res) => {
+    if (req.file) {
+      await Company.updateLogo(req.file.buffer, req.file.mimetype, req.file.size)
+    } else {
+      throw new AppError(400, COMPANY_LOGO_IS_REQUIRED, "Company logo is required", false)
+    }
+
+    res.status(204).json({ message: "Company logo updated successfully" })
   })
 }
 

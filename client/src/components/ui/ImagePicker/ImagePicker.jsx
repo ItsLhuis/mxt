@@ -1,8 +1,8 @@
 import PropTypes from "prop-types"
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 
-import { Box, Typography, IconButton, Skeleton, Stack } from "@mui/material"
+import { Box, Typography, Skeleton, Stack, ButtonBase } from "@mui/material"
 import { PhotoCamera } from "@mui/icons-material"
 
 import { Loadable, Avatar } from ".."
@@ -11,13 +11,17 @@ const ImagePicker = ({
   image,
   onChange,
   error,
+  errorMessage,
   withLoadingEffect = true,
   alt,
   name,
   size = 120,
   circular = true,
+  loading = false,
   sx
 }) => {
+  const inputRef = useRef(null)
+
   const [imageError, setImageError] = useState(false)
 
   useEffect(() => {
@@ -27,7 +31,10 @@ const ImagePicker = ({
   const handleChange = (e) => {
     const selectedFile = e.target.files[0]
     if (selectedFile) {
-      if (selectedFile.type.startsWith("image/")) {
+      if (
+        selectedFile.type.startsWith("image/") &&
+        ["image/jpeg", "image/jpg", "image/png"].includes(selectedFile.type)
+      ) {
         if (selectedFile.size <= 5 * 1024 * 1024) {
           onChange(selectedFile)
           setImageError(false)
@@ -41,7 +48,9 @@ const ImagePicker = ({
   }
 
   const handleClick = () => {
-    document.getElementById("image-input").click()
+    if (inputRef.current) {
+      inputRef.current.click()
+    }
   }
 
   const isURL = (image) => {
@@ -58,21 +67,20 @@ const ImagePicker = ({
       }}
     >
       <input
+        ref={inputRef}
         type="file"
         id="image-input"
         accept="image/*"
         style={{ display: "none" }}
         onChange={handleChange}
       />
-      <Box
-        component="label"
-        htmlFor="image-input"
+      <ButtonBase
+        onClick={handleClick}
         sx={{
           position: "relative",
           display: "inline-block",
           borderRadius: circular ? "50%" : "8px",
-          "&:hover > .hover-upload-image": { opacity: 1 },
-          cursor: "pointer"
+          "&:hover > .hover-upload-image": { opacity: 1 }
         }}
       >
         <Stack
@@ -103,6 +111,7 @@ const ImagePicker = ({
                 }
                 name={name ? name : ""}
                 size={size}
+                loading={loading}
                 sx={{
                   cursor: "pointer",
                   ...sx
@@ -142,18 +151,24 @@ const ImagePicker = ({
             Selecionar Imagem
           </Typography>
         </Box>
-        <IconButton
-          className="primary"
-          sx={{
+        <span
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
             position: "absolute",
             right: circular ? 0 : -8,
-            bottom: circular ? 0 : -8
+            bottom: circular ? 0 : -8,
+            background: "var(--primary)",
+            borderRadius: "50%",
+            padding: "8px",
+            userSelect: "none",
+            cursor: "pointer"
           }}
-          onClick={handleClick}
         >
           <PhotoCamera fontSize="small" sx={{ color: "rgb(228, 225, 230)" }} />
-        </IconButton>
-      </Box>
+        </span>
+      </ButtonBase>
       <Typography
         variant="p"
         component="p"
@@ -165,6 +180,11 @@ const ImagePicker = ({
           fontSize: "0.70rem"
         }}
       >
+        {error && (
+          <>
+            {errorMessage} <br></br>
+          </>
+        )}
         Permitido *.jpeg, *.jpg e *.png <br></br> Tamanho máximo de 5 Mb
       </Typography>
     </Stack>
@@ -178,6 +198,7 @@ ImagePicker.propTypes = {
   alt: PropTypes.string,
   size: PropTypes.number,
   circular: PropTypes.bool,
+  loading: PropTypes.bool,
   sx: PropTypes.object
 }
 

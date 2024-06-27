@@ -1,6 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
-import { getCompany, updateCompany as updateCompanyApi, updateCompanyLogo as updateCompanyLogoApi } from "@api/routes/company"
+import {
+  getCompany,
+  updateCompany as updateCompanyApi,
+  updateCompanyLogo as updateCompanyLogoApi
+} from "@api/routes/company"
 
 export const useCompany = () => {
   const queryClient = useQueryClient()

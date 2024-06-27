@@ -18,13 +18,16 @@ const Avatar = ({
   circular = true,
   withLoadingEffect = true,
   withBorderAnimation = false,
+  loading = false,
   sx
 }) => {
-  const [isLoading, setIsLoading] = useState(withLoadingEffect)
+  const [isLoading, setIsLoading] = useState(withLoadingEffect ? loading : withLoadingEffect)
   const [isError, setIsError] = useState(true)
 
   useEffect(() => {
     if (!withLoadingEffect) return
+
+    if (loading) return
 
     if (!src) return
 
@@ -50,7 +53,7 @@ const Avatar = ({
       img.onload = null
       img.onerror = null
     }
-  }, [src])
+  }, [src, loading])
 
   if (name) {
     const backgroundColor = getStringColor(name)
@@ -166,6 +169,7 @@ Avatar.propTypes = {
   circular: PropTypes.bool,
   withLoadingEffect: PropTypes.bool,
   withBorderAnimation: PropTypes.bool,
+  loading: PropTypes.bool,
   sx: PropTypes.object
 }
 
