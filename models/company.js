@@ -15,6 +15,7 @@ const Company = {
         postal_code,
         phone_number,
         email,
+        website,
         created_at_datetime
       FROM company`
     return dbQueryExecutor.execute(query)
@@ -35,9 +36,9 @@ const Company = {
       return revalidateCache("company").then(() => result)
     })
   },
-  update: (name, address, city, locality, country, postalCode, phoneNumber, email) => {
+  update: (name, address, city, locality, country, postalCode, phoneNumber, email, website) => {
     const query =
-      "UPDATE company SET name = ?, address = ?, city = ?, locality = ?, country = ?, postal_code = ?, phone_number = ?, email = ? WHERE enforce_one_row = 'only'"
+      "UPDATE company SET name = ?, address = ?, city = ?, locality = ?, country = ?, postal_code = ?, phone_number = ?, email = ?, website = ? WHERE enforce_one_row = 'only'"
     return dbQueryExecutor
       .execute(query, [
         name,
@@ -47,7 +48,8 @@ const Company = {
         country,
         postalCode,
         phoneNumber.replace(/\s/g, ""),
-        email
+        email,
+        website
       ])
       .then((result) => {
         return revalidateCache("company").then(() => result)

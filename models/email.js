@@ -90,11 +90,13 @@ const Email = {
     )(),
   send: (
     clientId,
-    companyLogo,
     companyName,
     companyAddress,
     companyCity,
     companyCountry,
+    companyPhoneNumber,
+    companyEmail,
+    companyWebsite,
     contact,
     title,
     subject,
@@ -105,14 +107,16 @@ const Email = {
     return new Promise((resolve, reject) => {
       mailer
         .send(companyName, contact, subject, text, {
-          companyLogo,
           title,
           message,
           footer: "Por motivos de segurança, recomendamos o não compartilhamento desta mensagem!",
           companyName,
           companyAddress,
           companyCity,
-          companyCountry
+          companyCountry,
+          companyPhoneNumber,
+          companyEmail,
+          companyWebsite
         })
         .then((data) => {
           const query =

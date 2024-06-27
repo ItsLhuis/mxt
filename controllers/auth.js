@@ -172,7 +172,10 @@ const authController = {
             companyName: companyDetails[0].name,
             companyAddress: `${companyDetails[0].address}, ${companyDetails[0].postal_code}`,
             companyCity: companyDetails[0].city,
-            companyCountry: companyDetails[0].country
+            companyCountry: companyDetails[0].country,
+            companyPhoneNumber: companyDetails[0].phone_number,
+            companyEmail: companyDetails[0].email,
+            companyWebsite: companyDetails[0].website
           },
           "resetPassword"
         )

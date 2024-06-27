@@ -309,6 +309,11 @@
 									"key": "logo",
 									"type": "file",
 									"src": "postman-cloud:///1ef27296-e4d8-4050-9685-193f61876086"
+								},
+								{
+									"key": "website",
+									"value": "www.mixtura.pt",
+									"type": "text"
 								}
 							]
 						},

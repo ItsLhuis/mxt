@@ -12,7 +12,8 @@ const companySchema = z
     country: z.string().max(255).trim(),
     postalCode: z.string().max(20).regex(POSTAL_CODE_REGEX).trim(),
     phoneNumber: z.string().max(20).trim(),
-    email: z.string().email().trim()
+    email: z.string().email().trim(),
+    website: z.string().optional().nullable()
   })
   .refine(
     (data) => {

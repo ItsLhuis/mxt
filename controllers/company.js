@@ -63,11 +63,22 @@ const companyController = {
     })
   }),
   update: tryCatch(async (req, res) => {
-    const { name, address, city, locality, country, postalCode, phoneNumber, email } = req.body
+    const { name, address, city, locality, country, postalCode, phoneNumber, email, website } =
+      req.body
 
     companySchema.parse(req.body)
 
-    await Company.update(name, address, city, locality, country, postalCode, phoneNumber, email)
+    await Company.update(
+      name,
+      address,
+      city,
+      locality,
+      country,
+      postalCode,
+      phoneNumber,
+      email,
+      website
+    )
 
     if (req.file) {
       await Company.updateLogo(req.file.buffer, req.file.mimetype, req.file.size)

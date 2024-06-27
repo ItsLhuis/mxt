@@ -3,8 +3,6 @@ import React, { useState, useEffect, useRef } from "react"
 import {
   Paper,
   Box,
-  ListItemText,
-  Typography,
   Button,
   FormControl,
   TextField,
@@ -17,19 +15,19 @@ import { HeaderSection, Modal } from "@components/ui"
 import { showSuccessToast } from "@config/toast"
 
 const Security = () => {
-  const [open, setOpen] = useState(false)
+  const [changePasswordModal, setChangePasswordModal] = useState(false)
 
   const currentPasswordRef = useRef(null)
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (open && currentPasswordRef.current) {
+      if (changePasswordModal && currentPasswordRef.current) {
         currentPasswordRef.current.focus()
       }
     }, 100)
 
     return () => clearTimeout(timer)
-  }, [open])
+  }, [changePasswordModal])
 
   return (
     <>
@@ -39,35 +37,28 @@ const Security = () => {
           description="Definições de Segurança"
           icon={<SecurityIcon />}
         />
-        <Box sx={{ padding: 3, paddingTop: 0 }}>
-          <Box sx={{ marginTop: 2 }}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                width: "100%",
-                gap: 2
-              }}
-            >
-              <ListItemText>
-                <Typography variant="h6" component="h6">
-                  Senha
-                </Typography>
-                <Typography variant="p" component="p" color="var(--outline)" fontSize="13px">
-                  Altere a sua senha
-                </Typography>
-              </ListItemText>
-              <Button variant="contained" color="error" onClick={() => setOpen(true)}>
-                Alterar Senha
-              </Button>
-            </Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+            gap: 2,
+            paddingBottom: 2,
+            paddingRight: 3
+          }}
+        >
+          <HeaderSection title="Senha" description="Altere a sua senha" />
+          <Box sx={{paddingTop: 2}}>
+          <Button variant="contained" color="error" onClick={() => setChangePasswordModal(true)}>
+            Alterar Senha
+          </Button>
           </Box>
         </Box>
       </Paper>
       <Modal
-        open={open}
-        onClose={() => setOpen(false)}
+        open={changePasswordModal}
+        onClose={() => setChangePasswordModal(false)}
         mode="form"
         title="Alterar Senha"
         submitButtonText="Alterar Senha"

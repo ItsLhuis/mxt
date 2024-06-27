@@ -70,8 +70,8 @@ const Company = () => {
       <Box sx={{ margin: "auto" }}>
         <Paper sx={{ maxWidth: 900, margin: 3 }} elevation={1}>
           <HeaderSection
-            title="Empresa"
-            description="Atualizar nome, e-mail, contacto, país,... da empresa"
+            title="Para continuar, precisa de atualizar os dados sobre a empresa"
+            description="Posteriormente, poderá alterar estes dados"
             icon={<Business />}
           />
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -146,6 +146,11 @@ const Company = () => {
                       </FormControl>
                     </Stack>
                   </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <TextField {...register("website")} label="Site" />
+                  </FormControl>
                 </Grid>
                 <Grid item xs={12}>
                   <FormControl fullWidth>

@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS company (
     postal_code VARCHAR(20),
     phone_number VARCHAR(20),
     email VARCHAR(255),
+    website VARCHAR(255),
     logo MEDIUMBLOB,
     logo_mime_type VARCHAR(50),
     logo_file_size INT,

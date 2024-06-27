@@ -91,7 +91,7 @@ const ButtonDropDownSelect = ({
                 }}
               >
                 <ListItemText>
-                  <Typography variant="h6" component="h6" textAlign="left">
+                  <Typography variant="h5" component="h5" textAlign="left">
                     {title}
                   </Typography>
                   {subTitle && (

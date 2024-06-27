@@ -22,7 +22,8 @@ export const companySchema = z
       .min(1, { message: "O contacto é obrigatório" })
       .max(20),
     email: z.string().email({ message: "E-mail inválido" }).trim(),
-    logo: z.instanceof(File),
+    website: z.string().optional().nullable(),
+    logo: z.instanceof(File)
   })
   .refine(
     (data) => {

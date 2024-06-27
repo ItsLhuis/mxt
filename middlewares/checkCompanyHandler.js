@@ -17,8 +17,8 @@ const checkCompany = tryCatch(async (req, res, next) => {
       true
     )
   }
-
-  const { name, address, city, country, postal_code, phone_number, email } = company[0]
+  const { name, address, locality, city, country, postal_code, phone_number, email, website } =
+    company[0]
 
   if (!name || !address || !city || !country || !postal_code || !phone_number || !email) {
     throw new AppError(
@@ -32,11 +32,13 @@ const checkCompany = tryCatch(async (req, res, next) => {
   req.company = {
     name,
     address,
+    locality,
     city,
     country,
     postalCode: postal_code,
     phoneNumber: phone_number,
-    email
+    email,
+    website
   }
 
   next()

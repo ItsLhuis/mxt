@@ -44,15 +44,17 @@ const emailController = {
       throw new AppError(400, INVALID_CONTACT, "Invalid contact", true)
     }
 
-    const { name, address, city, country, postalCode, logo } = req.company
+    const { name, address, city, country, postalCode, phoneNumber, email, website } = req.company
 
     await Email.send(
       clientId,
-      logo,
       name,
       `${address}, ${postalCode}`,
       city,
       country,
+      phoneNumber,
+      email,
+      website,
       existingContact[0].contact,
       title,
       subject,

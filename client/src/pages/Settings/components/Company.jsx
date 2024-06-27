@@ -59,6 +59,7 @@ const Company = () => {
     name: company?.name || "",
     email: company?.email || "",
     phoneNumber: company?.phone_number || "+351",
+    website: company?.website || "",
     city: company?.city || "",
     country: company?.country || "",
     locality: company?.locality || "",
@@ -129,7 +130,7 @@ const Company = () => {
                 render={({ field }) => (
                   <ImagePicker
                     circular={false}
-                    size={110}
+                    size={90}
                     image={
                       field.value instanceof File
                         ? URL.createObjectURL(field.value)
@@ -209,6 +210,11 @@ const Company = () => {
                   </FormControl>
                 </Stack>
               </Stack>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <TextField {...register("website")} label="Site" />
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth>

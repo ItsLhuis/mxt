@@ -14,6 +14,7 @@ const updateCompany = async ({
   postalCode,
   phoneNumber,
   email,
+  website,
   logo
 }) => {
   const formData = new FormData()
@@ -25,11 +26,12 @@ const updateCompany = async ({
   formData.append("postalCode", postalCode)
   formData.append("phoneNumber", phoneNumber)
   formData.append("email", email)
+  formData.append("website", website)
 
   if (logo instanceof File) {
     formData.append("logo", logo)
   }
-  
+
   const response = await api.put("/company", formData, {
     headers: {
       "Content-Type": "multipart/form-data"
@@ -63,7 +65,7 @@ const updateCompanyLogo = async ({
   if (logo instanceof File) {
     formData.append("logo", logo)
   }
-  
+
   const response = await api.put("/company", formData, {
     headers: {
       "Content-Type": "multipart/form-data"

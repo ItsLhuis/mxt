@@ -195,7 +195,10 @@ const userController = {
         companyName: req.company.name,
         companyAddress: `${req.company.address}, ${req.company.postalCode}`,
         companyCity: req.company.city,
-        companyCountry: req.company.country
+        companyCountry: req.company.country,
+        companyPhoneNumber: req.company.phoneNumber,
+        companyEmail: req.company.email,
+        companyWebsite: req.company.website
       })
       .catch(() => {})
     res.status(201).json({ message: "User created successfully" })
