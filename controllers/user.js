@@ -16,7 +16,8 @@ const {
   USERNAME_ALREADY_EXISTS,
   EMAIL_ALREADY_EXISTS,
   USER_NOT_FOUND,
-  PASSWORD_MISMATCH
+  PASSWORD_MISMATCH,
+  USER_AVATAR_IS_REQUIRED
 } = require("@constants/errors/user")
 
 const { IMAGE_ERROR_TYPE, PERMISSION_DENIED_ERROR_TYPE } = require("@constants/errors/shared/types")
@@ -26,7 +27,12 @@ const { SALT_ROUNDS } = require("@constants/bcrypt")
 const roles = require("@constants/roles")
 
 const User = require("@models/user")
-const { createUserSchema, updateUserSchema, updateUserPasswordSchema } = require("@schemas/user")
+const {
+  createUserSchema,
+  updateUserSchema,
+  updateUserProfileSchema,
+  updateUserPasswordSchema
+} = require("@schemas/user")
 
 const Employee = require("@models/employee")
 
@@ -211,29 +217,22 @@ const userController = {
 
     const isCurrentUser = req.user.id === Number(userId)
 
-    if (!isCurrentUser) {
+    if (isCurrentUser) {
+      throw new AppError(
+        403,
+        PERMISSION_DENIED,
+        "You are not allowed to change your own profile here",
+        true,
+        PERMISSION_DENIED_ERROR_TYPE
+      )
+    } else {
       const currentUserRole = req.user.role
 
-      if (
-        role &&
-        ((currentUserRole === roles.BOSS && role === roles.BOSS) ||
-          (currentUserRole === roles.ADMIN &&
-            (role !== roles.EMPLOYEE || role === roles.ADMIN || role === roles.BOSS)))
-      ) {
+      if (currentUserRole === roles.ADMIN && (role === roles.BOSS || role === roles.ADMIN)) {
         throw new AppError(
           403,
           PERMISSION_DENIED,
           "You don't have permission to perform this action",
-          true,
-          PERMISSION_DENIED_ERROR_TYPE
-        )
-      }
-    } else {
-      if (role !== undefined || isActive !== undefined) {
-        throw new AppError(
-          403,
-          PERMISSION_DENIED,
-          "You don't have permission to change your own role or active status",
           true,
           PERMISSION_DENIED_ERROR_TYPE
         )
@@ -255,17 +254,41 @@ const userController = {
       throw new AppError(400, EMAIL_ALREADY_EXISTS, "The e-mail already exists", true)
     }
 
-    const finalRole = isCurrentUser ? existingUser[0].role : role ?? existingUser[0].role
-    const finalIsActive = isCurrentUser
-      ? existingUser[0].is_active
-      : isActive ?? existingUser[0].is_active
-
-    await User.update(userId, username, email, finalRole, finalIsActive)
-
-    if (req.file) {
-      await User.updateAvatar(existingUser[0].id, req.file.buffer, req.file.mimetype, req.file.size)
-    }
+    await User.update(userId, username, email, role, isActive)
     res.status(204).json({ message: "User updated successfully" })
+  }),
+  updateProfile: tryCatch(async (req, res) => {
+    const userId = req.user.id
+    const { username, email } = req.body
+
+    updateUserProfileSchema.parse(req.body)
+
+    const existingUser = await User.findByUserId(userId)
+    if (existingUser.length <= 0) {
+      throw new AppError(404, USER_NOT_FOUND, "User not found", true)
+    }
+
+    const existingUsername = await User.findByUsername(username, userId)
+    if (existingUsername.length > 0) {
+      throw new AppError(400, USERNAME_ALREADY_EXISTS, "The username already exists", true)
+    }
+
+    const existingEmail = await User.findByEmail(email, userId)
+    if (existingEmail.length > 0) {
+      throw new AppError(400, EMAIL_ALREADY_EXISTS, "The e-mail already exists", true)
+    }
+
+    await User.update(userId, username, email, existingUser[0].role, existingUser[0].is_active)
+    res.status(204).json({ message: "Profile updated successfully" })
+  }),
+  updateProfileAvatar: tryCatch(async (req, res) => {
+    if (req.file) {
+      await User.updateAvatar(req.user.id, req.file.buffer, req.file.mimetype, req.file.size)
+    } else {
+      throw new AppError(400, USER_AVATAR_IS_REQUIRED, "User avatar is required", false)
+    }
+
+    res.status(204).json({ message: "Avatar updated successfully" })
   }),
   updatePassword: tryCatch(async (req, res) => {
     const { userId } = req.params
@@ -308,7 +331,7 @@ const userController = {
     }
 
     if (
-      (currentUserRole !== roles.ADMIN || existingUser.role === roles.EMPLOYEE) &&
+      (currentUserRole !== roles.ADMIN || existingUser[0].role === roles.EMPLOYEE) &&
       (currentUserRole !== roles.BOSS || userId === req.user.id)
     ) {
       throw new AppError(

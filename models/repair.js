@@ -59,8 +59,6 @@ const Repair = {
             name: status[0].name,
             is_default: status[0].is_default
           },
-          equipment_os_password: repair.equipment_os_password,
-          equipment_bios_password: repair.equipment_bios_password,
           entry_accessories: entryAccessories,
           entry_accessories_description: repair.entry_accessories_description,
           entry_reported_issues: entryReportedIssues,
@@ -144,8 +142,6 @@ const Repair = {
             name: status[0].name,
             is_default: status[0].is_default
           },
-          equipment_os_password: repair[0].equipment_os_password,
-          equipment_bios_password: repair[0].equipment_bios_password,
           entry_accessories: entryAccessories,
           entry_accessories_description: repair[0].entry_accessories_description,
           entry_reported_issues: entryReportedIssues,
@@ -176,38 +172,20 @@ const Repair = {
       },
       memoryOnlyCache
     )(),
-  create: (
-    equipmentId,
-    statusId,
-    clientOsPassword,
-    clientBiosPassword,
-    entryDescription,
-    entryDatetime,
-    createdByUserId
-  ) => {
+  create: (equipmentId, statusId, entryDescription, entryDatetime, createdByUserId) => {
     const query = `
     INSERT INTO repairs (
       equipment_id, 
-      status_id, 
-      equipment_os_password, 
-      equipment_bios_password, 
+      status_id,
       entry_description, 
       entry_datetime, 
       created_by_user_id, 
       created_at_datetime
     ) VALUES (
-      ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP()
+      ?, ?, ?, ?, ?, CURRENT_TIMESTAMP()
     )`
     return dbQueryExecutor
-      .execute(query, [
-        equipmentId,
-        statusId,
-        clientOsPassword,
-        clientBiosPassword,
-        entryDescription,
-        entryDatetime,
-        createdByUserId
-      ])
+      .execute(query, [equipmentId, statusId, entryDescription, entryDatetime, createdByUserId])
       .then((result) => {
         return revalidateCache("repairs").then(() => result)
       })
@@ -215,8 +193,6 @@ const Repair = {
   update: (
     repairId,
     statusId,
-    clientOsPassword,
-    clientBiosPassword,
     entryAccessoriesDescription,
     entryReportedIssuesDescription,
     entryDescription,
@@ -242,8 +218,6 @@ const Repair = {
         UPDATE repairs
         SET 
           status_id = ?,
-          equipment_os_password = ?,
-          equipment_bios_password = ?,
           entry_accessories_description = ?,
           entry_reported_issues_description = ?,
           entry_description = ?,
@@ -260,8 +234,6 @@ const Repair = {
           updateRepairQuery,
           [
             statusId,
-            clientOsPassword,
-            clientBiosPassword,
             entryAccessoriesDescription,
             entryReportedIssuesDescription,
             entryDescription,

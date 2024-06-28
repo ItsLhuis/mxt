@@ -120,6 +120,7 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
                 error={!!errors.country}
                 helperText={errors.country?.message}
                 inputRef={countryInputRef}
+                InputLabelProps={{ shrink: watch("country")?.length > 0 }}
               />
             </FormControl>
           </Grid>
@@ -130,6 +131,7 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
                 label="Cidade"
                 error={!!errors.city}
                 helperText={errors.city?.message}
+                InputLabelProps={{ shrink: watch("city")?.length > 0 }}
               />
             </FormControl>
           </Grid>
@@ -140,6 +142,7 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
                 label="Localidade"
                 error={!!errors.locality}
                 helperText={errors.locality?.message}
+                InputLabelProps={{ shrink: watch("locality")?.length > 0 }}
               />
             </FormControl>
           </Grid>
@@ -151,6 +154,7 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
                   label="Morada"
                   error={!!errors.address}
                   helperText={errors.address?.message}
+                  InputLabelProps={{ shrink: watch("address")?.length > 0 }}
                 />
               </FormControl>
               <FormControl fullWidth>
@@ -159,6 +163,7 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
                   label="Código Postal"
                   error={!!errors.postalCode}
                   helperText={errors.postalCode?.message}
+                  InputLabelProps={{ shrink: watch("postalCode")?.length > 0 }}
                 />
               </FormControl>
             </Stack>

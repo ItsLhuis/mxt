@@ -1,11 +1,11 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { companyLogoSchema } from "@schemas/company"
+import { updateUserAvatarSchema } from "@schemas/user"
 
 import { BASE_URL } from "@api"
-import { useCompany } from "@hooks/server/useCompany"
+import { useUser } from "@/hooks/server/useUser"
 
 import { LoadingButton } from "@mui/lab"
 import { Box } from "@mui/material"
@@ -14,39 +14,46 @@ import { HeaderSection, ImagePicker } from "@components/ui"
 
 import { showErrorToast, showSuccessToast } from "@/config/toast"
 
-const CompanyLogoForm = ({ company, isLoading, isError }) => {
-  const isCompanyFinished = !isLoading && !isError
+const UserAvatarForm = ({ user, isLoading, isError }) => {
+  const isUserFinished = !isLoading && !isError
 
-  const [logoChanged, setLogoChanged] = useState(false)
+  const [avatarChanged, setAvatarChanged] = useState(false)
 
   const {
     control,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    reset
   } = useForm({
-    resolver: zodResolver(companyLogoSchema),
+    resolver: zodResolver(updateUserAvatarSchema),
     defaultValues: {
-      logo: `${BASE_URL}/company/logo?size=180`
+      avatar: isUserFinished ? `${BASE_URL}/users/${user.id}/avatar?size=200` : ""
     }
   })
 
-  const { updateCompanyLogo } = useCompany()
+  useEffect(() => {
+    if (isUserFinished && user) {
+      reset({ avatar: `${BASE_URL}/users/${user.id}/avatar?size=200` })
+    }
+  }, [isUserFinished])
+
+  const { updateUserProfileAvatar } = useUser()
 
   const onSubmit = async (data) => {
-    if (!isCompanyFinished || !logoChanged) return
+    if (!isUserFinished || !avatarChanged) return
 
-    updateCompanyLogo
+    updateUserProfileAvatar
       .mutateAsync(data)
       .then(() => {
-        setLogoChanged(false)
-        showSuccessToast("Logotipo atualizado com sucesso!")
+        setAvatarChanged(false)
+        showSuccessToast("Avatar atualizado com sucesso!")
       })
-      .catch(() => showErrorToast("Erro ao atualizar logotipo!"))
+      .catch(() => showErrorToast("Erro ao atualizar avatar!"))
   }
 
   return (
     <>
-      <HeaderSection title="Logotipo" description="Atualizar logotipo da empresa" />
+      <HeaderSection title="Avatar" description="Atualizar avatar do utilizador" />
       <Box sx={{ padding: 3, paddingLeft: 0 }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box
@@ -60,35 +67,35 @@ const CompanyLogoForm = ({ company, isLoading, isError }) => {
             }}
           >
             <Controller
-              name="logo"
+              name="avatar"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <ImagePicker
-                  circular={false}
                   size={100}
                   image={field.value}
                   onChange={(value) => {
                     field.onChange(value)
-                    if (value !== `${BASE_URL}/company/logo?size=180`) {
-                      setLogoChanged(true)
+                    if (value !== `${BASE_URL}/users/${user?.id}/avatar?size=200`) {
+                      setAvatarChanged(true)
                     }
                   }}
-                  loading={!isCompanyFinished}
+                  alt={isUserFinished ? user.username : ""}
+                  name={isUserFinished ? user.username : ""}
+                  loading={!isUserFinished}
                   error={!!errors.logo}
                   errorMessage={errors.logo?.message}
-                  sx={{ "& img": { objectFit: "contain !important" } }}
                 />
               )}
             />
             <Box sx={{ marginLeft: "auto" }}>
               <LoadingButton
-                loading={updateCompanyLogo.isPending}
+                loading={updateUserProfileAvatar.isPending}
                 type="submit"
                 variant="contained"
-                disabled={!isCompanyFinished || !logoChanged}
+                disabled={!isUserFinished || !avatarChanged}
               >
-                Atualizar Logotipo
+                Atualizar Avatar
               </LoadingButton>
             </Box>
           </Box>
@@ -98,4 +105,4 @@ const CompanyLogoForm = ({ company, isLoading, isError }) => {
   )
 }
 
-export default CompanyLogoForm
+export default UserAvatarForm

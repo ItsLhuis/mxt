@@ -87,14 +87,7 @@ const repairController = {
     res.status(200).json([filteredRepairs])
   }),
   create: tryCatch(async (req, res) => {
-    const {
-      equipmentId,
-      statusId,
-      equipmentOsPassword,
-      equipmentBiosPassword,
-      entryDescription,
-      entryDatetime
-    } = req.body
+    const { equipmentId, statusId, entryDescription, entryDatetime } = req.body
 
     repairSchema.parse(req.body)
 
@@ -111,8 +104,6 @@ const repairController = {
     const newRepair = await Repair.create(
       equipmentId,
       statusId,
-      equipmentOsPassword,
-      equipmentBiosPassword,
       entryDescription,
       entryDatetime,
       req.user.id
@@ -140,8 +131,6 @@ const repairController = {
         }
       },
       { field: "Data de entrada", after: entryDatetime },
-      { field: "Password SO", after: !equipmentOsPassword ? null : equipmentOsPassword },
-      { field: "Password BIOS", after: !equipmentBiosPassword ? null : equipmentBiosPassword },
       { field: "Descrição da entrada", after: !entryDescription ? null : entryDescription }
     ]
 
@@ -152,8 +141,6 @@ const repairController = {
     const { repairId } = req.params
     const {
       statusId,
-      equipmentOsPassword,
-      equipmentBiosPassword,
       entryAccessoriesDescription,
       entryReportedIssuesDescription,
       entryDescription,
@@ -258,8 +245,6 @@ const repairController = {
     await Repair.update(
       repairId,
       statusId,
-      equipmentOsPassword,
-      equipmentBiosPassword,
       entryAccessoriesDescription,
       entryReportedIssuesDescription,
       entryDescription,
@@ -311,18 +296,6 @@ const repairController = {
         before: existingRepair[0].entry_datetime,
         after: entryDatetime,
         changed: existingRepair[0].entry_datetime !== entryDatetime
-      },
-      {
-        field: "Password SO",
-        before: existingRepair[0].equipment_os_password,
-        after: !equipmentOsPassword ? null : equipmentOsPassword,
-        changed: existingRepair[0].equipment_os_password !== equipmentOsPassword
-      },
-      {
-        field: "Password BIOS",
-        before: existingRepair[0].equipment_bios_password,
-        after: !equipmentBiosPassword ? null : equipmentBiosPassword,
-        changed: existingRepair[0].equipment_bios_password !== equipmentBiosPassword
       },
       {
         field: "Descrição da entrada",

@@ -49,16 +49,6 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
     return () => clearTimeout(timer)
   }, [open])
 
-  useEffect(() => {
-    if (clientContact) {
-      reset({
-        type: clientContact.type || "",
-        contact: clientContact.contact || "",
-        description: clientContact.description || ""
-      })
-    }
-  }, [clientContact, reset])
-
   const isFormUnchanged = () => {
     const values = watch()
     return (
@@ -69,11 +59,26 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
     )
   }
 
+  useEffect(() => {
+    if (clientContact) {
+      reset({
+        type: clientContact.type || "",
+        contact: clientContact.contact || "",
+        description: clientContact.description || ""
+      })
+    }
+  }, [clientContact, reset])
+
   const onSubmit = async (data) => {
     if (!isFormUnchanged()) {
       return new Promise((resolve, reject) => {
         updateContactClient
-          .mutateAsync({ clientId: clientContact.client_id, contactId: clientContact.id, ...data })
+          .mutateAsync({
+            clientId: clientContact.client_id,
+            contactId: clientContact.id,
+            ...data,
+            description: sanitizeHTML(data.description) === "" ? null : data.description
+          })
           .then(() => {
             onClose()
             showSuccessToast("Contacto atualizado com sucesso!")
@@ -138,6 +143,7 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
                   label="E-mail"
                   error={!!errors.contact}
                   helperText={errors.contact?.message}
+                  InputLabelProps={{ shrink: watch("contact")?.length > 0 }}
                 />
               </FormControl>
             ) : (
@@ -169,6 +175,7 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
                       label="Contacto"
                       error={!!errors.contact}
                       helperText={errors.contact?.message}
+                      InputLabelProps={{ shrink: watch("contact")?.length > 0 }}
                     />
                   </FormControl>
                 )}

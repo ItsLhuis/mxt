@@ -23,7 +23,7 @@ export const initialCompanySchema = z
       .max(20),
     email: z.string().email({ message: "E-mail inválido" }).trim(),
     website: z.string().optional().nullable(),
-    logo: z.instanceof(File, { message: "Selecione uma imagem" })
+    logo: z.instanceof(File, { message: "Selecione o logotipo da empresa" })
   })
   .refine(
     (data) => {
@@ -75,5 +75,5 @@ export const companySchema = z
   )
 
 export const companyLogoSchema = z.object({
-  logo: z.instanceof(File, { message: "Selecione uma imagem" })
+  logo: z.instanceof(File, { message: "Selecione o logotipo da empresa" })
 })

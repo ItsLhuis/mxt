@@ -15,6 +15,8 @@ import { HeaderSection, Select, RichEditor } from "@components/ui"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
+import { sanitizeHTML } from "@utils/sanitizeHTML"
+
 const ClientContactForm = ({ client, isLoading, isError }) => {
   const isClientFinished = !isLoading && !isError
 
@@ -25,8 +27,6 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
     formState: { errors },
     setError,
     watch,
-    setValue,
-    resetField,
     reset
   } = useForm({
     resolver: zodResolver(clientContactSchema)
@@ -40,7 +40,8 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
     await addNewContactClient
       .mutateAsync({
         clientId: client[0].id,
-        ...data
+        ...data,
+        description: sanitizeHTML(data.description) === "" ? null : data.description
       })
       .then(() => {
         reset()

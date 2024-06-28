@@ -97,185 +97,185 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
 
   return (
     <>
-    <HeaderSection title="Dados" description="Atualizar dados da empresa" />
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack sx={{ paddingTop: 1 }}>
-        <Grid container spacing={2} sx={{ paddingInline: 3 }}>
-          <Grid item xs={12}>
-            <Stack
-              sx={{
-                alignItems: "center",
-                flexDirection: isSmallScreen ? "column" : "row",
-                gap: 2
-              }}
-            >
-              <Stack sx={{ flexDirection: "column", gap: 2, width: "100%" }}>
-                <Loadable
-                  isLoading={!isCompanyFinished}
-                  LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
-                  LoadedComponent={
-                    <FormControl fullWidth>
-                      <TextField
-                        {...register("name")}
-                        label="Nome"
-                        error={!!errors.name}
-                        helperText={errors.name?.message}
-                      />
-                    </FormControl>
-                  }
-                />
-                <Loadable
-                  isLoading={!isCompanyFinished}
-                  LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
-                  LoadedComponent={
-                    <FormControl fullWidth>
-                      <TextField
-                        {...register("email")}
-                        label="E-mail"
-                        error={!!errors.email}
-                        helperText={errors.email?.message}
-                      />
-                    </FormControl>
-                  }
-                />
-                <Loadable
-                  isLoading={!isCompanyFinished}
-                  LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
-                  LoadedComponent={
-                    <FormControl fullWidth>
-                      <Controller
-                        name="phoneNumber"
-                        control={control}
-                        defaultValue="+351"
-                        render={({ field }) => (
-                          <MuiTelInput
-                            {...field}
-                            value={field.value || "+351"}
-                            defaultCountry={"pt"}
-                            label="Contacto"
-                            variant="outlined"
-                            fullWidth
-                            error={!!errors.phoneNumber}
-                            helperText={errors.phoneNumber?.message}
-                            disableDropdown
-                          />
-                        )}
-                      />
-                    </FormControl>
-                  }
-                />
+      <HeaderSection title="Dados" description="Atualizar dados da empresa" />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Stack sx={{ paddingTop: 1 }}>
+          <Grid container spacing={2} sx={{ paddingInline: 3 }}>
+            <Grid item xs={12}>
+              <Stack
+                sx={{
+                  alignItems: "center",
+                  flexDirection: isSmallScreen ? "column" : "row",
+                  gap: 2
+                }}
+              >
+                <Stack sx={{ flexDirection: "column", gap: 2, width: "100%" }}>
+                  <Loadable
+                    isLoading={!isCompanyFinished}
+                    LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
+                    LoadedComponent={
+                      <FormControl fullWidth>
+                        <TextField
+                          {...register("name")}
+                          label="Nome"
+                          error={!!errors.name}
+                          helperText={errors.name?.message}
+                        />
+                      </FormControl>
+                    }
+                  />
+                  <Loadable
+                    isLoading={!isCompanyFinished}
+                    LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
+                    LoadedComponent={
+                      <FormControl fullWidth>
+                        <TextField
+                          {...register("email")}
+                          label="E-mail"
+                          error={!!errors.email}
+                          helperText={errors.email?.message}
+                        />
+                      </FormControl>
+                    }
+                  />
+                  <Loadable
+                    isLoading={!isCompanyFinished}
+                    LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
+                    LoadedComponent={
+                      <FormControl fullWidth>
+                        <Controller
+                          name="phoneNumber"
+                          control={control}
+                          defaultValue="+351"
+                          render={({ field }) => (
+                            <MuiTelInput
+                              {...field}
+                              value={field.value || "+351"}
+                              defaultCountry={"pt"}
+                              label="Contacto"
+                              variant="outlined"
+                              fullWidth
+                              error={!!errors.phoneNumber}
+                              helperText={errors.phoneNumber?.message}
+                              disableDropdown
+                            />
+                          )}
+                        />
+                      </FormControl>
+                    }
+                  />
+                </Stack>
               </Stack>
-            </Stack>
-          </Grid>
-          <Grid item xs={12}>
-            <Loadable
-              isLoading={!isCompanyFinished}
-              LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
-              LoadedComponent={
-                <FormControl fullWidth>
-                  <TextField {...register("website")} label="Site" />
-                </FormControl>
-              }
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Loadable
-              isLoading={!isCompanyFinished}
-              LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
-              LoadedComponent={
-                <FormControl fullWidth>
-                  <TextField
-                    {...register("country")}
-                    label="País"
-                    error={!!errors.country}
-                    helperText={errors.country?.message}
+            </Grid>
+            <Grid item xs={12}>
+              <Loadable
+                isLoading={!isCompanyFinished}
+                LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
+                LoadedComponent={
+                  <FormControl fullWidth>
+                    <TextField {...register("website")} label="Site" />
+                  </FormControl>
+                }
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Loadable
+                isLoading={!isCompanyFinished}
+                LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
+                LoadedComponent={
+                  <FormControl fullWidth>
+                    <TextField
+                      {...register("country")}
+                      label="País"
+                      error={!!errors.country}
+                      helperText={errors.country?.message}
+                    />
+                  </FormControl>
+                }
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Loadable
+                isLoading={!isCompanyFinished}
+                LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
+                LoadedComponent={
+                  <FormControl fullWidth>
+                    <TextField
+                      {...register("city")}
+                      label="Cidade"
+                      error={!!errors.city}
+                      helperText={errors.city?.message}
+                    />
+                  </FormControl>
+                }
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Loadable
+                isLoading={!isCompanyFinished}
+                LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
+                LoadedComponent={
+                  <FormControl fullWidth>
+                    <TextField
+                      {...register("locality")}
+                      label="Localidade"
+                      error={!!errors.locality}
+                      helperText={errors.locality?.message}
+                    />
+                  </FormControl>
+                }
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Stack sx={{ flexDirection: isSmallScreen ? "column" : "row", gap: 2 }}>
+                <Box sx={{ width: "100%" }}>
+                  <Loadable
+                    isLoading={!isCompanyFinished}
+                    LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
+                    LoadedComponent={
+                      <FormControl fullWidth>
+                        <TextField
+                          {...register("address")}
+                          label="Morada"
+                          error={!!errors.address}
+                          helperText={errors.address?.message}
+                        />
+                      </FormControl>
+                    }
                   />
-                </FormControl>
-              }
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Loadable
-              isLoading={!isCompanyFinished}
-              LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
-              LoadedComponent={
-                <FormControl fullWidth>
-                  <TextField
-                    {...register("city")}
-                    label="Cidade"
-                    error={!!errors.city}
-                    helperText={errors.city?.message}
+                </Box>
+                <Box sx={{ width: !isSmallScreen ? "60%" : "100%" }}>
+                  <Loadable
+                    isLoading={!isCompanyFinished}
+                    LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
+                    LoadedComponent={
+                      <FormControl fullWidth>
+                        <TextField
+                          {...register("postalCode")}
+                          label="Código Postal"
+                          error={!!errors.postalCode}
+                          helperText={errors.postalCode?.message}
+                        />
+                      </FormControl>
+                    }
                   />
-                </FormControl>
-              }
-            />
+                </Box>
+              </Stack>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Loadable
-              isLoading={!isCompanyFinished}
-              LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
-              LoadedComponent={
-                <FormControl fullWidth>
-                  <TextField
-                    {...register("locality")}
-                    label="Localidade"
-                    error={!!errors.locality}
-                    helperText={errors.locality?.message}
-                  />
-                </FormControl>
-              }
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Stack sx={{ flexDirection: isSmallScreen ? "column" : "row", gap: 2 }}>
-              <Box sx={{ width: "100%" }}>
-                <Loadable
-                  isLoading={!isCompanyFinished}
-                  LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
-                  LoadedComponent={
-                    <FormControl fullWidth>
-                      <TextField
-                        {...register("address")}
-                        label="Morada"
-                        error={!!errors.address}
-                        helperText={errors.address?.message}
-                      />
-                    </FormControl>
-                  }
-                />
-              </Box>
-              <Box sx={{ width: !isSmallScreen ? "60%" : "100%" }}>
-                <Loadable
-                  isLoading={!isCompanyFinished}
-                  LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
-                  LoadedComponent={
-                    <FormControl fullWidth>
-                      <TextField
-                        {...register("postalCode")}
-                        label="Código Postal"
-                        error={!!errors.postalCode}
-                        helperText={errors.postalCode?.message}
-                      />
-                    </FormControl>
-                  }
-                />
-              </Box>
-            </Stack>
-          </Grid>
-        </Grid>
-        <Box sx={{ marginLeft: "auto", padding: 3 }}>
-          <LoadingButton
-            loading={updateCompany.isPending}
-            type="submit"
-            variant="contained"
-            sx={{ marginLeft: "auto" }}
-            disabled={!isCompanyFinished || isFormUnchanged()}
-          >
-            Atualizar Empresa
-          </LoadingButton>
-        </Box>
-      </Stack>
-    </form>
+          <Box sx={{ marginLeft: "auto", padding: 3 }}>
+            <LoadingButton
+              loading={updateCompany.isPending}
+              type="submit"
+              variant="contained"
+              sx={{ marginLeft: "auto" }}
+              disabled={!isCompanyFinished || isFormUnchanged()}
+            >
+              Atualizar Empresa
+            </LoadingButton>
+          </Box>
+        </Stack>
+      </form>
     </>
   )
 }

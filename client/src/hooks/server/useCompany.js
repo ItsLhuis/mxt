@@ -24,9 +24,9 @@ export const useCompany = () => {
     }
   })
 
-  const updateCompanylogo = useMutation({
+  const updateCompanyLogo = useMutation({
     mutationFn: updateCompanyLogoApi
   })
 
-  return { findCompany, updateCompany, updateCompanylogo }
+  return { findCompany, updateCompany, updateCompanyLogo }
 }

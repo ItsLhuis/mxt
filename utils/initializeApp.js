@@ -4,6 +4,7 @@ const { SALT_ROUNDS } = require("@constants/bcrypt")
 const { BOSS } = require("@constants/roles")
 
 const User = require("@models/user")
+const Employee = require("@models/employee")
 const Company = require("@models/company")
 
 const initializeApp = async () => {
@@ -18,7 +19,8 @@ const initializeApp = async () => {
     if (!bossUser) {
       const hashedPassword = await bcrypt.hash("adminboss", SALT_ROUNDS)
 
-      await User.create("Admin", hashedPassword, null, BOSS, 1)
+      const bossUser = await User.create("Admin", hashedPassword, null, BOSS, 1)
+      await Employee.create(bossUser.insertId)
     }
   } catch (error) {
     console.error('Error initializing the app')

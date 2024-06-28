@@ -47,21 +47,11 @@ const employeeController = {
     res.status(200).json(existingUser)
   }),
   update: tryCatch(async (req, res) => {
-    const { userId } = req.params
+    const userId = req.user.id
     const { name, phoneNumber, country, city, locality, address, postalCode, description } =
       req.body
 
     employeeSchema.parse(req.body)
-
-    if (req.user.id !== Number(userId)) {
-      throw new AppError(
-        403,
-        PERMISSION_DENIED,
-        "You don't have permission to change your own role or active status",
-        true,
-        PERMISSION_DENIED_ERROR_TYPE
-      )
-    }
 
     const existingUser = await Employee.findByUserId(userId)
     if (existingUser.length <= 0) {

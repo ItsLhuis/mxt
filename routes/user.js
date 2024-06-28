@@ -20,18 +20,14 @@ router
   .get(checkPermissionHandler("user", permissions.READ), userController.findAll)
   .post(checkPermissionHandler("user", permissions.CREATE), userController.create)
 
-router
-  .route("/profile")
-  .get(checkPermissionHandler("user", permissions.READ), userController.findProfile)
+router.route("/profile").get(userController.findProfile).put(userController.updateProfile)
+
+router.route("/profile/avatar").put(userController.uploadAvatar, userController.updateProfileAvatar)
 
 router
   .route("/:userId")
   .get(checkPermissionHandler("user", permissions.READ), userController.findByUserId)
-  .put(
-    checkPermissionHandler("user", permissions.UPDATE),
-    userController.uploadAvatar,
-    userController.update
-  )
+  .put(checkPermissionHandler("user", permissions.UPDATE), userController.update)
   .delete(checkPermissionHandler("user", permissions.DELETE), userController.delete)
 
 router.put(

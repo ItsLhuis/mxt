@@ -254,8 +254,6 @@ CREATE TABLE IF NOT EXISTS repairs (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     equipment_id INT NOT NULL,
     status_id INT NOT NULL,
-    equipment_os_password VARCHAR(255),
-    equipment_bios_password VARCHAR(255),
     entry_accessories_description TEXT,
     entry_reported_issues_description TEXT,
     entry_description TEXT,

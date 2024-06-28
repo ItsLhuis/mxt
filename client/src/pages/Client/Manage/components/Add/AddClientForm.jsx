@@ -16,6 +16,8 @@ import { HeaderSection, RichEditor } from "@components/ui"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
+import { sanitizeHTML } from "@utils/sanitizeHTML"
+
 const AddClientForm = () => {
   const navigate = useNavigate()
 
@@ -32,7 +34,10 @@ const AddClientForm = () => {
 
   const onSubmit = async (data) => {
     await createNewClient
-      .mutateAsync(data)
+      .mutateAsync({
+        ...data,
+        description: sanitizeHTML(data.description) === "" ? null : data.description
+      })
       .then(() => {
         navigate("/client/list")
         showSuccessToast("Cliente criado com sucesso!")

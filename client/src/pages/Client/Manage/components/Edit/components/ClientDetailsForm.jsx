@@ -14,6 +14,8 @@ import { Person } from "@mui/icons-material"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
+import { sanitizeHTML } from "@utils/sanitizeHTML"
+
 const ClientDetailsForm = ({ client, isLoading, isError }) => {
   const isClientFinished = !isLoading && !isError
 
@@ -35,7 +37,11 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
 
   const isFormUnchanged = () => {
     const values = watch()
-    return values.name === initialValues.name && values.description === initialValues.description
+    return (
+      values.name === initialValues.name &&
+      (sanitizeHTML(values.description) === "" ? "" : values.description) ===
+        initialValues.description
+    )
   }
 
   useEffect(() => {
@@ -52,7 +58,8 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
     await updateClient
       .mutateAsync({
         clientId: client[0].id,
-        ...data
+        ...data,
+        description: sanitizeHTML(data.description) === "" ? null : data.description
       })
       .then(() => showSuccessToast("Cliente atualizado com sucesso!"))
       .catch(() => showErrorToast("Erro ao atualizar cliente!"))
@@ -73,6 +80,7 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
                   label="Nome"
                   error={!!errors.name}
                   helperText={errors.name?.message}
+                  InputLabelProps={{ shrink: watch("name")?.length > 0 }}
                 />
               </FormControl>
             }

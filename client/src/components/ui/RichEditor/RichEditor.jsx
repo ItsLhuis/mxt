@@ -107,9 +107,11 @@ const RichEditor = ({ label, value, onChange, isLoading = false }) => {
       LoadingComponent={<Skeleton variant="rounded" width="100%" height={425} />}
       LoadedComponent={
         <Box>
-          <Typography variant="p" component="p" sx={{ marginBottom: 1.5 }}>
-            {label}
-          </Typography>
+          {label && (
+            <Typography variant="p" component="p" sx={{ marginBottom: 1.5 }}>
+              {label}
+            </Typography>
+          )}
           <MenuBar editor={editor} fullscreen={fullscreen} toggleFullscreen={toggleFullscreen} />
           {fullscreen && (
             <Stack

@@ -2,7 +2,9 @@ const mapUser = (user) => {
   return {
     id: user.id,
     username: user.username,
-    role: user.role
+    role: user.role,
+    email: user.email,
+    is_active: user.is_active
   }
 }
 

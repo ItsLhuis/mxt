@@ -12,11 +12,11 @@ module.exports = {
   user: {
     [roles.BOSS]: [permissions.ALL],
     [roles.ADMIN]: [permissions.ALL],
-    [roles.EMPLOYEE]: [permissions.READ, permissions.UPDATE]
+    [roles.EMPLOYEE]: [permissions.READ]
   },
   employee: {
-    [roles.BOSS]: [permissions.ALL],
-    [roles.ADMIN]: [permissions.ALL],
+    [roles.BOSS]: [permissions.READ, permissions.UPDATE],
+    [roles.ADMIN]: [permissions.READ, permissions.UPDATE],
     [roles.EMPLOYEE]: [permissions.READ, permissions.UPDATE]
   },
   email: {

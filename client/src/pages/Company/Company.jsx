@@ -91,7 +91,7 @@ const Company = () => {
                           <ImagePicker
                             withLoadingEffect={false}
                             circular={false}
-                            size={110}
+                            size={100}
                             image={field.value}
                             onChange={field.onChange}
                             error={!!errors.logo}

@@ -40,10 +40,11 @@ const Login = () => {
         setLoginError(
           "Esta conta foi desativada. Por favor, entre em contacto com o suporte para resolver esta questão!"
         )
-      } else {
-        setFocus("username")
-        setLoginError("Nome de utilizador ou senha inválidos!")
+        return
       }
+      
+      setFocus("username")
+      setLoginError("Nome de utilizador ou senha inválidos!")
     })
   }
 

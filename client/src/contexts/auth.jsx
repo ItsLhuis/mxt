@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
       .then((data) => {
         setRole(data.role)
         setIsAuth(!!data)
-        getUserById(data.id)
+        getUserById({ userId: data.id })
           .then(() => setIsAuthCompany(false))
           .catch((error) => {
             if (error.error.code === "COMP-001") {
