@@ -25,7 +25,17 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 app.use(helmet())
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }))
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        "img-src": ["'self'", "data:", "blob:", "https://flagcdn.com"]
+      }
+    },
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+  })
+)
 app.use(
   cors({
     origin: [

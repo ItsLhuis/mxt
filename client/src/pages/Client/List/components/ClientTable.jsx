@@ -8,16 +8,7 @@ import { BASE_URL } from "@api"
 import { useClient } from "@hooks/server/useClient"
 
 import { Link } from "react-router-dom"
-import {
-  Stack,
-  Paper,
-  Box,
-  Typography,
-  ListItemText,
-  Divider,
-  Tooltip,
-  IconButton
-} from "@mui/material"
+import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton } from "@mui/material"
 import { MoreVert, Edit, Delete, Phone, Place, History, Check, Close } from "@mui/icons-material"
 
 import {
@@ -105,7 +96,7 @@ const ClientTable = () => {
                 src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
                 name={row.created_by_user.username}
               />
-              <ListItemText
+              <Stack
                 sx={{
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -118,7 +109,7 @@ const ClientTable = () => {
                 <Typography variant="p" component="p" color="var(--outline)">
                   {row.created_by_user.role}
                 </Typography>
-              </ListItemText>
+              </Stack>
             </Stack>
             <Divider
               sx={{
@@ -126,7 +117,7 @@ const ClientTable = () => {
                 borderWidth: 1
               }}
             />
-            <ListItemText
+            <Stack
               sx={{
                 whiteSpace: "nowrap",
                 overflow: "hidden",
@@ -139,7 +130,7 @@ const ClientTable = () => {
               <Typography variant="p" component="p" color="var(--outline)">
                 {formatTime(row.created_at_datetime)}
               </Typography>
-            </ListItemText>
+            </Stack>
           </Stack>
         )
       },
@@ -170,7 +161,7 @@ const ClientTable = () => {
                     src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
                     name={row.last_modified_by_user.username}
                   />
-                  <ListItemText
+                  <Stack
                     sx={{
                       whiteSpace: "nowrap",
                       overflow: "hidden",
@@ -183,7 +174,7 @@ const ClientTable = () => {
                     <Typography variant="p" component="p" color="var(--outline)">
                       {row.last_modified_by_user.role}
                     </Typography>
-                  </ListItemText>
+                  </Stack>
                 </Stack>
                 <Divider
                   sx={{
@@ -191,7 +182,7 @@ const ClientTable = () => {
                     borderWidth: 1
                   }}
                 />
-                <ListItemText
+                <Stack
                   sx={{
                     whiteSpace: "nowrap",
                     overflow: "hidden",
@@ -204,7 +195,7 @@ const ClientTable = () => {
                   <Typography variant="p" component="p" color="var(--outline)">
                     {formatTime(row.last_modified_datetime)}
                   </Typography>
-                </ListItemText>
+                </Stack>
               </Stack>
             ) : (
               <Typography variant="p" component="p" color="var(--outline)">
@@ -295,7 +286,7 @@ const ClientTable = () => {
                       src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
                       name={row.created_by_user.username}
                     />
-                    <ListItemText
+                    <Stack
                       sx={{
                         whiteSpace: "nowrap",
                         overflow: "hidden",
@@ -308,7 +299,7 @@ const ClientTable = () => {
                       <Typography variant="p" component="p" color="var(--outline)">
                         {row.created_by_user.role}
                       </Typography>
-                    </ListItemText>
+                    </Stack>
                   </Stack>
                   <Divider
                     sx={{
@@ -316,7 +307,7 @@ const ClientTable = () => {
                       borderWidth: 1
                     }}
                   />
-                  <ListItemText
+                  <Stack
                     sx={{
                       whiteSpace: "nowrap",
                       overflow: "hidden",
@@ -329,7 +320,7 @@ const ClientTable = () => {
                     <Typography variant="p" component="p" color="var(--outline)">
                       {formatTime(row.created_at_datetime)}
                     </Typography>
-                  </ListItemText>
+                  </Stack>
                 </Stack>
               )
             },
@@ -360,7 +351,7 @@ const ClientTable = () => {
                           src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
                           name={row.last_modified_by_user.username}
                         />
-                        <ListItemText
+                        <Stack
                           sx={{
                             whiteSpace: "nowrap",
                             overflow: "hidden",
@@ -373,7 +364,7 @@ const ClientTable = () => {
                           <Typography variant="p" component="p" color="var(--outline)">
                             {row.last_modified_by_user.role}
                           </Typography>
-                        </ListItemText>
+                        </Stack>
                       </Stack>
                       <Divider
                         sx={{
@@ -381,7 +372,7 @@ const ClientTable = () => {
                           borderWidth: 1
                         }}
                       />
-                      <ListItemText
+                      <Stack
                         sx={{
                           whiteSpace: "nowrap",
                           overflow: "hidden",
@@ -394,7 +385,7 @@ const ClientTable = () => {
                         <Typography variant="p" component="p" color="var(--outline)">
                           {formatTime(row.last_modified_datetime)}
                         </Typography>
-                      </ListItemText>
+                      </Stack>
                     </Stack>
                   ) : (
                     <Typography variant="p" component="p" color="var(--outline)">
@@ -465,7 +456,7 @@ const ClientTable = () => {
                       src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
                       name={row.created_by_user.username}
                     />
-                    <ListItemText
+                    <Stack
                       sx={{
                         whiteSpace: "nowrap",
                         overflow: "hidden",
@@ -478,7 +469,7 @@ const ClientTable = () => {
                       <Typography variant="p" component="p" color="var(--outline)">
                         {row.created_by_user.role}
                       </Typography>
-                    </ListItemText>
+                    </Stack>
                   </Stack>
                   <Divider
                     sx={{
@@ -486,7 +477,7 @@ const ClientTable = () => {
                       borderWidth: 1
                     }}
                   />
-                  <ListItemText
+                  <Stack
                     sx={{
                       whiteSpace: "nowrap",
                       overflow: "hidden",
@@ -499,7 +490,7 @@ const ClientTable = () => {
                     <Typography variant="p" component="p" color="var(--outline)">
                       {formatTime(row.created_at_datetime)}
                     </Typography>
-                  </ListItemText>
+                  </Stack>
                 </Stack>
               )
             },
@@ -530,7 +521,7 @@ const ClientTable = () => {
                           src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
                           name={row.last_modified_by_user.username}
                         />
-                        <ListItemText
+                        <Stack
                           sx={{
                             whiteSpace: "nowrap",
                             overflow: "hidden",
@@ -543,7 +534,7 @@ const ClientTable = () => {
                           <Typography variant="p" component="p" color="var(--outline)">
                             {row.last_modified_by_user.role}
                           </Typography>
-                        </ListItemText>
+                        </Stack>
                       </Stack>
                       <Divider
                         sx={{
@@ -551,7 +542,7 @@ const ClientTable = () => {
                           borderWidth: 1
                         }}
                       />
-                      <ListItemText
+                      <Stack
                         sx={{
                           whiteSpace: "nowrap",
                           overflow: "hidden",
@@ -564,7 +555,7 @@ const ClientTable = () => {
                         <Typography variant="p" component="p" color="var(--outline)">
                           {formatTime(row.last_modified_datetime)}
                         </Typography>
-                      </ListItemText>
+                      </Stack>
                     </Stack>
                   ) : (
                     <Typography variant="p" component="p" color="var(--outline)">
@@ -611,7 +602,7 @@ const ClientTable = () => {
                       src={`${BASE_URL}/users/${row.responsible_user.id}/avatar?size=80`}
                       name={row.responsible_user.username}
                     />
-                    <ListItemText
+                    <Stack
                       sx={{
                         whiteSpace: "nowrap",
                         overflow: "hidden",
@@ -624,7 +615,7 @@ const ClientTable = () => {
                       <Typography variant="p" component="p" color="var(--outline)">
                         {row.responsible_user.role}
                       </Typography>
-                    </ListItemText>
+                    </Stack>
                   </Stack>
                   <Divider
                     sx={{
@@ -632,7 +623,7 @@ const ClientTable = () => {
                       borderWidth: 1
                     }}
                   />
-                  <ListItemText
+                  <Stack
                     sx={{
                       whiteSpace: "nowrap",
                       overflow: "hidden",
@@ -645,7 +636,7 @@ const ClientTable = () => {
                     <Typography variant="p" component="p" color="var(--outline)">
                       {formatTime(row.created_at_datetime)}
                     </Typography>
-                  </ListItemText>
+                  </Stack>
                 </Stack>
               )
             }

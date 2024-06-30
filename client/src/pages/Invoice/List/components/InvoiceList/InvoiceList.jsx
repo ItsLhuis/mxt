@@ -10,7 +10,6 @@ import {
   Typography,
   Stack,
   Chip,
-  ListItemText,
   Tooltip,
   IconButton,
   Avatar
@@ -130,7 +129,7 @@ const InvoiceList = () => {
                 gap: 1
               }}
             >
-              <ListItemText
+              <Stack
                 sx={{
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -143,7 +142,7 @@ const InvoiceList = () => {
                 <Typography variant="p" component="p" color="var(--outline)">
                   {formatPhoneNumber(data.customerPhoneNumber)}
                 </Typography>
-              </ListItemText>
+              </Stack>
             </Stack>
           )
         },
@@ -195,7 +194,7 @@ const InvoiceList = () => {
             >
               {data.name.charAt(0)}
             </Avatar>
-            <ListItemText
+            <Stack
               sx={{
                 whiteSpace: "nowrap",
                 overflow: "hidden",
@@ -208,7 +207,7 @@ const InvoiceList = () => {
               <Typography variant="p" component="p" color="var(--outline)">
                 {data.role}
               </Typography>
-            </ListItemText>
+            </Stack>
           </Stack>
         )
       },
@@ -218,7 +217,7 @@ const InvoiceList = () => {
         align: "left",
         sortable: true,
         renderComponent: ({ data }) => (
-          <ListItemText
+          <Stack
             sx={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -231,7 +230,7 @@ const InvoiceList = () => {
             <Typography variant="p" component="p" color="var(--outline)">
               {formatTime(data)}
             </Typography>
-          </ListItemText>
+          </Stack>
         )
       },
       ...additionalColumns
@@ -263,7 +262,7 @@ const InvoiceList = () => {
       align: "left",
       sortable: true,
       renderComponent: ({ data }) => (
-        <ListItemText
+        <Stack
           sx={{
             whiteSpace: "nowrap",
             overflow: "hidden",
@@ -276,7 +275,7 @@ const InvoiceList = () => {
           <Typography variant="p" component="p" color="var(--outline)">
             {formatTime(data)}
           </Typography>
-        </ListItemText>
+        </Stack>
       )
     },
     { id: "amount", label: "Quantidade", align: "left", sortable: true },

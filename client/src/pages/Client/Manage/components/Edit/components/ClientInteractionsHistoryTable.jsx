@@ -2,27 +2,10 @@ import React, { useMemo } from "react"
 
 import { BASE_URL } from "@api"
 
-import {
-  Box,
-  Stack,
-  Paper,
-  Divider,
-  ListItemText,
-  Typography,
-  Tooltip,
-  IconButton
-} from "@mui/material"
-import { History, MoreVert, Edit, Delete, Check, Close } from "@mui/icons-material"
+import { Box, Stack, Paper, Divider, Typography } from "@mui/material"
+import { History, Check, Close } from "@mui/icons-material"
 
-import {
-  HeaderSection,
-  Loadable,
-  Table,
-  TableSkeleton,
-  Avatar,
-  ButtonDropDownSelect,
-  ListButton
-} from "@components/ui"
+import { HeaderSection, Loadable, Table, TableSkeleton, Avatar } from "@components/ui"
 
 import { formatHTML } from "@utils/format/formatHTML"
 import { formatDate, formatTime } from "@utils/format/date"
@@ -64,7 +47,7 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                 src={`${BASE_URL}/users/${row.responsible_user.id}/avatar?size=80`}
                 name={row.responsible_user.username}
               />
-              <ListItemText
+              <Stack
                 sx={{
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -77,7 +60,7 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                 <Typography variant="p" component="p" color="var(--outline)">
                   {row.responsible_user.role}
                 </Typography>
-              </ListItemText>
+              </Stack>
             </Stack>
             <Divider
               sx={{
@@ -85,7 +68,7 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                 borderWidth: 1
               }}
             />
-            <ListItemText
+            <Stack
               sx={{
                 whiteSpace: "nowrap",
                 overflow: "hidden",
@@ -98,7 +81,7 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
               <Typography variant="p" component="p" color="var(--outline)">
                 {formatTime(row.created_at_datetime)}
               </Typography>
-            </ListItemText>
+            </Stack>
           </Stack>
         )
       }
@@ -136,7 +119,10 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                           padding: 2
                         }}
                       >
-                        <span className="table-cell-tiptap-editor" dangerouslySetInnerHTML={formatHTML(row.before)} />
+                        <span
+                          className="table-cell-tiptap-editor"
+                          dangerouslySetInnerHTML={formatHTML(row.before)}
+                        />
                       </Box>
                     )
                   }
@@ -176,7 +162,10 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                           padding: 2
                         }}
                       >
-                        <span className="table-cell-tiptap-editor" dangerouslySetInnerHTML={formatHTML(row.after)} />
+                        <span
+                          className="table-cell-tiptap-editor"
+                          dangerouslySetInnerHTML={formatHTML(row.after)}
+                        />
                       </Box>
                     )
                   }

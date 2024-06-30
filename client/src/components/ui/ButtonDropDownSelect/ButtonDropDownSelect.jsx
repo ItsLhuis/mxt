@@ -2,7 +2,7 @@ import PropTypes from "prop-types"
 
 import React, { useState } from "react"
 
-import { Button, Box, ListItemText, Typography, Popover, Stack } from "@mui/material"
+import { Button, Box, Typography, Popover, Stack } from "@mui/material"
 import { KeyboardArrowUp } from "@mui/icons-material"
 
 const ButtonDropDownSelect = ({
@@ -90,7 +90,7 @@ const ButtonDropDownSelect = ({
                   padding: 1
                 }}
               >
-                <ListItemText>
+                <Stack>
                   <Typography variant="h5" component="h5" textAlign="left">
                     {title}
                   </Typography>
@@ -105,7 +105,7 @@ const ButtonDropDownSelect = ({
                       {subTitle}
                     </Typography>
                   )}
-                </ListItemText>
+                </Stack>
                 <Stack
                   sx={{
                     flexDirection: "row",

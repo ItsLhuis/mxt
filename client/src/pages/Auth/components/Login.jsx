@@ -7,16 +7,7 @@ import { authSchema } from "@schemas/user"
 import { useAuth } from "@hooks/server/useAuth"
 
 import { LoadingButton } from "@mui/lab"
-import {
-  Stack,
-  Box,
-  ListItemText,
-  Typography,
-  TextField,
-  FormControl,
-  Link,
-  Alert
-} from "@mui/material"
+import { Stack, Box, Typography, TextField, FormControl, Link, Alert } from "@mui/material"
 
 import { motion } from "framer-motion"
 
@@ -42,7 +33,7 @@ const Login = () => {
         )
         return
       }
-      
+
       setFocus("username")
       setLoginError("Nome de utilizador ou senha inválidos!")
     })
@@ -58,7 +49,7 @@ const Login = () => {
         Mixtech
       </Typography>
       <Stack sx={{ gap: 2, marginBottom: 4 }}>
-        <ListItemText
+        <Stack
           sx={{
             whiteSpace: "nowrap",
             overflow: "hidden",
@@ -71,7 +62,7 @@ const Login = () => {
           <Typography variant="p" component="p">
             Bem vindo de volta!
           </Typography>
-        </ListItemText>
+        </Stack>
       </Stack>
       {loginError && (
         <motion.div

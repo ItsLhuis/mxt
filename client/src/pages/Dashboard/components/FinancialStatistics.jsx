@@ -10,7 +10,6 @@ import {
   Grid,
   Button,
   Chip,
-  ListItemText,
   Avatar,
   IconButton,
   Tooltip
@@ -79,7 +78,7 @@ const FinancialStatistics = () => {
                 gap: 1
               }}
             >
-              <ListItemText
+              <Stack
                 sx={{
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -92,7 +91,7 @@ const FinancialStatistics = () => {
                 <Typography variant="p" component="p" color="var(--outline)">
                   {formatPhoneNumber(data.customerPhoneNumber)}
                 </Typography>
-              </ListItemText>
+              </Stack>
             </Stack>
           )
         },
@@ -144,7 +143,7 @@ const FinancialStatistics = () => {
             >
               {data.name.charAt(0)}
             </Avatar>
-            <ListItemText
+            <Stack
               sx={{
                 whiteSpace: "nowrap",
                 overflow: "hidden",
@@ -157,7 +156,7 @@ const FinancialStatistics = () => {
               <Typography variant="p" component="p" color="var(--outline)">
                 {data.role}
               </Typography>
-            </ListItemText>
+            </Stack>
           </Stack>
         )
       },
@@ -167,7 +166,7 @@ const FinancialStatistics = () => {
         align: "left",
         sortable: true,
         renderComponent: ({ data }) => (
-          <ListItemText
+          <Stack
             sx={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -180,7 +179,7 @@ const FinancialStatistics = () => {
             <Typography variant="p" component="p" color="var(--outline)">
               {formatTime(data)}
             </Typography>
-          </ListItemText>
+          </Stack>
         )
       },
       ...additionalColumns
@@ -212,7 +211,7 @@ const FinancialStatistics = () => {
       align: "left",
       sortable: true,
       renderComponent: ({ data }) => (
-        <ListItemText
+        <Stack
           sx={{
             whiteSpace: "nowrap",
             overflow: "hidden",
@@ -225,7 +224,7 @@ const FinancialStatistics = () => {
           <Typography variant="p" component="p" color="var(--outline)">
             {formatTime(data)}
           </Typography>
-        </ListItemText>
+        </Stack>
       )
     },
     { id: "amount", label: "Quantidade", align: "left", sortable: true },

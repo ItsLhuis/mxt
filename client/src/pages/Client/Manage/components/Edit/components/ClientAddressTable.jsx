@@ -5,7 +5,7 @@ import { useAuth } from "@contexts/auth"
 import { BASE_URL } from "@api"
 import { useClient } from "@hooks/server/useClient"
 
-import { Box, Stack, Divider, ListItemText, Typography, Tooltip, IconButton } from "@mui/material"
+import { Box, Stack, Divider, Typography, Tooltip, IconButton } from "@mui/material"
 import { Place, MoreVert, Edit, Delete } from "@mui/icons-material"
 
 import {
@@ -131,7 +131,7 @@ const ClientAddressTable = ({ client, isLoading, isError }) => {
                 src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
                 name={row.created_by_user.username}
               />
-              <ListItemText
+              <Stack
                 sx={{
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -144,7 +144,7 @@ const ClientAddressTable = ({ client, isLoading, isError }) => {
                 <Typography variant="p" component="p" color="var(--outline)">
                   {row.created_by_user.role}
                 </Typography>
-              </ListItemText>
+              </Stack>
             </Stack>
             <Divider
               sx={{
@@ -152,7 +152,7 @@ const ClientAddressTable = ({ client, isLoading, isError }) => {
                 borderWidth: 1
               }}
             />
-            <ListItemText
+            <Stack
               sx={{
                 whiteSpace: "nowrap",
                 overflow: "hidden",
@@ -165,7 +165,7 @@ const ClientAddressTable = ({ client, isLoading, isError }) => {
               <Typography variant="p" component="p" color="var(--outline)">
                 {formatTime(row.created_at_datetime)}
               </Typography>
-            </ListItemText>
+            </Stack>
           </Stack>
         )
       },
@@ -196,7 +196,7 @@ const ClientAddressTable = ({ client, isLoading, isError }) => {
                     src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
                     name={row.last_modified_by_user.username}
                   />
-                  <ListItemText
+                  <Stack
                     sx={{
                       whiteSpace: "nowrap",
                       overflow: "hidden",
@@ -209,7 +209,7 @@ const ClientAddressTable = ({ client, isLoading, isError }) => {
                     <Typography variant="p" component="p" color="var(--outline)">
                       {row.last_modified_by_user.role}
                     </Typography>
-                  </ListItemText>
+                  </Stack>
                 </Stack>
                 <Divider
                   sx={{
@@ -217,7 +217,7 @@ const ClientAddressTable = ({ client, isLoading, isError }) => {
                     borderWidth: 1
                   }}
                 />
-                <ListItemText
+                <Stack
                   sx={{
                     whiteSpace: "nowrap",
                     overflow: "hidden",
@@ -230,7 +230,7 @@ const ClientAddressTable = ({ client, isLoading, isError }) => {
                   <Typography variant="p" component="p" color="var(--outline)">
                     {formatTime(row.last_modified_datetime)}
                   </Typography>
-                </ListItemText>
+                </Stack>
               </Stack>
             ) : (
               <Typography variant="p" component="p" color="var(--outline)">

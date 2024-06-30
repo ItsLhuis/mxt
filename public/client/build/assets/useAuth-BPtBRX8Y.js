@@ -1,0 +1,1 @@
+import{u as i,a4 as r,aI as l,aJ as u,bF as c,bG as g}from"./index-CeqpX1Nb.js";const h=()=>{const t=i(),{reloadAuthStatus:o}=r(),s=l(),e=u({mutationFn:c,onSuccess:n=>{o(),s.setQueryData(["userProfile"],n[0]),t("/")}}),a=u({mutationFn:g,onSuccess:()=>{o(),s.removeQueries(["userProfile"]),t("/auth/login")}});return{login:e,logout:a}};export{h as u};
