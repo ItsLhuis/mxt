@@ -15,6 +15,13 @@ addAliases({
   "@public": `${__dirname}/public`
 })
 
+const fs = require("fs")
+const path = require("path")
+
+if (fs.existsSync(path.join(__dirname, "tmp"))) {
+  fs.rmSync(path.join(__dirname, "tmp"), { recursive: true, force: true })
+}
+
 const { server } = require("./app.js")
 
 const PORT = process.env.PORT || 8080

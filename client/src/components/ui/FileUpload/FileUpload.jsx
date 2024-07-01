@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 
-import React, { useState, useRef } from "react"
+import React, { useState, useEffect, useRef } from "react"
 
 import { useDropzone } from "react-dropzone"
 
@@ -8,10 +8,8 @@ import { useTheme } from "@contexts/theme"
 
 import { produce } from "immer"
 
-import { Stack, Box, Typography, IconButton, ButtonBase, Tooltip } from "@mui/material"
-import { PictureAsPdf, Image, Delete } from "@mui/icons-material"
-
-import { motion, AnimatePresence } from "framer-motion"
+import { Stack, Box, Typography, IconButton, ButtonBase, Tooltip, ListItem } from "@mui/material"
+import { PictureAsPdf, Image, Close } from "@mui/icons-material"
 
 import Lottie from "lottie-react"
 import LottieAnimationDark from "./Lottie/dark.json"
@@ -25,6 +23,8 @@ const LottieAnimation = {
 const FileUpload = ({
   value = [],
   onChange,
+  error,
+  errorMessage,
   acceptedFiles = {
     "image/png": [".png"],
     "image/jpeg": [".jpg", ".jpeg"],
@@ -37,8 +37,13 @@ const FileUpload = ({
 
   const inputRef = useRef(null)
 
+  const [fileUploadError, setFileUploadError] = useState(false)
   const [validFiles, setValidFiles] = useState([])
   const [invalidFiles, setInvalidFiles] = useState([])
+
+  useEffect(() => {
+    setFileUploadError(error)
+  }, [error])
 
   const isValidFile = (file) => {
     const fileMime = file.type
@@ -50,6 +55,8 @@ const FileUpload = ({
   }
 
   const onDrop = (files) => {
+    setInvalidFiles([])
+
     const validFilesToAdd = []
     const invalidFilesToAdd = []
 
@@ -74,17 +81,15 @@ const FileUpload = ({
       })
     )
 
-    setInvalidFiles((currentInvalidFiles) =>
-      produce(currentInvalidFiles, (draft) => {
-        draft.push(...invalidFilesToAdd)
-      })
-    )
+    setInvalidFiles(invalidFilesToAdd)
 
     onChange([...validFiles, ...validFilesToAdd])
   }
 
   const handleClickInput = () => {
     if (inputRef.current) {
+      setInvalidFiles([])
+
       inputRef.current.click()
     }
   }
@@ -116,11 +121,7 @@ const FileUpload = ({
       })
     )
 
-    setInvalidFiles((currentInvalidFiles) =>
-      produce(currentInvalidFiles, (draft) => {
-        draft.push(...invalidFilesToAdd)
-      })
-    )
+    setInvalidFiles(invalidFilesToAdd)
 
     e.target.value = null
 
@@ -141,23 +142,67 @@ const FileUpload = ({
     maxSize
   })
 
+  const renderInvalidFiles = (files) => {
+    const fileCount = files.length
+    const isPlural = fileCount > 1
+
+    return (
+      <Box
+        sx={{
+          padding: 2,
+          borderRadius: "8px",
+          border: "2px dashed rgb(211, 47, 47)",
+          color: "rgb(211, 47, 47)"
+        }}
+      >
+        <Stack
+          sx={{
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            overflow: "hidden",
+            gap: 1
+          }}
+        >
+          <Typography
+            variant="p"
+            component="p"
+            sx={{
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis"
+            }}
+          >
+            {isPlural
+              ? "Os seguintes ficheiros selecionados: "
+              : "O seguinte ficheiro selecionado: "}
+            {files.map((file, index) => (
+              <ListItem sx={{ display: "list-item" }}>
+                {file.name}
+                {index < files.length - 1 ? ", " : ""}
+              </ListItem>
+            ))}
+            {isPlural
+              ? " serão ignorados, pois não respeitam as regras de carregamento."
+              : " será ignorado, pois não respeita as regras de carregamento."}
+          </Typography>
+        </Stack>
+      </Box>
+    )
+  }
+
   const renderFiles = (files) => {
     return (
-      <AnimatePresence mode="wait">
+      <>
         {files.map((file, index) => (
-          <motion.div
-            key={index}
-            initial={{ scaleY: 0, opacity: 0 }}
-            animate={{ scaleY: 1, opacity: 1 }}
-            exit={{ scaleY: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 50 }}
-          >
+          <Box key={index} sx={{ width: "100%", maxWidth: "100%" }}>
             <Stack
               sx={{
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
                 padding: 2,
+                gap: 1,
                 backgroundColor: "var(--elevation-level4)",
                 borderRadius: "8px"
               }}
@@ -167,6 +212,7 @@ const FileUpload = ({
                   flexDirection: "row",
                   justifyContent: "flex-start",
                   alignItems: "center",
+                  overflow: "hidden",
                   gap: 1
                 }}
               >
@@ -175,8 +221,16 @@ const FileUpload = ({
                 ) : (
                   <Image fontSize="large" sx={{ color: "rgb(245, 128, 8)" }} />
                 )}
-                <Stack>
-                  <Typography variant="p" component="p">
+                <Stack sx={{ overflow: "hidden" }}>
+                  <Typography
+                    variant="p"
+                    component="p"
+                    sx={{
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis"
+                    }}
+                  >
                     {file.name}
                   </Typography>
                   <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
@@ -190,13 +244,13 @@ const FileUpload = ({
               </Stack>
               <Tooltip title="Remover">
                 <IconButton onClick={() => removeFile(file)}>
-                  <Delete />
+                  <Close />
                 </IconButton>
               </Tooltip>
             </Stack>
-          </motion.div>
+          </Box>
         ))}
-      </AnimatePresence>
+      </>
     )
   }
 
@@ -207,12 +261,17 @@ const FileUpload = ({
         sx={{
           cursor: "pointer",
           borderRadius: "8px",
-          border: isDragActive ? "2px dashed var(--primary)" : "2px dashed var(--outline)",
+          border: fileUploadError
+            ? "2px dashed rgb(211, 47, 47)"
+            : isDragActive
+            ? "2px dashed var(--primary)"
+            : "2px dashed var(--outline)",
           margin: 0,
           position: "relative",
           paddingInline: 3,
           "&:hover": {
-            backgroundColor: "rgba(20, 20, 20, 0.5)"
+            backgroundColor:
+              dataTheme === "dark" ? "rgba(20, 20, 20, 0.5)" : "rgba(20, 20, 20, 0.05)"
           }
         }}
         onClick={handleClickInput}
@@ -225,7 +284,11 @@ const FileUpload = ({
               <u>Clique para carregar</u> ou arraste e solte
             </Typography>
             <Stack>
-              <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
+              <Typography
+                variant="p"
+                component="p"
+                sx={{ color: fileUploadError ? "rgb(211, 47, 47)" : "var(--outline)" }}
+              >
                 Permitido
                 {Object.keys(acceptedFiles).map((type, index) => (
                   <React.Fragment key={index}>
@@ -233,7 +296,11 @@ const FileUpload = ({
                   </React.Fragment>
                 ))}
               </Typography>
-              <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
+              <Typography
+                variant="p"
+                component="p"
+                sx={{ color: fileUploadError ? "rgb(211, 47, 47)" : "var(--outline)" }}
+              >
                 Tamanho máximo de {Math.floor((maxSize / (1024 * 1024)).toFixed(2))} Mb por ficheiro
               </Typography>
             </Stack>
@@ -246,7 +313,8 @@ const FileUpload = ({
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: "rgba(20, 20, 20, 0.5)",
+            backgroundColor:
+              dataTheme === "dark" ? "rgba(20, 20, 20, 0.5)" : "rgba(20, 20, 20, 0.05)",
             width: "100%",
             height: "100%",
             opacity: isDragActive ? 1 : 0,
@@ -254,7 +322,17 @@ const FileUpload = ({
           }}
         />
       </ButtonBase>
-      <Stack sx={{ flexWrap: "wrap", justifyContent: "flex-start", gap: 1 }}>
+      {invalidFiles.length > 0 && <>{renderInvalidFiles(invalidFiles)}</>}
+      <Stack
+        sx={{
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "repeat(auto-fill, minmax(100px, 1fr))",
+            md: "repeat(auto-fill, minmax(400px, 1fr))"
+          },
+          gap: 1
+        }}
+      >
         {validFiles.length > 0 && <>{renderFiles(validFiles)}</>}
       </Stack>
     </Stack>

@@ -17,27 +17,27 @@ const Client = {
   findAll: withCache("clients", async () => {
     const clientsQuery = `
             SELECT 
-                c.id,
-                c.name,
-                c.description,
-                c.created_by_user_id,
-                c.created_at_datetime,
-                c.last_modified_datetime,
-                c.last_modified_by_user_id,
-                GREATEST(
-                    COALESCE(c.last_modified_datetime, c.created_at_datetime), 
-                    COALESCE(MAX(cc.last_modified_datetime), MAX(cc.created_at_datetime), c.created_at_datetime), 
-                    COALESCE(MAX(ca.last_modified_datetime), MAX(ca.created_at_datetime), c.created_at_datetime)
-                ) AS last_modified,
-                CASE
-                    WHEN COALESCE(c.last_modified_datetime, c.created_at_datetime) >= COALESCE(MAX(cc.last_modified_datetime), MAX(cc.created_at_datetime), c.created_at_datetime) 
-                        AND COALESCE(c.last_modified_datetime, c.created_at_datetime) >= COALESCE(MAX(ca.last_modified_datetime), MAX(ca.created_at_datetime), c.created_at_datetime) 
-                    THEN c.last_modified_by_user_id
-                    WHEN COALESCE(MAX(cc.last_modified_datetime), MAX(cc.created_at_datetime), c.created_at_datetime) >= COALESCE(c.last_modified_datetime, c.created_at_datetime) 
-                        AND COALESCE(MAX(cc.last_modified_datetime), MAX(cc.created_at_datetime), c.created_at_datetime) >= COALESCE(MAX(ca.last_modified_datetime), MAX(ca.created_at_datetime), c.created_at_datetime) 
-                    THEN MAX(cc.last_modified_by_user_id)
-                    ELSE MAX(ca.last_modified_by_user_id)
-                END AS last_modified_by_user_id
+              c.id,
+              c.name,
+              c.description,
+              c.created_by_user_id,
+              c.created_at_datetime,
+              c.last_modified_datetime,
+              c.last_modified_by_user_id,
+              GREATEST(
+                  COALESCE(c.last_modified_datetime, c.created_at_datetime), 
+                  COALESCE(MAX(cc.last_modified_datetime), MAX(cc.created_at_datetime), c.created_at_datetime), 
+                  COALESCE(MAX(ca.last_modified_datetime), MAX(ca.created_at_datetime), c.created_at_datetime)
+              ) AS last_modified,
+              CASE
+                  WHEN COALESCE(c.last_modified_datetime, c.created_at_datetime) >= COALESCE(MAX(cc.last_modified_datetime), MAX(cc.created_at_datetime), c.created_at_datetime) 
+                      AND COALESCE(c.last_modified_datetime, c.created_at_datetime) >= COALESCE(MAX(ca.last_modified_datetime), MAX(ca.created_at_datetime), c.created_at_datetime) 
+                  THEN c.last_modified_by_user_id
+                  WHEN COALESCE(MAX(cc.last_modified_datetime), MAX(cc.created_at_datetime), c.created_at_datetime) >= COALESCE(c.last_modified_datetime, c.created_at_datetime) 
+                      AND COALESCE(MAX(cc.last_modified_datetime), MAX(cc.created_at_datetime), c.created_at_datetime) >= COALESCE(MAX(ca.last_modified_datetime), MAX(ca.created_at_datetime), c.created_at_datetime) 
+                  THEN MAX(cc.last_modified_by_user_id)
+                  ELSE MAX(ca.last_modified_by_user_id)
+              END AS last_modified_by_user_id
             FROM clients c
             LEFT JOIN client_contacts cc ON c.id = cc.client_id
             LEFT JOIN client_addresses ca ON c.id = ca.client_id
@@ -83,24 +83,7 @@ const Client = {
     withCache(
       `client:${clientId}`,
       async () => {
-        const clientQuery = `
-          SELECT c.*, 
-                 GREATEST(
-                   COALESCE(c.last_modified_datetime, c.created_at_datetime), 
-                   COALESCE(MAX(cc.last_modified_datetime), MAX(cc.created_at_datetime), c.created_at_datetime), 
-                   COALESCE(MAX(ca.last_modified_datetime), MAX(ca.created_at_datetime), c.created_at_datetime)
-                 ) AS last_modified,
-                 CASE
-                   WHEN COALESCE(c.last_modified_datetime, c.created_at_datetime) >= COALESCE(MAX(cc.last_modified_datetime), MAX(cc.created_at_datetime), c.created_at_datetime) AND COALESCE(c.last_modified_datetime, c.created_at_datetime) >= COALESCE(MAX(ca.last_modified_datetime), MAX(ca.created_at_datetime), c.created_at_datetime) THEN c.last_modified_by_user_id
-                   WHEN COALESCE(MAX(cc.last_modified_datetime), MAX(cc.created_at_datetime), c.created_at_datetime) >= COALESCE(c.last_modified_datetime, c.created_at_datetime) AND COALESCE(MAX(cc.last_modified_datetime), MAX(cc.created_at_datetime), c.created_at_datetime) >= COALESCE(MAX(ca.last_modified_datetime), MAX(ca.created_at_datetime), c.created_at_datetime) THEN cc.last_modified_by_user_id
-                   ELSE ca.last_modified_by_user_id
-                 END AS last_modified_by_user_id
-          FROM clients c
-          LEFT JOIN client_contacts cc ON c.id = cc.client_id
-          LEFT JOIN client_addresses ca ON c.id = ca.client_id
-          WHERE c.id = ?
-          GROUP BY c.id
-        `
+        const clientQuery = "SELECT  * FROM clients WHERE id = ?"
         const client = await dbQueryExecutor.execute(clientQuery, [clientId])
 
         if (!client || client.length <= 0) {
