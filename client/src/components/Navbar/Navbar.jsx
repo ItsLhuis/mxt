@@ -68,7 +68,7 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen, isNotFound = false }) => {
             </Box>
             {!isNotFound && (
               <Box className="container-but-menu">
-                <Tooltip title="Menu" placement="bottom">
+                <Tooltip title="Menu">
                   <IconButton
                     aria-label="Menu"
                     size="normal"
@@ -88,7 +88,7 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen, isNotFound = false }) => {
                   </IconButton>
                 </Tooltip>
                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                  <Tooltip title="Pesquisar" placement="bottom">
+                  <Tooltip title="Pesquisar">
                     <IconButton
                       aria-label="Pesquisar"
                       size="normal"
@@ -157,7 +157,7 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen, isNotFound = false }) => {
             </Box>
             {!isNotFound && (
               <Box className="container-but-settings">
-                <Tooltip title="Definições" placement="bottom">
+                <Tooltip title="Definições">
                   <IconButton
                     aria-label="Definições"
                     size="normal"

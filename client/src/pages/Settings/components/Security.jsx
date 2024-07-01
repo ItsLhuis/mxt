@@ -1,13 +1,28 @@
 import React, { useState, useEffect, useRef } from "react"
 
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { updateUserPasswordSchema } from "@schemas/user"
+
+import { useUser } from "@hooks/server/useUser"
+
 import { Paper, Box, Button, FormControl, TextField, Stack } from "@mui/material"
 import SecurityIcon from "@mui/icons-material/Security"
 
 import { HeaderSection, Modal } from "@components/ui"
 
-import { showSuccessToast } from "@config/toast"
+import { showSuccessToast, showErrorToast } from "@config/toast"
 
 const Security = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError
+  } = useForm({
+    resolver: zodResolver(updateUserPasswordSchema)
+  })
+
   const [changePasswordModal, setChangePasswordModal] = useState(false)
 
   const currentPasswordRef = useRef(null)
@@ -21,6 +36,41 @@ const Security = () => {
 
     return () => clearTimeout(timer)
   }, [changePasswordModal])
+
+  const { findUserProfile, updateUserPassword } = useUser()
+
+  const isUserFinished = !findUserProfile.isLoading && !findUserProfile.isError
+
+  const onSubmit = async (data) => {
+    return new Promise((resolve, reject) => {
+      if (isUserFinished) {
+        updateUserPassword
+          .mutateAsync({ userId: findUserProfile?.data?.id, ...data })
+          .then(() => {
+            setChangePasswordModal(false)
+            showSuccessToast("Senha atualizada com sucesso!")
+            resolve()
+          })
+          .catch((error) => {
+            if (error.error.code === "USR-005") {
+              setError("password", {
+                type: "manual",
+                message: "Senha atual incorreta"
+              })
+              reject()
+              return
+            }
+            setChangePasswordModal(false)
+            showErrorToast("Erro ao atualizar senha!")
+            reject()
+          })
+      } else {
+        setChangePasswordModal(false)
+        showErrorToast("Erro ao atualizar senha!")
+        reject()
+      }
+    })
+  }
 
   return (
     <>
@@ -43,7 +93,12 @@ const Security = () => {
         >
           <HeaderSection title="Senha" description="Altere a sua senha" />
           <Box sx={{ paddingTop: 2 }}>
-            <Button variant="contained" color="error" onClick={() => setChangePasswordModal(true)}>
+            <Button
+              variant="contained"
+              color="error"
+              disabled={!isUserFinished}
+              onClick={() => setChangePasswordModal(true)}
+            >
               Alterar Senha
             </Button>
           </Box>
@@ -56,29 +111,36 @@ const Security = () => {
         title="Alterar Senha"
         submitButtonText="Alterar Senha"
         color="error"
-        onSubmit={() => {
-          return new Promise((resolve, reject) => {
-            setTimeout(() => {
-              showSuccessToast("Senha alterada com sucesso!")
-              resolve(true)
-            }, 1000)
-          })
-        }}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <Stack sx={{ padding: 3, gap: 2 }}>
           <FormControl fullWidth>
             <TextField
               inputRef={currentPasswordRef}
-              name="currentPassword"
+              {...register("password")}
               type="password"
               label="Senha atual"
+              error={!!errors.password}
+              helperText={errors.password?.message}
             />
           </FormControl>
           <FormControl fullWidth>
-            <TextField name="newPassword" type="password" label="Nova senha" />
+            <TextField
+              {...register("newPassword")}
+              type="password"
+              label="Nova senha"
+              error={!!errors.newPassword}
+              helperText={errors.newPassword?.message}
+            />
           </FormControl>
           <FormControl fullWidth>
-            <TextField name="confirmNewPassword" type="password" label="Confirmar nova senha" />
+            <TextField
+              {...register("confirmPassword")}
+              type="password"
+              label="Confirmar nova senha"
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword?.message}
+            />
           </FormControl>
         </Stack>
       </Modal>

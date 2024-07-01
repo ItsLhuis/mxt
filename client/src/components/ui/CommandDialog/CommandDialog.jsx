@@ -356,7 +356,7 @@ const CommandDialog = ({ open, handleClose }) => {
             )
           }}
         />
-        <Tooltip title="Fechar" placement="bottom">
+        <Tooltip title="Fechar">
           <IconButton aria-label="close" onClick={handleClose} sx={{ margin: 2, marginRight: 3 }}>
             <Close />
           </IconButton>

@@ -1,58 +1,155 @@
 import PropTypes from "prop-types"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
 
 import { Link } from "react-router-dom"
-import { Box, Typography, Breadcrumbs, Button } from "@mui/material"
-import { Home } from "@mui/icons-material"
+import {
+  Box,
+  Typography,
+  Breadcrumbs,
+  Button,
+  Tooltip,
+  IconButton,
+  Stack,
+  useTheme,
+  useMediaQuery
+} from "@mui/material"
+import { Home, Refresh } from "@mui/icons-material"
 
-const HeaderPage = ({ title, breadcrumbs, button }) => {
+import { motion } from "framer-motion"
+
+const HeaderPage = ({
+  title,
+  breadcrumbs,
+  isRefetchEnable,
+  refetchFunction,
+  isRefetching,
+  button
+}) => {
+  const theme = useTheme()
+  const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"))
+
+  const [isRefreshFinished, setIsRefreshFinished] = useState(false)
+
+  const [lastRefreshTime, setLastRefreshTime] = useState(null)
+
+  const handleRefetch = () => {
+    if (refetchFunction && canRefetch()) {
+      refetchFunction().finally(() => {
+        setIsRefreshFinished(true)
+        setLastRefreshTime(new Date())
+      })
+    }
+  }
+
+  const canRefetch = () => {
+    if (!lastRefreshTime) return true
+
+    const currentTime = new Date()
+    const elapsedTime = currentTime - lastRefreshTime
+    return elapsedTime >= 4000
+  }
+
+  useEffect(() => {
+    if (!isRefetching) {
+      const timeout = setTimeout(() => {
+        setIsRefreshFinished(false)
+      }, 2000)
+
+      return () => clearTimeout(timeout)
+    }
+  }, [isRefetching])
+
   return (
-    <Box
+    <Stack
       sx={{
         display: "flex",
-        flexDirection: "row",
+        flexDirection: isMediumScreen ? "column" : "row",
         justifyContent: "space-between",
-        alignItems: "center",
-        gap: 3
+        alignItems: isMediumScreen ? "flex-start" : "center",
+        gap: 2
       }}
     >
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        <Typography variant="h4" component="h4">
-          {title}
-        </Typography>
-        <Breadcrumbs
-          separator={
-            <Box
-              sx={{
-                width: 4,
-                height: 4,
-                borderRadius: "50%",
-                backgroundColor: "var(--outline)"
-              }}
-            />
-          }
-          aria-label="breadcrumb"
-          sx={{ color: "var(--onSurface)", fontSize: 13 }}
+      <Stack sx={{ flexDirection: "row", alignItems: "flex-start", gap: 1 }}>
+        <Stack sx={{ gap: 1 }}>
+          <Typography variant="h4" component="h4">
+            {title}
+          </Typography>
+          <Breadcrumbs
+            separator={
+              <Box
+                sx={{
+                  width: 4,
+                  height: 4,
+                  borderRadius: "50%",
+                  backgroundColor: "var(--outline)"
+                }}
+              />
+            }
+            aria-label="breadcrumb"
+            sx={{ color: "var(--onSurface)", fontSize: 13 }}
+          >
+            <Home fontSize="small" />
+            {breadcrumbs.map((breadcrumb, index) => (
+              <Box key={index}>
+                {breadcrumb.link ? (
+                  <Link to={breadcrumb.link}>{breadcrumb.name}</Link>
+                ) : (
+                  <Typography
+                    variant="p"
+                    component="p"
+                    sx={{ color: "var(--outline)", fontWeight: 500 }}
+                  >
+                    {breadcrumb.name}
+                  </Typography>
+                )}
+              </Box>
+            ))}
+          </Breadcrumbs>
+        </Stack>
+        <Stack
+          sx={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 1,
+            marginTop: -0.4
+          }}
         >
-          <Home fontSize="small" />
-          {breadcrumbs.map((breadcrumb, index) => (
-            <Box key={index}>
-              {breadcrumb.link ? (
-                <Link to={breadcrumb.link}>{breadcrumb.name}</Link>
-              ) : (
-                <Typography
-                  variant="p"
-                  component="p"
-                  sx={{ color: "var(--outline)", fontWeight: 500 }}
-                >
-                  {breadcrumb.name}
-                </Typography>
-              )}
-            </Box>
-          ))}
-        </Breadcrumbs>
-      </Box>
+          {refetchFunction && (
+            <Tooltip title="Atualizar">
+              <motion.span
+                animate={{
+                  rotate: isRefetching ? [0, 180, 360] : [0]
+                }}
+                transition={{
+                  repeat: isRefetching ? Infinity : 0,
+                  duration: 1,
+                  type: "spring"
+                }}
+              >
+                <IconButton onClick={handleRefetch} disabled={isRefetching || !isRefetchEnable}>
+                  <Refresh fontSize="small" />
+                </IconButton>
+              </motion.span>
+            </Tooltip>
+          )}
+          {isRefreshFinished && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 1, 1, 1, 0] }}
+              transition={{
+                times: [0, 0.2, 0.8, 0.9, 1],
+                duration: 2
+              }}
+            >
+              <Typography variant="p" component="p">
+                Atualizado!
+              </Typography>
+            </motion.div>
+          )}
+        </Stack>
+      </Stack>
       {button && (
         <Button
           variant="contained"
@@ -63,7 +160,7 @@ const HeaderPage = ({ title, breadcrumbs, button }) => {
           {button.title}
         </Button>
       )}
-    </Box>
+    </Stack>
   )
 }
 
@@ -75,6 +172,9 @@ HeaderPage.propTypes = {
       link: PropTypes.string
     })
   ).isRequired,
+  isRefetchEnable: PropTypes.bool,
+  refetchFunction: PropTypes.func,
+  isRefetching: PropTypes.bool,
   button: PropTypes.shape({
     startIcon: PropTypes.element.isRequired,
     title: PropTypes.string.isRequired,

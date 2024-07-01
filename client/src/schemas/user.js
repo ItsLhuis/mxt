@@ -6,6 +6,30 @@ export const authSchema = z.object({
   password: z.string().trim().min(1, { message: "A senha é obrigatória" }).max(255)
 })
 
+export const updateUserPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(6, { message: "A senha atual deve ter pelo menos 6 caracteres" })
+      .max(255)
+      .trim(),
+    newPassword: z
+      .string()
+      .min(6, { message: "A nova senha deve ter pelo menos 6 caracteres" })
+      .max(255)
+      .trim(),
+    confirmPassword: z
+      .string()
+      .min(6, { message: "A confirmação de senha deve ter pelo menos 6 caracteres" })
+      .max(255)
+      .trim()
+  })
+  .refine(
+    (data) =>
+      !data.newPassword || !data.confirmPassword || data.newPassword === data.confirmPassword,
+    { message: "As senhas não coincidem", path: ["newPassword"] }
+  )
+
 export const updateUserAvatarSchema = z.object({
   avatar: z.instanceof(File, { message: "Selecione uma imagem" })
 })

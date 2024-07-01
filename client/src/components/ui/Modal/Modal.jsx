@@ -103,7 +103,7 @@ const Modal = ({
             <Typography variant="h4" component="h4">
               {!title ? "Eliminar" : title}
             </Typography>
-            <Tooltip title="Fechar" placement="bottom">
+            <Tooltip title="Fechar">
               <IconButton aria-label="close" onClick={handleClose}>
                 <Close />
               </IconButton>
@@ -180,7 +180,7 @@ const Modal = ({
             <Typography variant="h4" component="h4">
               {title}
             </Typography>
-            <Tooltip title="Fechar" placement="bottom">
+            <Tooltip title="Fechar">
               <IconButton aria-label="close" onClick={handleClose}>
                 <Close />
               </IconButton>
@@ -307,7 +307,7 @@ const Modal = ({
               <Typography variant="h4" component="h4">
                 {title}
               </Typography>
-              <Tooltip title="Fechar" placement="bottom">
+              <Tooltip title="Fechar">
                 <IconButton aria-label="close" onClick={handleClose}>
                   <Close />
                 </IconButton>
@@ -405,7 +405,7 @@ const Modal = ({
             <Typography variant="h4" component="h4">
               {title}
             </Typography>
-            <Tooltip title="Fechar" placement="bottom">
+            <Tooltip title="Fechar">
               <IconButton aria-label="close" onClick={handleClose}>
                 <Close />
               </IconButton>

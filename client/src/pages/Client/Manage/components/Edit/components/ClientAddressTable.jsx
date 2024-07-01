@@ -248,7 +248,7 @@ const ClientAddressTable = ({ client, isLoading, isError }) => {
           <ButtonDropDownSelect
             mode="custom"
             customButton={
-              <Tooltip title="Mais opções" placement="bottom" sx={{ margin: -1 }}>
+              <Tooltip title="Mais opções" sx={{ margin: -1 }}>
                 <IconButton>
                   <MoreVert />
                 </IconButton>

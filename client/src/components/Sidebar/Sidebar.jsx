@@ -15,7 +15,8 @@ import {
   Email,
   Sms,
   KeyboardArrowUp,
-  Close
+  Close,
+  AccountBox
 } from "@mui/icons-material"
 
 import { Image } from "@components/ui"
@@ -29,6 +30,23 @@ const sidebarData = [
   },
   {
     title: "MANUTENÇÃO",
+    icon: <AccountBox fontSize="small" />,
+    path: "/user",
+    name: "Utilizador",
+    submenu: [
+      {
+        path: "/user/list",
+        name: "Lista",
+        className: ""
+      },
+      {
+        path: "/user/add",
+        name: "Adicionar",
+        className: ""
+      }
+    ]
+  },
+  {
     icon: <Person fontSize="small" />,
     path: "/client",
     name: "Cliente",
@@ -402,7 +420,7 @@ const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
               </Typography>
             </Box>
             <Box className="container-but-menu" style={{ marginRight: "0.6rem" }}>
-              <Tooltip title="Fechar" placement="bottom">
+              <Tooltip title="Fechar">
                 <IconButton
                   aria-label="Fechar"
                   size="normal"

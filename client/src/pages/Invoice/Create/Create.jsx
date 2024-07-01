@@ -222,7 +222,7 @@ const Create = () => {
         <ButtonDropDownSelect
           mode="custom"
           customButton={
-            <Tooltip title="Mais Opções" placement="bottom" sx={{ margin: -1 }}>
+            <Tooltip title="Mais Opções"  sx={{ margin: -1 }}>
               <IconButton>
                 <MoreVert />
               </IconButton>

@@ -247,7 +247,7 @@ const FinancialStatistics = () => {
       align: "center",
       sortable: false,
       renderComponent: ({ data }) => (
-        <Tooltip title="Mais Opções" placement="bottom" sx={{ margin: -1 }}>
+        <Tooltip title="Mais Opções"  sx={{ margin: -1 }}>
           <IconButton onClick={() => console.log(data)}>
             <MoreVert />
           </IconButton>

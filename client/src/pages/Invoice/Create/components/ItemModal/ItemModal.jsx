@@ -179,7 +179,7 @@ const ItemModal = ({ mode, open, handleClose, onClick, services, products, initi
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Stack sx={{ flexDirection: "row", alignItems: "flex-start", gap: 1 }}>
-              <Tooltip title="Pesquisar" placement="bottom">
+              <Tooltip title="Pesquisar" >
                 <IconButton sx={{ marginTop: 1 }} onClick={() => setSearchtemModalOpen(true)}>
                   <Search />
                 </IconButton>

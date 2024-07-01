@@ -57,7 +57,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
     data: userPersonalData,
     isLoading: isUserPersonalDataLoading,
     isError: isUserPersonalDataError
-  } = findEmployeeByUserId(user.id)
+  } = findEmployeeByUserId(user?.id)
 
   const isUserPersonalDataFinished = !isUserPersonalDataLoading && !isUserPersonalDataError
 
@@ -246,22 +246,16 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
               </Stack>
             </Grid>
             <Grid item xs={12}>
-              <Loadable
-                isLoading={!isUserFinished}
-                LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
-                LoadedComponent={
-                  <Controller
-                    name="description"
-                    control={control}
-                    render={({ field }) => (
-                      <RichEditor
-                        value={field.value}
-                        onChange={field.onChange}
-                        isLoading={!isUserFinished}
-                      />
-                    )}
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <RichEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                    isLoading={!isUserFinished}
                   />
-                }
+                )}
               />
             </Grid>
           </Grid>

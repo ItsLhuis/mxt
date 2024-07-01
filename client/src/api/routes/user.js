@@ -15,6 +15,15 @@ const getUserById = async ({ userId }) => {
   return response.data
 }
 
+const updateUserPassword = async ({ userId, password, newPassword, confirmPassword }) => {
+  const response = await api.put(`/users/${userId}/password`, {
+    password,
+    newPassword,
+    confirmPassword
+  })
+  return response.data
+}
+
 const updateUserProfile = async ({ username, email }) => {
   const response = await api.put("/users/profile", { username, email })
   return response.data
@@ -62,6 +71,7 @@ export {
   getUserProfile,
   getEmplyeeByUserId,
   getUserById,
+  updateUserPassword,
   updateUserProfile,
   updateUserProfileAvatar,
   updateUserPersonalData

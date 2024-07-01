@@ -1,6 +1,8 @@
-import React, { Suspense } from "react"
+import React, { Suspense, useEffect } from "react"
 
 import { useNavigate } from "react-router-dom"
+
+import { useClient } from "@hooks/server/useClient"
 
 import { Box, Container } from "@mui/material"
 import { Add } from "@mui/icons-material"
@@ -13,6 +15,8 @@ import { motion } from "framer-motion"
 const ClientListPage = () => {
   const navigate = useNavigate()
 
+  const { findAllClients } = useClient()
+
   return (
     <Suspense fallback={<PageLoader />}>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
@@ -21,6 +25,9 @@ const ClientListPage = () => {
             <HeaderPage
               title="Lista de Clientes"
               breadcrumbs={[{ name: "Cliente" }, { name: "Lista" }]}
+              isRefetchEnable={!findAllClients.isFetching}
+              refetchFunction={() => findAllClients.refetch()}
+              isRefetching={findAllClients.isRefetching && !findAllClients.isRefetchError}
               button={{
                 startIcon: <Add fontSize="large" />,
                 title: "Adicionar Cliente",

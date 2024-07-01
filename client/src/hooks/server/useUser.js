@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   getEmplyeeByUserId,
   getUserProfile,
+  updateUserPassword as updateUserPasswordApi,
   updateUserProfile as updateUserProfileApi,
   updateUserProfileAvatar as updateUserProfileAvatarApi,
   updateUserPersonalData as updateUserPersonalDataApi
@@ -31,6 +32,10 @@ export const useUser = () => {
     }
   })
 
+  const updateUserPassword = useMutation({
+    mutationFn: updateUserPasswordApi
+  })
+
   const updateUserProfile = useMutation({
     mutationFn: updateUserProfileApi,
     onSuccess: async () => {
@@ -53,6 +58,7 @@ export const useUser = () => {
   return {
     findEmployeeByUserId,
     findUserProfile,
+    updateUserPassword,
     updateUserProfile,
     updateUserPersonalData,
     updateUserProfileAvatar
