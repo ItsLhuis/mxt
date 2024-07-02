@@ -78,7 +78,7 @@ const Employee = {
       .execute(query, [
         userId,
         name,
-        phoneNumber,
+        phoneNumber && phoneNumber.replace(/\s/g, ""),
         country,
         city,
         locality,
@@ -106,7 +106,7 @@ const Employee = {
     return dbQueryExecutor
       .execute(query, [
         name,
-        phoneNumber,
+        phoneNumber.replace(/\s/g, ""),
         country,
         city,
         locality,

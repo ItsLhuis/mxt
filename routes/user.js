@@ -27,8 +27,19 @@ router.route("/profile/avatar").put(userController.uploadAvatar, userController.
 router
   .route("/:userId")
   .get(checkPermissionHandler("user", permissions.READ), userController.findByUserId)
-  .put(checkPermissionHandler("user", permissions.UPDATE), userController.update)
   .delete(checkPermissionHandler("user", permissions.DELETE), userController.delete)
+
+router.put(
+  "/:userId/role",
+  checkPermissionHandler("user", permissions.UPDATE),
+  userController.updateRole
+)
+
+router.put(
+  "/:userId/status",
+  checkPermissionHandler("user", permissions.UPDATE),
+  userController.updateStatus
+)
 
 router.put(
   "/:userId/password",

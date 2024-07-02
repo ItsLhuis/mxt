@@ -29,7 +29,8 @@ const roles = require("@constants/roles")
 const User = require("@models/user")
 const {
   createUserSchema,
-  updateUserSchema,
+  updateUserRoleSchema,
+  updateUserStatusSchema,
   updateUserProfileSchema,
   updateUserPasswordSchema
 } = require("@schemas/user")
@@ -209,11 +210,11 @@ const userController = {
       .catch(() => {})
     res.status(201).json({ message: "User created successfully" })
   }),
-  update: tryCatch(async (req, res) => {
+  updateRole: tryCatch(async (req, res) => {
     const { userId } = req.params
-    const { username, email, role, isActive } = req.body
+    const { role } = req.body
 
-    updateUserSchema.parse(req.body)
+    updateUserRoleSchema.parse(req.body)
 
     const isCurrentUser = req.user.id === Number(userId)
 
@@ -221,18 +222,28 @@ const userController = {
       throw new AppError(
         403,
         PERMISSION_DENIED,
-        "You are not allowed to change your own profile here",
+        "You are not allowed to change your own role",
         true,
         PERMISSION_DENIED_ERROR_TYPE
       )
     } else {
       const currentUserRole = req.user.role
 
-      if (currentUserRole === roles.ADMIN && (role === roles.BOSS || role === roles.ADMIN)) {
+      if (currentUserRole !== roles.BOSS) {
         throw new AppError(
           403,
           PERMISSION_DENIED,
           "You don't have permission to perform this action",
+          true,
+          PERMISSION_DENIED_ERROR_TYPE
+        )
+      }
+
+      if (role === roles.BOSS) {
+        throw new AppError(
+          403,
+          PERMISSION_DENIED,
+          "You are not allowed to assign the 'Boss' role",
           true,
           PERMISSION_DENIED_ERROR_TYPE
         )
@@ -244,18 +255,49 @@ const userController = {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
 
-    const existingUsername = await User.findByUsername(username, userId)
-    if (existingUsername.length > 0) {
-      throw new AppError(400, USERNAME_ALREADY_EXISTS, "The username already exists", true)
+    await User.updateRole(userId, role)
+    res.status(204).json({ message: "User role updated successfully" })
+  }),
+  updateStatus: tryCatch(async (req, res) => {
+    const { userId } = req.params
+    const { isActive } = req.body
+
+    updateUserStatusSchema.parse(req.body)
+
+    const isCurrentUser = req.user.id === Number(userId)
+
+    if (isCurrentUser) {
+      throw new AppError(
+        403,
+        PERMISSION_DENIED,
+        "You are not allowed to change your own role",
+        true,
+        PERMISSION_DENIED_ERROR_TYPE
+      )
     }
 
-    const existingEmail = await User.findByEmail(email, userId)
-    if (existingEmail.length > 0) {
-      throw new AppError(400, EMAIL_ALREADY_EXISTS, "The e-mail already exists", true)
+    const existingUser = await User.findByUserId(userId)
+    if (existingUser.length <= 0) {
+      throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
 
-    await User.update(userId, username, email, role, isActive)
-    res.status(204).json({ message: "User updated successfully" })
+    const currentUserRole = req.user.role
+
+    if (
+      currentUserRole === roles.ADMIN &&
+      (existingUser[0].role === roles.ADMIN || existingUser[0].role === roles.BOSS)
+    ) {
+      throw new AppError(
+        403,
+        PERMISSION_DENIED,
+        "You don't have permission to perform this action",
+        true,
+        PERMISSION_DENIED_ERROR_TYPE
+      )
+    }
+
+    await User.updateStatus(userId, isActive)
+    res.status(204).json({ message: "User status updated successfully" })
   }),
   updateProfile: tryCatch(async (req, res) => {
     const userId = req.user.id

@@ -159,6 +159,18 @@ const User = {
         return clearAllCaches([multiCache, memoryOnlyCache]).then(() => result)
       })
   },
+  updateRole: (userId, role) => {
+    const query = "UPDATE users SET role = ? WHERE id = ?"
+    return dbQueryExecutor.execute(query, [role, userId]).then((result) => {
+      return clearAllCaches([multiCache, memoryOnlyCache]).then(() => result)
+    })
+  },
+  updateStatus: (userId, isActive) => {
+    const query = "UPDATE users SET is_active = ? WHERE id = ?"
+    return dbQueryExecutor.execute(query, [isActive, userId]).then((result) => {
+      return clearAllCaches([multiCache, memoryOnlyCache]).then(() => result)
+    })
+  },
   updateAvatar: (userId, avatar, mimitype, fileSize) => {
     const query =
       "UPDATE users SET avatar = ?, avatar_mime_type = ?, avatar_file_size = ? WHERE id = ?"
