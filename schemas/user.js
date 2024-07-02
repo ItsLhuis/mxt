@@ -13,10 +13,11 @@ const createUserSchema = z.object({
   isActive: z.boolean().optional().nullable()
 })
 
-const updateUserSchema = z.object({
-  username: z.string().min(3).max(255).trim(),
-  email: z.string().email().max(255).trim(),
+const updateUserRoleSchema = z.object({
   role: z.enum(["Chefe", "Administrador", "Funcionário"]),
+})
+
+const updateUserStatusSchema = z.object({
   isActive: z.boolean()
 })
 
@@ -59,7 +60,8 @@ const resetPassword = {
 module.exports = {
   authSchema,
   createUserSchema,
-  updateUserSchema,
+  updateUserRoleSchema,
+  updateUserStatusSchema,
   updateUserPasswordSchema,
   updateUserProfileSchema,
   resetPassword
