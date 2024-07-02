@@ -8,7 +8,16 @@ import { Box } from "@mui/material"
 
 import { PageLoader } from "@components/ui"
 
-import { Dashboard, ClientList, AddClient, EditClient, InvoiceList, CreateInvoice, Settings } from "@pages"
+import {
+  Dashboard,
+  EmployeeList,
+  AddEmployee,
+  EditEmployee,
+  ClientList,
+  AddClient,
+  EditClient,
+  Settings
+} from "@/pages"
 
 const Content = () => {
   const location = useLocation()
@@ -31,15 +40,16 @@ const Content = () => {
             <Route path="/" element={<Navigate replace to="/dashboard" />} />
             <Route path="/dashboard" element={<Dashboard />} />
 
+            {/* Employee */}
+            <Route path="/employee/list" element={<EmployeeList />} />
+            <Route path="/employee/add" element={<AddEmployee />} />
+            <Route path="/employee/:employeeId" element={<EditEmployee />} />
+            {/* ---------------------------------------------------------- */}
+
             {/* Client */}
             <Route path="/client/list" element={<ClientList />} />
             <Route path="/client/add" element={<AddClient />} />
             <Route path="/client/:clientId" element={<EditClient />} />
-            {/* ---------------------------------------------------------- */}
-
-            {/* Invoice */}
-            <Route path="/invoice/list" element={<InvoiceList />} />
-            <Route path="/invoice/add" element={<CreateInvoice />} />
             {/* ---------------------------------------------------------- */}
 
             <Route path="/settings" element={<Settings />} />

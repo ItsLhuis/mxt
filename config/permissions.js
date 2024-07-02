@@ -55,17 +55,17 @@ module.exports = {
     brand: {
       [roles.BOSS]: [permissions.ALL],
       [roles.ADMIN]: [permissions.ALL],
-      [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE]
+      [roles.EMPLOYEE]: [permissions.READ]
     },
     model: {
       [roles.BOSS]: [permissions.ALL],
       [roles.ADMIN]: [permissions.ALL],
-      [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE]
+      [roles.EMPLOYEE]: [permissions.READ]
     },
     type: {
       [roles.BOSS]: [permissions.ALL],
       [roles.ADMIN]: [permissions.ALL],
-      [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE]
+      [roles.EMPLOYEE]: [permissions.READ]
     },
     attachment: {
       [roles.BOSS]: [permissions.ALL],

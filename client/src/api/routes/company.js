@@ -1,11 +1,11 @@
 import { api } from ".."
 
-const getCompany = async () => {
+export const getCompany = async () => {
   const response = await api.get("/company")
   return response.data[0]
 }
 
-const updateCompany = async ({
+export const updateCompany = async ({
   name,
   address,
   city,
@@ -41,7 +41,7 @@ const updateCompany = async ({
   return response.data
 }
 
-const updateCompanyLogo = async ({ logo }) => {
+export const updateCompanyLogo = async ({ logo }) => {
   const formData = new FormData()
   formData.append("logo", logo)
 
@@ -53,5 +53,3 @@ const updateCompanyLogo = async ({ logo }) => {
 
   return response.data
 }
-
-export { getCompany, updateCompany, updateCompanyLogo }

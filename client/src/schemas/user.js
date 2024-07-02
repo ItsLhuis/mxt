@@ -6,6 +6,22 @@ export const authSchema = z.object({
   password: z.string().trim().min(1, { message: "A senha é obrigatória" }).max(255)
 })
 
+export const createUserSchema = z.object({
+  username: z
+    .string()
+    .min(3, { message: "O nome de utilizador deve ter pelo menos 3 caracteres" })
+    .max(255)
+    .trim(),
+  password: z
+    .string()
+    .min(6, { message: "A senha deve ter pelo menos 6 caracteres" })
+    .max(255)
+    .trim(),
+  email: z.string().email({ message: "E-mail inválido" }).max(255).trim(),
+  role: z.enum(["Chefe", "Administrador", "Funcionário"], { message: "Cargo inválido" }),
+  isActive: z.boolean({ message: "Valor inválido" })
+})
+
 export const updateUserPasswordSchema = z
   .object({
     password: z
@@ -30,12 +46,24 @@ export const updateUserPasswordSchema = z
     { message: "As senhas não coincidem", path: ["newPassword"] }
   )
 
+export const updateUserRoleSchema = z.object({
+  role: z.enum(["Chefe", "Administrador", "Funcionário"], { message: "Cargo inválido" })
+})
+
+export const updateUserStatusSchema = z.object({
+  isActive: z.boolean({ message: "Valor inválido" })
+})
+
 export const updateUserAvatarSchema = z.object({
   avatar: z.instanceof(File, { message: "Selecione uma imagem" })
 })
 
 export const updateUserAccountSchema = z.object({
-  username: z.string().trim().min(1, { message: "O nome de utilizador é obrigatório" }).max(255),
+  username: z
+    .string()
+    .trim()
+    .min(3, { message: "O nome de utilizador deve ter pelo menos 3 caracteresdis" })
+    .max(255),
   email: z.string().email({ message: "E-mail inválido" }).trim()
 })
 

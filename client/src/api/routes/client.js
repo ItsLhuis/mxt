@@ -1,31 +1,36 @@
 import { api } from ".."
 
-const getAllClients = async () => {
+export const getAllClients = async () => {
   const response = await api.get("/clients")
   return response.data
 }
 
-const getClientById = async ({ clientId }) => {
+export const getClientById = async ({ clientId }) => {
   const response = await api.get(`/clients/${clientId}`)
   return response.data
 }
 
-const createClient = async ({ name, description }) => {
+export const createClient = async ({ name, description }) => {
   const response = await api.post("/clients", { name, description })
   return response.data
 }
 
-const updateClient = async ({ clientId, name, description }) => {
+export const updateClient = async ({ clientId, name, description }) => {
   const response = await api.put(`/clients/${clientId}`, { name, description })
   return response.data
 }
 
-const addContactClient = async ({ clientId, type, contact, description }) => {
+export const deleteClient = async ({ clientId }) => {
+  const response = await api.delete(`/clients/${clientId}`)
+  return response.data
+}
+
+export const addContactClient = async ({ clientId, type, contact, description }) => {
   const response = await api.post(`/clients/${clientId}/contacts`, { type, contact, description })
   return response.data
 }
 
-const updateContactClient = async ({ clientId, contactId, type, contact, description }) => {
+export const updateContactClient = async ({ clientId, contactId, type, contact, description }) => {
   const response = await api.put(`/clients/${clientId}/contacts/${contactId}`, {
     type,
     contact,
@@ -34,12 +39,19 @@ const updateContactClient = async ({ clientId, contactId, type, contact, descrip
   return response.data
 }
 
-const deleteContactClient = async ({ clientId, contactId }) => {
+export const deleteContactClient = async ({ clientId, contactId }) => {
   const response = await api.delete(`/clients/${clientId}/contacts/${contactId}`)
   return response.data
 }
 
-const addAddressClient = async ({ clientId, country, city, locality, address, postalCode }) => {
+export const addAddressClient = async ({
+  clientId,
+  country,
+  city,
+  locality,
+  address,
+  postalCode
+}) => {
   const response = await api.post(`/clients/${clientId}/addresses`, {
     country,
     city,
@@ -50,7 +62,7 @@ const addAddressClient = async ({ clientId, country, city, locality, address, po
   return response.data
 }
 
-const updateAddressClient = async ({
+export const updateAddressClient = async ({
   clientId,
   addressId,
   country,
@@ -69,26 +81,7 @@ const updateAddressClient = async ({
   return response.data
 }
 
-const deleteAddressClient = async ({ clientId, addressId }) => {
+export const deleteAddressClient = async ({ clientId, addressId }) => {
   const response = await api.delete(`/clients/${clientId}/addresses/${addressId}`)
   return response.data
-}
-
-const deleteClient = async ({ clientId }) => {
-  const response = await api.delete(`/clients/${clientId}`)
-  return response.data
-}
-
-export {
-  getAllClients,
-  getClientById,
-  createClient,
-  updateClient,
-  addContactClient,
-  updateContactClient,
-  deleteContactClient,
-  addAddressClient,
-  updateAddressClient,
-  deleteAddressClient,
-  deleteClient
 }

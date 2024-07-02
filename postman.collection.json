@@ -400,13 +400,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/users/1",
+							"raw": "{{base_url}}/users/2",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"users",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -477,7 +477,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\":\"Luis\",\r\n    \"email\":\"itslhuis.dev@gmail.com\",\r\n    \"password\":\"123123\",\r\n    \"role\":\"Administrador\"\r\n}",
+							"raw": "{\r\n    \"username\":\"Ana\",\r\n    \"email\":\"ana@gmail.com\",\r\n    \"password\":\"123123\",\r\n    \"role\":\"Administrador\",\r\n    \"isActive\": false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -494,66 +494,6 @@
 							]
 						},
 						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
-					},
-					"response": []
-				},
-				{
-					"name": "Update",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Successful PUT request\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "username",
-									"value": "Luis",
-									"type": "text"
-								},
-								{
-									"key": "email",
-									"value": "itslhuis.dev@gmail.com",
-									"type": "text"
-								},
-								{
-									"key": "role",
-									"value": "Administrador",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "avatar",
-									"type": "file",
-									"src": "/C:/Users/luisr/OneDrive/Ambiente de Trabalho/react-app-template/src/assets/img/users/user-profile1.png"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{base_url}}/users/2",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"users",
-								"2"
-							]
-						},
-						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
 					},
 					"response": []
 				},
@@ -664,6 +604,94 @@
 					"response": []
 				},
 				{
+					"name": "UpdateRole",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"role\": \"Chefe\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/2/role",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"2",
+								"role"
+							]
+						},
+						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateStatus",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isActive\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/4/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"4",
+								"status"
+							]
+						},
+						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+					},
+					"response": []
+				},
+				{
 					"name": "UpdatePassword",
 					"request": {
 						"method": "PUT",
@@ -721,13 +749,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/users/2",
+							"raw": "{{base_url}}/users/3",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"users",
-								"2"
+								"3"
 							]
 						},
 						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
@@ -1296,13 +1324,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/clients/1",
+							"raw": "{{base_url}}/clients/2",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"clients",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -1330,7 +1358,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Luis\",\n    \"description\": \"\"\n}",
+							"raw": "{\n    \"name\": \"Carlinhos\",\n    \"description\": \"\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"

@@ -70,7 +70,7 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
         icon={<Phone />}
       />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack sx={{ padding: 3, gap: 3 }}>
+        <Stack sx={{ padding: 3, gap: 2 }}>
           <FormControl fullWidth>
             <Controller
               name="type"

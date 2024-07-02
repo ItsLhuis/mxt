@@ -122,6 +122,7 @@ const Security = () => {
               label="Senha atual"
               error={!!errors.password}
               helperText={errors.password?.message}
+              autoComplete="current-password"
             />
           </FormControl>
           <FormControl fullWidth>
@@ -131,6 +132,7 @@ const Security = () => {
               label="Nova senha"
               error={!!errors.newPassword}
               helperText={errors.newPassword?.message}
+              autoComplete="new-password"
             />
           </FormControl>
           <FormControl fullWidth>
@@ -140,6 +142,7 @@ const Security = () => {
               label="Confirmar nova senha"
               error={!!errors.confirmPassword}
               helperText={errors.confirmPassword?.message}
+              autoComplete="new-password"
             />
           </FormControl>
         </Stack>

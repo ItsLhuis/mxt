@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
 
   const [isAuth, setIsAuth] = useState(false)
   const [isAuthCompany, setIsAuthCompany] = useState(false)
+  const [id, setId] = useState(null)
   const [role, setRole] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -23,6 +24,7 @@ export const AuthProvider = ({ children }) => {
 
     getUserProfile()
       .then((data) => {
+        setId(data.id)
         setRole(data.role)
         setIsAuth(!!data)
         getUserById({ userId: data.id })
@@ -58,6 +60,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     isAuth,
     isAuthCompany,
+    id,
     role,
     isLoading,
     reloadAuthStatus

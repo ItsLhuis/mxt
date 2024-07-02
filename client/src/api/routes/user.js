@@ -1,21 +1,41 @@
 import { api } from ".."
 
-const getUserProfile = async () => {
+export const getUserProfile = async () => {
   const response = await api.get("/users/profile")
   return response.data[0]
 }
 
-const getEmplyeeByUserId = async ({ userId }) => {
+export const getAllEmployees = async () => {
+  const response = await api.get("/employees")
+  return response.data
+}
+
+export const getEmployeeByUserId = async ({ userId }) => {
   const response = await api.get(`/employees/${userId}`)
   return response.data[0]
 }
 
-const getUserById = async ({ userId }) => {
+export const getUserById = async ({ userId }) => {
   const response = await api.get(`/users/${userId}`)
   return response.data
 }
 
-const updateUserPassword = async ({ userId, password, newPassword, confirmPassword }) => {
+export const createUser = async ({ username, email, password, role, isActive }) => {
+  const response = await api.post("/users", { username, email, password, role, isActive })
+  return response.data
+}
+
+export const updateUserRole = async ({ userId, role }) => {
+  const response = await api.put(`/users/${userId}/role`, { role })
+  return response.data
+}
+
+export const updateUserStatus = async ({ userId, isActive }) => {
+  const response = await api.put(`/users/${userId}/status`, { isActive })
+  return response.data
+}
+
+export const updateUserPassword = async ({ userId, password, newPassword, confirmPassword }) => {
   const response = await api.put(`/users/${userId}/password`, {
     password,
     newPassword,
@@ -24,12 +44,12 @@ const updateUserPassword = async ({ userId, password, newPassword, confirmPasswo
   return response.data
 }
 
-const updateUserProfile = async ({ username, email }) => {
+export const updateUserProfile = async ({ username, email }) => {
   const response = await api.put("/users/profile", { username, email })
   return response.data
 }
 
-const updateUserProfileAvatar = async ({ avatar }) => {
+export const updateUserProfileAvatar = async ({ avatar }) => {
   const formData = new FormData()
   formData.append("avatar", avatar)
 
@@ -42,7 +62,7 @@ const updateUserProfileAvatar = async ({ avatar }) => {
   return response.data
 }
 
-const updateUserPersonalData = async ({
+export const updateUserPersonalData = async ({
   name,
   email,
   phoneNumber,
@@ -67,12 +87,7 @@ const updateUserPersonalData = async ({
   return response.data
 }
 
-export {
-  getUserProfile,
-  getEmplyeeByUserId,
-  getUserById,
-  updateUserPassword,
-  updateUserProfile,
-  updateUserProfileAvatar,
-  updateUserPersonalData
+export const deleteEmployee = async ({ userId }) => {
+  const response = await api.delete(`/users/${userId}`)
+  return response.data
 }

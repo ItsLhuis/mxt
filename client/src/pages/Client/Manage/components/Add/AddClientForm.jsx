@@ -40,9 +40,9 @@ const AddClientForm = () => {
       })
       .then(() => {
         navigate("/client/list")
-        showSuccessToast("Cliente criado com sucesso!")
+        showSuccessToast("Cliente adicionado com sucesso!")
       })
-      .catch(() => showErrorToast("Erro ao criar cliente!"))
+      .catch(() => showErrorToast("Erro ao adicionar cliente!"))
   }
 
   return (
@@ -54,7 +54,7 @@ const AddClientForm = () => {
             description="Nome e descrição do cliente"
             icon={<Person />}
           />
-          <Stack sx={{ padding: 3, gap: 3 }}>
+          <Stack sx={{ padding: 3, gap: 2 }}>
             <FormControl fullWidth>
               <TextField
                 {...register("name")}
@@ -71,13 +71,13 @@ const AddClientForm = () => {
                 <RichEditor label="Descrição" value={field.value} onChange={field.onChange} />
               )}
             />
+            <Box sx={{ marginLeft: "auto", marginTop: 1 }}>
+              <LoadingButton loading={createNewClient.isPending} type="submit" variant="contained">
+                Adicionar Cliente
+              </LoadingButton>
+            </Box>
           </Stack>
         </Paper>
-        <Box sx={{ marginLeft: "auto" }}>
-          <LoadingButton loading={createNewClient.isPending} type="submit" variant="contained">
-            Adicionar Cliente
-          </LoadingButton>
-        </Box>
       </Stack>
     </form>
   )

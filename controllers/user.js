@@ -373,8 +373,8 @@ const userController = {
     }
 
     if (
-      (currentUserRole !== roles.ADMIN || existingUser[0].role === roles.EMPLOYEE) &&
-      (currentUserRole !== roles.BOSS || userId === req.user.id)
+      currentUserRole === roles.ADMIN &&
+      (existingUser[0].role === roles.ADMIN || existingUser[0].role === roles.BOSS)
     ) {
       throw new AppError(
         403,

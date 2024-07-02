@@ -2,16 +2,20 @@ import React, { Suspense } from "react"
 
 import { useNavigate } from "react-router-dom"
 
+import { useUser } from "@hooks/server/useUser"
+
 import { Box, Container } from "@mui/material"
 import { Add } from "@mui/icons-material"
 
 import { PageLoader, HeaderPage } from "@components/ui"
-import { InvoiceList, InvoiceStatus } from "./components"
+import { EmployeeTable } from "./components"
 
 import { motion } from "framer-motion"
 
-const List = () => {
+const EmployeeListPage = () => {
   const navigate = useNavigate()
+
+  const { findAllEmployees } = useUser()
 
   return (
     <Suspense fallback={<PageLoader />}>
@@ -19,16 +23,18 @@ const List = () => {
         <Box component="main" className="page-main">
           <Container maxWidth={false}>
             <HeaderPage
-              title="Lista de Faturas"
-              breadcrumbs={[{ name: "Faturação" }, { name: "Lista" }]}
+              title="Lista de Funcionários"
+              breadcrumbs={[{ name: "Funcionário" }, { name: "Lista" }]}
+              isRefetchEnable={!findAllEmployees.isFetching}
+              refetchFunction={() => findAllEmployees.refetch()}
+              isRefetching={findAllEmployees.isRefetching && !findAllEmployees.isRefetchError}
               button={{
                 startIcon: <Add fontSize="large" />,
-                title: "Criar Fatura",
-                onClick: () => navigate("/invoice/add")
+                title: "Adicionar Funcionário",
+                onClick: () => navigate("/employee/add")
               }}
             />
-            <InvoiceStatus />
-            <InvoiceList />
+            <EmployeeTable />
           </Container>
         </Box>
       </motion.div>
@@ -36,4 +42,4 @@ const List = () => {
   )
 }
 
-export default List
+export default EmployeeListPage

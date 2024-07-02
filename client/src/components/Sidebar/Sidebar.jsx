@@ -31,16 +31,16 @@ const sidebarData = [
   {
     title: "MANUTENÇÃO",
     icon: <AccountBox fontSize="small" />,
-    path: "/user",
-    name: "Utilizador",
+    path: "/employee",
+    name: "Funcionário",
     submenu: [
       {
-        path: "/user/list",
+        path: "/employee/list",
         name: "Lista",
         className: ""
       },
       {
-        path: "/user/add",
+        path: "/employee/add",
         name: "Adicionar",
         className: ""
       }

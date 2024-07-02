@@ -115,6 +115,14 @@ p {
   color: rgb(228, 225, 230) !important;
 }
 
+.MuiButton-text .MuiLoadingButton-loadingIndicator {
+  color: var(--onSurface) !important;
+}
+
+.MuiButton-textError .MuiLoadingButton-loadingIndicator {
+  color: rgba(211, 47, 47) !important;
+}
+
 .MuiButton-containedSecondary:hover {
   background-color: var(--elevation-level6) !important;
 }
@@ -352,7 +360,15 @@ input[type=number]::-webkit-outer-spin-button {
   margin-top: 0 !important;
 }
 
-.MuiButtonBase-root {
+.MuiSwitch-track {
+  background-color: var(--outline) !important;
+}
+
+.MuiSwitch-switchBase.Mui-checked+.MuiSwitch-track {
+  background-color: var(--primary) !important;
+}
+
+.MuiButtonBase-root:not(.MuiSwitch-switchBase) {
   transition: background-color 0.3s ease !important;
 }
 

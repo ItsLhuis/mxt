@@ -108,7 +108,7 @@ const RichEditor = ({ label, value, onChange, isLoading = false }) => {
       LoadedComponent={
         <Box>
           {label && (
-            <Typography variant="p" component="p" sx={{ marginBottom: 1.5 }}>
+            <Typography variant="p" component="p" sx={{ marginBottom: 1 }}>
               {label}
             </Typography>
           )}

@@ -29,7 +29,7 @@ const Login = () => {
     await login.mutateAsync(data).catch((error) => {
       if (error.error.code === "USR-004") {
         setLoginError(
-          "Esta conta foi desativada. Por favor, entre em contacto com o suporte para resolver esta questão!"
+          "Esta conta foi desativada. Por favor, entre em contacto com o suporte!"
         )
         return
       }
