@@ -240,6 +240,11 @@ const authController = {
         throw new AppError(404, USER_NOT_FOUND, "User not found", true)
       }
 
+      const validOtp = await User.otpCode.findByOtpCodeAndUserId(otp, existingUser[0].id)
+      if (validOtp.length <= 0) {
+        throw new AppError(400, INVALID_OTP_CODE, "Invalid or expired otp code", true)
+      }
+
       const hashedNewPassword = await bcrypt.hash(newPassword, SALT_ROUNDS)
       await User.updatePassword(userId, hashedNewPassword)
 

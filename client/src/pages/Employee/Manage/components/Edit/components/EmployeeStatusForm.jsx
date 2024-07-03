@@ -49,7 +49,7 @@ const EmployeeStatusForm = ({ user, isUserFinished }) => {
 
   return (
     <Stack sx={{ paddingBottom: 2 }}>
-      <HeaderSection title="Estado" description="Alterar estado da conta do funcionário" />
+      <HeaderSection title="Estado" description="Atualizar estado da conta do funcionário" />
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack
           sx={{

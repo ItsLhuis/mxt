@@ -165,7 +165,7 @@ const AddEmployeeForm = () => {
             </FormControl>
             <Box sx={{ marginLeft: "auto", marginTop: 1 }}>
               <LoadingButton loading={createNewUser.isPending} type="submit" variant="contained">
-                Adicionar Fcunionário
+                Adicionar Funcionário
               </LoadingButton>
             </Box>
           </Stack>

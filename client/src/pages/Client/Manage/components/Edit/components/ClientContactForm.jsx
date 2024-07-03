@@ -141,7 +141,7 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
               <RichEditor label="Descrição" value={field.value} onChange={field.onChange} />
             )}
           />
-          <Box sx={{ marginLeft: "auto" }}>
+          <Box sx={{ marginLeft: "auto", marginTop: 1 }}>
             <LoadingButton
               loading={addNewContactClient.isPending}
               type="submit"

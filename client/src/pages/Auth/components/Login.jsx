@@ -6,8 +6,9 @@ import { authSchema } from "@schemas/user"
 
 import { useAuth } from "@hooks/server/useAuth"
 
+import { Link } from "react-router-dom"
 import { LoadingButton } from "@mui/lab"
-import { Stack, Box, Typography, TextField, FormControl, Link, Alert } from "@mui/material"
+import { Stack, Box, Typography, TextField, FormControl, Alert } from "@mui/material"
 
 import { motion } from "framer-motion"
 
@@ -28,9 +29,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     await login.mutateAsync(data).catch((error) => {
       if (error.error.code === "USR-004") {
-        setLoginError(
-          "Esta conta foi desativada. Por favor, entre em contacto com o suporte!"
-        )
+        setLoginError("Esta conta foi desativada. Por favor, entre em contacto com o suporte!")
         return
       }
 
@@ -99,13 +98,8 @@ const Login = () => {
             />
           </FormControl>
           <Link
-            sx={{
-              alignSelf: "flex-end",
-              fontSize: "13px",
-              margin: "8px 0",
-              color: "inherit",
-              textDecorationColor: "inherit"
-            }}
+            to="/auth/resetPassword/request"
+            style={{ alignSelf: "flex-end", fontSize: "13px" }}
           >
             Esqueceu a sua senha?
           </Link>

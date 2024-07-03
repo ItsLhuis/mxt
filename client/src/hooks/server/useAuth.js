@@ -2,7 +2,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import { useNavigate } from "react-router-dom"
 
-import { login as loginApi, logout as logoutApi } from "@api/routes/auth"
+import {
+  login as loginApi,
+  requestResetPassword as requestResetPasswordApi,
+  verifyResetPassword as verifyResetPasswordApi,
+  confirmResetPassword as confirmResetPasswordApi,
+  logout as logoutApi
+} from "@api/routes/auth"
 
 import { useAuth as useAuthContext } from "@contexts/auth"
 
@@ -22,6 +28,18 @@ export const useAuth = () => {
     }
   })
 
+  const requestResetPassword = useMutation({
+    mutationFn: requestResetPasswordApi
+  })
+
+  const verifyResetPassword = useMutation({
+    mutationFn: verifyResetPasswordApi
+  })
+
+  const confirmResetPassword = useMutation({
+    mutationFn: confirmResetPasswordApi
+  })
+
   const logout = useMutation({
     mutationFn: logoutApi,
     onSuccess: () => {
@@ -31,5 +49,5 @@ export const useAuth = () => {
     }
   })
 
-  return { login, logout }
+  return { login, requestResetPassword, verifyResetPassword, confirmResetPassword, logout }
 }

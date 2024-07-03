@@ -69,7 +69,7 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
     <Paper elevation={1}>
       <HeaderSection title="Detalhes" description="Nome e descrição do cliente" icon={<Person />} />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack sx={{ padding: 3, gap: 3 }}>
+        <Stack sx={{ padding: 3, gap: 2 }}>
           <Loadable
             isLoading={!isClientFinished}
             LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
@@ -97,7 +97,7 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
               />
             )}
           />
-          <Box sx={{ marginLeft: "auto" }}>
+          <Box sx={{ marginLeft: "auto", marginTop: 1 }}>
             <LoadingButton
               loading={updateClient.isPending}
               type="submit"

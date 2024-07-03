@@ -8,13 +8,19 @@ const api = axios.create({
   withCredentials: true
 })
 
-import { refreshToken } from "@api/routes/auth"
+import { refreshToken, logout } from "@api/routes/auth"
 
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config
 
+    //User account is not active
+    if (error.response.data.error.code && error.response.data.error.code === "USR-016") {
+      await logout().then(() => window.location.reload())
+    }
+
+    //Access token is not valid
     if (
       error.response.data.error.code &&
       (error.response.data.error.code === "USR-007" ||

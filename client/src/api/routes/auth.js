@@ -5,6 +5,24 @@ export const login = async ({ username, password }) => {
   return response.data
 }
 
+export const requestResetPassword = async ({ email }) => {
+  const response = await api.post("/auth/resetPassword/request", { email })
+  return response.data
+}
+
+export const verifyResetPassword = async ({ token, otp }) => {
+  const response = await api.post(`/auth/resetPassword/verify/${token}`, { otp })
+  return response.data
+}
+
+export const confirmResetPassword = async ({ token, newPassword, confirmPassword }) => {
+  const response = await api.post(`/auth/resetPassword/confirm/${token}`, {
+    newPassword,
+    confirmPassword
+  })
+  return response.data
+}
+
 export const refreshToken = async () => {
   const response = await api.post("/auth/refreshToken")
   return response.data
@@ -12,23 +30,5 @@ export const refreshToken = async () => {
 
 export const logout = async () => {
   const response = await api.delete("/auth/logout")
-  return response.data
-}
-
-export const requestPasswordReset = async ({ email }) => {
-  const response = await api.post("/auth/resetPassword/request", { email })
-  return response.data
-}
-
-export const verifyPasswordResetToken = async (token) => {
-  const response = await api.post(`/auth/resetPassword/verify/${token}`)
-  return response.data
-}
-
-export const confirmPasswordReset = async (token, { newPassword, confirmPassword }) => {
-  const response = await api.post(`/auth/resetPassword/confirm/${token}`, {
-    newPassword,
-    confirmPassword
-  })
   return response.data
 }

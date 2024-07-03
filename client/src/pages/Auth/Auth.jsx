@@ -6,9 +6,16 @@ import { Stack, Box, useTheme, useMediaQuery } from "@mui/material"
 
 import { PageProgress } from "@components/ui"
 
-import { Login } from "./components"
+import {
+  Login,
+  ResetPasswordRequest,
+  ResetPasswordVerify,
+  ResetPasswordConfirm
+} from "./components"
 
 import { TypeAnimation } from "react-type-animation"
+
+import { motion, AnimatePresence } from "framer-motion"
 
 const phrases = [
   "Registe novos colaboradores para uma gestão eficiente da equipa",
@@ -66,14 +73,34 @@ const Auth = () => {
               padding: isLargeScreen ? 3 : 8
             }}
           >
-            <Routes location={location} key={location.pathname}>
-              <Route path="/" element={<Navigate replace to="/auth/login" />} />
-              <Route path="/auth" element={<Navigate replace to="/auth/login" />} />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Routes location={location}>
+                  <Route path="/" element={<Navigate replace to="/auth/login" />} />
+                  <Route path="/auth" element={<Navigate replace to="/auth/login" />} />
 
-              <Route path="/auth/login" element={<Login />} />
+                  <Route path="/auth/login" element={<Login />} />
 
-              <Route path="*" element={<Navigate replace to="/auth/login" />} />
-            </Routes>
+                  <Route path="/auth/resetPassword/request" element={<ResetPasswordRequest />} />
+                  <Route
+                    path="/auth/resetPassword/verify/:token"
+                    element={<ResetPasswordVerify />}
+                  />
+                  <Route
+                    path="/auth/resetPassword/confirm/:token"
+                    element={<ResetPasswordConfirm />}
+                  />
+
+                  <Route path="*" element={<Navigate replace to="/auth/login" />} />
+                </Routes>
+              </motion.div>
+            </AnimatePresence>
           </Stack>
         </Stack>
       </Stack>

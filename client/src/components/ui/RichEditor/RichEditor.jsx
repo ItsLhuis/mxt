@@ -104,7 +104,7 @@ const RichEditor = ({ label, value, onChange, isLoading = false }) => {
   return (
     <Loadable
       isLoading={!isFinished}
-      LoadingComponent={<Skeleton variant="rounded" width="100%" height={425} />}
+      LoadingComponent={<Skeleton variant="rounded" width="100%" height={420} />}
       LoadedComponent={
         <Box>
           {label && (

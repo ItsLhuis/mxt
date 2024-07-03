@@ -59,7 +59,7 @@ const EmployeeRoleForm = ({ user, isUserFinished }) => {
 
   return (
     <Stack sx={{ paddingBottom: 2 }}>
-      <HeaderSection title="Cargo" description="Alterar cargo do funcionário" />
+      <HeaderSection title="Cargo" description="Atualizar cargo do funcionário" />
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack
           sx={{
@@ -69,7 +69,7 @@ const EmployeeRoleForm = ({ user, isUserFinished }) => {
             paddingBlock: 1
           }}
         >
-          <Box sx={{ width: "100%", marginInline: 3 }}>
+          <Box sx={{ minWidth: 90, marginInline: 3 }}>
             <Loadable
               isLoading={!isUserFinished}
               LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}

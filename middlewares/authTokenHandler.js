@@ -3,15 +3,13 @@ const jwt = require("jsonwebtoken")
 const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
-const destroyUser = require("@utils/destroyUser")
-
 const {
   REFRESH_TOKEN_NOT_PROVIDED,
   TOKEN_NOT_PROVIDED,
   INVALID_REFRESH_TOKEN,
   INVALID_TOKEN,
   USER_NOT_FOUND,
-  USER_NOT_ACTIVE
+  USER_NOT_ACTIVE_MIDDLEWARE
 } = require("@constants/errors/user")
 
 const { AUTHENTICATION_ERROR_TYPE } = require("@constants/errors/shared/types")
@@ -48,13 +46,11 @@ const authToken = tryCatch(async (req, res, next) => {
 
   const existingUser = await User.findByUserId(user.id)
   if (existingUser.length <= 0) {
-    await destroyUser(req, res)
     throw new AppError(404, USER_NOT_FOUND, "User not found", true, AUTHENTICATION_ERROR_TYPE)
   }
 
   if (!existingUser[0].is_active) {
-    await destroyUser(req, res)
-    throw new AppError(403, USER_NOT_ACTIVE, "User is not active", true, AUTHENTICATION_ERROR_TYPE)
+    throw new AppError(403, USER_NOT_ACTIVE_MIDDLEWARE, "User is not active", true, AUTHENTICATION_ERROR_TYPE)
   }
 
   req.user.id = Number(existingUser[0].id)

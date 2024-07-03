@@ -6,6 +6,35 @@ export const authSchema = z.object({
   password: z.string().trim().min(1, { message: "A senha é obrigatória" }).max(255)
 })
 
+export const authResetPasswordRequest = z.object({
+  email: z.string().email({ message: "E-mail inválido" }).max(255).trim()
+})
+
+export const authResetPasswordVerify = z.object({
+  otp: z
+    .string({ required_error: "O código é obrigatório" })
+    .min(6, { message: "O código é obrigatório" })
+})
+
+export const authResetPasswordConfirm = z
+  .object({
+    newPassword: z
+      .string()
+      .min(6, { message: "A senha deve ter pelo menos 6 caracteres" })
+      .max(255)
+      .trim(),
+    confirmPassword: z
+      .string()
+      .min(6, { message: "A confirmação de senha deve ter pelo menos 6 caracteres" })
+      .max(255)
+      .trim()
+  })
+  .refine(
+    (data) =>
+      !data.password || !data.confirmPassword || data.password === data.confirmPassword,
+    { message: "As senhas não coincidem", path: ["password"] }
+  )
+
 export const createUserSchema = z.object({
   username: z
     .string()
