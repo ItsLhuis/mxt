@@ -23,75 +23,73 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
         sortable: true
       },
       {
-        id: "created_at_datetime",
+        id: "responsible_user",
         label: "Responsável",
         align: "left",
-        sortable: true,
+        sortable: false,
         renderComponent: ({ row }) => (
           <>
-            <Stack
-              sx={{
-                flexDirection: "row",
-                gap: 2
-              }}
-            >
+            {row.responsible_user ? (
               <Stack
                 sx={{
                   flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: 1
+                  gap: 2
                 }}
               >
-                {!row.responsible_user ? (
-                  <Typography variant="p" component="p" color="var(--outline)">
-                    Utilizador removido
+                <Stack
+                  sx={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 1
+                  }}
+                >
+                  <Avatar
+                    alt={row.responsible_user.username}
+                    src={`${BASE_URL}/users/${row.responsible_user.id}/avatar?size=80`}
+                    name={row.responsible_user.username}
+                  />
+                  <Stack
+                    sx={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis"
+                    }}
+                  >
+                    <Typography variant="p" component="p" fontWeight={500}>
+                      {row.responsible_user.username}
+                    </Typography>
+                    <Typography variant="p" component="p" color="var(--outline)">
+                      {row.responsible_user.role}
+                    </Typography>
+                  </Stack>
+                </Stack>
+                <Divider
+                  sx={{
+                    borderColor: "var(--elevation-level5)",
+                    borderWidth: 1
+                  }}
+                />
+                <Stack
+                  sx={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis"
+                  }}
+                >
+                  <Typography variant="p" component="p" fontWeight={500}>
+                    {formatDate(row.created_at_datetime)}
                   </Typography>
-                ) : (
-                  <>
-                    <Avatar
-                      alt={row.responsible_user.username}
-                      src={`${BASE_URL}/users/${row.responsible_user.id}/avatar?size=80`}
-                      name={row.responsible_user.username}
-                    />
-                    <Stack
-                      sx={{
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis"
-                      }}
-                    >
-                      <Typography variant="p" component="p" fontWeight={500}>
-                        {row.responsible_user.username}
-                      </Typography>
-                      <Typography variant="p" component="p" color="var(--outline)">
-                        {row.responsible_user.role}
-                      </Typography>
-                    </Stack>
-                  </>
-                )}
+                  <Typography variant="p" component="p" color="var(--outline)">
+                    {formatTime(row.created_at_datetime)}
+                  </Typography>
+                </Stack>
               </Stack>
-              <Divider
-                sx={{
-                  borderColor: "var(--elevation-level5)",
-                  borderWidth: 1
-                }}
-              />
-              <Stack
-                sx={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis"
-                }}
-              >
-                <Typography variant="p" component="p" fontWeight={500}>
-                  {formatDate(row.created_at_datetime)}
-                </Typography>
-                <Typography variant="p" component="p" color="var(--outline)">
-                  {formatTime(row.created_at_datetime)}
-                </Typography>
-              </Stack>
-            </Stack>
+            ) : (
+              <Typography variant="p" component="p" color="var(--outline)">
+                Utilizador removido
+              </Typography>
+            )}
           </>
         )
       }

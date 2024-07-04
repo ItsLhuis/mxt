@@ -18,6 +18,12 @@ const AddClient = lazy(() => import("./Client/Manage/Add"))
 const EditClient = lazy(() => import("./Client/Manage/Edit"))
 //----------------------------------------------------------------------
 
+//Equi
+const EquipmentList = lazy(() => import("./Equipment/List/List"))
+const AddEquipment = lazy(() => import("./Client/Manage/Add"))
+const EditEquipment = lazy(() => import("./Client/Manage/Edit"))
+//----------------------------------------------------------------------
+
 const Settings = lazy(() => import("./Settings/Settings"))
 
 export {
@@ -30,5 +36,8 @@ export {
   ClientList,
   AddClient,
   EditClient,
+  EquipmentList,
+  AddEquipment,
+  EditEquipment,
   Settings
 }

@@ -39,8 +39,8 @@ app.use(
 app.use(
   cors({
     origin: [
-      process.env.NODE_ENV === "development" && process.env.DEVELOPMENT_DOMAIN,
-      process.env.PRODUCTION_DOMAIN
+      process.env.NODE_ENV === "development" && process.env.DEVELOPMENT_DOMAINS,
+      process.env.PRODUCTION_DOMAINS
     ].filter(Boolean),
     credentials: true
   })

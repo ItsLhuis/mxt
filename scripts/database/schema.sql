@@ -89,8 +89,8 @@ CREATE TABLE IF NOT EXISTS client_contacts (
     last_modified_by_user_id INT,
     last_modified_datetime TIMESTAMP NULL,
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
-    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 -- Table: client_addresses

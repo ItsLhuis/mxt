@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "@contexts/auth"
 
 import { BASE_URL } from "@api"
-import { useClient } from "@hooks/server/useClient"
+import { useEquipment } from "@hooks/server/useEquipment"
 
 import { Link } from "react-router-dom"
 import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton } from "@mui/material"
@@ -31,10 +31,10 @@ const ClientTable = () => {
 
   const { role } = useAuth()
 
-  const { findAllClients, deleteClient } = useClient()
-  const { data: clients, isLoading: isClientsLoading } = findAllClients
+  const { findAllEquipments } = useEquipment()
+  const { data: equipments, isLoading: isEquipmentsLoading } = findAllEquipments
 
-  const [deleteClientModal, setDeleteClientModal] = useState({ isOpen: false, clientId: null })
+  /*   const [deleteClientModal, setDeleteClientModal] = useState({ isOpen: false, clientId: null })
   const openDeleteClientModal = (id) => {
     setDeleteClientModal({ isOpen: true, clientId: id })
   }
@@ -60,29 +60,27 @@ const ClientTable = () => {
         reject()
       }
     })
-  }
+  } */
 
-  const clientsTableColumns = useMemo(
+  console.log(equipments)
+
+  const equipmentsTableColumns = useMemo(
     () => [
       {
-        id: "name",
-        label: "Nome",
+        id: "brand.name",
+        label: "Marca",
         align: "left",
         sortable: true,
-        renderComponent: ({ row }) => <Link to={`/client/${row.id}`}>{row.name}</Link>
+        renderComponent: ({ row }) => <>{row.brand.name}</>
       },
       {
         id: "created_by_user",
-        visible: false
-      },
-      {
-        id: "created_at_datetime",
         label: "Criado por",
         align: "left",
         sortable: true,
         renderComponent: ({ row }) => (
           <>
-            {row.created_at_datetime ? (
+            {row.created_by_user ? (
               <Stack
                 sx={{
                   flexDirection: "row",
@@ -97,33 +95,25 @@ const ClientTable = () => {
                     gap: 1
                   }}
                 >
-                  {!row.created_by_user ? (
-                    <Typography variant="p" component="p" color="var(--outline)">
-                      Utilizador removido
+                  <Avatar
+                    alt={row.created_by_user.username}
+                    src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
+                    name={row.created_by_user.username}
+                  />
+                  <Stack
+                    sx={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis"
+                    }}
+                  >
+                    <Typography variant="p" component="p" fontWeight={500}>
+                      {row.created_by_user.username}
                     </Typography>
-                  ) : (
-                    <>
-                      <Avatar
-                        alt={row.created_by_user.username}
-                        src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
-                        name={row.created_by_user.username}
-                      />
-                      <Stack
-                        sx={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis"
-                        }}
-                      >
-                        <Typography variant="p" component="p" fontWeight={500}>
-                          {row.created_by_user.username}
-                        </Typography>
-                        <Typography variant="p" component="p" color="var(--outline)">
-                          {row.created_by_user.role}
-                        </Typography>
-                      </Stack>
-                    </>
-                  )}
+                    <Typography variant="p" component="p" color="var(--outline)">
+                      {row.created_by_user.role}
+                    </Typography>
+                  </Stack>
                 </Stack>
                 <Divider
                   sx={{
@@ -148,7 +138,7 @@ const ClientTable = () => {
               </Stack>
             ) : (
               <Typography variant="p" component="p" color="var(--outline)">
-                Ainda não foi modificado
+                Utilizador removido
               </Typography>
             )}
           </>
@@ -156,16 +146,12 @@ const ClientTable = () => {
       },
       {
         id: "last_modified_by_user",
-        visible: false
-      },
-      {
-        id: "last_modified_datetime",
         label: "Modificado pela última vez por",
         align: "left",
-        sortable: true,
+        sortable: false,
         renderComponent: ({ row }) => (
           <>
-            {row.last_modified_datetime ? (
+            {row.last_modified_by_user ? (
               <Stack
                 sx={{
                   flexDirection: "row",
@@ -180,33 +166,25 @@ const ClientTable = () => {
                     gap: 1
                   }}
                 >
-                  {!row.last_modified_by_user ? (
-                    <Typography variant="p" component="p" color="var(--outline)">
-                      Utilizador removido
+                  <Avatar
+                    alt={row.last_modified_by_user.username}
+                    src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
+                    name={row.last_modified_by_user.username}
+                  />
+                  <Stack
+                    sx={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis"
+                    }}
+                  >
+                    <Typography variant="p" component="p" fontWeight={500}>
+                      {row.last_modified_by_user.username}
                     </Typography>
-                  ) : (
-                    <>
-                      <Avatar
-                        alt={row.last_modified_by_user.username}
-                        src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
-                        name={row.last_modified_by_user.username}
-                      />
-                      <Stack
-                        sx={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis"
-                        }}
-                      >
-                        <Typography variant="p" component="p" fontWeight={500}>
-                          {row.last_modified_by_user.username}
-                        </Typography>
-                        <Typography variant="p" component="p" color="var(--outline)">
-                          {row.last_modified_by_user.role}
-                        </Typography>
-                      </Stack>
-                    </>
-                  )}
+                    <Typography variant="p" component="p" color="var(--outline)">
+                      {row.last_modified_by_user.role}
+                    </Typography>
+                  </Stack>
                 </Stack>
                 <Divider
                   sx={{
@@ -299,93 +277,12 @@ const ClientTable = () => {
             },
             {
               id: "created_by_user",
-              visible: false
-            },
-            {
-              id: "created_at_datetime",
               label: "Criado por",
               align: "left",
-              sortable: true,
+              sortable: false,
               renderComponent: ({ row }) => (
                 <>
-                  <Stack
-                    sx={{
-                      flexDirection: "row",
-                      gap: 2
-                    }}
-                  >
-                    <Stack
-                      sx={{
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: 1
-                      }}
-                    >
-                      {!row.created_by_user ? (
-                        <Typography variant="p" component="p" color="var(--outline)">
-                          Utilizador removido
-                        </Typography>
-                      ) : (
-                        <>
-                          <Avatar
-                            alt={row.created_by_user.username}
-                            src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
-                            name={row.created_by_user.username}
-                          />
-                          <Stack
-                            sx={{
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis"
-                            }}
-                          >
-                            <Typography variant="p" component="p" fontWeight={500}>
-                              {row.created_by_user.username}
-                            </Typography>
-                            <Typography variant="p" component="p" color="var(--outline)">
-                              {row.created_by_user.role}
-                            </Typography>
-                          </Stack>
-                        </>
-                      )}
-                    </Stack>
-                    <Divider
-                      sx={{
-                        borderColor: "var(--elevation-level5)",
-                        borderWidth: 1
-                      }}
-                    />
-                    <Stack
-                      sx={{
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis"
-                      }}
-                    >
-                      <Typography variant="p" component="p" fontWeight={500}>
-                        {formatDate(row.created_at_datetime)}
-                      </Typography>
-                      <Typography variant="p" component="p" color="var(--outline)">
-                        {formatTime(row.created_at_datetime)}
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                </>
-              )
-            },
-            {
-              id: "last_modified_by_user",
-              visible: false
-            },
-            {
-              id: "last_modified_datetime",
-              label: "Modificado pela última vez por",
-              align: "left",
-              sortable: true,
-              renderComponent: ({ row }) => (
-                <>
-                  {row.last_modified_datetime ? (
+                  {row.created_by_user ? (
                     <Stack
                       sx={{
                         flexDirection: "row",
@@ -400,33 +297,96 @@ const ClientTable = () => {
                           gap: 1
                         }}
                       >
-                        {!row.last_modified_by_user ? (
-                          <Typography variant="p" component="p" color="var(--outline)">
-                            Utilizador removido
+                        <Avatar
+                          alt={row.created_by_user.username}
+                          src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
+                          name={row.created_by_user.username}
+                        />
+                        <Stack
+                          sx={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis"
+                          }}
+                        >
+                          <Typography variant="p" component="p" fontWeight={500}>
+                            {row.created_by_user.username}
                           </Typography>
-                        ) : (
-                          <>
-                            <Avatar
-                              alt={row.last_modified_by_user.username}
-                              src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
-                              name={row.last_modified_by_user.username}
-                            />
-                            <Stack
-                              sx={{
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis"
-                              }}
-                            >
-                              <Typography variant="p" component="p" fontWeight={500}>
-                                {row.last_modified_by_user.username}
-                              </Typography>
-                              <Typography variant="p" component="p" color="var(--outline)">
-                                {row.last_modified_by_user.role}
-                              </Typography>
-                            </Stack>
-                          </>
-                        )}
+                          <Typography variant="p" component="p" color="var(--outline)">
+                            {row.created_by_user.role}
+                          </Typography>
+                        </Stack>
+                      </Stack>
+                      <Divider
+                        sx={{
+                          borderColor: "var(--elevation-level5)",
+                          borderWidth: 1
+                        }}
+                      />
+                      <Stack
+                        sx={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis"
+                        }}
+                      >
+                        <Typography variant="p" component="p" fontWeight={500}>
+                          {formatDate(row.created_at_datetime)}
+                        </Typography>
+                        <Typography variant="p" component="p" color="var(--outline)">
+                          {formatTime(row.created_at_datetime)}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                  ) : (
+                    <Typography variant="p" component="p" color="var(--outline)">
+                      Utilizador removido
+                    </Typography>
+                  )}
+                </>
+              )
+            },
+            {
+              id: "last_modified_by_user",
+              label: "Modificado pela última vez por",
+              align: "left",
+              sortable: false,
+              renderComponent: ({ row }) => (
+                <>
+                  {row.last_modified_by_user ? (
+                    <Stack
+                      sx={{
+                        flexDirection: "row",
+                        gap: 2
+                      }}
+                    >
+                      <Stack
+                        sx={{
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: 1
+                        }}
+                      >
+                        <Avatar
+                          alt={row.last_modified_by_user.username}
+                          src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
+                          name={row.last_modified_by_user.username}
+                        />
+                        <Stack
+                          sx={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis"
+                          }}
+                        >
+                          <Typography variant="p" component="p" fontWeight={500}>
+                            {row.last_modified_by_user.username}
+                          </Typography>
+                          <Typography variant="p" component="p" color="var(--outline)">
+                            {row.last_modified_by_user.role}
+                          </Typography>
+                        </Stack>
                       </Stack>
                       <Divider
                         sx={{
@@ -495,93 +455,12 @@ const ClientTable = () => {
             },
             {
               id: "created_by_user",
-              visible: false
-            },
-            {
-              id: "created_at_datetime",
               label: "Criado por",
               align: "left",
-              sortable: true,
+              sortable: false,
               renderComponent: ({ row }) => (
                 <>
-                  <Stack
-                    sx={{
-                      flexDirection: "row",
-                      gap: 2
-                    }}
-                  >
-                    <Stack
-                      sx={{
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: 1
-                      }}
-                    >
-                      {!row.created_by_user ? (
-                        <Typography variant="p" component="p" color="var(--outline)">
-                          Utilizador removido
-                        </Typography>
-                      ) : (
-                        <>
-                          <Avatar
-                            alt={row.created_by_user.username}
-                            src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
-                            name={row.created_by_user.username}
-                          />
-                          <Stack
-                            sx={{
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis"
-                            }}
-                          >
-                            <Typography variant="p" component="p" fontWeight={500}>
-                              {row.created_by_user.username}
-                            </Typography>
-                            <Typography variant="p" component="p" color="var(--outline)">
-                              {row.created_by_user.role}
-                            </Typography>
-                          </Stack>
-                        </>
-                      )}
-                    </Stack>
-                    <Divider
-                      sx={{
-                        borderColor: "var(--elevation-level5)",
-                        borderWidth: 1
-                      }}
-                    />
-                    <Stack
-                      sx={{
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis"
-                      }}
-                    >
-                      <Typography variant="p" component="p" fontWeight={500}>
-                        {formatDate(row.created_at_datetime)}
-                      </Typography>
-                      <Typography variant="p" component="p" color="var(--outline)">
-                        {formatTime(row.created_at_datetime)}
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                </>
-              )
-            },
-            {
-              id: "last_modified_by_user",
-              visible: false
-            },
-            {
-              id: "last_modified_datetime",
-              label: "Modificado pela última vez por",
-              align: "left",
-              sortable: true,
-              renderComponent: ({ row }) => (
-                <>
-                  {row.last_modified_datetime ? (
+                  {row.created_by_user ? (
                     <Stack
                       sx={{
                         flexDirection: "row",
@@ -596,33 +475,96 @@ const ClientTable = () => {
                           gap: 1
                         }}
                       >
-                        {!row.last_modified_by_user ? (
-                          <Typography variant="p" component="p" color="var(--outline)">
-                            Utilizador removido
+                        <Avatar
+                          alt={row.created_by_user.username}
+                          src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
+                          name={row.created_by_user.username}
+                        />
+                        <Stack
+                          sx={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis"
+                          }}
+                        >
+                          <Typography variant="p" component="p" fontWeight={500}>
+                            {row.created_by_user.username}
                           </Typography>
-                        ) : (
-                          <>
-                            <Avatar
-                              alt={row.last_modified_by_user.username}
-                              src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
-                              name={row.last_modified_by_user.username}
-                            />
-                            <Stack
-                              sx={{
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis"
-                              }}
-                            >
-                              <Typography variant="p" component="p" fontWeight={500}>
-                                {row.last_modified_by_user.username}
-                              </Typography>
-                              <Typography variant="p" component="p" color="var(--outline)">
-                                {row.last_modified_by_user.role}
-                              </Typography>
-                            </Stack>
-                          </>
-                        )}
+                          <Typography variant="p" component="p" color="var(--outline)">
+                            {row.created_by_user.role}
+                          </Typography>
+                        </Stack>
+                      </Stack>
+                      <Divider
+                        sx={{
+                          borderColor: "var(--elevation-level5)",
+                          borderWidth: 1
+                        }}
+                      />
+                      <Stack
+                        sx={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis"
+                        }}
+                      >
+                        <Typography variant="p" component="p" fontWeight={500}>
+                          {formatDate(row.created_at_datetime)}
+                        </Typography>
+                        <Typography variant="p" component="p" color="var(--outline)">
+                          {formatTime(row.created_at_datetime)}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                  ) : (
+                    <Typography variant="p" component="p" color="var(--outline)">
+                      Utilizador removido
+                    </Typography>
+                  )}
+                </>
+              )
+            },
+            {
+              id: "last_modified_by_user",
+              label: "Modificado pela última vez por",
+              align: "left",
+              sortable: false,
+              renderComponent: ({ row }) => (
+                <>
+                  {row.last_modified_by_user ? (
+                    <Stack
+                      sx={{
+                        flexDirection: "row",
+                        gap: 2
+                      }}
+                    >
+                      <Stack
+                        sx={{
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: 1
+                        }}
+                      >
+                        <Avatar
+                          alt={row.last_modified_by_user.username}
+                          src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
+                          name={row.last_modified_by_user.username}
+                        />
+                        <Stack
+                          sx={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis"
+                          }}
+                        >
+                          <Typography variant="p" component="p" fontWeight={500}>
+                            {row.last_modified_by_user.username}
+                          </Typography>
+                          <Typography variant="p" component="p" color="var(--outline)">
+                            {row.last_modified_by_user.role}
+                          </Typography>
+                        </Stack>
                       </Stack>
                       <Divider
                         sx={{
@@ -667,78 +609,72 @@ const ClientTable = () => {
             },
             {
               id: "responsible_user",
-              visible: false
-            },
-            {
-              id: "created_at_datetime",
               label: "Responsável",
               align: "left",
-              sortable: true,
+              sortable: false,
               renderComponent: ({ row }) => (
                 <>
-                  <Stack
-                    sx={{
-                      flexDirection: "row",
-                      gap: 2
-                    }}
-                  >
+                  {row.responsible_user ? (
                     <Stack
                       sx={{
                         flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: 1
+                        gap: 2
                       }}
                     >
-                      {!row.responsible_user ? (
-                        <Typography variant="p" component="p" color="var(--outline)">
-                          Utilizador removido
+                      <Stack
+                        sx={{
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: 1
+                        }}
+                      >
+                        <Avatar
+                          alt={row.responsible_user.username}
+                          src={`${BASE_URL}/users/${row.responsible_user.id}/avatar?size=80`}
+                          name={row.responsible_user.username}
+                        />
+                        <Stack
+                          sx={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis"
+                          }}
+                        >
+                          <Typography variant="p" component="p" fontWeight={500}>
+                            {row.responsible_user.username}
+                          </Typography>
+                          <Typography variant="p" component="p" color="var(--outline)">
+                            {row.responsible_user.role}
+                          </Typography>
+                        </Stack>
+                      </Stack>
+                      <Divider
+                        sx={{
+                          borderColor: "var(--elevation-level5)",
+                          borderWidth: 1
+                        }}
+                      />
+                      <Stack
+                        sx={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis"
+                        }}
+                      >
+                        <Typography variant="p" component="p" fontWeight={500}>
+                          {formatDate(row.created_at_datetime)}
                         </Typography>
-                      ) : (
-                        <>
-                          <Avatar
-                            alt={row.responsible_user.username}
-                            src={`${BASE_URL}/users/${row.responsible_user.id}/avatar?size=80`}
-                            name={row.responsible_user.username}
-                          />
-                          <Stack
-                            sx={{
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis"
-                            }}
-                          >
-                            <Typography variant="p" component="p" fontWeight={500}>
-                              {row.responsible_user.username}
-                            </Typography>
-                            <Typography variant="p" component="p" color="var(--outline)">
-                              {row.responsible_user.role}
-                            </Typography>
-                          </Stack>
-                        </>
-                      )}
+                        <Typography variant="p" component="p" color="var(--outline)">
+                          {formatTime(row.created_at_datetime)}
+                        </Typography>
+                      </Stack>
                     </Stack>
-                    <Divider
-                      sx={{
-                        borderColor: "var(--elevation-level5)",
-                        borderWidth: 1
-                      }}
-                    />
-                    <Stack
-                      sx={{
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis"
-                      }}
-                    >
-                      <Typography variant="p" component="p" fontWeight={500}>
-                        {formatDate(row.created_at_datetime)}
-                      </Typography>
-                      <Typography variant="p" component="p" color="var(--outline)">
-                        {formatTime(row.created_at_datetime)}
-                      </Typography>
-                    </Stack>
-                  </Stack>
+                  ) : (
+                    <Typography variant="p" component="p" color="var(--outline)">
+                      Utilizador removido
+                    </Typography>
+                  )}
                 </>
               )
             }
@@ -932,18 +868,18 @@ const ClientTable = () => {
     <Paper elevation={1}>
       <Box sx={{ marginTop: 3 }}>
         <Loadable
-          isLoading={isClientsLoading}
+          isLoading={isEquipmentsLoading}
           LoadingComponent={<TableSkeleton mode="datatable" />}
           LoadedComponent={
             <Table
               mode="datatable"
-              data={clients ?? []}
-              columns={clientsTableColumns}
+              data={equipments ?? []}
+              columns={equipmentsTableColumns}
               ExpandableContentComponent={ExpandableClientsTableContent}
             />
           }
         />
-        <Modal
+        {/*         <Modal
           mode="delete"
           title="Eliminar Cliente"
           open={deleteClientModal.isOpen}
@@ -951,7 +887,7 @@ const ClientTable = () => {
           onSubmit={handleDeleteClient}
           description="Tem a certeza que deseja eliminar este cliente?"
           subDescription="Ao eliminar este cliente, todos os dados relacionados, incluindo contactos, moradas, equipamentos e reparações associadas, serão removidos de forma permanente."
-        />
+        /> */}
       </Box>
     </Paper>
   )

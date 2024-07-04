@@ -53,7 +53,7 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
     const values = watch()
     return (
       values.type === clientContact?.type &&
-      values.contact.replace(/\s+/g, "") === clientContact?.contact &&
+      values.contact === clientContact?.contact &&
       (sanitizeHTML(values.description) === "" ? null : values.description) ===
         clientContact?.description
     )

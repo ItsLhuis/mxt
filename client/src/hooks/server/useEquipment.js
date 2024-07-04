@@ -1,0 +1,124 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+
+import { getAllEquipments } from "@api/routes/equipment"
+
+import { showSuccessToast, showErrorToast } from "@config/toast"
+
+export const useEquipment = () => {
+  const queryClient = useQueryClient()
+
+  const findAllEquipments = useQuery({
+    queryKey: ["equipments"],
+    queryFn: getAllEquipments,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["equipments"], data)
+    },
+    refetchInterval: 60000
+  })
+
+  /* const findClientById = (clientId) => {
+    return useQuery({
+      queryKey: ["clients", clientId],
+      queryFn: () => getClientById({ clientId }),
+      onSuccess: (data) => {
+        queryClient.setQueryData(["clients", clientId], data)
+      },
+      enabled: !!clientId
+    })
+  }
+
+  const createNewClient = useMutation({
+    mutationFn: createClient,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["clients"])
+    }
+  })
+
+  const updateClient = useMutation({
+    mutationFn: updateClientApi,
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
+      await queryClient.invalidateQueries(["clients"])
+      await queryClient.invalidateQueries(["clients", clientId])
+    }
+  })
+
+  const addNewContactClient = useMutation({
+    mutationFn: addContactClient,
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
+      await queryClient.invalidateQueries(["clients"])
+      await queryClient.invalidateQueries(["clients", clientId])
+    }
+  })
+
+  const updateContactClient = useMutation({
+    mutationFn: updateContactClientApi,
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
+      await queryClient.invalidateQueries(["clients"])
+      await queryClient.invalidateQueries(["clients", clientId])
+    }
+  })
+
+  const deleteContactClient = useMutation({
+    mutationFn: deleteContactClientApi,
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
+      await queryClient.invalidateQueries(["clients"])
+      await queryClient.invalidateQueries(["clients", clientId])
+      showSuccessToast("Contato removido com sucesso!")
+    },
+    onError: () => {
+      showErrorToast("Erro ao remover contato!")
+    }
+  })
+
+  const addNewAddressClient = useMutation({
+    mutationFn: addAddressClient,
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
+      await queryClient.invalidateQueries(["clients"])
+      await queryClient.invalidateQueries(["clients", clientId])
+    }
+  })
+
+  const updateAddressClient = useMutation({
+    mutationFn: updateAddressClientApi,
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
+      await queryClient.invalidateQueries(["clients"])
+      await queryClient.invalidateQueries(["clients", clientId])
+    }
+  })
+
+  const deleteAddressClient = useMutation({
+    mutationFn: deleteAddressClientApi,
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
+      await queryClient.invalidateQueries(["clients"])
+      await queryClient.invalidateQueries(["clients", clientId])
+      showSuccessToast("Morada eliminada com sucesso!")
+    },
+    onError: () => {
+      showErrorToast("Erro ao eliminar morada!")
+    }
+  })
+
+  const deleteClient = useMutation({
+    mutationFn: deleteClientApi,
+    onSuccess: async (data, variables) => {
+      const clientId = variables.clientId
+      await queryClient.invalidateQueries(["clients"])
+      await queryClient.removeQueries(["clients", clientId])
+      showSuccessToast("Cliente eliminado com sucesso!")
+    },
+    onError: () => {
+      showErrorToast("Erro ao eliminar cliente!")
+    }
+  }) */
+
+  return {
+    findAllEquipments
+  }
+}

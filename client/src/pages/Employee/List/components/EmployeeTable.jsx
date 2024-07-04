@@ -63,13 +63,15 @@ const EmployeeTable = () => {
     [employees, id]
   )
 
+  console.log(filteredEmployees);
+
   const employeesTableColumns = useMemo(
     () => [
       {
-        id: "user",
+        id: "user.username",
         label: "Utilizador",
         align: "left",
-        sortable: false,
+        sortable: true,
         renderComponent: ({ row }) => (
           <Stack
             sx={{
@@ -102,10 +104,10 @@ const EmployeeTable = () => {
         )
       },
       {
-        id: "isActive",
+        id: "user.is_active",
         label: "Estado",
         align: "left",
-        sortable: false,
+        sortable: true,
         renderComponent: ({ row }) => (
           <>
             {row.user.is_active ? (
@@ -120,7 +122,7 @@ const EmployeeTable = () => {
         id: "name",
         label: "Nome",
         align: "left",
-        sortable: false,
+        sortable: true,
         renderComponent: ({ row }) =>
           row.name ? (
             row.name
@@ -131,10 +133,10 @@ const EmployeeTable = () => {
           )
       },
       {
-        id: "email",
+        id: "user.email",
         label: "E-mail",
         align: "left",
-        sortable: false,
+        sortable: true,
         renderComponent: ({ row }) =>
           row.user.email ? (
             row.user.email
@@ -148,7 +150,7 @@ const EmployeeTable = () => {
         id: "phone_number",
         label: "Contacto",
         align: "left",
-        sortable: false,
+        sortable: true,
         renderComponent: ({ row }) =>
           row.phone_number ? (
             formatPhoneNumber(row.phone_number)
@@ -162,7 +164,7 @@ const EmployeeTable = () => {
         id: "country",
         label: "País",
         align: "left",
-        sortable: false,
+        sortable: true,
         renderComponent: ({ row }) =>
           row.country ? (
             row.country
@@ -176,7 +178,7 @@ const EmployeeTable = () => {
         id: "city",
         label: "Cidade",
         align: "left",
-        sortable: false,
+        sortable: true,
         renderComponent: ({ row }) =>
           row.city ? (
             row.city
@@ -190,7 +192,7 @@ const EmployeeTable = () => {
         id: "locality",
         label: "Localidade",
         align: "left",
-        sortable: false,
+        sortable: true,
         renderComponent: ({ row }) =>
           row.locality ? (
             row.locality
@@ -204,7 +206,7 @@ const EmployeeTable = () => {
         id: "address",
         label: "Morada",
         align: "left",
-        sortable: false,
+        sortable: true,
         renderComponent: ({ row }) =>
           row.address ? (
             row.address
@@ -218,7 +220,7 @@ const EmployeeTable = () => {
         id: "postal_code",
         label: "Código postal",
         align: "left",
-        sortable: false,
+        sortable: true,
         renderComponent: ({ row }) =>
           row.postal_code ? (
             row.postal_code

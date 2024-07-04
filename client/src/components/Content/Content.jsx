@@ -16,6 +16,9 @@ import {
   ClientList,
   AddClient,
   EditClient,
+  EquipmentList,
+  AddEquipment,
+  EditEquipment,
   Settings
 } from "@/pages"
 
@@ -50,6 +53,12 @@ const Content = () => {
             <Route path="/client/list" element={<ClientList />} />
             <Route path="/client/add" element={<AddClient />} />
             <Route path="/client/:clientId" element={<EditClient />} />
+            {/* ---------------------------------------------------------- */}
+
+            {/* Equipment */}
+            <Route path="/equipment/list" element={<EquipmentList />} />
+            <Route path="/equipment/add" element={<AddEquipment />} />
+            <Route path="/equipment/:clientId" element={<EditEquipment />} />
             {/* ---------------------------------------------------------- */}
 
             <Route path="/settings" element={<Settings />} />

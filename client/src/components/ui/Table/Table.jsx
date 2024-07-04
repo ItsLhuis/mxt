@@ -33,13 +33,19 @@ import { NoData } from "../"
 
 import { formatNumber } from "@utils/format/number"
 
+const getNestedValue = (obj, path, defaultValue = undefined) =>
+  path.split(".").reduce((value, key) => (value ? value[key] : defaultValue), obj)
+
 const descendingComparator = (a, b, orderBy) => {
-  if (b[orderBy] < a[orderBy]) {
-    return -1
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1
-  }
+  const valueA = getNestedValue(a, orderBy)
+  const valueB = getNestedValue(b, orderBy)
+
+  if (valueA == null && valueB == null) return 0
+  if (valueA == null) return 1
+  if (valueB == null) return -1
+
+  if (valueB < valueA) return -1
+  if (valueB > valueA) return 1
   return 0
 }
 
@@ -221,7 +227,7 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
       data.filter((item) =>
         columns.some((column) => {
           if (column.id !== "moreOptions") {
-            const value = item[column.id]
+            const value = getNestedValue(item, column.id)
             const formattedValue = typeof value === "object" ? JSON.stringify(value) : String(value)
             return formattedValue.toLowerCase().includes(state.searchQuery.toLowerCase())
           }
@@ -369,26 +375,29 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
                 </TableCell>
               )}
               {hasExpandableContent && <TableCell padding="checkbox" />}
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  sortDirection={state.orderBy === column.id ? state.order : false}
-                  sx={{ padding: "16px 24px", fontSize: 13 }}
-                >
-                  {column.sortable ? (
-                    <TableSortLabel
-                      active={state.orderBy === column.id}
-                      direction={state.orderBy === column.id ? state.order : "asc"}
-                      onClick={() => handleSort(column.id)}
-                    >
-                      {column.label}
-                    </TableSortLabel>
-                  ) : (
-                    column.label
-                  )}
-                </TableCell>
-              ))}
+              {columns.map((column) => {
+                if (column.visible === false) return null
+                return (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    sortDirection={state.orderBy === column.id ? state.order : false}
+                    sx={{ padding: "16px 24px", fontSize: 13 }}
+                  >
+                    {column.sortable ? (
+                      <TableSortLabel
+                        active={state.orderBy === column.id}
+                        direction={state.orderBy === column.id ? state.order : "asc"}
+                        onClick={() => handleSort(column.id)}
+                      >
+                        {column.label}
+                      </TableSortLabel>
+                    ) : (
+                      column.label
+                    )}
+                  </TableCell>
+                )
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -400,7 +409,8 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
                       sx={{
                         transition: "background-color 0.3s ease",
                         "&:hover": {
-                          backgroundColor: dataTheme === "dark" ? "rgba(0, 0, 0, 0.1)" : "rgba(0, 0, 0, 0.02)"
+                          backgroundColor:
+                            dataTheme === "dark" ? "rgba(0, 0, 0, 0.1)" : "rgba(0, 0, 0, 0.02)"
                         },
                         "& .MuiTableCell-root": {
                           border: sortedData.length - 1 === index && "none"
@@ -433,25 +443,30 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
                           </Tooltip>
                         </TableCell>
                       )}
-                      {columns.map((column) => (
-                        <TableCell
-                          key={column.id}
-                          align={column.align}
-                          sx={{
-                            color: "var(--onSurface)",
-                            padding: "16px 24px",
-                            fontSize: 13
-                          }}
-                        >
-                          {column.renderComponent ? (
-                            <column.renderComponent row={row} />
-                          ) : (
-                            <>
-                              {column.formatter ? column.formatter(row[column.id]) : row[column.id]}
-                            </>
-                          )}
-                        </TableCell>
-                      ))}
+                      {columns.map((column) => {
+                        if (column.visible === false) return null
+                        return (
+                          <TableCell
+                            key={column.id}
+                            align={column.align}
+                            sx={{
+                              color: "var(--onSurface)",
+                              padding: "16px 24px",
+                              fontSize: 13
+                            }}
+                          >
+                            {column.renderComponent ? (
+                              <column.renderComponent row={row} />
+                            ) : (
+                              <>
+                                {column.formatter
+                                  ? column.formatter(row[column.id])
+                                  : row[column.id]}
+                              </>
+                            )}
+                          </TableCell>
+                        )
+                      })}
                     </TableRow>
                     {hasExpandableContent && (
                       <TableRow key={`${row.id}-expandable`}>
@@ -578,6 +593,7 @@ Table.propTypes = {
       align: PropTypes.oneOf(["left", "right", "center"]),
       disablePadding: PropTypes.bool,
       sortable: PropTypes.bool,
+      visible: PropTypes.bool,
       formatter: PropTypes.func,
       renderComponent: PropTypes.elementType
     })
