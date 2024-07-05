@@ -8,8 +8,20 @@ import { BASE_URL } from "@api"
 import { useEquipment } from "@hooks/server/useEquipment"
 
 import { Link } from "react-router-dom"
-import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton } from "@mui/material"
-import { MoreVert, Edit, Delete, Phone, Place, History, Check, Close } from "@mui/icons-material"
+import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton, Button } from "@mui/material"
+import {
+  MoreVert,
+  Edit,
+  Delete,
+  Attachment,
+  PictureAsPdf,
+  Image,
+  QuestionMark,
+  Visibility,
+  History,
+  Check,
+  Close
+} from "@mui/icons-material"
 
 import {
   HeaderSection,
@@ -19,6 +31,8 @@ import {
   Avatar,
   ButtonDropDownSelect,
   ListButton,
+  Caption,
+  FileViewer,
   Modal
 } from "@components/ui"
 
@@ -33,6 +47,17 @@ const ClientTable = () => {
 
   const { findAllEquipments } = useEquipment()
   const { data: equipments, isLoading: isEquipmentsLoading } = findAllEquipments
+
+  const [openFileViewer, setOpenFileViewer] = useState(false)
+  const [attachment, setAttachment] = useState({ url: "", name: "", size: "", type: "" })
+  const handleOpenFileViewer = (url, name, size, type) => {
+    setAttachment({ url, name, size, type })
+    setOpenFileViewer(true)
+  }
+  const handleCloseFileViewer = () => {
+    setOpenFileViewer(false)
+    setAttachment({ url: "", type: "" })
+  }
 
   /*   const [deleteClientModal, setDeleteClientModal] = useState({ isOpen: false, clientId: null })
   const openDeleteClientModal = (id) => {
@@ -62,96 +87,135 @@ const ClientTable = () => {
     })
   } */
 
-  console.log(equipments)
-
   const equipmentsTableColumns = useMemo(
     () => [
       {
-        id: "brand.name",
-        label: "Marca",
+        id: "client.name",
+        label: "Cliente",
         align: "left",
         sortable: true,
-        renderComponent: ({ row }) => <>{row.brand.name}</>
+        renderComponent: ({ row }) => (
+          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+            {row.client.name}
+            {row.client.description && (
+              <Caption fontSize="small" title={row.client.description} isHtml />
+            )}
+          </Stack>
+        )
+      },
+      {
+        id: "type.name",
+        label: "Tipo",
+        align: "left",
+        sortable: true
+      },
+      {
+        id: "brand.name",
+        label: "Marca ",
+        align: "left",
+        sortable: true
+      },
+      {
+        id: "model.name",
+        label: "Modelo",
+        align: "left",
+        sortable: true
+      },
+      {
+        id: "sn",
+        label: "Número de série",
+        align: "left",
+        sortable: true
       },
       {
         id: "created_by_user",
+        visible: false
+      },
+      {
+        id: "created_at_datetime",
         label: "Criado por",
         align: "left",
         sortable: true,
         renderComponent: ({ row }) => (
           <>
-            {row.created_by_user ? (
+            <Stack
+              sx={{
+                flexDirection: "row",
+                gap: 2
+              }}
+            >
               <Stack
                 sx={{
                   flexDirection: "row",
-                  gap: 2
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 1
                 }}
               >
-                <Stack
-                  sx={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: 1
-                  }}
-                >
-                  <Avatar
-                    alt={row.created_by_user.username}
-                    src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
-                    name={row.created_by_user.username}
-                  />
-                  <Stack
-                    sx={{
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis"
-                    }}
-                  >
-                    <Typography variant="p" component="p" fontWeight={500}>
-                      {row.created_by_user.username}
-                    </Typography>
-                    <Typography variant="p" component="p" color="var(--outline)">
-                      {row.created_by_user.role}
-                    </Typography>
-                  </Stack>
-                </Stack>
-                <Divider
-                  sx={{
-                    borderColor: "var(--elevation-level5)",
-                    borderWidth: 1
-                  }}
-                />
-                <Stack
-                  sx={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis"
-                  }}
-                >
-                  <Typography variant="p" component="p" fontWeight={500}>
-                    {formatDate(row.created_at_datetime)}
-                  </Typography>
+                {!row.created_by_user ? (
                   <Typography variant="p" component="p" color="var(--outline)">
-                    {formatTime(row.created_at_datetime)}
+                    Utilizador removido
                   </Typography>
-                </Stack>
+                ) : (
+                  <>
+                    <Avatar
+                      alt={row.created_by_user.username}
+                      src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
+                      name={row.created_by_user.username}
+                    />
+                    <Stack
+                      sx={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis"
+                      }}
+                    >
+                      <Typography variant="p" component="p" fontWeight={500}>
+                        {row.created_by_user.username}
+                      </Typography>
+                      <Typography variant="p" component="p" color="var(--outline)">
+                        {row.created_by_user.role}
+                      </Typography>
+                    </Stack>
+                  </>
+                )}
               </Stack>
-            ) : (
-              <Typography variant="p" component="p" color="var(--outline)">
-                Utilizador removido
-              </Typography>
-            )}
+              <Divider
+                sx={{
+                  borderColor: "var(--elevation-level5)",
+                  borderWidth: 1
+                }}
+              />
+              <Stack
+                sx={{
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis"
+                }}
+              >
+                <Typography variant="p" component="p" fontWeight={500}>
+                  {formatDate(row.created_at_datetime)}
+                </Typography>
+                <Typography variant="p" component="p" color="var(--outline)">
+                  {formatTime(row.created_at_datetime)}
+                </Typography>
+              </Stack>
+            </Stack>
           </>
         )
       },
       {
         id: "last_modified_by_user",
+        visible: false
+      },
+      {
+        id: "last_modified_datetime",
         label: "Modificado pela última vez por",
         align: "left",
-        sortable: false,
+        sortable: true,
         renderComponent: ({ row }) => (
           <>
-            {row.last_modified_by_user ? (
+            {row.last_modified_datetime ? (
               <Stack
                 sx={{
                   flexDirection: "row",
@@ -166,25 +230,33 @@ const ClientTable = () => {
                     gap: 1
                   }}
                 >
-                  <Avatar
-                    alt={row.last_modified_by_user.username}
-                    src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
-                    name={row.last_modified_by_user.username}
-                  />
-                  <Stack
-                    sx={{
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis"
-                    }}
-                  >
-                    <Typography variant="p" component="p" fontWeight={500}>
-                      {row.last_modified_by_user.username}
-                    </Typography>
+                  {!row.last_modified_by_user ? (
                     <Typography variant="p" component="p" color="var(--outline)">
-                      {row.last_modified_by_user.role}
+                      Utilizador removido
                     </Typography>
-                  </Stack>
+                  ) : (
+                    <>
+                      <Avatar
+                        alt={row.last_modified_by_user.username}
+                        src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
+                        name={row.last_modified_by_user.username}
+                      />
+                      <Stack
+                        sx={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis"
+                        }}
+                      >
+                        <Typography variant="p" component="p" fontWeight={500}>
+                          {row.last_modified_by_user.username}
+                        </Typography>
+                        <Typography variant="p" component="p" color="var(--outline)">
+                          {row.last_modified_by_user.role}
+                        </Typography>
+                      </Stack>
+                    </>
+                  )}
                 </Stack>
                 <Divider
                   sx={{
@@ -216,7 +288,7 @@ const ClientTable = () => {
         )
       },
       {
-        id: "moreOptions",
+        id: "more_options",
         align: "right",
         sortable: false,
         renderComponent: ({ row }) => (
@@ -260,339 +332,140 @@ const ClientTable = () => {
   const ExpandableClientsTableContent = useMemo(
     () =>
       ({ row }) => {
-        const contactsTableColumns = useMemo(
+        const attachmentsTableColumns = useMemo(
           () => [
             {
-              id: "type",
-              label: "Tipo",
-              align: "left",
-              sortable: true
-            },
-            {
-              id: "contact",
-              label: "Contacto",
+              id: "file_mime_type",
               align: "left",
               sortable: true,
-              formatter: formatPhoneNumber
+              renderComponent: ({ row }) => (
+                <Stack sx={{ alignItems: "flex-start" }}>
+                  {row.file_mime_type === "application/pdf" ? (
+                    <PictureAsPdf fontSize="medium" sx={{ color: "rgb(223, 88, 84)" }} />
+                  ) : row.file_mime_type.startsWith("image/") ? (
+                    <Image fontSize="medium" sx={{ color: "rgb(245, 128, 8)" }} />
+                  ) : (
+                    <QuestionMark fontSize="medium" sx={{ color: "var(--outline)" }} />
+                  )}
+                </Stack>
+              )
             },
             {
-              id: "created_by_user",
-              label: "Criado por",
+              id: "original_filename",
+              label: "Ficheiro",
               align: "left",
-              sortable: false,
+              sortable: true,
+              renderComponent: ({ row }) => (
+                <Stack>
+                  <Typography variant="p" component="p">
+                    {row.original_filename}
+                  </Typography>
+                  <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
+                    {`${
+                      row.file_size < 1024 * 1024
+                        ? (row.file_size / 1024).toFixed(2) + " Kb"
+                        : (row.file_size / (1024 * 1024)).toFixed(2) + " Mb"
+                    }`}
+                  </Typography>
+                </Stack>
+              )
+            },
+            {
+              id: "uploaded_by_user",
+              visible: false
+            },
+            {
+              id: "uploaded_at_datetime",
+              label: "Carregado por",
+              align: "left",
+              sortable: true,
               renderComponent: ({ row }) => (
                 <>
-                  {row.created_by_user ? (
+                  <Stack
+                    sx={{
+                      flexDirection: "row",
+                      gap: 2
+                    }}
+                  >
                     <Stack
                       sx={{
                         flexDirection: "row",
-                        gap: 2
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: 1
                       }}
                     >
-                      <Stack
-                        sx={{
-                          flexDirection: "row",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          gap: 1
-                        }}
-                      >
-                        <Avatar
-                          alt={row.created_by_user.username}
-                          src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
-                          name={row.created_by_user.username}
-                        />
-                        <Stack
-                          sx={{
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis"
-                          }}
-                        >
-                          <Typography variant="p" component="p" fontWeight={500}>
-                            {row.created_by_user.username}
-                          </Typography>
-                          <Typography variant="p" component="p" color="var(--outline)">
-                            {row.created_by_user.role}
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                      <Divider
-                        sx={{
-                          borderColor: "var(--elevation-level5)",
-                          borderWidth: 1
-                        }}
-                      />
-                      <Stack
-                        sx={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis"
-                        }}
-                      >
-                        <Typography variant="p" component="p" fontWeight={500}>
-                          {formatDate(row.created_at_datetime)}
-                        </Typography>
+                      {!row.uploaded_by_user ? (
                         <Typography variant="p" component="p" color="var(--outline)">
-                          {formatTime(row.created_at_datetime)}
+                          Utilizador removido
                         </Typography>
-                      </Stack>
+                      ) : (
+                        <>
+                          <Avatar
+                            alt={row.uploaded_by_user.username}
+                            src={`${BASE_URL}/users/${row.uploaded_by_user.id}/avatar?size=80`}
+                            name={row.uploaded_by_user.username}
+                          />
+                          <Stack
+                            sx={{
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis"
+                            }}
+                          >
+                            <Typography variant="p" component="p" fontWeight={500}>
+                              {row.uploaded_by_user.username}
+                            </Typography>
+                            <Typography variant="p" component="p" color="var(--outline)">
+                              {row.uploaded_by_user.role}
+                            </Typography>
+                          </Stack>
+                        </>
+                      )}
                     </Stack>
-                  ) : (
-                    <Typography variant="p" component="p" color="var(--outline)">
-                      Utilizador removido
-                    </Typography>
-                  )}
+                    <Divider
+                      sx={{
+                        borderColor: "var(--elevation-level5)",
+                        borderWidth: 1
+                      }}
+                    />
+                    <Stack
+                      sx={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis"
+                      }}
+                    >
+                      <Typography variant="p" component="p" fontWeight={500}>
+                        {formatDate(row.uploaded_at_datetime)}
+                      </Typography>
+                      <Typography variant="p" component="p" color="var(--outline)">
+                        {formatTime(row.uploaded_at_datetime)}
+                      </Typography>
+                    </Stack>
+                  </Stack>
                 </>
               )
             },
             {
-              id: "last_modified_by_user",
-              label: "Modificado pela última vez por",
-              align: "left",
+              id: "view_file",
+              align: "right",
               sortable: false,
               renderComponent: ({ row }) => (
-                <>
-                  {row.last_modified_by_user ? (
-                    <Stack
-                      sx={{
-                        flexDirection: "row",
-                        gap: 2
-                      }}
-                    >
-                      <Stack
-                        sx={{
-                          flexDirection: "row",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          gap: 1
-                        }}
-                      >
-                        <Avatar
-                          alt={row.last_modified_by_user.username}
-                          src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
-                          name={row.last_modified_by_user.username}
-                        />
-                        <Stack
-                          sx={{
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis"
-                          }}
-                        >
-                          <Typography variant="p" component="p" fontWeight={500}>
-                            {row.last_modified_by_user.username}
-                          </Typography>
-                          <Typography variant="p" component="p" color="var(--outline)">
-                            {row.last_modified_by_user.role}
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                      <Divider
-                        sx={{
-                          borderColor: "var(--elevation-level5)",
-                          borderWidth: 1
-                        }}
-                      />
-                      <Stack
-                        sx={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis"
-                        }}
-                      >
-                        <Typography variant="p" component="p" fontWeight={500}>
-                          {formatDate(row.last_modified_datetime)}
-                        </Typography>
-                        <Typography variant="p" component="p" color="var(--outline)">
-                          {formatTime(row.last_modified_datetime)}
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  ) : (
-                    <Typography variant="p" component="p" color="var(--outline)">
-                      Ainda não foi modificado
-                    </Typography>
-                  )}
-                </>
-              )
-            }
-          ],
-          []
-        )
-
-        const addressesTableColumns = useMemo(
-          () => [
-            {
-              id: "country",
-              label: "País",
-              align: "left",
-              sortable: true
-            },
-            {
-              id: "city",
-              label: "Cidade",
-              align: "left",
-              sortable: true
-            },
-            {
-              id: "locality",
-              label: "Localidade",
-              align: "left",
-              sortable: true
-            },
-            {
-              id: "address",
-              label: "Morada",
-              align: "left",
-              sortable: true
-            },
-            {
-              id: "postal_code",
-              label: "Código postal",
-              align: "left",
-              sortable: true
-            },
-            {
-              id: "created_by_user",
-              label: "Criado por",
-              align: "left",
-              sortable: false,
-              renderComponent: ({ row }) => (
-                <>
-                  {row.created_by_user ? (
-                    <Stack
-                      sx={{
-                        flexDirection: "row",
-                        gap: 2
-                      }}
-                    >
-                      <Stack
-                        sx={{
-                          flexDirection: "row",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          gap: 1
-                        }}
-                      >
-                        <Avatar
-                          alt={row.created_by_user.username}
-                          src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
-                          name={row.created_by_user.username}
-                        />
-                        <Stack
-                          sx={{
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis"
-                          }}
-                        >
-                          <Typography variant="p" component="p" fontWeight={500}>
-                            {row.created_by_user.username}
-                          </Typography>
-                          <Typography variant="p" component="p" color="var(--outline)">
-                            {row.created_by_user.role}
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                      <Divider
-                        sx={{
-                          borderColor: "var(--elevation-level5)",
-                          borderWidth: 1
-                        }}
-                      />
-                      <Stack
-                        sx={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis"
-                        }}
-                      >
-                        <Typography variant="p" component="p" fontWeight={500}>
-                          {formatDate(row.created_at_datetime)}
-                        </Typography>
-                        <Typography variant="p" component="p" color="var(--outline)">
-                          {formatTime(row.created_at_datetime)}
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  ) : (
-                    <Typography variant="p" component="p" color="var(--outline)">
-                      Utilizador removido
-                    </Typography>
-                  )}
-                </>
-              )
-            },
-            {
-              id: "last_modified_by_user",
-              label: "Modificado pela última vez por",
-              align: "left",
-              sortable: false,
-              renderComponent: ({ row }) => (
-                <>
-                  {row.last_modified_by_user ? (
-                    <Stack
-                      sx={{
-                        flexDirection: "row",
-                        gap: 2
-                      }}
-                    >
-                      <Stack
-                        sx={{
-                          flexDirection: "row",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          gap: 1
-                        }}
-                      >
-                        <Avatar
-                          alt={row.last_modified_by_user.username}
-                          src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
-                          name={row.last_modified_by_user.username}
-                        />
-                        <Stack
-                          sx={{
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis"
-                          }}
-                        >
-                          <Typography variant="p" component="p" fontWeight={500}>
-                            {row.last_modified_by_user.username}
-                          </Typography>
-                          <Typography variant="p" component="p" color="var(--outline)">
-                            {row.last_modified_by_user.role}
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                      <Divider
-                        sx={{
-                          borderColor: "var(--elevation-level5)",
-                          borderWidth: 1
-                        }}
-                      />
-                      <Stack
-                        sx={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis"
-                        }}
-                      >
-                        <Typography variant="p" component="p" fontWeight={500}>
-                          {formatDate(row.last_modified_datetime)}
-                        </Typography>
-                        <Typography variant="p" component="p" color="var(--outline)">
-                          {formatTime(row.last_modified_datetime)}
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  ) : (
-                    <Typography variant="p" component="p" color="var(--outline)">
-                      Ainda não foi modificado
-                    </Typography>
-                  )}
-                </>
+                <Tooltip title="Ver anexo" sx={{ margin: -1 }}>
+                  <IconButton
+                    onClick={() =>
+                      handleOpenFileViewer(
+                        `${BASE_URL}/equipments/${row.equipment_id}/attachments/${row.id}/${row.original_filename}`,
+                        row.original_filename,
+                        row.file_size,
+                        row.file_mime_type
+                      )
+                    }
+                  >
+                    <Visibility />
+                  </IconButton>
+                </Tooltip>
               )
             }
           ],
@@ -721,9 +594,34 @@ const ClientTable = () => {
                         }
                       }
 
-                      if (row.field === "Contacto") {
+                      if (row.field === "Cliente") {
                         if (row.before) {
-                          return formatPhoneNumber(row.before)
+                          return (
+                            <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+                              {row.before.name}
+                              {row.before.description && (
+                                <Caption fontSize="small" title={row.before.description} isHtml />
+                              )}
+                            </Stack>
+                          )
+                        }
+                      }
+
+                      if (row.field === "Tipo") {
+                        if (row.before) {
+                          return <>{row.before.name}</>
+                        }
+                      }
+
+                      if (row.field === "Marca") {
+                        if (row.before) {
+                          return <>{row.before.name}</>
+                        }
+                      }
+
+                      if (row.field === "Modelo") {
+                        if (row.before) {
+                          return <>{row.before.name}</>
                         }
                       }
 
@@ -764,9 +662,34 @@ const ClientTable = () => {
                         }
                       }
 
-                      if (row.field === "Contacto") {
+                      if (row.field === "Cliente") {
                         if (row.after) {
-                          return formatPhoneNumber(row.after)
+                          return (
+                            <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+                              {row.after.name}
+                              {row.after.description && (
+                                <Caption fontSize="small" title={row.after.description} isHtml />
+                              )}
+                            </Stack>
+                          )
+                        }
+                      }
+
+                      if (row.field === "Tipo") {
+                        if (row.after) {
+                          return <>{row.after.name}</>
+                        }
+                      }
+
+                      if (row.field === "Marca") {
+                        if (row.after) {
+                          return <>{row.after.name}</>
+                        }
+                      }
+
+                      if (row.field === "Modelo") {
+                        if (row.after) {
+                          return <>{row.after.name}</>
                         }
                       }
 
@@ -792,6 +715,50 @@ const ClientTable = () => {
                 []
               )
 
+              const interactionsHistoryAttachmentDetailsTableColumns = useMemo(
+                () => [
+                  {
+                    id: "file_mime_type",
+                    align: "left",
+                    sortable: true,
+                    renderComponent: ({ row }) => (
+                      <Stack sx={{ alignItems: "flex-start" }}>
+                        {row.file_mime_type === "application/pdf" ? (
+                          <PictureAsPdf fontSize="medium" sx={{ color: "rgb(223, 88, 84)" }} />
+                        ) : row.file_mime_type.startsWith("image/") ? (
+                          <Image fontSize="medium" sx={{ color: "rgb(245, 128, 8)" }} />
+                        ) : (
+                          <QuestionMark fontSize="medium" sx={{ color: "var(--outline)" }} />
+                        )}
+                      </Stack>
+                    )
+                  },
+                  {
+                    id: "original_filename",
+                    label: "Ficheiro",
+                    align: "left",
+                    sortable: true,
+                    renderComponent: ({ row }) => (
+                      <Stack>
+                        <Typography variant="p" component="p">
+                          {row.original_filename}
+                        </Typography>
+                        <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
+                          {`${
+                            row.file_size < 1024 * 1024
+                              ? (row.file_size / 1024).toFixed(2) + " Kb"
+                              : (row.file_size / (1024 * 1024)).toFixed(2) + " Mb"
+                          }`}
+                        </Typography>
+                      </Stack>
+                    )
+                  }
+                ],
+                []
+              )
+
+              console.log(row.details[0])
+
               return (
                 <Box
                   sx={{
@@ -801,10 +768,27 @@ const ClientTable = () => {
                     margin: 3
                   }}
                 >
-                  <Table
-                    data={row.details ?? []}
-                    columns={interactionsHistoryDetailsTableColumns}
-                  />
+                  {row.details[0].field === "Anexos" ? (
+                    <>
+                      {row.details[0].after ? (
+                        <Table
+                          data={row.details[0].after ?? []}
+                          columns={interactionsHistoryAttachmentDetailsTableColumns}
+                        />
+                      ) : (
+                        <Table
+                          showSearch={false}
+                          data={[row.details[0].before] ?? []}
+                          columns={interactionsHistoryAttachmentDetailsTableColumns}
+                        />
+                      )}
+                    </>
+                  ) : (
+                    <Table
+                      data={row.details ?? []}
+                      columns={interactionsHistoryDetailsTableColumns}
+                    />
+                  )}
                 </Box>
               )
             },
@@ -821,21 +805,15 @@ const ClientTable = () => {
               }}
             >
               <HeaderSection
-                title="Contactos"
-                description="Contactos do cliente"
-                icon={<Phone />}
+                title="Anexos"
+                description="Anexos do equipamento"
+                icon={<Attachment />}
               />
-              <Table mode="datatable" data={row.contacts ?? []} columns={contactsTableColumns} />
-            </Box>
-            <Box
-              sx={{
-                border: "1px solid var(--elevation-level5)",
-                borderRadius: 2,
-                overflow: "hidden"
-              }}
-            >
-              <HeaderSection title="Moradas" description="Moradas do cliente" icon={<Place />} />
-              <Table mode="datatable" data={row.addresses ?? []} columns={addressesTableColumns} />
+              <Table
+                mode="datatable"
+                data={row.attachments ?? []}
+                columns={attachmentsTableColumns}
+              />
             </Box>
             {role !== "Funcionário" && (
               <Box
@@ -847,7 +825,7 @@ const ClientTable = () => {
               >
                 <HeaderSection
                   title="Histórico de Atividades"
-                  description="Histórico de atividades sobre os clientes"
+                  description="Histórico de atividades sobre o equipamento"
                   icon={<History />}
                 />
                 <Table
@@ -888,6 +866,14 @@ const ClientTable = () => {
           description="Tem a certeza que deseja eliminar este cliente?"
           subDescription="Ao eliminar este cliente, todos os dados relacionados, incluindo contactos, moradas, equipamentos e reparações associadas, serão removidos de forma permanente."
         /> */}
+        <FileViewer
+          open={openFileViewer}
+          onClose={handleCloseFileViewer}
+          file={attachment.url}
+          fileName={attachment.name}
+          fileSize={Number(attachment.size)}
+          fileType={attachment.type}
+        />
       </Box>
     </Paper>
   )

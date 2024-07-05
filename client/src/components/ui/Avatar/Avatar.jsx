@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react"
 
 import { Box, Avatar as MuiAvatar, Skeleton } from "@mui/material"
 
-import { Loadable } from "../"
+import { Loadable } from ".."
 
 import { motion } from "framer-motion"
 

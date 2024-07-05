@@ -1,0 +1,2 @@
+const __vite__fileDeps=["assets/AddClientForm-DUCRqW53.js","assets/index-DjYwzy8o.js","assets/index-CDTAegzr.css","assets/client-Ce6SMqAF.js","assets/useClient-u94t69cI.js","assets/sanitizeHTML-BJ4gd8Xw.js","assets/EditClient-7w29M9gd.js","assets/Alert-SruG8s_r.js"],__vite__mapDeps=i=>i.map(i=>__vite__fileDeps[i]);
+import{r as t,_}from"./index-DjYwzy8o.js";const r=t.lazy(()=>_(()=>import("./AddClientForm-DUCRqW53.js"),__vite__mapDeps([0,1,2,3,4,5]))),i=t.lazy(()=>_(()=>import("./EditClient-7w29M9gd.js"),__vite__mapDeps([6,1,2,4,7])));export{r as A,i as E};

@@ -902,6 +902,8 @@ const repairController = {
       const attachmentType = attachment[0].type
       const attachmentBuffer = Buffer.from(attachment[0].file)
 
+      const originalFilename = attachment[0].original_filename
+
       let readStream = new PassThrough()
 
       if (attachmentType === "image") {
@@ -918,7 +920,9 @@ const repairController = {
         readStream.end(attachmentBuffer)
       }
 
+      res.setHeader("Content-Disposition", `inline; filename="${originalFilename}"`)
       res.setHeader("Content-Type", attachmentType === "image" ? "image/jpeg" : "application/pdf")
+      
       readStream.pipe(res)
 
       readStream.on("error", () => {

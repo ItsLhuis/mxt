@@ -249,7 +249,7 @@ const ClientAddressTable = ({ client, isLoading, isError }) => {
         )
       },
       {
-        id: "moreOptions",
+        id: "more_options",
         align: "right",
         sortable: false,
         renderComponent: ({ row }) => (

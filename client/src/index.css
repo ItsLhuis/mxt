@@ -94,7 +94,7 @@ p {
 }
 
 .MuiTooltip-tooltip {
-  background-color: var(--elevation-level6) !important;
+  background-color: var(--elevation-level4) !important;
   color: var(--onSurface) !important;
   box-shadow: 0 0 0.465rem var(--boxShadow) !important;
   padding: 8px 12px !important;
@@ -329,12 +329,12 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: var(--elevation-level6) !important;
 }
 
-.MuiAlert-root {
+.MuiAlert-root.MuiAlert-colorError {
   background-color: rgb(211, 47, 47) !important;
   color: rgb(228, 225, 230) !important;
 }
 
-.MuiAlert-root .MuiAlert-icon .MuiSvgIcon-root {
+.MuiAlert-root.MuiAlert-colorError .MuiAlert-icon .MuiSvgIcon-root {
   color: rgb(228, 225, 230) !important;
 }
 
@@ -617,18 +617,21 @@ input[type=number]::-webkit-outer-spin-button {
   font-weight: 400;
 }
 
+.MuiTooltip-popper-html hr,
 .tiptap hr,
 .table-cell-tiptap-editor hr {
   border: 1px solid var(--elevation-level6);
   margin: 16px 0;
 }
 
+.MuiTooltip-popper-html blockquote,
 .tiptap blockquote,
 .table-cell-tiptap-editor blockquote {
   border-left: 2px solid var(--elevation-level6);
   padding-left: 16px;
 }
 
+.MuiTooltip-popper-html a,
 .tiptap a,
 .table-cell-tiptap-editor a {
   color: var(--primary);

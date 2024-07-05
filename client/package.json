@@ -51,6 +51,7 @@
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.23.1",
     "react-type-animation": "^3.2.0",
+    "react-zoom-pan-pinch": "^3.6.1",
     "styled-components": "^6.1.11",
     "zod": "^3.23.8"
   },

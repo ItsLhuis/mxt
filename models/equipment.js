@@ -65,8 +65,8 @@ const Equipment = {
               ? mapUser(lastModifiedByUser[0])
               : null,
           last_modified_datetime: equipment.last_modified_datetime,
-          interactions_history: interactionsHistory,
-          attachments
+          attachments,
+          interactions_history: interactionsHistory
         }
       })
     )
@@ -125,8 +125,8 @@ const Equipment = {
               ? mapUser(lastModifiedByUser[0])
               : null,
           last_modified_datetime: equipment[0].last_modified_datetime,
-          interactions_history: interactionsHistory,
-          attachments
+          attachments,
+          interactions_history: interactionsHistory
         }
 
         return [equipmentWithDetails]
@@ -589,9 +589,30 @@ const Equipment = {
   },
   attachment: {
     findAllByEquipmentId: async (equipmentId) => {
-      const query =
-        "SELECT id, equipment_id, original_filename, file_size, type, uploaded_by_user_id, uploaded_at_datetime FROM equipment_attachments WHERE equipment_id = ? ORDER BY uploaded_at_datetime DESC"
-      return dbQueryExecutor.execute(query, [equipmentId])
+      const attachmentsQuery =
+        "SELECT id, equipment_id, original_filename, file_size, file_mime_type, type, uploaded_by_user_id, uploaded_at_datetime FROM equipment_attachments WHERE equipment_id = ? ORDER BY uploaded_at_datetime DESC"
+      const attachments = await dbQueryExecutor.execute(attachmentsQuery, [equipmentId])
+
+      const attachmentsWithUserDetails = await Promise.all(
+        attachments.map(async (attachment) => {
+          const [uploadedByUser] = await Promise.all([
+            User.findByUserId(attachment.uploaded_by_user_id)
+          ])
+
+          return {
+            id: attachment.id,
+            equipment_id: attachment.equipment_id,
+            original_filename: attachment.original_filename,
+            file_size: attachment.file_size,
+            file_mime_type: attachment.file_mime_type,
+            type: attachment.type,
+            uploaded_by_user: uploadedByUser.length > 0 ? mapUser(uploadedByUser[0]) : null,
+            uploaded_at_datetime: attachment.uploaded_at_datetime
+          }
+        })
+      )
+
+      return attachmentsWithUserDetails
     },
     findByAttachmentId: (attachmentId) =>
       withCache(

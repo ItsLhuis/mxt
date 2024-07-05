@@ -229,7 +229,7 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
     <Paper elevation={1}>
       <HeaderSection
         title="Histórico de Atividades"
-        description="Histórico de atividades sobre os clientes"
+        description="Histórico de atividades sobre o cliente"
         icon={<History />}
       />
       <Loadable

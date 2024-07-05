@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 
 import { Skeleton } from "@mui/material"
 
-import { Loadable } from "../"
+import { Loadable } from ".."
 
 const Image = ({ src, alt, maxHeight = 40, maxWidth = 80, ...props }) => {
   const [isLoading, setIsLoading] = useState(true)

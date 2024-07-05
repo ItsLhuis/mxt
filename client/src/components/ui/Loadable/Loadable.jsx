@@ -4,7 +4,7 @@ import React from "react"
 
 import { motion } from "framer-motion"
 
-const Loadable = ({ isLoading, LoadingComponent, LoadedComponent }) => {
+const Loadable = ({ isLoading, LoadingComponent, LoadedComponent, ...props }) => {
   return isLoading ? (
     LoadingComponent
   ) : (
@@ -12,6 +12,7 @@ const Loadable = ({ isLoading, LoadingComponent, LoadedComponent }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
+      {...props}
     >
       {LoadedComponent}
     </motion.div>

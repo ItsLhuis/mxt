@@ -112,13 +112,16 @@ router
 
 router
   .route("/:equipmentId/attachments/:attachmentId")
-  .get(
-    checkPermissionHandler("equipment.attachment", permissions.READ),
-    equipmentController.attachment.sendAttachment
-  )
   .delete(
     checkPermissionHandler("equipment.attachment", permissions.DELETE),
     equipmentController.attachment.delete
+  )
+
+router
+  .route("/:equipmentId/attachments/:attachmentId/:fileName")
+  .get(
+    checkPermissionHandler("equipment.attachment", permissions.READ),
+    equipmentController.attachment.sendAttachment
   )
 
 router.get(

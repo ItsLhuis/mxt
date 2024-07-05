@@ -1,0 +1,2 @@
+const __vite__fileDeps=["assets/AddEmployeeForm-B4n10_jm.js","assets/index-BCLPk4lW.js","assets/index-BnCpLLZ7.css","assets/user-Bho16HCH.js","assets/Switch-Bdik7-NQ.js","assets/EditEmployee-LnOSMTvM.js","assets/phone-DqZOodLQ.js"],__vite__mapDeps=i=>i.map(i=>__vite__fileDeps[i]);
+import{r as o,_}from"./index-BCLPk4lW.js";const t=o.lazy(()=>_(()=>import("./AddEmployeeForm-B4n10_jm.js"),__vite__mapDeps([0,1,2,3,4]))),e=o.lazy(()=>_(()=>import("./EditEmployee-LnOSMTvM.js"),__vite__mapDeps([5,1,2,6])));export{t as A,e as E};

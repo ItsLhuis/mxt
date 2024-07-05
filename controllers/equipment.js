@@ -140,9 +140,9 @@ const equipmentController = {
           description: existingClient[0].description
         }
       },
+      { field: "Tipo", after: { id: existingType[0].id, name: existingType[0].name } },
       { field: "Marca", after: { id: existingBrand[0].id, name: existingBrand[0].name } },
       { field: "Modelo", after: { id: existingModel[0].id, name: existingModel[0].name } },
-      { field: "Tipo", after: { id: existingType[0].id, name: existingType[0].name } },
       { field: "SN", after: sn },
       { field: "Descrição", after: !description ? null : description }
     ]
@@ -191,6 +191,12 @@ const equipmentController = {
 
     const changes = [
       {
+        field: "Tipo",
+        before: { id: existingEquipment[0].type.id, name: existingEquipment[0].type.name },
+        after: { id: existingType[0].id, name: existingType[0].name },
+        changed: existingEquipment[0].type.id !== Number(typeId)
+      },
+      {
         field: "Marca",
         before: { id: existingEquipment[0].brand.id, name: existingEquipment[0].brand.name },
         after: { id: existingBrand[0].id, name: existingBrand[0].name },
@@ -201,12 +207,6 @@ const equipmentController = {
         before: { id: existingEquipment[0].model.id, name: existingEquipment[0].model.name },
         after: { id: existingModel[0].id, name: existingModel[0].name },
         changed: existingEquipment[0].model.id !== Number(modelId)
-      },
-      {
-        field: "Tipo",
-        before: { id: existingEquipment[0].type.id, name: existingEquipment[0].type.name },
-        after: { id: existingType[0].id, name: existingType[0].name },
-        changed: existingEquipment[0].type.id !== Number(typeId)
       },
       {
         field: "SN",
@@ -540,6 +540,8 @@ const equipmentController = {
       const attachmentType = attachment[0].type
       const attachmentBuffer = Buffer.from(attachment[0].file)
 
+      const originalFilename = attachment[0].original_filename
+
       let readStream = new PassThrough()
 
       if (attachmentType === "image") {
@@ -556,7 +558,9 @@ const equipmentController = {
         readStream.end(attachmentBuffer)
       }
 
+      res.setHeader("Content-Disposition", `inline; filename="${originalFilename}"`)
       res.setHeader("Content-Type", attachmentType === "image" ? "image/jpeg" : "application/pdf")
+
       readStream.pipe(res)
 
       readStream.on("error", () => {
@@ -617,8 +621,9 @@ const equipmentController = {
         {
           field: "Anexos",
           after: attachments.map((result) => ({
-            id: result.insertId,
             original_filename: result.originalFilename,
+            file_mime_type: result.fileMimeType,
+            file_size: result.fileSize,
             type: result.type
           }))
         }
@@ -651,8 +656,9 @@ const equipmentController = {
         {
           field: "Anexos",
           before: {
-            id: existingAttachment[0].id,
             original_filename: existingAttachment[0].original_filename,
+            file_mime_type: existingAttachment[0].file_mime_type,
+            file_size: existingAttachment[0].file_size,
             type: existingAttachment[0].type
           }
         }

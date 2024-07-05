@@ -173,7 +173,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"Admin\",\r\n    \"password\": \"adminboss\"\r\n}",
+							"raw": "{\r\n    \"username\": \"Luis\",\r\n    \"password\": \"123123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1358,7 +1358,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Carlinhos\",\n    \"description\": \"\"\n}",
+							"raw": "{\n    \"name\": \"Pinto\",\n    \"description\": \"\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1592,7 +1592,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Apple\"\r\n}\r\n",
+									"raw": "{\r\n    \"name\": \"Xiaomi\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1728,7 +1728,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"brandId\": 1,\r\n    \"name\": \"iPhone 15\"\r\n}\r\n",
+									"raw": "{\r\n    \"brandId\": 1,\r\n    \"name\": \"13T\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1806,15 +1806,16 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/equipments/1/attachments/3",
+									"raw": "{{base_url}}/equipments/5/attachments/281/nomeDoFicheiro.png",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"equipments",
-										"1",
+										"5",
 										"attachments",
-										"3"
+										"281",
+										"nomeDoFicheiro.png"
 									]
 								}
 							},
@@ -1831,18 +1832,21 @@
 										{
 											"key": "attachments",
 											"type": "file",
-											"src": "/C:/Users/luisr/OneDrive/Ambiente de Trabalho/PAP/Relatório - Gestão de Stocks.pdf"
+											"src": [
+												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/PAP/TesteFatura.pdf",
+												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/PAP/Relatório - Gestão de Stocks.pdf"
+											]
 										}
 									]
 								},
 								"url": {
-									"raw": "{{base_url}}/equipments/1/attachments",
+									"raw": "{{base_url}}/equipments/5/attachments",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"equipments",
-										"1",
+										"5",
 										"attachments"
 									]
 								}
@@ -1855,15 +1859,15 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/equipments/1/attachments/4",
+									"raw": "{{base_url}}/equipments/5/attachments/283",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"equipments",
-										"1",
+										"5",
 										"attachments",
-										"4"
+										"283"
 									]
 								}
 							},
@@ -1918,13 +1922,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/equipments/1",
+							"raw": "{{base_url}}/equipments/5",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"equipments",
-								"1"
+								"5"
 							]
 						}
 					},
@@ -1937,7 +1941,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"clientId\": 1,\r\n    \"brandId\": 1,\r\n    \"modelId\": 1,\r\n    \"typeId\": 1,\r\n    \"sn\": \"SN123456\",\r\n    \"description\": \"\"\r\n}\r\n",
+							"raw": "{\r\n    \"clientId\": 9,\r\n    \"brandId\": 1,\r\n    \"modelId\": 1,\r\n    \"typeId\": 1,\r\n    \"sn\": \"SN654321\",\r\n    \"description\": \"\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1971,13 +1975,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/equipments/1",
+							"raw": "{{base_url}}/equipments/5",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"equipments",
-								"1"
+								"5"
 							]
 						}
 					},
@@ -2671,7 +2675,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/repairs/1/attachments/1",
+									"raw": "{{base_url}}/repairs/1/attachments/1/nomeDoFicheiro.png",
 									"host": [
 										"{{base_url}}"
 									],
@@ -2679,7 +2683,8 @@
 										"repairs",
 										"1",
 										"attachments",
-										"1"
+										"1",
+										"nomeDoFicheiro.png"
 									]
 								}
 							},

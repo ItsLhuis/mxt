@@ -24,24 +24,49 @@ app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-app.use(helmet())
+const getDomainList = () => {
+  const domains =
+    process.env.NODE_ENV === "development"
+      ? process.env.DEVELOPMENT_DOMAINS.split(",")
+      : process.env.PRODUCTION_DOMAINS.split(",")
+
+  return domains.filter(Boolean)
+}
+
 app.use(
   helmet({
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
-        "img-src": ["'self'", "data:", "blob:", "https://flagcdn.com"]
+        "img-src": ["'self'", "data:", "blob:", "https://flagcdn.com", ...getDomainList()],
+        "script-src": ["'self'", "https:", ...getDomainList()],
+        "style-src": ["'self'", "https:", "'unsafe-inline'", ...getDomainList()],
+        "connect-src": ["'self'", "https:", "wss:", ...getDomainList()],
+        "default-src": ["'self'", ...getDomainList()],
+        "frame-src": ["'self'", ...getDomainList()],
+        "frame-ancestors": ["'self'", ...getDomainList()]
       }
     },
-    crossOriginResourcePolicy: { policy: "cross-origin" }
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    dnsPrefetchControl: { allow: false },
+    frameguard: { action: "sameorigin" },
+    hidePoweredBy: true,
+    hsts: {
+      maxAge: 15552000,
+      includeSubDomains: true,
+      preload: true
+    },
+    ieNoOpen: true,
+    noSniff: true,
+    xssFilter: true,
+    crossOriginEmbedderPolicy: { policy: "require-corp" },
+    crossOriginOpenerPolicy: { policy: "same-origin" }
   })
 )
+
 app.use(
   cors({
-    origin: [
-      process.env.NODE_ENV === "development" && process.env.DEVELOPMENT_DOMAINS,
-      process.env.PRODUCTION_DOMAINS
-    ].filter(Boolean),
+    origin: getDomainList(),
     credentials: true
   })
 )

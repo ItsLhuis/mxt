@@ -29,7 +29,7 @@ import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material"
 
 import TableSearch from "./TableSearch"
 
-import { NoData } from "../"
+import { NoData } from ".."
 
 import { formatNumber } from "@utils/format/number"
 
@@ -73,7 +73,16 @@ const getDataCountText = (dataSize) => {
   return dataSize === 1 ? "resultado encontrado" : "resultados encontrados"
 }
 
-const Table = ({ columns, data, mode, actions, error, helperText, ExpandableContentComponent }) => {
+const Table = ({
+  columns,
+  data,
+  mode,
+  actions,
+  error,
+  helperText,
+  showSearch = true,
+  ExpandableContentComponent
+}) => {
   const { dataTheme } = useTheme()
 
   const tableRef = useRef(null)
@@ -226,12 +235,9 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
     setFilteredData(
       data.filter((item) =>
         columns.some((column) => {
-          if (column.id !== "moreOptions") {
-            const value = getNestedValue(item, column.id)
-            const formattedValue = typeof value === "object" ? JSON.stringify(value) : String(value)
-            return formattedValue.toLowerCase().includes(state.searchQuery.toLowerCase())
-          }
-          return false
+          const value = getNestedValue(item, column.id)
+          const formattedValue = typeof value === "object" ? JSON.stringify(value) : String(value)
+          return formattedValue.toLowerCase().includes(state.searchQuery.toLowerCase())
         })
       )
     )
@@ -275,21 +281,23 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
       sx={{
         position: "relative",
         width: "100%",
-        paddingTop: 3
+        paddingTop: showSearch && 3
       }}
     >
-      <Stack
-        sx={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "flex-end",
-          marginInline: 3,
-          marginBottom: 3,
-          gap: 3
-        }}
-      >
-        <TableSearch onSearch={handleSearchChange} />
-      </Stack>
+      {showSearch && (
+        <Stack
+          sx={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            marginInline: 3,
+            marginBottom: 3,
+            gap: 3
+          }}
+        >
+          <TableSearch onSearch={handleSearchChange} />
+        </Stack>
+      )}
       {hasSelectedRows && (
         <Stack
           sx={{
@@ -383,6 +391,7 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
                     align={column.align}
                     sortDirection={state.orderBy === column.id ? state.order : false}
                     sx={{ padding: "16px 24px", fontSize: 13 }}
+                    padding={column.disablePadding ? "checkbox" : "normal"}
                   >
                     {column.sortable ? (
                       <TableSortLabel
@@ -454,14 +463,15 @@ const Table = ({ columns, data, mode, actions, error, helperText, ExpandableCont
                               padding: "16px 24px",
                               fontSize: 13
                             }}
+                            padding={column.disablePadding ? "checkbox" : "normal"}
                           >
                             {column.renderComponent ? (
                               <column.renderComponent row={row} />
                             ) : (
                               <>
                                 {column.formatter
-                                  ? column.formatter(row[column.id])
-                                  : row[column.id]}
+                                  ? column.formatter(getNestedValue(row, column.id))
+                                  : getNestedValue(row, column.id)}
                               </>
                             )}
                           </TableCell>
@@ -625,6 +635,7 @@ Table.propTypes = {
   },
   error: PropTypes.string,
   helperText: PropTypes.string,
+  showSearch: PropTypes.bool,
   ExpandableContentComponent: PropTypes.elementType
 }
 

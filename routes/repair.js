@@ -161,13 +161,16 @@ router
 
 router
   .route("/:repairId/attachments/:attachmentId")
-  .get(
-    checkPermissionHandler("repair.attachment", permissions.READ),
-    repairController.attachment.sendAttachment
-  )
   .delete(
     checkPermissionHandler("repair.attachment", permissions.DELETE),
     repairController.attachment.delete
+  )
+
+router
+  .route("/:repairId/attachments/:attachmentId/:fileName")
+  .get(
+    checkPermissionHandler("repair.attachment", permissions.READ),
+    repairController.attachment.sendAttachment
   )
 
 router.get(

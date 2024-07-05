@@ -19,6 +19,7 @@ import {
   Avatar,
   ButtonDropDownSelect,
   ListButton,
+  Caption,
   Modal
 } from "@components/ui"
 
@@ -69,7 +70,12 @@ const ClientTable = () => {
         label: "Nome",
         align: "left",
         sortable: true,
-        renderComponent: ({ row }) => <Link to={`/client/${row.id}`}>{row.name}</Link>
+        renderComponent: ({ row }) => (
+          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+            <Link to={`/client/${row.id}`}>{row.name}</Link>
+            {row.description && <Caption fontSize="small" title={row.description} isHtml />}
+          </Stack>
+        )
       },
       {
         id: "created_by_user",
@@ -82,75 +88,69 @@ const ClientTable = () => {
         sortable: true,
         renderComponent: ({ row }) => (
           <>
-            {row.created_at_datetime ? (
+            <Stack
+              sx={{
+                flexDirection: "row",
+                gap: 2
+              }}
+            >
               <Stack
                 sx={{
                   flexDirection: "row",
-                  gap: 2
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 1
                 }}
               >
-                <Stack
-                  sx={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: 1
-                  }}
-                >
-                  {!row.created_by_user ? (
-                    <Typography variant="p" component="p" color="var(--outline)">
-                      Utilizador removido
-                    </Typography>
-                  ) : (
-                    <>
-                      <Avatar
-                        alt={row.created_by_user.username}
-                        src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
-                        name={row.created_by_user.username}
-                      />
-                      <Stack
-                        sx={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis"
-                        }}
-                      >
-                        <Typography variant="p" component="p" fontWeight={500}>
-                          {row.created_by_user.username}
-                        </Typography>
-                        <Typography variant="p" component="p" color="var(--outline)">
-                          {row.created_by_user.role}
-                        </Typography>
-                      </Stack>
-                    </>
-                  )}
-                </Stack>
-                <Divider
-                  sx={{
-                    borderColor: "var(--elevation-level5)",
-                    borderWidth: 1
-                  }}
-                />
-                <Stack
-                  sx={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis"
-                  }}
-                >
-                  <Typography variant="p" component="p" fontWeight={500}>
-                    {formatDate(row.created_at_datetime)}
-                  </Typography>
+                {!row.created_by_user ? (
                   <Typography variant="p" component="p" color="var(--outline)">
-                    {formatTime(row.created_at_datetime)}
+                    Utilizador removido
                   </Typography>
-                </Stack>
+                ) : (
+                  <>
+                    <Avatar
+                      alt={row.created_by_user.username}
+                      src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
+                      name={row.created_by_user.username}
+                    />
+                    <Stack
+                      sx={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis"
+                      }}
+                    >
+                      <Typography variant="p" component="p" fontWeight={500}>
+                        {row.created_by_user.username}
+                      </Typography>
+                      <Typography variant="p" component="p" color="var(--outline)">
+                        {row.created_by_user.role}
+                      </Typography>
+                    </Stack>
+                  </>
+                )}
               </Stack>
-            ) : (
-              <Typography variant="p" component="p" color="var(--outline)">
-                Ainda não foi modificado
-              </Typography>
-            )}
+              <Divider
+                sx={{
+                  borderColor: "var(--elevation-level5)",
+                  borderWidth: 1
+                }}
+              />
+              <Stack
+                sx={{
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis"
+                }}
+              >
+                <Typography variant="p" component="p" fontWeight={500}>
+                  {formatDate(row.created_at_datetime)}
+                </Typography>
+                <Typography variant="p" component="p" color="var(--outline)">
+                  {formatTime(row.created_at_datetime)}
+                </Typography>
+              </Stack>
+            </Stack>
           </>
         )
       },
@@ -238,7 +238,7 @@ const ClientTable = () => {
         )
       },
       {
-        id: "moreOptions",
+        id: "more_options",
         align: "right",
         sortable: false,
         renderComponent: ({ row }) => (
@@ -295,7 +295,12 @@ const ClientTable = () => {
               label: "Contacto",
               align: "left",
               sortable: true,
-              formatter: formatPhoneNumber
+              renderComponent: ({ row }) => (
+                <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+                  <>{formatPhoneNumber(row.contact)}</>
+                  {row.description && <Caption fontSize="small" title={row.description} isHtml />}
+                </Stack>
+              )
             },
             {
               id: "created_by_user",
@@ -911,7 +916,7 @@ const ClientTable = () => {
               >
                 <HeaderSection
                   title="Histórico de Atividades"
-                  description="Histórico de atividades sobre os clientes"
+                  description="Histórico de atividades sobre o cliente"
                   icon={<History />}
                 />
                 <Table

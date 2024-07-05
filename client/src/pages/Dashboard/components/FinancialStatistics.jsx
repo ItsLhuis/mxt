@@ -243,7 +243,7 @@ const FinancialStatistics = () => {
       )
     },
     {
-      id: "moreOptions",
+      id: "more_options",
       align: "center",
       sortable: false,
       renderComponent: ({ data }) => (
@@ -265,7 +265,7 @@ const FinancialStatistics = () => {
       value: 1199,
       total: 1199,
       type: "Rendimento (Pendente)",
-      moreOptions: "ola",
+      more_options: "ola",
       expandableContent: () =>
         getExpandableContent("Rendimento", [
           {
@@ -293,7 +293,7 @@ const FinancialStatistics = () => {
       value: 1999,
       total: 1999,
       type: "Despesa",
-      moreOptions: "ola",
+      more_options: "ola",
       expandableContent: () =>
         getExpandableContent("Despesa", [
           {
@@ -326,7 +326,7 @@ const FinancialStatistics = () => {
       value: 399,
       total: 399,
       type: "Despesa",
-      moreOptions: "ola",
+      more_options: "ola",
       expandableContent: () =>
         getExpandableContent("Despesa", [
           {
@@ -349,7 +349,7 @@ const FinancialStatistics = () => {
       value: 49,
       total: 49,
       type: "Rendimento",
-      moreOptions: "ola",
+      more_options: "ola",
       expandableContent: () =>
         getExpandableContent("Rendimento", [
           {
@@ -392,7 +392,7 @@ const FinancialStatistics = () => {
       value: 2499,
       total: 2499,
       type: "Rendimento",
-      moreOptions: "ola",
+      more_options: "ola",
       expandableContent: () =>
         getExpandableContent("Rendimento", [
           {

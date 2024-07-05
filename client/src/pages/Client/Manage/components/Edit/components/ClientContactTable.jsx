@@ -16,6 +16,7 @@ import {
   Avatar,
   ButtonDropDownSelect,
   ListButton,
+  Caption,
   Modal
 } from "@components/ui"
 import ClientContactEditModal from "./ClientContactEditModal"
@@ -88,7 +89,12 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
         label: "Contacto",
         align: "left",
         sortable: true,
-        formatter: formatPhoneNumber
+        renderComponent: ({ row }) => (
+          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+            <>{formatPhoneNumber(row.contact)}</>
+            {row.description && <Caption fontSize="small" title={row.description} isHtml />}
+          </Stack>
+        )
       },
       {
         id: "created_by_user",
@@ -251,7 +257,7 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
         )
       },
       {
-        id: "moreOptions",
+        id: "more_options",
         align: "right",
         sortable: false,
         renderComponent: ({ row }) => (
