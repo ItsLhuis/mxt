@@ -38,10 +38,10 @@ const {
 
 const Employee = require("@models/employee")
 
-const upload = require("@middlewares/uploadFileHandler")
+const { upload, VALID_IMAGE_EXTENSIONS } = require("@middlewares/uploadFileHandler")
 
 const userController = {
-  uploadAvatar: upload.single("avatar"),
+  uploadAvatar: upload.single("avatar", VALID_IMAGE_EXTENSIONS),
   findAll: tryCatch(async (req, res) => {
     if (req.user.role === roles.EMPLOYEE) {
       throw new AppError(

@@ -6,7 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 
 const generateEmailHtml = require("@utils/emailMjmlToHtml")
 
-const sendEmail = (companyName, to, subject, text, data, template) => {
+const sendEmail = (companyName, to, subject, text, data, template, attachments) => {
   return new Promise((resolve, reject) => {
     let emailHtml = ""
 
@@ -30,7 +30,12 @@ const sendEmail = (companyName, to, subject, text, data, template) => {
       to,
       subject,
       text: text,
-      html: emailHtml
+      html: emailHtml,
+      attachments: attachments.map((att) => ({
+        content: att.buffer,
+        filename: att.originalname,
+        content_type: att.mimetype
+      }))
     }
 
     resend.emails

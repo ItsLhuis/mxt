@@ -10,7 +10,13 @@ const Email = require("@models/email")
 
 const Client = require("@models/client")
 
+const { upload, checkTotalFileSize } = require("@middlewares/uploadFileHandler")
+
 const emailController = {
+  addAttachments: [
+    upload.multiple("attachments", Infinity, []),
+    checkTotalFileSize(40 * 1024 * 1024)
+  ],
   findAll: tryCatch(async (req, res) => {
     const emails = await Email.findAll()
     res.status(200).json(emails)
@@ -48,6 +54,8 @@ const emailController = {
 
     const { name, address, city, country, postalCode, phoneNumber, email, website } = req.company
 
+    const attachments = req.files || []
+
     await Email.send(
       clientId,
       name,
@@ -62,6 +70,7 @@ const emailController = {
       subject,
       message,
       text,
+      attachments,
       req.user.id
     )
     res.status(201).json({ message: "E-mail sent successfully" })

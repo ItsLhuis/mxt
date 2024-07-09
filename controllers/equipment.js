@@ -49,7 +49,7 @@ const {
 
 const Client = require("@models/client")
 
-const upload = require("@middlewares/uploadFileHandler")
+const { upload } = require("@middlewares/uploadFileHandler")
 
 const equipmentController = {
   findAll: tryCatch(async (req, res) => {

@@ -102,22 +102,31 @@ const Email = {
     subject,
     message,
     text,
+    attachments,
     sentByUserId
   ) => {
     return new Promise((resolve, reject) => {
       mailer
-        .send(companyName, contact, subject, text, {
-          title,
-          message,
-          footer: "Por motivos de segurança, recomendamos o não compartilhamento desta mensagem!",
+        .send(
           companyName,
-          companyAddress,
-          companyCity,
-          companyCountry,
-          companyPhoneNumber,
-          companyEmail,
-          companyWebsite
-        })
+          contact,
+          subject,
+          text,
+          {
+            title,
+            message,
+            footer: "Por motivos de segurança, recomendamos o não compartilhamento desta mensagem!",
+            companyName,
+            companyAddress,
+            companyCity,
+            companyCountry,
+            companyPhoneNumber,
+            companyEmail,
+            companyWebsite
+          },
+          "default",
+          attachments
+        )
         .then((data) => {
           const query =
             "INSERT INTO emails (api_id, client_id, contact, subject, sent_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP())"

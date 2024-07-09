@@ -1,6 +1,3 @@
-const fs = require("fs")
-const path = require("path")
-
 const { PassThrough } = require("stream")
 
 const AppError = require("@classes/app/error")
@@ -16,10 +13,10 @@ const { IMAGE_ERROR_TYPE } = require("@constants/errors/shared/types")
 const Company = require("@models/company")
 const { companySchema } = require("@schemas/company")
 
-const upload = require("@middlewares/uploadFileHandler")
+const { upload, VALID_IMAGE_EXTENSIONS } = require("@middlewares/uploadFileHandler")
 
 const companyController = {
-  uploadLogo: upload.single("logo"),
+  uploadLogo: upload.single("logo", VALID_IMAGE_EXTENSIONS),
   find: tryCatch(async (req, res) => {
     const company = await Company.find()
     res.status(200).json(company)

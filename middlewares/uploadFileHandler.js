@@ -6,7 +6,10 @@ const sharp = require("sharp")
 const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
-const { INVALID_ATTACHMENT_FORMAT } = require("@constants/errors/shared/attachment")
+const {
+  INVALID_ATTACHMENT_FORMAT,
+  MAX_TOTAL_FILE_SIZE_EXCEEDED
+} = require("@constants/errors/shared/attachment")
 const { INVALID_IMAGE_FORMAT } = require("@constants/errors/shared/image")
 
 const { ATTACHMENT_ERROR_TYPE, IMAGE_ERROR_TYPE } = require("@constants/errors/shared/types")
@@ -75,14 +78,41 @@ const fileFilter = (validExtensions) => (req, file, cb) => {
   }
 }
 
+const checkTotalFileSize = (maxTotalSize) => (req, res, next) => {
+  if (!req.files || req.files.length === 0) {
+    return next()
+  }
+
+  const totalSize = req.files.reduce((acc, file) => acc + file.size, 0)
+
+  if (totalSize > maxTotalSize) {
+    return next(
+      new AppError(
+        400,
+        MAX_TOTAL_FILE_SIZE_EXCEEDED,
+        `Total file size exceeds ${maxTotalSize} bytes`,
+        false,
+        ATTACHMENT_ERROR_TYPE
+      )
+    )
+  }
+
+  next()
+}
+
 const upload = {
   single: (fieldName, validExtensions = VALID_ATTACHMENT_EXTENSIONS) =>
     tryCatch(async (req, res, next) => {
-      const upload = multer({
+      let multerOptions = {
         storage: memoryStorage,
-        limits: { fileSize: 5 * 1024 * 1024 },
-        fileFilter: fileFilter(validExtensions)
-      }).single(fieldName)
+        limits: { fileSize: 5 * 1024 * 1024 }
+      }
+
+      if (validExtensions && validExtensions.length > 0) {
+        multerOptions.fileFilter = fileFilter(validExtensions)
+      }
+
+      const upload = multer(multerOptions).single(fieldName)
 
       upload(req, res, async (err) => {
         if (err) return next(err)
@@ -101,11 +131,16 @@ const upload = {
     }),
   multiple: (fieldName, maxCount, validExtensions = VALID_ATTACHMENT_EXTENSIONS) =>
     tryCatch(async (req, res, next) => {
-      const upload = multer({
+      let multerOptions = {
         storage: memoryStorage,
-        limits: { fileSize: 5 * 1024 * 1024 },
-        fileFilter: fileFilter(validExtensions)
-      }).array(fieldName, maxCount)
+        limits: { fileSize: 5 * 1024 * 1024 }
+      }
+
+      if (validExtensions && validExtensions.length > 0) {
+        multerOptions.fileFilter = fileFilter(validExtensions)
+      }
+
+      const upload = multer(multerOptions).array(fieldName, maxCount)
 
       upload(req, res, async (err) => {
         if (err) return next(err)
@@ -124,4 +159,9 @@ const upload = {
     })
 }
 
-module.exports = upload
+module.exports = {
+  VALID_ATTACHMENT_EXTENSIONS,
+  VALID_IMAGE_EXTENSIONS,
+  checkTotalFileSize,
+  upload
+}

@@ -8,7 +8,11 @@ const emailController = require("@controllers/email")
 router
   .route("/")
   .get(checkPermissionHandler("email", permissions.READ), emailController.findAll)
-  .post(checkPermissionHandler("email", permissions.CREATE), emailController.send)
+  .post(
+    checkPermissionHandler("email", permissions.CREATE),
+    emailController.addAttachments,
+    emailController.send
+  )
 
 router
   .route("/:emailId")

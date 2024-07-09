@@ -50,7 +50,7 @@ const { repairSchema, updateRepairSchema, optionsSchema } = require("@schemas/re
 
 const Equipment = require("@models/equipment")
 
-const upload = require("@middlewares/uploadFileHandler")
+const { upload } = require("@middlewares/uploadFileHandler")
 
 const repairController = {
   findAll: tryCatch(async (req, res) => {
