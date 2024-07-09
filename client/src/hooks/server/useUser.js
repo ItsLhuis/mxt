@@ -33,7 +33,6 @@ export const useUser = () => {
       queryKey: ["user", userId],
       queryFn: () => getEmployeeByUserId({ userId }),
       onSuccess: (data) => {
-        console.log(data)
         queryClient.setQueryData(["users", userId], data)
       },
       enabled: !!userId

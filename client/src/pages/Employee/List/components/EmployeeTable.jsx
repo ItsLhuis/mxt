@@ -63,8 +63,6 @@ const EmployeeTable = () => {
     [employees, id]
   )
 
-  console.log(filteredEmployees);
-
   const employeesTableColumns = useMemo(
     () => [
       {
