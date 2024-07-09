@@ -20,8 +20,8 @@ const EditClient = lazy(() => import("./Client/Manage/Edit"))
 
 //Equi
 const EquipmentList = lazy(() => import("./Equipment/List/List"))
-const AddEquipment = lazy(() => import("./Client/Manage/Add"))
-const EditEquipment = lazy(() => import("./Client/Manage/Edit"))
+const AddEquipment = lazy(() => import("./Equipment/Manage/Add"))
+const EditEquipment = lazy(() => import("./Equipment/Manage/Edit"))
 //----------------------------------------------------------------------
 
 const Settings = lazy(() => import("./Settings/Settings"))

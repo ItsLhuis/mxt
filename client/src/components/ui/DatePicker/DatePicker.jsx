@@ -2,7 +2,7 @@ import React from "react"
 
 import { startOfDay, isBefore, isAfter } from "date-fns"
 
-import { DateTimePicker  } from "@mui/x-date-pickers"
+import { DateTimePicker } from "@mui/x-date-pickers"
 import { DialogActions, Button, FormHelperText } from "@mui/material"
 import { KeyboardArrowDown } from "@mui/icons-material"
 
@@ -62,9 +62,7 @@ const DatePicker = (props) => {
         {...props}
       />
       {hasHelperText && (
-        <FormHelperText
-          sx={{ color: (props.error || isBeforeMinDate || isAfterMaxDate) && "rgb(211, 47, 47)" }}
-        >
+        <FormHelperText error={props.error || isBeforeMinDate || isAfterMaxDate}>
           {(isBeforeMinDate && "A data selecionada está antes do limite mínimo") ||
             (isAfterMaxDate && "A data selecionada está após o limite máximo") ||
             props.helperText}

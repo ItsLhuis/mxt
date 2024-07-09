@@ -15,7 +15,7 @@ const LottieAnimation = {
   light: LottieAnimationLight
 }
 
-const NoData = ({ error, onlyLottie }) => {
+const NoData = ({ error, onlyLottie, style }) => {
   const { dataTheme } = useTheme()
 
   return (
@@ -33,7 +33,8 @@ const NoData = ({ error, onlyLottie }) => {
             borderRadius: 2,
             padding: 3,
             paddingBottom: 5,
-            color: "var(--outline)"
+            color: "var(--outline)",
+            ...style
           }}
         >
           <Lottie animationData={LottieAnimation[dataTheme]} style={{ height: 200 }} />
@@ -48,7 +49,8 @@ const NoData = ({ error, onlyLottie }) => {
 
 NoData.propTypes = {
   error: PropTypes.bool,
-  onlyLottie: PropTypes.bool
+  onlyLottie: PropTypes.bool,
+  style: PropTypes.object
 }
 
 export default NoData

@@ -7,6 +7,7 @@ const { tryCatch } = require("@utils/tryCatch")
 const destroyUser = require("@utils/destroyUser")
 const mailer = require("@utils/mailer")
 const generateOtp = require("@utils/generateOtp")
+const formatPhoneNumber = require("@utils/formatPhoneNumber")
 
 const {
   AUTHENTICATION_FAILED,
@@ -173,7 +174,7 @@ const authController = {
             companyAddress: `${companyDetails[0].address}, ${companyDetails[0].postal_code}`,
             companyCity: companyDetails[0].city,
             companyCountry: companyDetails[0].country,
-            companyPhoneNumber: companyDetails[0].phone_number,
+            companyPhoneNumber: formatPhoneNumber(companyDetails[0].phone_number),
             companyEmail: companyDetails[0].email,
             companyWebsite: companyDetails[0].website
           },

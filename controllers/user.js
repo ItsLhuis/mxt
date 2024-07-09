@@ -9,6 +9,7 @@ const { tryCatch } = require("@utils/tryCatch")
 
 const mailer = require("@utils/mailer")
 const processImage = require("@utils/processImage")
+const formatPhoneNumber = require("@utils/formatPhoneNumber")
 
 const { PERMISSION_DENIED } = require("@constants/errors/permission")
 const { IMAGE_STREAMING_ERROR } = require("@constants/errors/shared/image")
@@ -203,7 +204,7 @@ const userController = {
         companyAddress: `${req.company.address}, ${req.company.postalCode}`,
         companyCity: req.company.city,
         companyCountry: req.company.country,
-        companyPhoneNumber: req.company.phoneNumber,
+        companyPhoneNumber: formatPhoneNumber(req.company.phoneNumber),
         companyEmail: req.company.email,
         companyWebsite: req.company.website
       })

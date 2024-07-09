@@ -28,7 +28,7 @@ const FileViewer = ({ open, onClose, file, fileName, fileSize, fileType }) => {
 
   const [state, setState] = useState({
     fileName: "",
-    fileSize: ""
+    fileSize: 0
   })
 
   useEffect(() => {
@@ -194,7 +194,7 @@ const FileViewer = ({ open, onClose, file, fileName, fileSize, fileType }) => {
                   isLoading={isLoading}
                   LoadingComponent={<CircularProgress />}
                   LoadedComponent={
-                    <TransformWrapper>
+                    <TransformWrapper doubleClick={{ disabled: true }}>
                       <TransformComponent
                         wrapperStyle={{
                           height: "100%",

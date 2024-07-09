@@ -7,6 +7,7 @@ import {
   Dialog,
   Box,
   Stack,
+  CircularProgress,
   TextField,
   InputAdornment,
   IconButton,
@@ -21,7 +22,7 @@ import {
 } from "@mui/material"
 import { Close, Search } from "@mui/icons-material"
 
-import { NoData } from ".."
+import { NoData, Loadable } from ".."
 
 import { formatNumber } from "@utils/format/number"
 
@@ -37,6 +38,7 @@ const Modal = ({
   color = "primary",
   onSubmit,
   data,
+  isLoading,
   placeholder,
   buttonStructure,
   disabled = false,
@@ -284,7 +286,7 @@ const Modal = ({
 
       useEffect(() => {
         filterData()
-      }, [open, text, currentPage])
+      }, [open, data, text, currentPage])
 
       const totalPages = Math.ceil(filteredData.length / pageSize)
       const startIndex = (currentPage - 1) * pageSize
@@ -341,26 +343,44 @@ const Modal = ({
               borderWidth: 1
             }}
           />
-          <Box
-            sx={{
+          <Loadable
+            isLoading={isLoading}
+            LoadingComponent={
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100%",
+                  width: "100%",
+                  minHeight: 210
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            }
+            LoadedComponent={
+              <>
+                {itemsToShow.length === 0 ? (
+                  <NoData style={{ height: "100%" }} />
+                ) : (
+                  <>
+                    {itemsToShow.map((item, index) => (
+                      <React.Fragment key={index}>{buttonStructure(item, onClose)}</React.Fragment>
+                    ))}
+                  </>
+                )}
+              </>
+            }
+            style={{
               display: "flex",
               flexDirection: "column",
-              gap: 1,
+              gap: "8px",
               overflow: "auto",
-              padding: 3,
+              padding: "24px",
               height: "100%"
             }}
-          >
-            {itemsToShow.length === 0 ? (
-              <NoData />
-            ) : (
-              <>
-                {itemsToShow.map((item, index) => (
-                  <React.Fragment key={index}>{buttonStructure(item, onClose)}</React.Fragment>
-                ))}
-              </>
-            )}
-          </Box>
+          />
           {totalPages > 1 && (
             <>
               <Divider
@@ -442,6 +462,7 @@ Modal.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
   mode: PropTypes.oneOf(["normal", "delete", "form", "data"]),
+  isLoading: PropTypes.bool,
   cancelButtonText: PropTypes.string,
   submitButtonText: PropTypes.string,
   color: PropTypes.string,

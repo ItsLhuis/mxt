@@ -61,10 +61,10 @@ const Select = forwardRef(
                 component="p"
                 sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}
               >
-                {item === "" ? "Nenhum" : item}
+                {item === "" ? "Nenhum item" : item}
               </Typography>
             </MenuItem>,
-            item === "" && (
+            item === "" && data.length > 1 && (
               <Divider
                 key={`divider-${index}`}
                 sx={{
@@ -75,9 +75,7 @@ const Select = forwardRef(
             )
           ])}
         </MuiSelect>
-        {helperText && (
-          <FormHelperText sx={{ color: error && "rgb(211, 47, 47)" }}>{helperText}</FormHelperText>
-        )}
+        {helperText && <FormHelperText error={error}>{helperText}</FormHelperText>}
       </FormControl>
     )
   }

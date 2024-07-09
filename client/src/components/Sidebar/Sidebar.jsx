@@ -87,11 +87,6 @@ const sidebarData = [
             path: "/equipment/type/list",
             name: "Lista",
             className: "__but__lvlDown"
-          },
-          {
-            path: "/equipment/type/tag",
-            name: "Adicionar",
-            className: "__but__lvlDown"
           }
         ]
       },
@@ -104,11 +99,6 @@ const sidebarData = [
             path: "/equipment/brand/list",
             name: "Lista",
             className: "__but__lvlDown"
-          },
-          {
-            path: "/equipment/brand/add",
-            name: "Adicionar",
-            className: "__but__lvlDown"
           }
         ]
       },
@@ -120,11 +110,6 @@ const sidebarData = [
           {
             path: "/equipment/model/list",
             name: "Lista",
-            className: "__but__lvlDown"
-          },
-          {
-            path: "/equipment/model/add",
-            name: "Adicionar",
             className: "__but__lvlDown"
           }
         ]
@@ -147,7 +132,19 @@ const sidebarData = [
         className: ""
       },
       {
-        icon: <AppsOutlined fontSize="small" />,
+        icon: <Construction fontSize="small" />,
+        path: "/repair/status",
+        name: "Estado",
+        submenu: [
+          {
+            path: "/repair/entry-accessory/list",
+            name: "Lista",
+            className: "__but__lvlDown"
+          }
+        ]
+      },
+      {
+        icon: <Construction fontSize="small" />,
         path: "/repair/entry-accessory",
         name: "Acessório da Entrada",
         submenu: [
@@ -155,16 +152,11 @@ const sidebarData = [
             path: "/repair/entry-accessory/list",
             name: "Lista",
             className: "__but__lvlDown"
-          },
-          {
-            path: "/repair/entry-accessory/tag",
-            name: "Adicionar",
-            className: "__but__lvlDown"
           }
         ]
       },
       {
-        icon: <AppsOutlined fontSize="small" />,
+        icon: <Construction fontSize="small" />,
         path: "/repair/reported-issue",
         name: "Problema Relatado",
         submenu: [
@@ -172,16 +164,11 @@ const sidebarData = [
             path: "/repair/reported-issue/list",
             name: "Lista",
             className: "__but__lvlDown"
-          },
-          {
-            path: "/repair/reported-issue/add",
-            name: "Adicionar",
-            className: "__but__lvlDown"
           }
         ]
       },
       {
-        icon: <AppsOutlined fontSize="small" />,
+        icon: <Construction fontSize="small" />,
         path: "/repair/work-done",
         name: "Trabalho Realizado",
         submenu: [
@@ -189,27 +176,17 @@ const sidebarData = [
             path: "/repair/work-done/list",
             name: "Lista",
             className: "__but__lvlDown"
-          },
-          {
-            path: "/repair/work-done/add",
-            name: "Adicionar",
-            className: "__but__lvlDown"
           }
         ]
       },
       {
-        icon: <AppsOutlined fontSize="small" />,
+        icon: <Construction fontSize="small" />,
         path: "/repair/intervention-accessory",
         name: "Acessório da Intervenção",
         submenu: [
           {
             path: "/repair/intervention-accessory/list",
             name: "Lista",
-            className: "__but__lvlDown"
-          },
-          {
-            path: "/repair/intervention-accessory/add",
-            name: "Adicionar",
             className: "__but__lvlDown"
           }
         ]

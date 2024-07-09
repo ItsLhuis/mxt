@@ -17,18 +17,12 @@ const VALID_IMAGE_EXTENSIONS = [".jpeg", ".jpg", ".png"]
 const memoryStorage = multer.memoryStorage()
 
 const normalizeFileName = (fileName) => {
-  const normalizedFileName = Buffer.from(fileName, "latin1").toString("utf8")
-
-  if (normalizedFileName === fileName) {
-    return fileName
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^\w\s.-]/g, "")
-      .toLowerCase()
-      .replace(/^\w/, (char) => char.toUpperCase())
-  }
-
-  return normalizedFileName
+  return fileName
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\w\s.-]/g, "")
+    .toLowerCase()
+    .replace(/^\w/, (char) => char.toUpperCase())
 }
 
 const processFile = async (file) => {

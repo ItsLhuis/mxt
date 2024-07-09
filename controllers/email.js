@@ -1,6 +1,8 @@
 const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
 
+const formatPhoneNumber = require("@utils/formatPhoneNumber")
+
 const { EMAIL_NOT_FOUND } = require("@constants/errors/shared/email")
 const { CLIENT_NOT_FOUND, CONTACT_NOT_FOUND, INVALID_CONTACT } = require("@constants/errors/client")
 
@@ -52,7 +54,7 @@ const emailController = {
       `${address}, ${postalCode}`,
       city,
       country,
-      phoneNumber,
+      formatPhoneNumber(phoneNumber),
       email,
       website,
       existingContact[0].contact,

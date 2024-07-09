@@ -9,7 +9,8 @@ import { updateUserRoleSchema } from "@schemas/user"
 import { useUser } from "@hooks/server/useUser"
 
 import { LoadingButton } from "@mui/lab"
-import { Stack, Box, Typography, FormControl, Skeleton } from "@mui/material"
+import { Stack, Box, FormControl, Skeleton, Paper } from "@mui/material"
+import { ManageAccounts } from "@mui/icons-material"
 
 import { Loadable, HeaderSection, Select } from "@components/ui"
 
@@ -58,60 +59,59 @@ const EmployeeRoleForm = ({ user, isUserFinished }) => {
   }
 
   return (
-    <Stack sx={{ paddingBottom: 2 }}>
-      <HeaderSection title="Cargo" description="Atualizar cargo do funcionário" />
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack
-          sx={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingBlock: 1
-          }}
-        >
-          <Box sx={{ minWidth: 90, marginInline: 3 }}>
-            <Loadable
-              isLoading={!isUserFinished}
-              LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
-              LoadedComponent={
-                <FormControl fullWidth>
-                  <Controller
-                    name="role"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <Select
-                        ref={field.ref}
-                        label="Cargo"
-                        data={[
-                          "",
-                          ...(role !== "Administrador" ? ["Administrador"] : []),
-                          "Funcionário"
-                        ]}
-                        value={field.value}
-                        onChange={field.onChange}
-                        error={!!errors.role}
-                        helperText={errors.role?.message}
-                      />
-                    )}
-                  />
-                </FormControl>
-              }
-            />
-          </Box>
-          <Box sx={{ paddingRight: 3 }}>
-            <LoadingButton
-              loading={updateUserRole.isPending}
-              type="submit"
-              variant="contained"
-              disabled={!isUserFinished || isFormUnchanged()}
-            >
-              Atualizar Cargo
-            </LoadingButton>
-          </Box>
-        </Stack>
-      </form>
-    </Stack>
+    <Paper elevation={1}>
+      <Stack>
+        <HeaderSection
+          title="Cargo"
+          description="Atualizar cargo do funcionário"
+          icon={<ManageAccounts />}
+        />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Stack sx={{ padding: 3 }}>
+            <Box sx={{ minWidth: 90 }}>
+              <Loadable
+                isLoading={!isUserFinished}
+                LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
+                LoadedComponent={
+                  <FormControl fullWidth>
+                    <Controller
+                      name="role"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <Select
+                          ref={field.ref}
+                          label="Cargo"
+                          data={[
+                            "",
+                            ...(role !== "Administrador" ? ["Administrador"] : []),
+                            "Funcionário"
+                          ]}
+                          value={field.value}
+                          onChange={field.onChange}
+                          error={!!errors.role}
+                          helperText={errors.role?.message}
+                        />
+                      )}
+                    />
+                  </FormControl>
+                }
+              />
+            </Box>
+            <Box sx={{ marginLeft: "auto", marginTop: 3 }}>
+              <LoadingButton
+                loading={updateUserRole.isPending}
+                type="submit"
+                variant="contained"
+                disabled={!isUserFinished || isFormUnchanged()}
+              >
+                Atualizar Cargo
+              </LoadingButton>
+            </Box>
+          </Stack>
+        </form>
+      </Stack>
+    </Paper>
   )
 }
 

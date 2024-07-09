@@ -3,21 +3,21 @@ import React, { Suspense } from "react"
 import { Box, Container } from "@mui/material"
 
 import { PageLoader, HeaderPage } from "@components/ui"
-import { AddClientForm } from "./components"
+import { AddEquipmentForm } from "./components"
 
 import { motion } from "framer-motion"
 
-const AddCLientPage = () => {
+const AddEquipmentPage = () => {
   return (
     <Suspense fallback={<PageLoader />}>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
         <Box component="main" className="page-main">
           <Container maxWidth={false}>
             <HeaderPage
-              title="Adicionar Cliente"
-              breadcrumbs={[{ name: "Cliente", link: "/client/list" }, { name: "Adicionar" }]}
+              title="Adicionar Equipamento"
+              breadcrumbs={[{ name: "Equipamento", link: "/equipment/list" }, { name: "Adicionar" }]}
             />
-            <AddClientForm />
+            <AddEquipmentForm />
           </Container>
         </Box>
       </motion.div>
@@ -25,4 +25,4 @@ const AddCLientPage = () => {
   )
 }
 
-export default AddCLientPage
+export default AddEquipmentPage

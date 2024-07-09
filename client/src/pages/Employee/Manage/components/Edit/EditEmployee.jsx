@@ -7,7 +7,7 @@ import { useAuth } from "@contexts/auth"
 import { BASE_URL } from "@api"
 import { useUser } from "@hooks/server/useUser"
 
-import { Stack, Alert, Paper, Skeleton, Typography, Grid, Divider } from "@mui/material"
+import { Stack, Alert, Paper, Skeleton, Typography, Grid } from "@mui/material"
 import { AccountBox } from "@mui/icons-material"
 
 import { PageLoader, HeaderSection, Loadable, Avatar } from "@components/ui"
@@ -81,8 +81,8 @@ const EditEmployee = () => {
             </Alert>
           </motion.div>
         )}
-        <Paper elevation={1}>
-          <Stack>
+        <Stack sx={{ gap: 3 }}>
+          <Paper elevation={1}>
             <HeaderSection
               title="Detalhes"
               description="Utilizador, email, nome, contacto... do funcionário"
@@ -161,22 +161,10 @@ const EditEmployee = () => {
                 </Grid>
               ))}
             </Grid>
-            <Divider
-              sx={{
-                borderColor: "var(--elevation-level5)",
-                borderWidth: 1
-              }}
-            />
-            <EmployeeRoleForm user={user} isUserFinished={isUserFinished && canEdit} />
-            <Divider
-              sx={{
-                borderColor: "var(--elevation-level5)",
-                borderWidth: 1
-              }}
-            />
-            <EmployeeStatusForm user={user} isUserFinished={isUserFinished && canEdit} />
-          </Stack>
-        </Paper>
+          </Paper>
+          <EmployeeRoleForm user={user} isUserFinished={isUserFinished && canEdit} />
+          <EmployeeStatusForm user={user} isUserFinished={isUserFinished && canEdit} />
+        </Stack>
       </Stack>
     </Suspense>
   )

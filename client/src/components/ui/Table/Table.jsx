@@ -587,7 +587,7 @@ const Table = ({
         </Grid>
       )}
       {error && (
-        <FormHelperText sx={{ marginLeft: 3, marginTop: 1, color: error && "rgb(211, 47, 47)" }}>
+        <FormHelperText error={error} sx={{ marginLeft: 3, marginTop: 1 }}>
           {helperText}
         </FormHelperText>
       )}

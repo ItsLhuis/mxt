@@ -3,18 +3,17 @@ import React, { useMemo } from "react"
 import { BASE_URL } from "@api"
 
 import { Box, Stack, Paper, Divider, Typography } from "@mui/material"
-import { History, Check, Close } from "@mui/icons-material"
+import { History, Check, Close, PictureAsPdf, Image, QuestionMark } from "@mui/icons-material"
 
 import { HeaderSection, Loadable, Table, TableSkeleton, Avatar } from "@components/ui"
 
 import { formatHTML } from "@utils/format/formatHTML"
 import { formatDate, formatTime } from "@utils/format/date"
-import { formatPhoneNumber } from "@utils/format/phone"
 
-const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
-  const isClientFinished = !isLoading && !isError
+const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
+  const isEquipmentFinished = !isLoading && !isError
 
-  const clientInteractionsHistoryTableColumns = useMemo(
+  const equipmentInteractionsHistoryTableColumns = useMemo(
     () => [
       {
         id: "type",
@@ -97,7 +96,7 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
     []
   )
 
-  const ExpandableClientsInteractionsHistoryTableContent = useMemo(
+  const ExpandableEquipmentsInteractionsHistoryTableContent = useMemo(
     () =>
       ({ row }) => {
         const interactionsHistoryDetailsTableColumns = useMemo(
@@ -136,9 +135,34 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                   }
                 }
 
-                if (row.field === "Contacto") {
+                if (row.field === "Cliente") {
                   if (row.before) {
-                    return formatPhoneNumber(row.before)
+                    return (
+                      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+                        {row.before.name}
+                        {row.before.description && (
+                          <Caption fontSize="small" title={row.before.description} isHtml />
+                        )}
+                      </Stack>
+                    )
+                  }
+                }
+
+                if (row.field === "Tipo") {
+                  if (row.before) {
+                    return <>{row.before.name}</>
+                  }
+                }
+
+                if (row.field === "Marca") {
+                  if (row.before) {
+                    return <>{row.before.name}</>
+                  }
+                }
+
+                if (row.field === "Modelo") {
+                  if (row.before) {
+                    return <>{row.before.name}</>
                   }
                 }
 
@@ -179,9 +203,34 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                   }
                 }
 
-                if (row.field === "Contacto") {
+                if (row.field === "Cliente") {
                   if (row.after) {
-                    return formatPhoneNumber(row.after)
+                    return (
+                      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+                        {row.after.name}
+                        {row.after.description && (
+                          <Caption fontSize="small" title={row.after.description} isHtml />
+                        )}
+                      </Stack>
+                    )
+                  }
+                }
+
+                if (row.field === "Tipo") {
+                  if (row.after) {
+                    return <>{row.after.name}</>
+                  }
+                }
+
+                if (row.field === "Marca") {
+                  if (row.after) {
+                    return <>{row.after.name}</>
+                  }
+                }
+
+                if (row.field === "Modelo") {
+                  if (row.after) {
+                    return <>{row.after.name}</>
                   }
                 }
 
@@ -207,6 +256,48 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
           []
         )
 
+        const interactionsHistoryAttachmentDetailsTableColumns = useMemo(
+          () => [
+            {
+              id: "file_mime_type",
+              align: "left",
+              sortable: true,
+              renderComponent: ({ row }) => (
+                <Stack sx={{ alignItems: "flex-start" }}>
+                  {row.file_mime_type === "application/pdf" ? (
+                    <PictureAsPdf fontSize="medium" sx={{ color: "rgb(223, 88, 84)" }} />
+                  ) : row.file_mime_type.startsWith("image/") ? (
+                    <Image fontSize="medium" sx={{ color: "rgb(245, 128, 8)" }} />
+                  ) : (
+                    <QuestionMark fontSize="medium" sx={{ color: "var(--outline)" }} />
+                  )}
+                </Stack>
+              )
+            },
+            {
+              id: "original_filename",
+              label: "Ficheiro",
+              align: "left",
+              sortable: true,
+              renderComponent: ({ row }) => (
+                <Stack>
+                  <Typography variant="p" component="p">
+                    {row.original_filename}
+                  </Typography>
+                  <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
+                    {`${
+                      row.file_size < 1024 * 1024
+                        ? (row.file_size / 1024).toFixed(2) + " Kb"
+                        : (row.file_size / (1024 * 1024)).toFixed(2) + " Mb"
+                    }`}
+                  </Typography>
+                </Stack>
+              )
+            }
+          ],
+          []
+        )
+
         return (
           <Box
             sx={{
@@ -216,7 +307,24 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
               margin: 3
             }}
           >
-            <Table data={row.details ?? []} columns={interactionsHistoryDetailsTableColumns} />
+            {row.details[0].field === "Anexos" ? (
+              <>
+                {row.details[0].after ? (
+                  <Table
+                    data={row.details[0].after ?? []}
+                    columns={interactionsHistoryAttachmentDetailsTableColumns}
+                  />
+                ) : (
+                  <Table
+                    showSearch={false}
+                    data={[row.details[0].before]}
+                    columns={interactionsHistoryAttachmentDetailsTableColumns}
+                  />
+                )}
+              </>
+            ) : (
+              <Table data={row.details ?? []} columns={interactionsHistoryDetailsTableColumns} />
+            )}
           </Box>
         )
       },
@@ -227,11 +335,11 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
     <Paper elevation={1}>
       <HeaderSection
         title="Histórico de Atividades"
-        description="Histórico de atividades sobre o cliente"
+        description="Histórico de atividades sobre o equipamento"
         icon={<History />}
       />
       <Loadable
-        isLoading={!isClientFinished}
+        isLoading={!isEquipmentFinished}
         LoadingComponent={<TableSkeleton mode="datatable" />}
         LoadedComponent={
           <Box
@@ -244,9 +352,9 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
           >
             <Table
               mode="datatable"
-              data={isClientFinished ? client[0].interactions_history : []}
-              columns={clientInteractionsHistoryTableColumns}
-              ExpandableContentComponent={ExpandableClientsInteractionsHistoryTableContent}
+              data={isEquipmentFinished ? equipment[0].interactions_history : []}
+              columns={equipmentInteractionsHistoryTableColumns}
+              ExpandableContentComponent={ExpandableEquipmentsInteractionsHistoryTableContent}
             />
           </Box>
         }

@@ -58,7 +58,7 @@ const Content = () => {
             {/* Equipment */}
             <Route path="/equipment/list" element={<EquipmentList />} />
             <Route path="/equipment/add" element={<AddEquipment />} />
-            <Route path="/equipment/:clientId" element={<EditEquipment />} />
+            <Route path="/equipment/:equipmentId" element={<EditEquipment />} />
             {/* ---------------------------------------------------------- */}
 
             <Route path="/settings" element={<Settings />} />

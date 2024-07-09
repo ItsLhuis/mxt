@@ -8,7 +8,16 @@ import { useTheme } from "@contexts/theme"
 
 import { produce } from "immer"
 
-import { Stack, Box, Typography, IconButton, ButtonBase, Tooltip, ListItem } from "@mui/material"
+import {
+  Stack,
+  Box,
+  Typography,
+  IconButton,
+  ButtonBase,
+  Tooltip,
+  ListItem,
+  FormHelperText
+} from "@mui/material"
 import { PictureAsPdf, Image, Close } from "@mui/icons-material"
 
 import Lottie from "lottie-react"
@@ -25,6 +34,7 @@ const FileUpload = ({
   onChange,
   error,
   errorMessage,
+  disabled = false,
   acceptedFiles = {
     "image/png": [".png"],
     "image/jpeg": [".jpg", ".jpeg"],
@@ -45,6 +55,10 @@ const FileUpload = ({
     setFileUploadError(error)
   }, [error])
 
+  useEffect(() => {
+    setValidFiles(value.filter((file) => isValidFile(file)))
+  }, [value])
+
   const isValidFile = (file) => {
     const fileMime = file.type
     const acceptedExtensions = Object.values(acceptedFiles).flat()
@@ -55,6 +69,8 @@ const FileUpload = ({
   }
 
   const onDrop = (files) => {
+    if (disabled) return
+
     setInvalidFiles([])
 
     const validFilesToAdd = []
@@ -95,6 +111,8 @@ const FileUpload = ({
   }
 
   const handleInputChange = (e) => {
+    if (disabled) return
+
     const filesToAdd = Array.from(e.target.files)
 
     const validFilesToAdd = []
@@ -129,6 +147,8 @@ const FileUpload = ({
   }
 
   const removeFile = (fileToRemove) => {
+    if (disabled) return
+
     setValidFiles((currentFiles) =>
       produce(currentFiles, (draft) => {
         return draft.filter((file) => file !== fileToRemove)
@@ -193,7 +213,16 @@ const FileUpload = ({
 
   const renderFiles = (files) => {
     return (
-      <>
+      <Stack
+        sx={{
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "repeat(auto-fit, minmax(200px, 1fr))",
+            md: "repeat(auto-fit, minmax(400px, 1fr))"
+          },
+          gap: 1
+        }}
+      >
         {files.map((file, index) => (
           <Box key={index} sx={{ width: "100%", maxWidth: "100%" }}>
             <Stack
@@ -243,20 +272,23 @@ const FileUpload = ({
                 </Stack>
               </Stack>
               <Tooltip title="Remover">
-                <IconButton onClick={() => removeFile(file)}>
-                  <Close />
-                </IconButton>
+                <span>
+                  <IconButton disabled={disabled} onClick={() => removeFile(file)}>
+                    <Close />
+                  </IconButton>
+                </span>
               </Tooltip>
             </Stack>
           </Box>
         ))}
-      </>
+      </Stack>
     )
   }
 
   return (
     <Stack sx={{ padding: 0, gap: 1 }} {...props}>
       <ButtonBase
+        disabled={disabled}
         {...getRootProps()}
         sx={{
           cursor: "pointer",
@@ -322,19 +354,13 @@ const FileUpload = ({
           }}
         />
       </ButtonBase>
+      {fileUploadError && (
+        <FormHelperText error={error} sx={{ marginLeft: 2 }}>
+          {errorMessage}
+        </FormHelperText>
+      )}
       {invalidFiles.length > 0 && <>{renderInvalidFiles(invalidFiles)}</>}
-      <Stack
-        sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "repeat(auto-fill, minmax(100px, 1fr))",
-            md: "repeat(auto-fill, minmax(400px, 1fr))"
-          },
-          gap: 1
-        }}
-      >
-        {validFiles.length > 0 && <>{renderFiles(validFiles)}</>}
-      </Stack>
+      {validFiles.length > 0 && <>{renderFiles(validFiles)}</>}
     </Stack>
   )
 }
@@ -342,7 +368,10 @@ const FileUpload = ({
 FileUpload.propTypes = {
   value: PropTypes.array,
   onChange: PropTypes.func,
-  acceptedFiles: PropTypes.string,
+  error: PropTypes.bool,
+  errorMessage: PropTypes.string,
+  disabled: PropTypes.bool,
+  acceptedFiles: PropTypes.object,
   maxSize: PropTypes.number
 }
 

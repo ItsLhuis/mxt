@@ -8,7 +8,7 @@ import { BASE_URL } from "@api"
 import { useEquipment } from "@hooks/server/useEquipment"
 
 import { Link } from "react-router-dom"
-import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton, Button } from "@mui/material"
+import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton } from "@mui/material"
 import {
   MoreVert,
   Edit,
@@ -38,14 +38,13 @@ import {
 
 import { formatHTML } from "@utils/format/formatHTML"
 import { formatDate, formatTime } from "@utils/format/date"
-import { formatPhoneNumber } from "@utils/format/phone"
 
 const ClientTable = () => {
   const navigate = useNavigate()
 
   const { role } = useAuth()
 
-  const { findAllEquipments } = useEquipment()
+  const { findAllEquipments, deleteEquipment } = useEquipment()
   const { data: equipments, isLoading: isEquipmentsLoading } = findAllEquipments
 
   const [openFileViewer, setOpenFileViewer] = useState(false)
@@ -59,33 +58,36 @@ const ClientTable = () => {
     setAttachment({ url: "", type: "" })
   }
 
-  /*   const [deleteClientModal, setDeleteClientModal] = useState({ isOpen: false, clientId: null })
-  const openDeleteClientModal = (id) => {
-    setDeleteClientModal({ isOpen: true, clientId: id })
+  const [deleteEquipmentModal, setDeleteEquipmentModal] = useState({
+    isOpen: false,
+    equipmentId: null
+  })
+  const openDeleteEquipmentModal = (id) => {
+    setDeleteEquipmentModal({ isOpen: true, equipmentId: id })
   }
-  const closeDeleteClientModal = () => {
-    setDeleteClientModal({ isOpen: false, clientId: null })
+  const closeDeleteEquipmentModal = () => {
+    setDeleteEquipmentModal({ isOpen: false, equipmentId: null })
   }
 
   const handleDeleteClient = () => {
     return new Promise((resolve, reject) => {
-      if (deleteClientModal.clientId) {
-        deleteClient
-          .mutateAsync({ clientId: deleteClientModal.clientId })
+      if (deleteEquipmentModal.equipmentId) {
+        deleteEquipment
+          .mutateAsync({ equipmentId: deleteEquipmentModal.equipmentId })
           .then(() => {
-            closeDeleteClientModal()
+            closeDeleteEquipmentModal()
             resolve()
           })
           .catch(() => {
-            closeDeleteClientModal()
+            closeDeleteEquipmentModal()
             reject()
           })
       } else {
-        closeDeleteClientModal()
+        closeDeleteEquipmentModal()
         reject()
       }
     })
-  } */
+  }
 
   const equipmentsTableColumns = useMemo(
     () => [
@@ -96,7 +98,7 @@ const ClientTable = () => {
         sortable: true,
         renderComponent: ({ row }) => (
           <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-            {row.client.name}
+            <Link to={`/client/${row.id}`}>{row.client.name}</Link>
             {row.client.description && (
               <Caption fontSize="small" title={row.client.description} isHtml />
             )}
@@ -307,7 +309,7 @@ const ClientTable = () => {
                 {
                   label: "Editar",
                   icon: <Edit fontSize="small" />,
-                  onClick: () => navigate(`/client/${row.id}`)
+                  onClick: () => navigate(`/equipment/${row.id}`)
                 },
                 ...(role !== "Funcionário"
                   ? [
@@ -316,7 +318,7 @@ const ClientTable = () => {
                         icon: <Delete fontSize="small" color="error" />,
                         color: "error",
                         divider: true,
-                        onClick: () => openDeleteClientModal(row.id)
+                        onClick: () => openDeleteEquipmentModal(row.id)
                       }
                     ]
                   : [])
@@ -555,7 +557,7 @@ const ClientTable = () => {
           []
         )
 
-        const ExpandableClientsInteractionsHistoryTableContent = useMemo(
+        const ExpandableEquipmentsInteractionsHistoryTableContent = useMemo(
           () =>
             ({ row }) => {
               const interactionsHistoryDetailsTableColumns = useMemo(
@@ -757,8 +759,6 @@ const ClientTable = () => {
                 []
               )
 
-              console.log(row.details[0])
-
               return (
                 <Box
                   sx={{
@@ -778,7 +778,7 @@ const ClientTable = () => {
                       ) : (
                         <Table
                           showSearch={false}
-                          data={[row.details[0].before] ?? []}
+                          data={[row.details[0].before]}
                           columns={interactionsHistoryAttachmentDetailsTableColumns}
                         />
                       )}
@@ -832,7 +832,7 @@ const ClientTable = () => {
                   mode="datatable"
                   data={row.interactions_history ?? []}
                   columns={interactionsHistoryTableColumns}
-                  ExpandableContentComponent={ExpandableClientsInteractionsHistoryTableContent}
+                  ExpandableContentComponent={ExpandableEquipmentsInteractionsHistoryTableContent}
                 />
               </Box>
             )}
@@ -857,15 +857,15 @@ const ClientTable = () => {
             />
           }
         />
-        {/*         <Modal
+        <Modal
           mode="delete"
-          title="Eliminar Cliente"
-          open={deleteClientModal.isOpen}
-          onClose={closeDeleteClientModal}
+          title="Eliminar Equipamento"
+          open={deleteEquipmentModal.isOpen}
+          onClose={closeDeleteEquipmentModal}
           onSubmit={handleDeleteClient}
-          description="Tem a certeza que deseja eliminar este cliente?"
-          subDescription="Ao eliminar este cliente, todos os dados relacionados, incluindo contactos, moradas, equipamentos e reparações associadas, serão removidos de forma permanente."
-        /> */}
+          description="Tem a certeza que deseja eliminar este equipamento?"
+          subDescription="Ao eliminar este equipamento, todos os dados relacionados, incluindo anexos e reparações associadas, serão removidos de forma permanente."
+        />
         <FileViewer
           open={openFileViewer}
           onClose={handleCloseFileViewer}
