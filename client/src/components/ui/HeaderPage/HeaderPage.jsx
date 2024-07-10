@@ -71,10 +71,60 @@ const HeaderPage = ({
       }}
     >
       <Stack sx={{ flexDirection: "row", alignItems: "flex-start", gap: 1 }}>
-        <Stack sx={{ gap: 1 }}>
-          <Typography variant="h4" component="h4">
-            {title}
-          </Typography>
+        <Stack sx={{ gap: 0.5 }}>
+          <Stack
+            sx={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              gap: 1
+            }}
+          >
+            <Typography variant="h4" component="h4">
+              {title}
+            </Typography>
+            <Stack
+              sx={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 1
+              }}
+            >
+              {refetchFunction && (
+                <Tooltip title="Atualizar">
+                  <motion.span
+                    animate={{
+                      rotate: isRefetching ? [0, 180, 360] : [0]
+                    }}
+                    transition={{
+                      repeat: isRefetching ? Infinity : 0,
+                      duration: 1,
+                      type: "spring"
+                    }}
+                  >
+                    <IconButton onClick={handleRefetch} disabled={isRefetching || !isRefetchEnable}>
+                      <Refresh fontSize="small" />
+                    </IconButton>
+                  </motion.span>
+                </Tooltip>
+              )}
+              {isRefreshFinished && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 1, 1, 0] }}
+                  transition={{
+                    times: [0, 0.2, 0.8, 0.9, 1],
+                    duration: 2
+                  }}
+                >
+                  <Typography variant="p" component="p">
+                    Atualizado!
+                  </Typography>
+                </motion.div>
+              )}
+            </Stack>
+          </Stack>
           <Breadcrumbs
             separator={
               <Box
@@ -106,48 +156,6 @@ const HeaderPage = ({
               </Box>
             ))}
           </Breadcrumbs>
-        </Stack>
-        <Stack
-          sx={{
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 1,
-            marginTop: -0.4
-          }}
-        >
-          {refetchFunction && (
-            <Tooltip title="Atualizar">
-              <motion.span
-                animate={{
-                  rotate: isRefetching ? [0, 180, 360] : [0]
-                }}
-                transition={{
-                  repeat: isRefetching ? Infinity : 0,
-                  duration: 1,
-                  type: "spring"
-                }}
-              >
-                <IconButton onClick={handleRefetch} disabled={isRefetching || !isRefetchEnable}>
-                  <Refresh fontSize="small" />
-                </IconButton>
-              </motion.span>
-            </Tooltip>
-          )}
-          {isRefreshFinished && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 1, 1, 1, 0] }}
-              transition={{
-                times: [0, 0.2, 0.8, 0.9, 1],
-                duration: 2
-              }}
-            >
-              <Typography variant="p" component="p">
-                Atualizado!
-              </Typography>
-            </motion.div>
-          )}
         </Stack>
       </Stack>
       {button && (

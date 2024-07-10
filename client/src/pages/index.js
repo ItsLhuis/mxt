@@ -18,10 +18,22 @@ const AddClient = lazy(() => import("./Client/Manage/Add"))
 const EditClient = lazy(() => import("./Client/Manage/Edit"))
 //----------------------------------------------------------------------
 
-//Equi
+//Equipment
 const EquipmentList = lazy(() => import("./Equipment/List/List"))
 const AddEquipment = lazy(() => import("./Equipment/Manage/Add"))
 const EditEquipment = lazy(() => import("./Equipment/Manage/Edit"))
+
+//Equipment Type
+const EquipmentTypeList = lazy(() => import("./Equipment/Attributes/Type/List"))
+//----------------------------------------------------------------------
+
+//Equipment Brand
+const EquipmentBrandList = lazy(() => import("./Equipment/Attributes/Brand/List"))
+//----------------------------------------------------------------------
+
+//Equipment Model
+const EquipmentModelList = lazy(() => import("./Equipment/Attributes/Model/List"))
+//----------------------------------------------------------------------
 //----------------------------------------------------------------------
 
 const Settings = lazy(() => import("./Settings/Settings"))
@@ -39,5 +51,8 @@ export {
   EquipmentList,
   AddEquipment,
   EditEquipment,
+  EquipmentTypeList,
+  EquipmentBrandList,
+  EquipmentModelList,
   Settings
 }

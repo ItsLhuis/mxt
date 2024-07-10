@@ -70,6 +70,8 @@ const Modal = ({
   }
 
   const handleSubmit = async (e) => {
+    if (disabled) return
+
     e.preventDefault()
     setLoad(true)
 
@@ -197,7 +199,12 @@ const Modal = ({
           <Box sx={{ overflow: "auto", height: fullScreen ? "100%" : "auto", minHeight: 64 }}>
             <form onSubmit={handleSubmit} style={{ height: "100%" }}>
               {children}
-              <Button sx={{ display: "none" }} type="submit" onClick={handleSubmit} />
+              <Button
+                sx={{ display: "none" }}
+                type="submit"
+                onClick={handleSubmit}
+                disabled={disabled}
+              />
             </form>
           </Box>
           <Divider

@@ -75,8 +75,38 @@ export const getAllEquipmentTypes = async () => {
   return response.data
 }
 
+export const createEquipmentType = async ({ name }) => {
+  const response = await api.post("/equipments/types", { name })
+  return response.data
+}
+
+export const updateEquipmentType = async ({ typeId, name }) => {
+  const response = await api.put(`/equipments/types/${typeId}`, { name })
+  return response.data
+}
+
+export const deleteEquipmentType = async ({ typeId }) => {
+  const response = await api.delete(`/equipments/types/${typeId}`)
+  return response.data
+}
+
 export const getAllEquipmentBrands = async () => {
   const response = await api.get("/equipments/brands")
+  return response.data
+}
+
+export const createEquipmentBrand = async ({ name }) => {
+  const response = await api.post("/equipments/brands", { name })
+  return response.data
+}
+
+export const updateEquipmentBrand = async ({ brandId, name }) => {
+  const response = await api.put(`/equipments/brands/${brandId}`, { name })
+  return response.data
+}
+
+export const deleteEquipmentBrand = async ({ brandId }) => {
+  const response = await api.delete(`/equipments/brands/${brandId}`)
   return response.data
 }
 
@@ -87,5 +117,20 @@ export const getAllEquipmentModels = async () => {
 
 export const getAllEquipmentModelsByBrandId = async ({ brandId }) => {
   const response = await api.get(`/equipments/models/brands/${brandId}`)
+  return response.data
+}
+
+export const createEquipmentModel = async ({ brandId, name }) => {
+  const response = await api.post("/equipments/models", { brandId, name })
+  return response.data
+}
+
+export const updateEquipmentModel = async ({ modelId, brandId, name }) => {
+  const response = await api.put(`/equipments/models/${modelId}`, { brandId, name })
+  return response.data
+}
+
+export const deleteEquipmentModel = async ({ modelId }) => {
+  const response = await api.delete(`/equipments/models/${modelId}`)
   return response.data
 }

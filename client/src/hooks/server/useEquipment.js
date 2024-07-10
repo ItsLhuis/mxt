@@ -10,9 +10,18 @@ import {
   transferEquipment as transferEquipmentApi,
   deleteEquipment as deleteEquipmentApi,
   getAllEquipmentTypes,
+  createEquipmentType,
+  updateEquipmentType as updateEquipmentTypeApi,
+  deleteEquipmentType as deleteEquipmentTypeApi,
   getAllEquipmentBrands,
+  createEquipmentBrand,
+  updateEquipmentBrand as updateEquipmentBrandApi,
+  deleteEquipmentBrand as deleteEquipmentBrandApi,
   getAllEquipmentModels,
-  getAllEquipmentModelsByBrandId
+  getAllEquipmentModelsByBrandId,
+  createEquipmentModel,
+  updateEquipmentModel as updateEquipmentModelApi,
+  deleteEquipmentModel as deleteEquipmentModelApi
 } from "@api/routes/equipment"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
@@ -116,11 +125,53 @@ export const useEquipment = () => {
     }
   })
 
+  const createNewEquipmentType = useMutation({
+    mutationFn: createEquipmentType,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["equipment", "types"])
+    }
+  })
+
+  const updateEquipmentType = useMutation({
+    mutationFn: updateEquipmentTypeApi,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["equipment", "types"])
+    }
+  })
+
+  const deleteEquipmentType = useMutation({
+    mutationFn: deleteEquipmentTypeApi,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["equipment", "types"])
+    }
+  })
+
   const findAllEquipmentBrands = useQuery({
     queryKey: ["equipment", "brands"],
     queryFn: getAllEquipmentBrands,
     onSuccess: (data) => {
       queryClient.setQueryData(["equipment", "brands"], data)
+    }
+  })
+
+  const createNewEquipmentBrand = useMutation({
+    mutationFn: createEquipmentBrand,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["equipment", "brands"])
+    }
+  })
+
+  const updateEquipmentBrand = useMutation({
+    mutationFn: updateEquipmentBrandApi,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["equipment", "brands"])
+    }
+  })
+
+  const deleteEquipmentBrand = useMutation({
+    mutationFn: deleteEquipmentBrandApi,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["equipment", "brands"])
     }
   })
 
@@ -142,94 +193,32 @@ export const useEquipment = () => {
       enabled: !!brandId
     })
 
-  /* const findClientById = (clientId) => {
-    return useQuery({
-      queryKey: ["clients", clientId],
-      queryFn: () => getClientById({ clientId }),
-      onSuccess: (data) => {
-        queryClient.setQueryData(["clients", clientId], data)
-      },
-      enabled: !!clientId
-    })
-  }
-
-  const createNewClient = useMutation({
-    mutationFn: createClient,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(["clients"])
+  const createNewEquipmentModel = useMutation({
+    mutationFn: createEquipmentModel,
+    onSuccess: async (data, variables) => {
+      const brandId = variables.brandId
+      await queryClient.invalidateQueries(["equipment", "models"])
+      await queryClient.invalidateQueries(["equipment", "models", "brand", brandId])
     }
   })
 
-  const updateClient = useMutation({
-    mutationFn: updateClientApi,
+  const updateEquipmentModel = useMutation({
+    mutationFn: updateEquipmentModelApi,
     onSuccess: async (data, variables) => {
-      const clientId = variables.clientId
-      await queryClient.invalidateQueries(["clients"])
-      await queryClient.invalidateQueries(["clients", clientId])
+      const brandId = variables.brandId
+      await queryClient.invalidateQueries(["equipment", "models"])
+      await queryClient.invalidateQueries(["equipment", "models", "brand", brandId])
     }
   })
 
-  const addNewContactClient = useMutation({
-    mutationFn: addContactClient,
+  const deleteEquipmentModel = useMutation({
+    mutationFn: deleteEquipmentModelApi,
     onSuccess: async (data, variables) => {
-      const clientId = variables.clientId
-      await queryClient.invalidateQueries(["clients"])
-      await queryClient.invalidateQueries(["clients", clientId])
+      const brandId = variables.modbrandIdelId
+      await queryClient.invalidateQueries(["equipment", "models"])
+      await queryClient.removeQueries(["equipment", "models", "brand", brandId])
     }
   })
-
-  const updateContactClient = useMutation({
-    mutationFn: updateContactClientApi,
-    onSuccess: async (data, variables) => {
-      const clientId = variables.clientId
-      await queryClient.invalidateQueries(["clients"])
-      await queryClient.invalidateQueries(["clients", clientId])
-    }
-  })
-
-  const deleteContactClient = useMutation({
-    mutationFn: deleteContactClientApi,
-    onSuccess: async (data, variables) => {
-      const clientId = variables.clientId
-      await queryClient.invalidateQueries(["clients"])
-      await queryClient.invalidateQueries(["clients", clientId])
-      showSuccessToast("Contato removido com sucesso!")
-    },
-    onError: () => {
-      showErrorToast("Erro ao remover contato!")
-    }
-  })
-
-  const addNewAddressClient = useMutation({
-    mutationFn: addAddressClient,
-    onSuccess: async (data, variables) => {
-      const clientId = variables.clientId
-      await queryClient.invalidateQueries(["clients"])
-      await queryClient.invalidateQueries(["clients", clientId])
-    }
-  })
-
-  const updateAddressClient = useMutation({
-    mutationFn: updateAddressClientApi,
-    onSuccess: async (data, variables) => {
-      const clientId = variables.clientId
-      await queryClient.invalidateQueries(["clients"])
-      await queryClient.invalidateQueries(["clients", clientId])
-    }
-  })
-
-  const deleteAddressClient = useMutation({
-    mutationFn: deleteAddressClientApi,
-    onSuccess: async (data, variables) => {
-      const clientId = variables.clientId
-      await queryClient.invalidateQueries(["clients"])
-      await queryClient.invalidateQueries(["clients", clientId])
-      showSuccessToast("Morada eliminada com sucesso!")
-    },
-    onError: () => {
-      showErrorToast("Erro ao eliminar morada!")
-    }
-  })*/
 
   return {
     findAllEquipments,
@@ -241,8 +230,17 @@ export const useEquipment = () => {
     transferEquipment,
     deleteEquipment,
     findAllEquipmentTypes,
+    createNewEquipmentType,
+    updateEquipmentType,
+    deleteEquipmentType,
     findAllEquipmentBrands,
+    createNewEquipmentBrand,
+    updateEquipmentBrand,
+    deleteEquipmentBrand,
     findAllEquipmentModels,
-    findAllEquipmentModelsByBrandId
+    findAllEquipmentModelsByBrandId,
+    createNewEquipmentModel,
+    updateEquipmentModel,
+    deleteEquipmentModel
   }
 }

@@ -564,27 +564,9 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "username",
-									"value": "Luis",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "email",
-									"value": "itslhuis.dev@gmail.com",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "role",
-									"value": "Administrador",
-									"type": "text",
-									"disabled": true
-								},
-								{
 									"key": "avatar",
 									"type": "file",
-									"src": "postman-cloud:///1ef2189e-4330-4600-83ab-411fff462ba7"
+									"src": "/C:/Users/luisr/OneDrive/Ambiente de Trabalho/OUTROS/porsche.png"
 								}
 							]
 						},
@@ -905,13 +887,47 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"clientId\": 1,\r\n    \"contactId\": 1,\r\n    \"subject\": \"Assunto do e-mail\",\r\n    \"title\": \"Título do e-mail\",\r\n    \"message\": \"Conteúdo do e-mail\",\r\n    \"text\": \"Texto alternativo do e-mail (opcional)\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "clientId",
+									"value": "23",
+									"type": "text"
+								},
+								{
+									"key": "contactId",
+									"value": "18",
+									"type": "text"
+								},
+								{
+									"key": "subject",
+									"value": "Assunto do e-mail",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "Título do e-mail",
+									"type": "text"
+								},
+								{
+									"key": "message",
+									"value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam quis placerat dolor. Phasellus egestas ullamcorper sollicitudin.\n\nDuis ut euismod libero.\n\nProin cursus risus lectus, id euismod quam imperdiet eu. Pellentesque porta rhoncus vulputate. Cras sed pretium erat. Nulla nisi justo, sodales vitae felis sit amet, lobortis pretium nunc. In et leo tortor. Nam rhoncus sit amet quam ut imperdiet. In hac habitasse platea dictumst. Integer et ante elit. Mauris et hendrerit leo.\n\nSed sagittis non elit facilisis ultrices. Mauris congue posuere enim eu malesuada.\n\nPellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.",
+									"type": "text"
+								},
+								{
+									"key": "text",
+									"value": "Texto alternativo do e-mail (opcional)",
+									"type": "text"
+								},
+								{
+									"key": "attachments",
+									"type": "file",
+									"src": [
+										"postman-cloud:///1ef2189e-4330-4600-83ab-411fff462ba7",
+										"postman-cloud:///1ef27296-e4d8-4050-9685-193f61876086"
+									]
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{base_url}}/emails",
@@ -1324,13 +1340,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/clients/2",
+							"raw": "{{base_url}}/clients/23",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"clients",
-								"2"
+								"23"
 							]
 						}
 					},
@@ -1476,7 +1492,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Telemóvel\"\r\n}\r\n",
+									"raw": "{\r\n    \"name\": \"Telefone\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1832,21 +1848,18 @@
 										{
 											"key": "attachments",
 											"type": "file",
-											"src": [
-												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/PAP/TesteFatura.pdf",
-												"/C:/Users/luisr/OneDrive/Ambiente de Trabalho/PAP/Relatório - Gestão de Stocks.pdf"
-											]
+											"src": "/C:/Users/luisr/OneDrive/Ambiente de Trabalho/TPSI/Estagio/Cronograma.xlsx"
 										}
 									]
 								},
 								"url": {
-									"raw": "{{base_url}}/equipments/5/attachments",
+									"raw": "{{base_url}}/equipments/7/attachments",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"equipments",
-										"5",
+										"7",
 										"attachments"
 									]
 								}
@@ -1859,15 +1872,15 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/equipments/5/attachments/283",
+									"raw": "{{base_url}}/equipments/7/attachments/306",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"equipments",
-										"5",
+										"7",
 										"attachments",
-										"283"
+										"306"
 									]
 								}
 							},
@@ -1884,13 +1897,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/equipments/2/interactionsHistory",
+									"raw": "{{base_url}}/equipments/5/interactionsHistory",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"equipments",
-										"2",
+										"5",
 										"interactionsHistory"
 									]
 								}
@@ -1922,13 +1935,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/equipments/5",
+							"raw": "{{base_url}}/equipments/7",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"equipments",
-								"5"
+								"7"
 							]
 						}
 					},
@@ -1967,7 +1980,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"brandId\": 1,\r\n    \"modelId\": 1,\r\n    \"typeId\": 1,\r\n    \"sn\": \"SN123456\",\r\n    \"description\": \"\"\r\n}\r\n",
+							"raw": "{\r\n    \"brandId\": 1,\r\n    \"modelId\": 1,\r\n    \"typeId\": 1,\r\n    \"sn\": \"SN123456\",\r\n    \"description\": \"<h1><strong><em><s><u>This is a test</u></s></em></strong></h1>\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1975,13 +1988,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/equipments/5",
+							"raw": "{{base_url}}/equipments/7",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"equipments",
-								"5"
+								"7"
 							]
 						}
 					},
@@ -2021,13 +2034,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/equipments/1",
+							"raw": "{{base_url}}/equipments/6",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"equipments",
-								"1"
+								"6"
 							]
 						}
 					},
@@ -2104,7 +2117,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Aberto\"\r\n}\r\n",
+									"raw": "{\r\n    \"name\": \"Aberto\",\r\n    \"color\": \"error\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2131,7 +2144,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Xiaomi\"\r\n}\r\n",
+									"raw": "{\r\n    \"name\": \"Aberto\",\r\n    \"color\": \"error\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2139,14 +2152,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/repairs/status/4",
+									"raw": "{{base_url}}/repairs/status/1",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"repairs",
 										"status",
-										"4"
+										"1"
 									]
 								}
 							},

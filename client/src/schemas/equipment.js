@@ -27,14 +27,15 @@ export const equipmentAttachmentSchema = z.object({
     .min(1, { message: "Selecione pelo menos um anexo" })
 })
 
+export const typeSchema = z.object({
+  name: z.string().min(1, { message: "O nome é obrigatório" }).max(255).trim()
+})
+
 export const brandSchema = z.object({
-  name: z.string().max(255).trim()
+  name: z.string().min(1, { message: "O nome é obrigatório" }).max(255).trim()
 })
 
 export const modelSchema = z.object({
-  name: z.string().max(255).trim()
-})
-
-export const typeSchema = z.object({
-  name: z.string().max(255).trim()
+  brandId: z.number({ message: "A marca é obrigatória" }),
+  name: z.string().min(1, { message: "O nome é obrigatório" }).max(255).trim()
 })

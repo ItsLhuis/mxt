@@ -19,6 +19,9 @@ import {
   EquipmentList,
   AddEquipment,
   EditEquipment,
+  EquipmentTypeList,
+  EquipmentBrandList,
+  EquipmentModelList,
   Settings
 } from "@/pages"
 
@@ -59,6 +62,18 @@ const Content = () => {
             <Route path="/equipment/list" element={<EquipmentList />} />
             <Route path="/equipment/add" element={<AddEquipment />} />
             <Route path="/equipment/:equipmentId" element={<EditEquipment />} />
+
+            {/* Equipment Type */}
+            <Route path="/equipment/type/list" element={<EquipmentTypeList />} />
+            {/* ---------------------------------------------------------- */}
+
+            {/* Equipment Brand*/}
+            <Route path="/equipment/brand/list" element={<EquipmentBrandList />} />
+            {/* ---------------------------------------------------------- */}
+
+            {/* Equipment Model*/}
+            <Route path="/equipment/model/list" element={<EquipmentModelList />} />
+            {/* ---------------------------------------------------------- */}
             {/* ---------------------------------------------------------- */}
 
             <Route path="/settings" element={<Settings />} />
