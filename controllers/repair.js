@@ -419,7 +419,7 @@ const repairController = {
       res.status(200).json(defaultStatus)
     }),
     create: tryCatch(async (req, res) => {
-      const { name } = req.body
+      const { name, color } = req.body
 
       optionsSchema.parse(req.body)
 
@@ -433,12 +433,12 @@ const repairController = {
         )
       }
 
-      await Repair.status.create(name, false, req.user.id)
+      await Repair.status.create(name, color, false, req.user.id)
       res.status(201).json({ message: "Status created successfully" })
     }),
     update: tryCatch(async (req, res) => {
       const { statusId } = req.params
-      const { name } = req.body
+      const { name, color } = req.body
 
       optionsSchema.parse(req.body)
 
@@ -457,7 +457,7 @@ const repairController = {
         )
       }
 
-      await Repair.status.update(statusId, name, req.user.id)
+      await Repair.status.update(statusId, name, color, req.user.id)
       res.status(204).json({ message: "Status updated successfully" })
     }),
     updateDefault: tryCatch(async (req, res) => {
@@ -922,7 +922,7 @@ const repairController = {
 
       res.setHeader("Content-Disposition", `inline; filename="${originalFilename}"`)
       res.setHeader("Content-Type", attachmentType === "image" ? "image/jpeg" : "application/pdf")
-      
+
       readStream.pipe(res)
 
       readStream.on("error", () => {

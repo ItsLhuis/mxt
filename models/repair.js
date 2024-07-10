@@ -57,6 +57,7 @@ const Repair = {
           status: {
             id: status[0].id,
             name: status[0].name,
+            color: status[0].color,
             is_default: status[0].is_default
           },
           entry_accessories: entryAccessories,
@@ -140,6 +141,7 @@ const Repair = {
           status: {
             id: status[0].id,
             name: status[0].name,
+            color: status[0].color,
             is_default: status[0].is_default
           },
           entry_accessories: entryAccessories,
@@ -388,6 +390,7 @@ const Repair = {
           return {
             id: status.id,
             name: status.name,
+            color: status.color,
             created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
             created_at_datetime: status.created_at_datetime,
             last_modified_by_user:
@@ -422,6 +425,7 @@ const Repair = {
           const statusWithDetails = {
             id: status[0].id,
             name: status[0].name,
+            color: status[0].color,
             created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
             created_at_datetime: status[0].created_at_datetime,
             last_modified_by_user:
@@ -456,6 +460,7 @@ const Repair = {
           const statusWithDetails = {
             id: status[0].id,
             name: status[0].name,
+            color: status[0].color,
             created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
             created_at_datetime: status[0].created_at_datetime,
             last_modified_by_user:
@@ -473,26 +478,25 @@ const Repair = {
       const query = "SELECT * FROM repair_status WHERE name = ?"
       return dbQueryExecutor.execute(query, [name])
     },
-    create: (name, isDefault, createdByUserId) => {
+    create: (name, color, isDefault, createdByUserId) => {
       const query =
-        "INSERT INTO repair_status (name, is_default, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, CURRENT_TIMESTAMP())"
+        "INSERT INTO repair_status (name, color, is_default, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor
-        .execute(query, [name, isDefault ?? false, createdByUserId])
+        .execute(query, [name, color, isDefault ?? false, createdByUserId])
         .then((result) => {
           return revalidateCache(["repair:status", "repair:defaultStatus"]).then(() => result)
         })
     },
-    update: (statusId, name, lastModifiedByUserId) => {
+    update: (statusId, name, color, lastModifiedByUserId) => {
       const query =
-        "UPDATE repair_status SET name = ?, last_modified_by_user_id = ?, last_modified_datetime = CURRENT_TIMESTAMP() WHERE id = ?"
+        "UPDATE repair_status SET name = ?, color = ?, last_modified_by_user_id = ?, last_modified_datetime = CURRENT_TIMESTAMP() WHERE id = ?"
       return dbQueryExecutor
-        .execute(query, [name, lastModifiedByUserId, statusId])
+        .execute(query, [name, color, lastModifiedByUserId, statusId])
         .then(async (result) => {
           const allRepairsByStatusId = await Repair.findByStatusId(statusId)
-
-          if (allRepairsByStatusId || allRepairsByStatusId.length > 0) {
-            allRepairsByStatusId.map((repair) => {
-              return revalidateCache(["repairs", `repair:${repair.id}`])
+          if (allRepairsByStatusId && allRepairsByStatusId.length > 0) {
+            allRepairsByStatusId.forEach((repair) => {
+              revalidateCache(["repairs", `repair:${repair.id}`])
             })
           }
 
@@ -517,10 +521,9 @@ const Repair = {
         })
         .then(async (result) => {
           const allRepairsByStatusId = await Repair.findByStatusId(statusId)
-
-          if (allRepairsByStatusId || allRepairsByStatusId.length > 0) {
-            allRepairsByStatusId.map((repair) => {
-              return revalidateCache(["repairs", `repair:${repair.id}`])
+          if (allRepairsByStatusId && allRepairsByStatusId.length > 0) {
+            allRepairsByStatusId.forEach((repair) => {
+              revalidateCache(["repairs", `repair:${repair.id}`])
             })
           }
 
@@ -535,10 +538,9 @@ const Repair = {
       const query = "DELETE FROM repair_status WHERE id = ?"
       return dbQueryExecutor.execute(query, [statusId]).then(async (result) => {
         const allRepairsByStatusId = await Repair.findByStatusId(statusId)
-
-        if (allRepairsByStatusId || allRepairsByStatusId.length > 0) {
-          allRepairsByStatusId.map((repair) => {
-            return revalidateCache(["repairs", `repair:${repair.id}`])
+        if (allRepairsByStatusId && allRepairsByStatusId.length > 0) {
+          allRepairsByStatusId.forEach((repair) => {
+            revalidateCache(["repairs", `repair:${repair.id}`])
           })
         }
 
@@ -643,10 +645,9 @@ const Repair = {
         .execute(query, [name, lastModifiedByUserId, accessoryId])
         .then(async (result) => {
           const allRepairsByEntryAccessoryId = await Repair.findByEntryAccessoryId(accessoryId)
-
-          if (allRepairsByEntryAccessoryId || allRepairsByEntryAccessoryId.length > 0) {
-            allRepairsByEntryAccessoryId.map((repair) => {
-              return revalidateCache(["repairs", `repair:${repair.id}`])
+          if (allRepairsByEntryAccessoryId && allRepairsByEntryAccessoryId.length > 0) {
+            allRepairsByEntryAccessoryId.forEach((repair) => {
+              revalidateCache(["repairs", `repair:${repair.id}`])
             })
           }
 
@@ -660,10 +661,9 @@ const Repair = {
       const query = "DELETE FROM repair_entry_accessories_options WHERE id = ?"
       return dbQueryExecutor.execute(query, [accessoryId]).then(async (result) => {
         const allRepairsByEntryAccessoryId = await Repair.findByEntryAccessoryId(accessoryId)
-
-        if (allRepairsByEntryAccessoryId || allRepairsByEntryAccessoryId.length > 0) {
-          allRepairsByEntryAccessoryId.map((repair) => {
-            return revalidateCache(["repairs", `repair:${repair.id}`])
+        if (allRepairsByEntryAccessoryId && allRepairsByEntryAccessoryId.length > 0) {
+          allRepairsByEntryAccessoryId.forEach((repair) => {
+            revalidateCache(["repairs", `repair:${repair.id}`])
           })
         }
 
@@ -773,10 +773,9 @@ const Repair = {
           const allRepairsByReportedIssueId = await Repair.findByEntryReportedIssueId(
             reportedIssueId
           )
-
-          if (allRepairsByReportedIssueId || allRepairsByReportedIssueId.length > 0) {
-            allRepairsByReportedIssueId.map((repair) => {
-              return revalidateCache(["repairs", `repair:${repair.id}`])
+          if (allRepairsByReportedIssueId && allRepairsByReportedIssueId.length > 0) {
+            allRepairsByReportedIssueId.forEach((repair) => {
+              revalidateCache(["repairs", `repair:${repair.id}`])
             })
           }
 
@@ -790,10 +789,9 @@ const Repair = {
       const query = "DELETE FROM repair_entry_reported_issues_options WHERE id = ?"
       return dbQueryExecutor.execute(query, [reportedIssueId]).then(async (result) => {
         const allRepairsByReportedIssueId = await Repair.findByEntryReportedIssueId(reportedIssueId)
-
-        if (allRepairsByReportedIssueId || allRepairsByReportedIssueId.length > 0) {
-          allRepairsByReportedIssueId.map((repair) => {
-            return revalidateCache(["repairs", `repair:${repair.id}`])
+        if (allRepairsByReportedIssueId && allRepairsByReportedIssueId.length > 0) {
+          allRepairsByReportedIssueId.forEach((repair) => {
+            revalidateCache(["repairs", `repair:${repair.id}`])
           })
         }
 
@@ -901,10 +899,9 @@ const Repair = {
         .execute(query, [name, lastModifiedByUserId, workDoneId])
         .then(async (result) => {
           const allRepairsByWorkDoneId = await Repair.findByInterventionWorkDoneId(workDoneId)
-
-          if (allRepairsByWorkDoneId || allRepairsByWorkDoneId.length > 0) {
-            allRepairsByWorkDoneId.map((repair) => {
-              return revalidateCache(["repairs", `repair:${repair.id}`])
+          if (allRepairsByWorkDoneId && allRepairsByWorkDoneId.length > 0) {
+            allRepairsByWorkDoneId.forEach((repair) => {
+              revalidateCache(["repairs", `repair:${repair.id}`])
             })
           }
 
@@ -918,10 +915,9 @@ const Repair = {
       const query = "DELETE FROM repair_intervention_works_done_options WHERE id = ?"
       return dbQueryExecutor.execute(query, [workDoneId]).then(async (result) => {
         const allRepairsByWorkDoneId = await Repair.findByInterventionWorkDoneId(workDoneId)
-
-        if (allRepairsByWorkDoneId || allRepairsByWorkDoneId.length > 0) {
-          allRepairsByWorkDoneId.map((repair) => {
-            return revalidateCache(["repairs", `repair:${repair.id}`])
+        if (allRepairsByWorkDoneId && allRepairsByWorkDoneId.length > 0) {
+          allRepairsByWorkDoneId.forEach((repair) => {
+            revalidateCache(["repairs", `repair:${repair.id}`])
           })
         }
 
@@ -1034,10 +1030,9 @@ const Repair = {
           const allRepairsByAccessoryUsedId = await Repair.findByInterventionAccessoryUsedId(
             accessoryUsedId
           )
-
-          if (allRepairsByAccessoryUsedId || allRepairsByAccessoryUsedId.length > 0) {
-            allRepairsByAccessoryUsedId.map((repair) => {
-              return revalidateCache(["repairs", `repair:${repair.id}`])
+          if (allRepairsByAccessoryUsedId && allRepairsByAccessoryUsedId.length > 0) {
+            allRepairsByAccessoryUsedId.forEach((repair) => {
+              revalidateCache(["repairs", `repair:${repair.id}`])
             })
           }
 
@@ -1053,10 +1048,9 @@ const Repair = {
         const allRepairsByAccessoryUsedId = await Repair.findByInterventionAccessoryUsedId(
           accessoryUsedId
         )
-
-        if (allRepairsByAccessoryUsedId || allRepairsByAccessoryUsedId.length > 0) {
-          allRepairsByAccessoryUsedId.map((repair) => {
-            return revalidateCache(["repairs", `repair:${repair.id}`])
+        if (allRepairsByAccessoryUsedId && allRepairsByAccessoryUsedId.length > 0) {
+          allRepairsByAccessoryUsedId.forEach((repair) => {
+            revalidateCache(["repairs", `repair:${repair.id}`])
           })
         }
 

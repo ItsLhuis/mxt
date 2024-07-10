@@ -149,6 +149,18 @@ CREATE TABLE IF NOT EXISTS smses (
     FOREIGN KEY (sent_by_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
+-- Table: equipment_types
+CREATE TABLE IF NOT EXISTS equipment_types (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    created_by_user_id INT,
+    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    last_modified_by_user_id INT,
+    last_modified_datetime TIMESTAMP NULL,
+    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
 -- Table: equipment_brands
 CREATE TABLE IF NOT EXISTS equipment_brands (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -176,25 +188,13 @@ CREATE TABLE IF NOT EXISTS equipment_models (
     UNIQUE (brand_id, name)
 );
 
--- Table: equipment_types
-CREATE TABLE IF NOT EXISTS equipment_types (
-    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL UNIQUE,
-    created_by_user_id INT,
-    created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    last_modified_by_user_id INT,
-    last_modified_datetime TIMESTAMP NULL,
-    FOREIGN KEY (created_by_user_id) REFERENCES users(id) ON DELETE SET NULL,
-    FOREIGN KEY (last_modified_by_user_id) REFERENCES users(id) ON DELETE SET NULL
-);
-
 -- Table: equipments
 CREATE TABLE IF NOT EXISTS equipments (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     client_id INT NOT NULL,
+    type_id INT NOT NULL,
     brand_id INT NOT NULL,
     model_id INT NOT NULL,
-    type_id INT NOT NULL,
     sn VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
     created_by_user_id INT,
@@ -240,6 +240,7 @@ CREATE TABLE IF NOT EXISTS equipment_interactions_history (
 CREATE TABLE IF NOT EXISTS repair_status (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL UNIQUE,
+    color VARCHAR(50),
     is_default BOOLEAN NOT NULL DEFAULT false,
     created_by_user_id INT,
     created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -409,9 +410,9 @@ CREATE INDEX idx_smses_created_at ON smses (created_at_datetime);
 -- Table: equipments
 CREATE INDEX idx_equipments_created_at ON equipments (created_at_datetime);
 CREATE INDEX idx_equipments_last_modified ON equipments (last_modified_datetime);
+CREATE INDEX idx_equipment_types_name ON equipment_types (name);
 CREATE INDEX idx_equipment_brands_name ON equipment_brands (name);
 CREATE INDEX idx_equipment_models_name ON equipment_models (name);
-CREATE INDEX idx_equipment_types_name ON equipment_types (name);
 CREATE INDEX idx_equipment_interactions_created_at ON equipment_interactions_history (created_at_datetime);
 
 -- Table: repairs

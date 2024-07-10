@@ -279,10 +279,20 @@ const Equipment = {
         .execute(query, [name, lastModifiedByUserId, brandId])
         .then(async (result) => {
           const allEquipmentsByBrandId = await Equipment.findByBrandId(brandId)
+          if (allEquipmentsByBrandId && allEquipmentsByBrandId.length > 0) {
+            allEquipmentsByBrandId.forEach((equipment) => {
+              revalidateCache(["equipments", `equipment:${equipment.id}`])
+            })
+          }
 
-          if (allEquipmentsByBrandId || allEquipmentsByBrandId.length > 0) {
-            allEquipmentsByBrandId.map((equipment) => {
-              return revalidateCache(["equipments", `equipment:${equipment.id}`])
+          const allModelsByBrandId = await Equipment.model.findByBrandId(brandId)
+          if (allModelsByBrandId && allModelsByBrandId.length > 0) {
+            allModelsByBrandId.forEach((model) => {
+              revalidateCache([
+                "equipment:models",
+                `equipment:model:${model.id}`,
+                `equipment:modelsByBrand:${brandId}`
+              ])
             })
           }
 
@@ -295,10 +305,20 @@ const Equipment = {
       const query = "DELETE FROM equipment_brands WHERE id = ?"
       return dbQueryExecutor.execute(query, [brandId]).then(async (result) => {
         const allEquipmentsByBrandId = await Equipment.findByBrandId(brandId)
+        if (allEquipmentsByBrandId && allEquipmentsByBrandId.length > 0) {
+          allEquipmentsByBrandId.forEach((equipment) => {
+            revalidateCache(["equipments", `equipment:${equipment.id}`])
+          })
+        }
 
-        if (allEquipmentsByBrandId || allEquipmentsByBrandId.length > 0) {
-          allEquipmentsByBrandId.map((equipment) => {
-            return revalidateCache(["equipments", `equipment:${equipment.id}`])
+        const allModelsByBrandId = await Equipment.model.findByBrandId(brandId)
+        if (allModelsByBrandId && allModelsByBrandId.length > 0) {
+          allModelsByBrandId.forEach((model) => {
+            revalidateCache([
+              "equipment:models",
+              `equipment:model:${model.id}`,
+              `equipment:modelsByBrand:${brandId}`
+            ])
           })
         }
 
