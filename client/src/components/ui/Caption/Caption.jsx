@@ -7,7 +7,9 @@ import { Info } from "@mui/icons-material"
 
 import { formatHTML } from "@utils/format/formatHTML"
 
-const Caption = ({ fontSize, title, isHtml = false }) => {
+const Caption = ({ fontSize, title }) => {
+  const isHtml = typeof title === "string" && /<\/?[a-z][\s\S]*>/i.test(title)
+
   const renderTitle = () => {
     if (isHtml) {
       return <span dangerouslySetInnerHTML={formatHTML(title)} />
@@ -41,8 +43,7 @@ const Caption = ({ fontSize, title, isHtml = false }) => {
 
 Caption.propTypes = {
   size: PropTypes.string,
-  title: PropTypes.string.isRequired,
-  isHtml: PropTypes.bool
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired
 }
 
 export default Caption

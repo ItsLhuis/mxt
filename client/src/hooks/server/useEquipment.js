@@ -75,10 +75,10 @@ export const useEquipment = () => {
       const equipmentId = variables.equipmentId
       await queryClient.invalidateQueries(["equipments"])
       await queryClient.invalidateQueries(["equipments", equipmentId])
-      showSuccessToast("Anexo removido com sucesso!")
+      showSuccessToast("Anexo eliminado com sucesso!")
     },
     onError: () => {
-      showErrorToast("Erro ao remover anexo!")
+      showErrorToast("Erro ao eliminar anexo!")
     }
   })
 

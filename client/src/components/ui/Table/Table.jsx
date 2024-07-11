@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 
 import { useTheme } from "@contexts/theme"
 
@@ -85,11 +85,6 @@ const Table = ({
 }) => {
   const { dataTheme } = useTheme()
 
-  const tableRef = useRef(null)
-  const [tableHeadHeight, setTableHeadHeight] = useState(0)
-
-  const [filteredData, setFilteredData] = useState(data)
-
   const [state, setState] = useState({
     order: "asc",
     orderBy: "",
@@ -101,12 +96,27 @@ const Table = ({
     searchQuery: ""
   })
 
-  useEffect(() => {
-    const tableHead = tableRef.current.querySelector("thead")
-    if (tableHead) {
-      setTableHeadHeight(tableHead.getBoundingClientRect().height)
+  const formatValueForSearch = (value) => {
+    if (Array.isArray(value)) {
+      return value.map((item) => formatValueForSearch(item)).join(" ")
+    } else if (typeof value === "object") {
+      return JSON.stringify(value)
+    } else {
+      return String(value)
     }
+  }
 
+  const filteredData = useMemo(() => {
+    return data.filter((item) =>
+      columns.some((column) => {
+        const value = getNestedValue(item, column.id)
+        const formattedValue = formatValueForSearch(value)
+        return formattedValue.toLowerCase().includes(state.searchQuery.toLowerCase())
+      })
+    )
+  }, [data, columns, state.searchQuery])
+
+  useEffect(() => {
     setState((prevState) =>
       produce(prevState, (draft) => {
         const newSelected = new Set(
@@ -221,33 +231,15 @@ const Table = ({
     )
   }
 
-  const formatValueForSearch = (value) => {
-    if (Array.isArray(value)) {
-      return value.map((item) => formatValueForSearch(item)).join(" ")
-    } else if (typeof value === "object") {
-      return JSON.stringify(value)
-    } else {
-      return String(value)
-    }
-  }
-
-  useEffect(() => {
-    setFilteredData(
-      data.filter((item) =>
-        columns.some((column) => {
-          const value = getNestedValue(item, column.id)
-          const formattedValue = typeof value === "object" ? JSON.stringify(value) : String(value)
-          return formattedValue.toLowerCase().includes(state.searchQuery.toLowerCase())
-        })
-      )
-    )
-  }, [state.searchQuery, data])
-
   const selectedCount = filteredData.filter((item) => state.selected.has(item.id)).length
   const hasSelectedRows = state.selected.size > 0
   const isSelected = (id) => state.selected.has(id)
 
-  const sortedData = stableSort(filteredData, getComparator(state.order, state.orderBy))
+  const sortedData = useMemo(() => {
+    const comparator = getComparator(state.order, state.orderBy)
+    return stableSort(filteredData, comparator)
+  }, [filteredData, state.order, state.orderBy])
+
   const slicedData =
     mode === "datatable"
       ? sortedData.slice(
@@ -257,24 +249,6 @@ const Table = ({
       : sortedData
 
   const hasExpandableContent = !!ExpandableContentComponent && data.length > 0
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (tableRef.current) {
-        const tableHead = tableRef.current.querySelector("thead")
-        if (tableHead) {
-          setTableHeadHeight(tableHead.getBoundingClientRect().height)
-        }
-      }
-    }
-
-    handleResize()
-    window.addEventListener("resize", handleResize)
-
-    return () => {
-      window.removeEventListener("resize", handleResize)
-    }
-  }, [tableRef.current, handleRowClick])
 
   return (
     <Box
@@ -305,7 +279,7 @@ const Table = ({
             flexDirection: "row",
             alignItems: "center",
             backgroundColor: "var(--elevation-level5)",
-            height: tableHeadHeight,
+            height: 64,
             width: "100%",
             position: "absolute",
             zIndex: 3
@@ -345,7 +319,7 @@ const Table = ({
           )}
         </Stack>
       )}
-      <TableContainer ref={tableRef} component={Box}>
+      <TableContainer component={Box}>
         <MuiTable
           sx={{
             width: "100%",
@@ -372,7 +346,7 @@ const Table = ({
               }
             }}
           >
-            <TableRow>
+            <TableRow sx={{ height: 64 }}>
               {mode === "datatable" && data.length !== 0 && (
                 <TableCell padding="checkbox" sx={{ paddingLeft: 2 }}>
                   <Checkbox
@@ -390,7 +364,7 @@ const Table = ({
                     key={column.id}
                     align={column.align}
                     sortDirection={state.orderBy === column.id ? state.order : false}
-                    sx={{ padding: "16px 24px", fontSize: 13 }}
+                    sx={{ padding: "16px 24px", fontSize: 13, textWrap: "nowrap !important" }}
                     padding={column.disablePadding ? "checkbox" : "normal"}
                   >
                     {column.sortable ? (

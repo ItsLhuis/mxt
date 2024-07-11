@@ -34,7 +34,7 @@ const User = {
       password: user.password,
       email: user.email,
       role: user.role,
-      is_active: user.is_active,
+      is_active: Boolean(user.is_active),
       created_by_user: user.created_by_user_id
         ? {
             id: user.created_by_user_id,
@@ -76,7 +76,7 @@ const User = {
           password: user[0].password,
           email: user[0].email,
           role: user[0].role,
-          is_active: user[0].is_active,
+          is_active: Boolean(user[0].is_active),
           created_by_user: user[0].created_by_user_id
             ? {
                 id: user[0].created_by_user_id,

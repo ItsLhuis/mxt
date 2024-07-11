@@ -22,8 +22,10 @@ import {
   EquipmentTypeList,
   EquipmentBrandList,
   EquipmentModelList,
+  RepairList,
+  EmailList,
   Settings
-} from "@/pages"
+} from "@pages"
 
 const Content = () => {
   const location = useLocation()
@@ -74,6 +76,14 @@ const Content = () => {
             {/* Equipment Model*/}
             <Route path="/equipment/model/list" element={<EquipmentModelList />} />
             {/* ---------------------------------------------------------- */}
+            {/* ---------------------------------------------------------- */}
+
+            {/* Repair */}
+            <Route path="/repair/list" element={<RepairList />} />
+            {/* ---------------------------------------------------------- */}
+
+            {/* Email */}
+            <Route path="/email/list" element={<EmailList />} />
             {/* ---------------------------------------------------------- */}
 
             <Route path="/settings" element={<Settings />} />

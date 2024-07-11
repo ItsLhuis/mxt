@@ -13,7 +13,6 @@ import {
   QuestionMark,
   Visibility,
   MoreVert,
-  Edit,
   Delete
 } from "@mui/icons-material"
 
@@ -87,13 +86,14 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
     () => [
       {
         id: "file_mime_type",
+        label: "Tipo",
         align: "left",
         sortable: true,
         renderComponent: ({ row }) => (
           <Stack sx={{ alignItems: "flex-start" }}>
-            {row.file_mime_type === "application/pdf" ? (
+            {row?.file_mime_type === "application/pdf" ? (
               <PictureAsPdf fontSize="medium" sx={{ color: "rgb(223, 88, 84)" }} />
-            ) : row.file_mime_type.startsWith("image/") ? (
+            ) : row?.file_mime_type.startsWith("image/") ? (
               <Image fontSize="medium" sx={{ color: "rgb(245, 128, 8)" }} />
             ) : (
               <QuestionMark fontSize="medium" sx={{ color: "var(--outline)" }} />
@@ -109,13 +109,13 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
         renderComponent: ({ row }) => (
           <Stack>
             <Typography variant="p" component="p">
-              {row.original_filename}
+              {row?.original_filename}
             </Typography>
             <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
               {`${
-                row.file_size < 1024 * 1024
-                  ? (row.file_size / 1024).toFixed(2) + " Kb"
-                  : (row.file_size / (1024 * 1024)).toFixed(2) + " Mb"
+                row?.file_size < 1024 * 1024
+                  ? (row?.file_size / 1024).toFixed(2) + " Kb"
+                  : (row?.file_size / (1024 * 1024)).toFixed(2) + " Mb"
               }`}
             </Typography>
           </Stack>
@@ -146,16 +146,16 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
                   gap: 1
                 }}
               >
-                {!row.uploaded_by_user ? (
+                {!row?.uploaded_by_user ? (
                   <Typography variant="p" component="p" color="var(--outline)">
                     Utilizador removido
                   </Typography>
                 ) : (
                   <>
                     <Avatar
-                      alt={row.uploaded_by_user.username}
-                      src={`${BASE_URL}/users/${row.uploaded_by_user.id}/avatar?size=80`}
-                      name={row.uploaded_by_user.username}
+                      alt={row?.uploaded_by_user?.username}
+                      src={`${BASE_URL}/users/${row?.uploaded_by_user?.id}/avatar?size=80`}
+                      name={row?.uploaded_by_user?.username}
                     />
                     <Stack
                       sx={{
@@ -165,10 +165,10 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
                       }}
                     >
                       <Typography variant="p" component="p" fontWeight={500}>
-                        {row.uploaded_by_user.username}
+                        {row?.uploaded_by_user?.username}
                       </Typography>
                       <Typography variant="p" component="p" color="var(--outline)">
-                        {row.uploaded_by_user.role}
+                        {row?.uploaded_by_user?.role}
                       </Typography>
                     </Stack>
                   </>
@@ -188,10 +188,10 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
                 }}
               >
                 <Typography variant="p" component="p" fontWeight={500}>
-                  {formatDate(row.uploaded_at_datetime)}
+                  {formatDate(row?.uploaded_at_datetime)}
                 </Typography>
                 <Typography variant="p" component="p" color="var(--outline)">
-                  {formatTime(row.uploaded_at_datetime)}
+                  {formatTime(row?.uploaded_at_datetime)}
                 </Typography>
               </Stack>
             </Stack>
@@ -202,16 +202,15 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
         id: "view_file",
         align: "right",
         sortable: false,
-        disablePadding: true,
         renderComponent: ({ row }) => (
           <Tooltip title="Ver anexo" sx={{ margin: -1 }}>
             <IconButton
               onClick={() =>
                 handleOpenFileViewer(
-                  `${BASE_URL}/equipments/${row.equipment_id}/attachments/${row.id}/${row.original_filename}`,
-                  row.original_filename,
-                  row.file_size,
-                  row.file_mime_type
+                  `${BASE_URL}/equipments/${row?.equipment_id}/attachments/${row?.id}/${row?.original_filename}`,
+                  row?.original_filename,
+                  row?.file_size,
+                  row?.file_mime_type
                 )
               }
             >
@@ -274,7 +273,7 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
           >
             <Table
               mode="datatable"
-              data={isEquipmentFinished ? equipment[0].attachments : []}
+              data={isEquipmentFinished ? equipment[0]?.attachments : []}
               columns={equipmentAttachmentsTableColumns}
             />
           </Box>

@@ -13,6 +13,7 @@ const Employee = {
     const employeesWithDetails = await Promise.all(
       employees.map(async (employee) => {
         const user = await User.findByUserId(employee.user_id)
+        const createdByUser = await User.findByUserId(user[0].id)
 
         return {
           id: employee.id,
@@ -24,7 +25,11 @@ const Employee = {
           locality: employee.locality,
           address: employee.address,
           postal_code: employee.postal_code,
-          description: employee.description
+          description: employee.description,
+          created_by_user: createdByUser[0].created_by_user
+            ? mapUser(createdByUser[0].created_by_user)
+            : null,
+          created_at_datetime: createdByUser[0].created_at_datetime
         }
       })
     )
@@ -43,6 +48,7 @@ const Employee = {
         }
 
         const user = await User.findByUserId(userId)
+        const createdByUser = await User.findByUserId(user[0].id)
 
         const emplyeeWithDetails = {
           id: employee[0].id,
@@ -54,7 +60,11 @@ const Employee = {
           locality: employee[0].locality,
           address: employee[0].address,
           postal_code: employee[0].postal_code,
-          description: employee[0].description
+          description: employee[0].description,
+          created_by_user: createdByUser[0].created_by_user
+            ? mapUser(createdByUser[0].created_by_user)
+            : null,
+          created_at_datetime: createdByUser[0].created_at_datetime
         }
 
         return [emplyeeWithDetails]

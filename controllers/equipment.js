@@ -276,6 +276,75 @@ const equipmentController = {
     await Equipment.delete(equipmentId)
     res.status(204).json({ message: "Equipment deleted successfully" })
   }),
+  type: {
+    findAll: tryCatch(async (req, res) => {
+      const types = await Equipment.type.findAll()
+      res.status(200).json(types)
+    }),
+    findByTypeId: tryCatch(async (req, res) => {
+      const { typeId } = req.params
+
+      const existingType = await Equipment.type.findByTypeId(typeId)
+      if (existingType.length <= 0) {
+        throw new AppError(404, TYPE_NOT_FOUND, "Type not found", true)
+      }
+
+      res.status(200).json(existingType)
+    }),
+    create: tryCatch(async (req, res) => {
+      const { name } = req.body
+
+      typeSchema.parse(req.body)
+
+      const existingType = await Equipment.type.findByName(name)
+      if (existingType.length > 0) {
+        throw new AppError(400, DUPLICATE_TYPE_NAME, "Type with the same name already exists", true)
+      }
+
+      await Equipment.type.create(name, req.user.id)
+      res.status(201).json({ message: "Type created successfully" })
+    }),
+    update: tryCatch(async (req, res) => {
+      const { typeId } = req.params
+      const { name } = req.body
+
+      typeSchema.parse(req.body)
+
+      const existingType = await Equipment.type.findByTypeId(typeId)
+      if (existingType.length <= 0) {
+        throw new AppError(404, TYPE_NOT_FOUND, "Type not found", true)
+      }
+
+      const duplicateType = await Equipment.type.findByName(name)
+      if (duplicateType.length > 0 && duplicateType[0].id !== Number(typeId)) {
+        throw new AppError(400, DUPLICATE_TYPE_NAME, "Type with the same name already exists", true)
+      }
+
+      await Equipment.type.update(typeId, name, req.user.id)
+      res.status(204).json({ message: "Type updated successfully" })
+    }),
+    delete: tryCatch(async (req, res) => {
+      const { typeId } = req.params
+
+      const existingType = await Equipment.type.findByTypeId(typeId)
+      if (existingType.length <= 0) {
+        throw new AppError(404, TYPE_NOT_FOUND, "Type not found", true)
+      }
+
+      const relatedEquipments = await Equipment.findByTypeId(typeId)
+      if (relatedEquipments.length > 0) {
+        throw new AppError(
+          400,
+          EQUIPMENTS_ASSOCIATED_WITH_TYPE,
+          "This type cannot be deleted. It is associated with one or more equipments",
+          true
+        )
+      }
+
+      await Equipment.type.delete(typeId)
+      res.status(204).json({ message: "Type deleted successfully" })
+    })
+  },
   brand: {
     findAll: tryCatch(async (req, res) => {
       const brands = await Equipment.brand.findAll()
@@ -451,75 +520,6 @@ const equipmentController = {
 
       await Equipment.model.delete(modelId)
       res.status(204).json({ message: "Model deleted successfully" })
-    })
-  },
-  type: {
-    findAll: tryCatch(async (req, res) => {
-      const types = await Equipment.type.findAll()
-      res.status(200).json(types)
-    }),
-    findByTypeId: tryCatch(async (req, res) => {
-      const { typeId } = req.params
-
-      const existingType = await Equipment.type.findByTypeId(typeId)
-      if (existingType.length <= 0) {
-        throw new AppError(404, TYPE_NOT_FOUND, "Type not found", true)
-      }
-
-      res.status(200).json(existingType)
-    }),
-    create: tryCatch(async (req, res) => {
-      const { name } = req.body
-
-      typeSchema.parse(req.body)
-
-      const existingType = await Equipment.type.findByName(name)
-      if (existingType.length > 0) {
-        throw new AppError(400, DUPLICATE_TYPE_NAME, "Type with the same name already exists", true)
-      }
-
-      await Equipment.type.create(name, req.user.id)
-      res.status(201).json({ message: "Type created successfully" })
-    }),
-    update: tryCatch(async (req, res) => {
-      const { typeId } = req.params
-      const { name } = req.body
-
-      typeSchema.parse(req.body)
-
-      const existingType = await Equipment.type.findByTypeId(typeId)
-      if (existingType.length <= 0) {
-        throw new AppError(404, TYPE_NOT_FOUND, "Type not found", true)
-      }
-
-      const duplicateType = await Equipment.type.findByName(name)
-      if (duplicateType.length > 0 && duplicateType[0].id !== Number(typeId)) {
-        throw new AppError(400, DUPLICATE_TYPE_NAME, "Type with the same name already exists", true)
-      }
-
-      await Equipment.type.update(typeId, name, req.user.id)
-      res.status(204).json({ message: "Type updated successfully" })
-    }),
-    delete: tryCatch(async (req, res) => {
-      const { typeId } = req.params
-
-      const existingType = await Equipment.type.findByTypeId(typeId)
-      if (existingType.length <= 0) {
-        throw new AppError(404, TYPE_NOT_FOUND, "Type not found", true)
-      }
-
-      const relatedEquipments = await Equipment.findByTypeId(typeId)
-      if (relatedEquipments.length > 0) {
-        throw new AppError(
-          400,
-          EQUIPMENTS_ASSOCIATED_WITH_TYPE,
-          "This type cannot be deleted. It is associated with one or more equipments",
-          true
-        )
-      }
-
-      await Equipment.type.delete(typeId)
-      res.status(204).json({ message: "Type deleted successfully" })
     })
   },
   attachment: {

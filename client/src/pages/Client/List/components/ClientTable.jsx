@@ -9,7 +9,17 @@ import { useClient } from "@hooks/server/useClient"
 
 import { Link } from "react-router-dom"
 import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton } from "@mui/material"
-import { MoreVert, Edit, Delete, Phone, Place, History, Check, Close } from "@mui/icons-material"
+import {
+  MoreVert,
+  Edit,
+  Delete,
+  Phone,
+  Place,
+  AppsOutlined,
+  History,
+  Check,
+  Close
+} from "@mui/icons-material"
 
 import {
   HeaderSection,
@@ -72,8 +82,8 @@ const ClientTable = () => {
         sortable: true,
         renderComponent: ({ row }) => (
           <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-            <Link to={`/client/${row.id}`}>{row.name}</Link>
-            {row.description && <Caption fontSize="small" title={row.description} isHtml />}
+            <Link to={`/client/${row?.id}`}>{row?.name}</Link>
+            {row?.description && <Caption fontSize="small" title={row?.description} />}
           </Stack>
         )
       },
@@ -102,16 +112,16 @@ const ClientTable = () => {
                   gap: 1
                 }}
               >
-                {!row.created_by_user ? (
+                {!row?.created_by_user ? (
                   <Typography variant="p" component="p" color="var(--outline)">
                     Utilizador removido
                   </Typography>
                 ) : (
                   <>
                     <Avatar
-                      alt={row.created_by_user.username}
-                      src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
-                      name={row.created_by_user.username}
+                      alt={row?.created_by_user?.username}
+                      src={`${BASE_URL}/users/${row?.created_by_user?.id}/avatar?size=80`}
+                      name={row?.created_by_user?.username}
                     />
                     <Stack
                       sx={{
@@ -121,10 +131,10 @@ const ClientTable = () => {
                       }}
                     >
                       <Typography variant="p" component="p" fontWeight={500}>
-                        {row.created_by_user.username}
+                        {row?.created_by_user?.username}
                       </Typography>
                       <Typography variant="p" component="p" color="var(--outline)">
-                        {row.created_by_user.role}
+                        {row?.created_by_user?.role}
                       </Typography>
                     </Stack>
                   </>
@@ -144,10 +154,10 @@ const ClientTable = () => {
                 }}
               >
                 <Typography variant="p" component="p" fontWeight={500}>
-                  {formatDate(row.created_at_datetime)}
+                  {formatDate(row?.created_at_datetime)}
                 </Typography>
                 <Typography variant="p" component="p" color="var(--outline)">
-                  {formatTime(row.created_at_datetime)}
+                  {formatTime(row?.created_at_datetime)}
                 </Typography>
               </Stack>
             </Stack>
@@ -165,7 +175,7 @@ const ClientTable = () => {
         sortable: true,
         renderComponent: ({ row }) => (
           <>
-            {row.last_modified_datetime ? (
+            {row?.last_modified_datetime ? (
               <Stack
                 sx={{
                   flexDirection: "row",
@@ -180,16 +190,16 @@ const ClientTable = () => {
                     gap: 1
                   }}
                 >
-                  {!row.last_modified_by_user ? (
+                  {!row?.last_modified_by_user ? (
                     <Typography variant="p" component="p" color="var(--outline)">
                       Utilizador removido
                     </Typography>
                   ) : (
                     <>
                       <Avatar
-                        alt={row.last_modified_by_user.username}
-                        src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
-                        name={row.last_modified_by_user.username}
+                        alt={row?.last_modified_by_user?.username}
+                        src={`${BASE_URL}/users/${row?.last_modified_by_user?.id}/avatar?size=80`}
+                        name={row?.last_modified_by_user?.username}
                       />
                       <Stack
                         sx={{
@@ -199,10 +209,10 @@ const ClientTable = () => {
                         }}
                       >
                         <Typography variant="p" component="p" fontWeight={500}>
-                          {row.last_modified_by_user.username}
+                          {row?.last_modified_by_user?.username}
                         </Typography>
                         <Typography variant="p" component="p" color="var(--outline)">
-                          {row.last_modified_by_user.role}
+                          {row?.last_modified_by_user?.role}
                         </Typography>
                       </Stack>
                     </>
@@ -222,10 +232,10 @@ const ClientTable = () => {
                   }}
                 >
                   <Typography variant="p" component="p" fontWeight={500}>
-                    {formatDate(row.last_modified_datetime)}
+                    {formatDate(row?.last_modified_datetime)}
                   </Typography>
                   <Typography variant="p" component="p" color="var(--outline)">
-                    {formatTime(row.last_modified_datetime)}
+                    {formatTime(row?.last_modified_datetime)}
                   </Typography>
                 </Stack>
               </Stack>
@@ -257,7 +267,7 @@ const ClientTable = () => {
                 {
                   label: "Editar",
                   icon: <Edit fontSize="small" />,
-                  onClick: () => navigate(`/client/${row.id}`)
+                  onClick: () => navigate(`/client/${row?.id}`)
                 },
                 ...(role !== "Funcionário"
                   ? [
@@ -266,7 +276,7 @@ const ClientTable = () => {
                         icon: <Delete fontSize="small" color="error" />,
                         color: "error",
                         divider: true,
-                        onClick: () => openDeleteClientModal(row.id)
+                        onClick: () => openDeleteClientModal(row?.id)
                       }
                     ]
                   : [])
@@ -297,8 +307,8 @@ const ClientTable = () => {
               sortable: true,
               renderComponent: ({ row }) => (
                 <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-                  <>{formatPhoneNumber(row.contact)}</>
-                  {row.description && <Caption fontSize="small" title={row.description} isHtml />}
+                  <>{formatPhoneNumber(row?.contact)}</>
+                  {row?.description && <Caption fontSize="small" title={row?.description} />}
                 </Stack>
               )
             },
@@ -327,16 +337,16 @@ const ClientTable = () => {
                         gap: 1
                       }}
                     >
-                      {!row.created_by_user ? (
+                      {!row?.created_by_user ? (
                         <Typography variant="p" component="p" color="var(--outline)">
                           Utilizador removido
                         </Typography>
                       ) : (
                         <>
                           <Avatar
-                            alt={row.created_by_user.username}
-                            src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
-                            name={row.created_by_user.username}
+                            alt={row?.created_by_user?.username}
+                            src={`${BASE_URL}/users/${row?.created_by_user?.id}/avatar?size=80`}
+                            name={row?.created_by_user?.username}
                           />
                           <Stack
                             sx={{
@@ -346,10 +356,10 @@ const ClientTable = () => {
                             }}
                           >
                             <Typography variant="p" component="p" fontWeight={500}>
-                              {row.created_by_user.username}
+                              {row?.created_by_user?.username}
                             </Typography>
                             <Typography variant="p" component="p" color="var(--outline)">
-                              {row.created_by_user.role}
+                              {row?.created_by_user?.role}
                             </Typography>
                           </Stack>
                         </>
@@ -369,10 +379,10 @@ const ClientTable = () => {
                       }}
                     >
                       <Typography variant="p" component="p" fontWeight={500}>
-                        {formatDate(row.created_at_datetime)}
+                        {formatDate(row?.created_at_datetime)}
                       </Typography>
                       <Typography variant="p" component="p" color="var(--outline)">
-                        {formatTime(row.created_at_datetime)}
+                        {formatTime(row?.created_at_datetime)}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -390,7 +400,7 @@ const ClientTable = () => {
               sortable: true,
               renderComponent: ({ row }) => (
                 <>
-                  {row.last_modified_datetime ? (
+                  {row?.last_modified_datetime ? (
                     <Stack
                       sx={{
                         flexDirection: "row",
@@ -405,16 +415,16 @@ const ClientTable = () => {
                           gap: 1
                         }}
                       >
-                        {!row.last_modified_by_user ? (
+                        {!row?.last_modified_by_user ? (
                           <Typography variant="p" component="p" color="var(--outline)">
                             Utilizador removido
                           </Typography>
                         ) : (
                           <>
                             <Avatar
-                              alt={row.last_modified_by_user.username}
-                              src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
-                              name={row.last_modified_by_user.username}
+                              alt={row?.last_modified_by_user?.username}
+                              src={`${BASE_URL}/users/${row?.last_modified_by_user?.id}/avatar?size=80`}
+                              name={row?.last_modified_by_user?.username}
                             />
                             <Stack
                               sx={{
@@ -424,10 +434,10 @@ const ClientTable = () => {
                               }}
                             >
                               <Typography variant="p" component="p" fontWeight={500}>
-                                {row.last_modified_by_user.username}
+                                {row?.last_modified_by_user?.username}
                               </Typography>
                               <Typography variant="p" component="p" color="var(--outline)">
-                                {row.last_modified_by_user.role}
+                                {row?.last_modified_by_user?.role}
                               </Typography>
                             </Stack>
                           </>
@@ -447,10 +457,10 @@ const ClientTable = () => {
                         }}
                       >
                         <Typography variant="p" component="p" fontWeight={500}>
-                          {formatDate(row.last_modified_datetime)}
+                          {formatDate(row?.last_modified_datetime)}
                         </Typography>
                         <Typography variant="p" component="p" color="var(--outline)">
-                          {formatTime(row.last_modified_datetime)}
+                          {formatTime(row?.last_modified_datetime)}
                         </Typography>
                       </Stack>
                     </Stack>
@@ -523,16 +533,16 @@ const ClientTable = () => {
                         gap: 1
                       }}
                     >
-                      {!row.created_by_user ? (
+                      {!row?.created_by_user ? (
                         <Typography variant="p" component="p" color="var(--outline)">
                           Utilizador removido
                         </Typography>
                       ) : (
                         <>
                           <Avatar
-                            alt={row.created_by_user.username}
-                            src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
-                            name={row.created_by_user.username}
+                            alt={row?.created_by_user?.username}
+                            src={`${BASE_URL}/users/${row?.created_by_user?.id}/avatar?size=80`}
+                            name={row?.created_by_user?.username}
                           />
                           <Stack
                             sx={{
@@ -542,10 +552,10 @@ const ClientTable = () => {
                             }}
                           >
                             <Typography variant="p" component="p" fontWeight={500}>
-                              {row.created_by_user.username}
+                              {row?.created_by_user?.username}
                             </Typography>
                             <Typography variant="p" component="p" color="var(--outline)">
-                              {row.created_by_user.role}
+                              {row?.created_by_user?.role}
                             </Typography>
                           </Stack>
                         </>
@@ -565,10 +575,10 @@ const ClientTable = () => {
                       }}
                     >
                       <Typography variant="p" component="p" fontWeight={500}>
-                        {formatDate(row.created_at_datetime)}
+                        {formatDate(row?.created_at_datetime)}
                       </Typography>
                       <Typography variant="p" component="p" color="var(--outline)">
-                        {formatTime(row.created_at_datetime)}
+                        {formatTime(row?.created_at_datetime)}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -586,7 +596,7 @@ const ClientTable = () => {
               sortable: true,
               renderComponent: ({ row }) => (
                 <>
-                  {row.last_modified_datetime ? (
+                  {row?.last_modified_datetime ? (
                     <Stack
                       sx={{
                         flexDirection: "row",
@@ -601,16 +611,16 @@ const ClientTable = () => {
                           gap: 1
                         }}
                       >
-                        {!row.last_modified_by_user ? (
+                        {!row?.last_modified_by_user ? (
                           <Typography variant="p" component="p" color="var(--outline)">
                             Utilizador removido
                           </Typography>
                         ) : (
                           <>
                             <Avatar
-                              alt={row.last_modified_by_user.username}
-                              src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
-                              name={row.last_modified_by_user.username}
+                              alt={row?.last_modified_by_user?.username}
+                              src={`${BASE_URL}/users/${row?.last_modified_by_user?.id}/avatar?size=80`}
+                              name={row?.last_modified_by_user?.username}
                             />
                             <Stack
                               sx={{
@@ -620,10 +630,10 @@ const ClientTable = () => {
                               }}
                             >
                               <Typography variant="p" component="p" fontWeight={500}>
-                                {row.last_modified_by_user.username}
+                                {row?.last_modified_by_user?.username}
                               </Typography>
                               <Typography variant="p" component="p" color="var(--outline)">
-                                {row.last_modified_by_user.role}
+                                {row?.last_modified_by_user?.role}
                               </Typography>
                             </Stack>
                           </>
@@ -643,10 +653,210 @@ const ClientTable = () => {
                         }}
                       >
                         <Typography variant="p" component="p" fontWeight={500}>
-                          {formatDate(row.last_modified_datetime)}
+                          {formatDate(row?.last_modified_datetime)}
                         </Typography>
                         <Typography variant="p" component="p" color="var(--outline)">
-                          {formatTime(row.last_modified_datetime)}
+                          {formatTime(row?.last_modified_datetime)}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                  ) : (
+                    <Typography variant="p" component="p" color="var(--outline)">
+                      Ainda não foi modificado
+                    </Typography>
+                  )}
+                </>
+              )
+            }
+          ],
+          []
+        )
+
+        const equipmentsTableColumns = useMemo(
+          () => [
+            {
+              id: "type.name",
+              label: "Tipo",
+              align: "left",
+              sortable: true,
+              renderComponent: ({ row }) => (
+                <Link to={`/equipment/${row?.id}`}>{row?.type?.name}</Link>
+              )
+            },
+            {
+              id: "brand.name",
+              label: "Marca ",
+              align: "left",
+              sortable: true,
+              renderComponent: ({ row }) => (
+                <Link to={`/equipment/${row?.id}`}>{row?.brand?.name}</Link>
+              )
+            },
+            {
+              id: "model.name",
+              label: "Modelo",
+              align: "left",
+              sortable: true,
+              renderComponent: ({ row }) => (
+                <Link to={`/equipment/${row?.id}`}>{row?.model?.name}</Link>
+              )
+            },
+            {
+              id: "sn",
+              label: "Número de série",
+              align: "left",
+              sortable: true,
+              renderComponent: ({ row }) => <Link to={`/equipment/${row?.id}`}>{row?.sn}</Link>
+            },
+            {
+              id: "created_by_user",
+              visible: false
+            },
+            {
+              id: "created_at_datetime",
+              label: "Criado por",
+              align: "left",
+              sortable: true,
+              renderComponent: ({ row }) => (
+                <>
+                  <Stack
+                    sx={{
+                      flexDirection: "row",
+                      gap: 2
+                    }}
+                  >
+                    <Stack
+                      sx={{
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: 1
+                      }}
+                    >
+                      {!row?.created_by_user ? (
+                        <Typography variant="p" component="p" color="var(--outline)">
+                          Utilizador removido
+                        </Typography>
+                      ) : (
+                        <>
+                          <Avatar
+                            alt={row?.created_by_user?.username}
+                            src={`${BASE_URL}/users/${row?.created_by_user?.id}/avatar?size=80`}
+                            name={row?.created_by_user?.username}
+                          />
+                          <Stack
+                            sx={{
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis"
+                            }}
+                          >
+                            <Typography variant="p" component="p" fontWeight={500}>
+                              {row?.created_by_user.username}
+                            </Typography>
+                            <Typography variant="p" component="p" color="var(--outline)">
+                              {row?.created_by_user.role}
+                            </Typography>
+                          </Stack>
+                        </>
+                      )}
+                    </Stack>
+                    <Divider
+                      sx={{
+                        borderColor: "var(--elevation-level5)",
+                        borderWidth: 1
+                      }}
+                    />
+                    <Stack
+                      sx={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis"
+                      }}
+                    >
+                      <Typography variant="p" component="p" fontWeight={500}>
+                        {formatDate(row?.created_at_datetime)}
+                      </Typography>
+                      <Typography variant="p" component="p" color="var(--outline)">
+                        {formatTime(row?.created_at_datetime)}
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                </>
+              )
+            },
+            {
+              id: "last_modified_by_user",
+              visible: false
+            },
+            {
+              id: "last_modified_datetime",
+              label: "Modificado pela última vez por",
+              align: "left",
+              sortable: true,
+              renderComponent: ({ row }) => (
+                <>
+                  {row?.last_modified_datetime ? (
+                    <Stack
+                      sx={{
+                        flexDirection: "row",
+                        gap: 2
+                      }}
+                    >
+                      <Stack
+                        sx={{
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: 1
+                        }}
+                      >
+                        {!row?.last_modified_by_user ? (
+                          <Typography variant="p" component="p" color="var(--outline)">
+                            Utilizador removido
+                          </Typography>
+                        ) : (
+                          <>
+                            <Avatar
+                              alt={row?.last_modified_by_user?.username}
+                              src={`${BASE_URL}/users/${row?.last_modified_by_user?.id}/avatar?size=80`}
+                              name={row?.last_modified_by_user?.username}
+                            />
+                            <Stack
+                              sx={{
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis"
+                              }}
+                            >
+                              <Typography variant="p" component="p" fontWeight={500}>
+                                {row?.last_modified_by_user?.username}
+                              </Typography>
+                              <Typography variant="p" component="p" color="var(--outline)">
+                                {row?.last_modified_by_user?.role}
+                              </Typography>
+                            </Stack>
+                          </>
+                        )}
+                      </Stack>
+                      <Divider
+                        sx={{
+                          borderColor: "var(--elevation-level5)",
+                          borderWidth: 1
+                        }}
+                      />
+                      <Stack
+                        sx={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis"
+                        }}
+                      >
+                        <Typography variant="p" component="p" fontWeight={500}>
+                          {formatDate(row?.last_modified_datetime)}
+                        </Typography>
+                        <Typography variant="p" component="p" color="var(--outline)">
+                          {formatTime(row?.last_modified_datetime)}
                         </Typography>
                       </Stack>
                     </Stack>
@@ -695,16 +905,16 @@ const ClientTable = () => {
                         gap: 1
                       }}
                     >
-                      {!row.responsible_user ? (
+                      {!row?.responsible_user ? (
                         <Typography variant="p" component="p" color="var(--outline)">
                           Utilizador removido
                         </Typography>
                       ) : (
                         <>
                           <Avatar
-                            alt={row.responsible_user.username}
-                            src={`${BASE_URL}/users/${row.responsible_user.id}/avatar?size=80`}
-                            name={row.responsible_user.username}
+                            alt={row?.responsible_user?.username}
+                            src={`${BASE_URL}/users/${row?.responsible_user?.id}/avatar?size=80`}
+                            name={row?.responsible_user?.username}
                           />
                           <Stack
                             sx={{
@@ -714,10 +924,10 @@ const ClientTable = () => {
                             }}
                           >
                             <Typography variant="p" component="p" fontWeight={500}>
-                              {row.responsible_user.username}
+                              {row?.responsible_user?.username}
                             </Typography>
                             <Typography variant="p" component="p" color="var(--outline)">
-                              {row.responsible_user.role}
+                              {row?.responsible_user?.role}
                             </Typography>
                           </Stack>
                         </>
@@ -737,10 +947,10 @@ const ClientTable = () => {
                       }}
                     >
                       <Typography variant="p" component="p" fontWeight={500}>
-                        {formatDate(row.created_at_datetime)}
+                        {formatDate(row?.created_at_datetime)}
                       </Typography>
                       <Typography variant="p" component="p" color="var(--outline)">
-                        {formatTime(row.created_at_datetime)}
+                        {formatTime(row?.created_at_datetime)}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -768,8 +978,8 @@ const ClientTable = () => {
                     align: "left",
                     sortable: true,
                     renderComponent: ({ row }) => {
-                      if (row.field === "Descrição") {
-                        if (row.before) {
+                      if (row?.field === "Descrição") {
+                        if (row?.before) {
                           return (
                             <Box
                               sx={{
@@ -783,21 +993,21 @@ const ClientTable = () => {
                             >
                               <span
                                 className="table-cell-tiptap-editor"
-                                dangerouslySetInnerHTML={formatHTML(row.before)}
+                                dangerouslySetInnerHTML={formatHTML(row?.before)}
                               />
                             </Box>
                           )
                         }
                       }
 
-                      if (row.field === "Contacto") {
-                        if (row.before) {
-                          return formatPhoneNumber(row.before)
+                      if (row?.field === "Contacto") {
+                        if (row?.before) {
+                          return formatPhoneNumber(row?.before)
                         }
                       }
 
-                      return row.before ? (
-                        row.before
+                      return row?.before ? (
+                        row?.before
                       ) : (
                         <Typography variant="p" component="p" color="var(--outline)">
                           Sem valor
@@ -811,8 +1021,8 @@ const ClientTable = () => {
                     align: "left",
                     sortable: true,
                     renderComponent: ({ row }) => {
-                      if (row.field === "Descrição") {
-                        if (row.after) {
+                      if (row?.field === "Descrição") {
+                        if (row?.after) {
                           return (
                             <Box
                               sx={{
@@ -826,21 +1036,21 @@ const ClientTable = () => {
                             >
                               <span
                                 className="table-cell-tiptap-editor"
-                                dangerouslySetInnerHTML={formatHTML(row.after)}
+                                dangerouslySetInnerHTML={formatHTML(row?.after)}
                               />
                             </Box>
                           )
                         }
                       }
 
-                      if (row.field === "Contacto") {
-                        if (row.after) {
-                          return formatPhoneNumber(row.after)
+                      if (row?.field === "Contacto") {
+                        if (row?.after) {
+                          return formatPhoneNumber(row?.after)
                         }
                       }
 
-                      return row.after ? (
-                        row.after
+                      return row?.after ? (
+                        row?.after
                       ) : (
                         <Typography variant="p" component="p" color="var(--outline)">
                           Sem valor
@@ -854,7 +1064,7 @@ const ClientTable = () => {
                     align: "left",
                     sortable: true,
                     renderComponent: ({ row }) => (
-                      <>{row.changed ? <Check color="success" /> : <Close color="error" />}</>
+                      <>{row?.changed ? <Check color="success" /> : <Close color="error" />}</>
                     )
                   }
                 ],
@@ -871,7 +1081,7 @@ const ClientTable = () => {
                   }}
                 >
                   <Table
-                    data={row.details ?? []}
+                    data={row?.details ?? []}
                     columns={interactionsHistoryDetailsTableColumns}
                   />
                 </Box>
@@ -894,7 +1104,7 @@ const ClientTable = () => {
                 description="Contactos do cliente"
                 icon={<Phone />}
               />
-              <Table mode="datatable" data={row.contacts ?? []} columns={contactsTableColumns} />
+              <Table mode="datatable" data={row?.contacts ?? []} columns={contactsTableColumns} />
             </Box>
             <Box
               sx={{
@@ -904,7 +1114,25 @@ const ClientTable = () => {
               }}
             >
               <HeaderSection title="Moradas" description="Moradas do cliente" icon={<Place />} />
-              <Table mode="datatable" data={row.addresses ?? []} columns={addressesTableColumns} />
+              <Table mode="datatable" data={row?.addresses ?? []} columns={addressesTableColumns} />
+            </Box>
+            <Box
+              sx={{
+                border: "1px solid var(--elevation-level5)",
+                borderRadius: 2,
+                overflow: "hidden"
+              }}
+            >
+              <HeaderSection
+                title="Equipamentos"
+                description="Equipamentos do cliente"
+                icon={<AppsOutlined />}
+              />
+              <Table
+                mode="datatable"
+                data={row?.equipments ?? []}
+                columns={equipmentsTableColumns}
+              />
             </Box>
             {role !== "Funcionário" && (
               <Box
@@ -921,7 +1149,7 @@ const ClientTable = () => {
                 />
                 <Table
                   mode="datatable"
-                  data={row.interactions_history ?? []}
+                  data={row?.interactions_history ?? []}
                   columns={interactionsHistoryTableColumns}
                   ExpandableContentComponent={ExpandableClientsInteractionsHistoryTableContent}
                 />

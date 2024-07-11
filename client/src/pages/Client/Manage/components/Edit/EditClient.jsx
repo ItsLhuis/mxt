@@ -13,6 +13,7 @@ import {
   ClientDetailsForm,
   ClientContact,
   ClientAddress,
+  ClientEquipmentsTable,
   ClientInteractionsHistoryTable
 } from "./components"
 
@@ -55,6 +56,11 @@ const EditClient = () => {
         <ClientDetailsForm client={client} isLoading={isClientLoading} isError={isClientError} />
         <ClientContact client={client} isLoading={isClientLoading} isError={isClientError} />
         <ClientAddress client={client} isLoading={isClientLoading} isError={isClientError} />
+        <ClientEquipmentsTable
+          client={client}
+          isLoading={isClientLoading}
+          isError={isClientError}
+        />
         {role !== "Funcionário" && (
           <ClientInteractionsHistoryTable
             client={client}

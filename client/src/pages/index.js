@@ -36,6 +36,14 @@ const EquipmentModelList = lazy(() => import("./Equipment/Attributes/Model/List"
 //----------------------------------------------------------------------
 //----------------------------------------------------------------------
 
+//Repair
+const RepairList = lazy(() => import("./Repair/List/List"))
+//----------------------------------------------------------------------
+
+//Email
+const EmailList = lazy(() => import("./Email/List/List"))
+//----------------------------------------------------------------------
+
 const Settings = lazy(() => import("./Settings/Settings"))
 
 export {
@@ -54,5 +62,7 @@ export {
   EquipmentTypeList,
   EquipmentBrandList,
   EquipmentModelList,
+  RepairList,
+  EmailList,
   Settings
 }

@@ -7,7 +7,7 @@ import { useAuth } from "@contexts/auth"
 import { BASE_URL } from "@api"
 import { useUser } from "@hooks/server/useUser"
 
-import { Stack, Paper, Box, Typography, Tooltip, IconButton, Chip } from "@mui/material"
+import { Stack, Paper, Box, Typography, Tooltip, IconButton, Chip, Divider } from "@mui/material"
 import { MoreVert, Edit, Delete } from "@mui/icons-material"
 
 import {
@@ -20,6 +20,7 @@ import {
   Modal
 } from "@components/ui"
 
+import { formatDate, formatTime } from "@utils/format/date"
 import { formatPhoneNumber } from "@utils/format/phone"
 
 const EmployeeTable = () => {
@@ -80,9 +81,9 @@ const EmployeeTable = () => {
             }}
           >
             <Avatar
-              alt={row.user.username}
-              src={`${BASE_URL}/users/${row.user.id}/avatar?size=80`}
-              name={row.user.username}
+              alt={row?.user?.username}
+              src={`${BASE_URL}/users/${row?.user?.id}/avatar?size=80`}
+              name={row?.user?.username}
             />
             <Stack
               sx={{
@@ -92,10 +93,10 @@ const EmployeeTable = () => {
               }}
             >
               <Typography variant="p" component="p" fontWeight={500}>
-                {row.user.username}
+                {row?.user?.username}
               </Typography>
               <Typography variant="p" component="p" color="var(--outline)">
-                {row.user.role}
+                {row?.user?.role}
               </Typography>
             </Stack>
           </Stack>
@@ -108,7 +109,7 @@ const EmployeeTable = () => {
         sortable: true,
         renderComponent: ({ row }) => (
           <>
-            {row.user.is_active ? (
+            {row?.user?.is_active ? (
               <Chip color="success" label="Ativo" />
             ) : (
               <Chip color="error" label="Inativo" />
@@ -122,8 +123,8 @@ const EmployeeTable = () => {
         align: "left",
         sortable: true,
         renderComponent: ({ row }) =>
-          row.name ? (
-            row.name
+          row?.name ? (
+            row?.name
           ) : (
             <Typography variant="p" component="p" color="var(--outline)">
               Sem valor
@@ -136,8 +137,8 @@ const EmployeeTable = () => {
         align: "left",
         sortable: true,
         renderComponent: ({ row }) =>
-          row.user.email ? (
-            row.user.email
+          row?.user?.email ? (
+            row?.user?.email
           ) : (
             <Typography variant="p" component="p" color="var(--outline)">
               Sem valor
@@ -150,8 +151,8 @@ const EmployeeTable = () => {
         align: "left",
         sortable: true,
         renderComponent: ({ row }) =>
-          row.phone_number ? (
-            formatPhoneNumber(row.phone_number)
+          row?.phone_number ? (
+            formatPhoneNumber(row?.phone_number)
           ) : (
             <Typography variant="p" component="p" color="var(--outline)">
               Sem valor
@@ -164,8 +165,8 @@ const EmployeeTable = () => {
         align: "left",
         sortable: true,
         renderComponent: ({ row }) =>
-          row.country ? (
-            row.country
+          row?.country ? (
+            row?.country
           ) : (
             <Typography variant="p" component="p" color="var(--outline)">
               Sem valor
@@ -178,8 +179,8 @@ const EmployeeTable = () => {
         align: "left",
         sortable: true,
         renderComponent: ({ row }) =>
-          row.city ? (
-            row.city
+          row?.city ? (
+            row?.city
           ) : (
             <Typography variant="p" component="p" color="var(--outline)">
               Sem valor
@@ -192,8 +193,8 @@ const EmployeeTable = () => {
         align: "left",
         sortable: true,
         renderComponent: ({ row }) =>
-          row.locality ? (
-            row.locality
+          row?.locality ? (
+            row?.locality
           ) : (
             <Typography variant="p" component="p" color="var(--outline)">
               Sem valor
@@ -206,8 +207,8 @@ const EmployeeTable = () => {
         align: "left",
         sortable: true,
         renderComponent: ({ row }) =>
-          row.address ? (
-            row.address
+          row?.address ? (
+            row?.address
           ) : (
             <Typography variant="p" component="p" color="var(--outline)">
               Sem valor
@@ -220,8 +221,8 @@ const EmployeeTable = () => {
         align: "left",
         sortable: true,
         renderComponent: ({ row }) =>
-          row.postal_code ? (
-            row.postal_code
+          row?.postal_code ? (
+            row?.postal_code
           ) : (
             <Typography variant="p" component="p" color="var(--outline)">
               Sem valor
@@ -229,13 +230,96 @@ const EmployeeTable = () => {
           )
       },
       {
+        id: "created_by_user",
+        visible: false
+      },
+      {
+        id: "created_at_datetime",
+        label: "Criado por",
+        align: "left",
+        sortable: true,
+        renderComponent: ({ row }) => (
+          <>
+            {row?.user?.role !== "Chefe" && row?.created_by_user ? (
+              <Stack
+                sx={{
+                  flexDirection: "row",
+                  gap: 2
+                }}
+              >
+                <Stack
+                  sx={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 1
+                  }}
+                >
+                  {!row?.created_by_user ? (
+                    <Typography variant="p" component="p" color="var(--outline)">
+                      Utilizador removido
+                    </Typography>
+                  ) : (
+                    <>
+                      <Avatar
+                        alt={row?.created_by_user?.username}
+                        src={`${BASE_URL}/users/${row?.created_by_user?.id}/avatar?size=80`}
+                        name={row?.created_by_user?.username}
+                      />
+                      <Stack
+                        sx={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis"
+                        }}
+                      >
+                        <Typography variant="p" component="p" fontWeight={500}>
+                          {row?.created_by_user?.username}
+                        </Typography>
+                        <Typography variant="p" component="p" color="var(--outline)">
+                          {row?.created_by_user?.role}
+                        </Typography>
+                      </Stack>
+                    </>
+                  )}
+                </Stack>
+                <Divider
+                  sx={{
+                    borderColor: "var(--elevation-level5)",
+                    borderWidth: 1
+                  }}
+                />
+                <Stack
+                  sx={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis"
+                  }}
+                >
+                  <Typography variant="p" component="p" fontWeight={500}>
+                    {formatDate(row?.created_at_datetime)}
+                  </Typography>
+                  <Typography variant="p" component="p" color="var(--outline)">
+                    {formatTime(row?.created_at_datetime)}
+                  </Typography>
+                </Stack>
+              </Stack>
+            ) : (
+              <Typography variant="p" component="p" color="var(--outline)">
+                Sem valor
+              </Typography>
+            )}
+          </>
+        )
+      },
+      {
         id: "more_options",
         align: "right",
         sortable: false,
         renderComponent: ({ row }) => {
           if (
-            row.user.role !== "Chefe" &&
-            !(role === "Administrador" && row.user.role === "Administrador")
+            row?.user.role !== "Chefe" &&
+            !(role === "Administrador" && row?.user.role === "Administrador")
           ) {
             return (
               <ButtonDropDownSelect
@@ -253,14 +337,14 @@ const EmployeeTable = () => {
                     {
                       label: "Editar",
                       icon: <Edit fontSize="small" />,
-                      onClick: () => navigate(`/employee/${row.user.id}`)
+                      onClick: () => navigate(`/employee/${row?.user?.id}`)
                     },
                     {
                       label: "Eliminar",
                       icon: <Delete fontSize="small" color="error" />,
                       color: "error",
                       divider: true,
-                      onClick: () => openDeleteClientModal(row.user.id)
+                      onClick: () => openDeleteClientModal(row?.user?.id)
                     }
                   ]}
                 />

@@ -28,7 +28,7 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
         sortable: false,
         renderComponent: ({ row }) => (
           <>
-            {row.responsible_user ? (
+            {row?.responsible_user ? (
               <Stack
                 sx={{
                   flexDirection: "row",
@@ -44,9 +44,9 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
                   }}
                 >
                   <Avatar
-                    alt={row.responsible_user.username}
-                    src={`${BASE_URL}/users/${row.responsible_user.id}/avatar?size=80`}
-                    name={row.responsible_user.username}
+                    alt={row?.responsible_user?.username}
+                    src={`${BASE_URL}/users/${row?.responsible_user?.id}/avatar?size=80`}
+                    name={row?.responsible_user?.username}
                   />
                   <Stack
                     sx={{
@@ -56,10 +56,10 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
                     }}
                   >
                     <Typography variant="p" component="p" fontWeight={500}>
-                      {row.responsible_user.username}
+                      {row?.responsible_user?.username}
                     </Typography>
                     <Typography variant="p" component="p" color="var(--outline)">
-                      {row.responsible_user.role}
+                      {row?.responsible_user?.role}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -77,10 +77,10 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
                   }}
                 >
                   <Typography variant="p" component="p" fontWeight={500}>
-                    {formatDate(row.created_at_datetime)}
+                    {formatDate(row?.created_at_datetime)}
                   </Typography>
                   <Typography variant="p" component="p" color="var(--outline)">
-                    {formatTime(row.created_at_datetime)}
+                    {formatTime(row?.created_at_datetime)}
                   </Typography>
                 </Stack>
               </Stack>
@@ -141,7 +141,7 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
                       <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
                         {row.before.name}
                         {row.before.description && (
-                          <Caption fontSize="small" title={row.before.description} isHtml />
+                          <Caption fontSize="small" title={row.before.description} />
                         )}
                       </Stack>
                     )
@@ -209,7 +209,7 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
                       <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
                         {row.after.name}
                         {row.after.description && (
-                          <Caption fontSize="small" title={row.after.description} isHtml />
+                          <Caption fontSize="small" title={row.after.description} />
                         )}
                       </Stack>
                     )
@@ -260,6 +260,7 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
           () => [
             {
               id: "file_mime_type",
+              label: "Tipo",
               align: "left",
               sortable: true,
               renderComponent: ({ row }) => (

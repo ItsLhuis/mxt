@@ -79,10 +79,10 @@ export const useClient = () => {
       const clientId = variables.clientId
       await queryClient.invalidateQueries(["clients"])
       await queryClient.invalidateQueries(["clients", clientId])
-      showSuccessToast("Contato removido com sucesso!")
+      showSuccessToast("Contacto eliminado com sucesso!")
     },
     onError: () => {
-      showErrorToast("Erro ao remover contato!")
+      showErrorToast("Erro ao eliminar contacto!")
     }
   })
 

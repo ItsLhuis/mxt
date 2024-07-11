@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "@contexts/auth"
 
 import { BASE_URL } from "@api"
-import { useEquipment } from "@hooks/server/useEquipment"
+import { useRepair } from "@hooks/server/useRepair"
 
 import { Link } from "react-router-dom"
 import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton, Chip } from "@mui/material"
@@ -13,7 +13,6 @@ import {
   MoreVert,
   Edit,
   Delete,
-  Construction,
   Attachment,
   PictureAsPdf,
   Image,
@@ -40,13 +39,13 @@ import {
 import { formatHTML } from "@utils/format/formatHTML"
 import { formatDateTime, formatDate, formatTime } from "@utils/format/date"
 
-const ClientTable = () => {
+const RepairTable = () => {
   const navigate = useNavigate()
 
   const { role } = useAuth()
 
-  const { findAllEquipments, deleteEquipment } = useEquipment()
-  const { data: equipments, isLoading: isEquipmentsLoading } = findAllEquipments
+  const { findAllRepairs } = useRepair()
+  const { data: repairs, isLoading: isRepairsLoading } = findAllRepairs
 
   const [openFileViewer, setOpenFileViewer] = useState(false)
   const [attachment, setAttachment] = useState({ url: "", name: "", size: "", type: "" })
@@ -71,7 +70,7 @@ const ClientTable = () => {
   }
 
   const handleDeleteClient = () => {
-    return new Promise((resolve, reject) => {
+    /*     return new Promise((resolve, reject) => {
       if (deleteEquipmentModal.equipmentId) {
         deleteEquipment
           .mutateAsync({ equipmentId: deleteEquipmentModal.equipmentId })
@@ -87,52 +86,115 @@ const ClientTable = () => {
         closeDeleteEquipmentModal()
         reject()
       }
-    })
+    }) */
   }
 
-  const equipmentsTableColumns = useMemo(
+  const repairsTableColumns = useMemo(
     () => [
       {
-        id: "client.name",
+        id: "status.name",
+        label: "Estado",
+        align: "left",
+        sortable: true,
+        renderComponent: ({ row }) => <Chip label={row?.status?.name} color={row?.status?.color} />
+      },
+      {
+        id: "equipment.client.name",
         label: "Cliente",
         align: "left",
         sortable: true,
         renderComponent: ({ row }) => (
           <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-            <Link to={`/client/${row?.client?.id}`}>{row?.client?.name}</Link>
-            {row?.client?.description && (
-              <Caption fontSize="small" title={row?.client?.description} />
+            <Link to={`/client/${row?.equipment?.client?.id}`}>{row?.equipment?.client?.name}</Link>
+            {row?.equipment?.client?.description && (
+              <Caption fontSize="small" title={row?.equipment?.client?.description} />
             )}
           </Stack>
         )
       },
       {
-        id: "type.name",
+        id: "equipment.type.name",
         label: "Tipo",
         align: "left",
-        sortable: true,
-        renderComponent: ({ row }) => <Link to={`/equipment/${row?.id}`}>{row?.type?.name}</Link>
+        sortable: true
       },
       {
-        id: "brand.name",
-        label: "Marca ",
+        id: "equipment.brand.name",
+        label: "Marca",
         align: "left",
-        sortable: true,
-        renderComponent: ({ row }) => <Link to={`/equipment/${row?.id}`}>{row?.brand?.name}</Link>
+        sortable: true
       },
       {
-        id: "model.name",
+        id: "equipment.model.name",
         label: "Modelo",
         align: "left",
-        sortable: true,
-        renderComponent: ({ row }) => <Link to={`/equipment/${row?.id}`}>{row?.model?.name}</Link>
+        sortable: true
       },
       {
-        id: "sn",
+        id: "equipment.sn",
         label: "Número de série",
         align: "left",
+        sortable: true
+      },
+      {
+        id: "entry_datetime",
+        label: "Data de entrada",
+        align: "left",
         sortable: true,
-        renderComponent: ({ row }) => <Link to={`/equipment/${row?.id}`}>{row?.sn}</Link>
+        renderComponent: ({ row }) => (
+          <>
+            {row?.entry_datetime ? (
+              <>{formatDateTime(row?.entry_datetime)}</>
+            ) : (
+              <Typography variant="p" component="p" color="var(--outline)">
+                Sem valor
+              </Typography>
+            )}
+          </>
+        )
+      },
+      {
+        id: "conclusion_datetime",
+        label: "Data de conclusão",
+        align: "left",
+        sortable: true,
+        renderComponent: ({ row }) => (
+          <>
+            {row?.conclusion_datetime ? (
+              <>{formatDateTime(row?.conclusion_datetime)}</>
+            ) : (
+              <Typography variant="p" component="p" color="var(--outline)">
+                Sem valor
+              </Typography>
+            )}
+          </>
+        )
+      },
+      {
+        id: "delivery_datetime",
+        label: "Data de entrega",
+        align: "left",
+        sortable: true,
+        renderComponent: ({ row }) => (
+          <>
+            {row?.delivery_datetime ? (
+              <>{formatDateTime(row?.delivery_datetime)}</>
+            ) : (
+              <Typography variant="p" component="p" color="var(--outline)">
+                Sem valor
+              </Typography>
+            )}
+          </>
+        )
+      },
+      {
+        id: "is_client_notified",
+        label: "Cliente notificado",
+        align: "left",
+        sortable: true,
+        renderComponent: ({ row }) => (
+          <>{row?.is_client_notified ? <Check color="success" /> : <Close color="error" />}</>
+        )
       },
       {
         id: "created_by_user",
@@ -339,243 +401,6 @@ const ClientTable = () => {
   const ExpandableClientsTableContent = useMemo(
     () =>
       ({ row }) => {
-        const repairsTableColumns = useMemo(
-          () => [
-            {
-              id: "status.name",
-              label: "Estado",
-              align: "left",
-              sortable: true,
-              renderComponent: ({ row }) => (
-                <Link to={`/repair/${row?.id}`}>
-                  <Chip label={row?.status?.name} color={row?.status?.color} />
-                </Link>
-              )
-            },
-            {
-              id: "entry_datetime",
-              label: "Data de entrada",
-              align: "left",
-              sortable: true,
-              renderComponent: ({ row }) => (
-                <>
-                  {row?.entry_datetime ? (
-                    <>{formatDateTime(row?.entry_datetime)}</>
-                  ) : (
-                    <Typography variant="p" component="p" color="var(--outline)">
-                      Sem valor
-                    </Typography>
-                  )}
-                </>
-              )
-            },
-            {
-              id: "conclusion_datetime",
-              label: "Data de conclusão",
-              align: "left",
-              sortable: true,
-              renderComponent: ({ row }) => (
-                <>
-                  {row?.conclusion_datetime ? (
-                    <>{formatDateTime(row?.conclusion_datetime)}</>
-                  ) : (
-                    <Typography variant="p" component="p" color="var(--outline)">
-                      Sem valor
-                    </Typography>
-                  )}
-                </>
-              )
-            },
-            {
-              id: "delivery_datetime",
-              label: "Data de entrega",
-              align: "left",
-              sortable: true,
-              renderComponent: ({ row }) => (
-                <>
-                  {row?.delivery_datetime ? (
-                    <>{formatDateTime(row?.delivery_datetime)}</>
-                  ) : (
-                    <Typography variant="p" component="p" color="var(--outline)">
-                      Sem valor
-                    </Typography>
-                  )}
-                </>
-              )
-            },
-            {
-              id: "is_client_notified",
-              label: "Cliente notificado",
-              align: "left",
-              sortable: true,
-              renderComponent: ({ row }) => (
-                <>{row?.is_client_notified ? <Check color="success" /> : <Close color="error" />}</>
-              )
-            },
-            {
-              id: "created_by_user",
-              visible: false
-            },
-            {
-              id: "created_at_datetime",
-              label: "Criado por",
-              align: "left",
-              sortable: true,
-              renderComponent: ({ row }) => (
-                <>
-                  <Stack
-                    sx={{
-                      flexDirection: "row",
-                      gap: 2
-                    }}
-                  >
-                    <Stack
-                      sx={{
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: 1
-                      }}
-                    >
-                      {!row?.created_by_user ? (
-                        <Typography variant="p" component="p" color="var(--outline)">
-                          Utilizador removido
-                        </Typography>
-                      ) : (
-                        <>
-                          <Avatar
-                            alt={row?.created_by_user?.username}
-                            src={`${BASE_URL}/users/${row?.created_by_user?.id}/avatar?size=80`}
-                            name={row?.created_by_user?.username}
-                          />
-                          <Stack
-                            sx={{
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis"
-                            }}
-                          >
-                            <Typography variant="p" component="p" fontWeight={500}>
-                              {row?.created_by_user?.username}
-                            </Typography>
-                            <Typography variant="p" component="p" color="var(--outline)">
-                              {row?.created_by_user?.role}
-                            </Typography>
-                          </Stack>
-                        </>
-                      )}
-                    </Stack>
-                    <Divider
-                      sx={{
-                        borderColor: "var(--elevation-level5)",
-                        borderWidth: 1
-                      }}
-                    />
-                    <Stack
-                      sx={{
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis"
-                      }}
-                    >
-                      <Typography variant="p" component="p" fontWeight={500}>
-                        {formatDate(row?.created_at_datetime)}
-                      </Typography>
-                      <Typography variant="p" component="p" color="var(--outline)">
-                        {formatTime(row?.created_at_datetime)}
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                </>
-              )
-            },
-            {
-              id: "last_modified_by_user",
-              visible: false
-            },
-            {
-              id: "last_modified_datetime",
-              label: "Modificado pela última vez por",
-              align: "left",
-              sortable: true,
-              renderComponent: ({ row }) => (
-                <>
-                  {row?.last_modified_datetime ? (
-                    <Stack
-                      sx={{
-                        flexDirection: "row",
-                        gap: 2
-                      }}
-                    >
-                      <Stack
-                        sx={{
-                          flexDirection: "row",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          gap: 1
-                        }}
-                      >
-                        {!row?.last_modified_by_user ? (
-                          <Typography variant="p" component="p" color="var(--outline)">
-                            Utilizador removido
-                          </Typography>
-                        ) : (
-                          <>
-                            <Avatar
-                              alt={row?.last_modified_by_user?.username}
-                              src={`${BASE_URL}/users/${row?.last_modified_by_user?.id}/avatar?size=80`}
-                              name={row?.last_modified_by_user?.username}
-                            />
-                            <Stack
-                              sx={{
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis"
-                              }}
-                            >
-                              <Typography variant="p" component="p" fontWeight={500}>
-                                {row?.last_modified_by_user?.username}
-                              </Typography>
-                              <Typography variant="p" component="p" color="var(--outline)">
-                                {row?.last_modified_by_user?.role}
-                              </Typography>
-                            </Stack>
-                          </>
-                        )}
-                      </Stack>
-                      <Divider
-                        sx={{
-                          borderColor: "var(--elevation-level5)",
-                          borderWidth: 1
-                        }}
-                      />
-                      <Stack
-                        sx={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis"
-                        }}
-                      >
-                        <Typography variant="p" component="p" fontWeight={500}>
-                          {formatDate(row?.last_modified_datetime)}
-                        </Typography>
-                        <Typography variant="p" component="p" color="var(--outline)">
-                          {formatTime(row?.last_modified_datetime)}
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  ) : (
-                    <Typography variant="p" component="p" color="var(--outline)">
-                      Ainda não foi modificado
-                    </Typography>
-                  )}
-                </>
-              )
-            }
-          ],
-          []
-        )
-
         const attachmentsTableColumns = useMemo(
           () => [
             {
@@ -701,7 +526,7 @@ const ClientTable = () => {
                   <IconButton
                     onClick={() =>
                       handleOpenFileViewer(
-                        `${BASE_URL}/equipments/${row?.equipment_id}/attachments/${row?.id}/${row?.original_filename}`,
+                        `${BASE_URL}/repairs/${row?.repair_id}/attachments/${row?.id}/${row?.original_filename}`,
                         row?.original_filename,
                         row?.file_size,
                         row?.file_mime_type
@@ -817,7 +642,14 @@ const ClientTable = () => {
                     align: "left",
                     sortable: true,
                     renderComponent: ({ row }) => {
-                      if (row?.field === "Descrição") {
+                      if (
+                        row?.field === "Descrição da entrada" ||
+                        row?.field === "Descrição dos acessórios da entrada" ||
+                        row?.field === "Descrição das avarias relatadas" ||
+                        row?.field === "Descrição dos trabalhos realizados" ||
+                        row?.field === "Descrição dos acessórios da intervenção" ||
+                        row?.field === "Descrição da intervenção"
+                      ) {
                         if (row?.before) {
                           return (
                             <Box
@@ -839,34 +671,42 @@ const ClientTable = () => {
                         }
                       }
 
-                      if (row?.field === "Cliente") {
+                      if (row?.field === "Estado") {
                         if (row?.before) {
+                          return <Chip label={row?.before?.name} color={row?.before?.color} />
+                        }
+                      }
+
+                      if (
+                        row?.field === "Data de entrada" ||
+                        row?.field === "Data de conclusão" ||
+                        row?.field === "Data de entrega"
+                      ) {
+                        if (row?.before) {
+                          return <>{formatDateTime(row?.before)}</>
+                        }
+                      }
+
+                      if (row?.field === "Cliente notificado") {
+                        return (
+                          <>{row?.before ? <Check color="success" /> : <Close color="error" />}</>
+                        )
+                      }
+
+                      if (
+                        row?.field === "Acessórios da entrada" ||
+                        row?.field === "Avarias relatadas" ||
+                        row?.field === "Trabalhos realizados" ||
+                        row?.field === "Acessórios da intervenção"
+                      ) {
+                        if (row?.before && row?.before.length > 0) {
+                          return row?.before.map((item) => item?.name).join(", ")
+                        } else {
                           return (
-                            <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-                              {row?.before.name}
-                              {row?.before.description && (
-                                <Caption fontSize="small" title={row?.before.description} />
-                              )}
-                            </Stack>
+                            <Typography variant="p" component="p" color="var(--outline)">
+                              Sem valor
+                            </Typography>
                           )
-                        }
-                      }
-
-                      if (row?.field === "Tipo") {
-                        if (row?.before) {
-                          return <>{row?.before?.name}</>
-                        }
-                      }
-
-                      if (row?.field === "Marca") {
-                        if (row?.before) {
-                          return <>{row?.before?.name}</>
-                        }
-                      }
-
-                      if (row?.field === "Modelo") {
-                        if (row?.before) {
-                          return <>{row?.before?.name}</>
                         }
                       }
 
@@ -885,7 +725,7 @@ const ClientTable = () => {
                     align: "left",
                     sortable: true,
                     renderComponent: ({ row }) => {
-                      if (row?.field === "Descrição") {
+                      if (row?.field === "Descrição da entrada") {
                         if (row?.after) {
                           return (
                             <Box
@@ -907,34 +747,85 @@ const ClientTable = () => {
                         }
                       }
 
-                      if (row?.field === "Cliente") {
+                      if (row?.field === "Equipamento") {
                         if (row?.after) {
                           return (
-                            <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-                              {row?.after.name}
-                              {row?.after.description && (
-                                <Caption fontSize="small" title={row?.after.description} />
-                              )}
-                            </Stack>
+                            <Caption
+                              fontSize="small"
+                              title={
+                                <Stack
+                                  sx={{
+                                    justifyContent: "center",
+                                    alignItems: "flex-start"
+                                  }}
+                                >
+                                  <Typography variant="p" component="p">
+                                    <b>Cliente:</b> {row?.after?.client?.name}
+                                  </Typography>
+                                  <Typography variant="p" component="p">
+                                    <b>Tipo:</b> {row?.after?.type?.name}
+                                  </Typography>
+                                  <Typography variant="p" component="p">
+                                    <b>Marca:</b> {row?.after?.brand?.name}
+                                  </Typography>
+                                  <Typography variant="p" component="p">
+                                    <b>Modelo:</b> {row?.after?.model?.name}
+                                  </Typography>
+                                  <Typography
+                                    variant="p"
+                                    component="p"
+                                    sx={{
+                                      maxWidth: 200,
+                                      whiteSpace: "nowrap",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis"
+                                    }}
+                                  >
+                                    <b>Número de série:</b> {row?.after?.sn}
+                                  </Typography>
+                                </Stack>
+                              }
+                            />
                           )
                         }
                       }
 
-                      if (row?.field === "Tipo") {
+                      if (row?.field === "Estado") {
                         if (row?.after) {
-                          return <>{row?.after?.name}</>
+                          return <Chip label={row?.after?.name} color={row?.after?.color} />
                         }
                       }
 
-                      if (row?.field === "Marca") {
+                      if (
+                        row?.field === "Data de entrada" ||
+                        row?.field === "Data de conclusão" ||
+                        row?.field === "Data de entrega"
+                      ) {
                         if (row?.after) {
-                          return <>{row?.after?.name}</>
+                          return <>{formatDateTime(row?.after)}</>
                         }
                       }
 
-                      if (row?.field === "Modelo") {
-                        if (row?.after) {
-                          return <>{row?.after?.name}</>
+                      if (row?.field === "Cliente notificado") {
+                        return (
+                          <>{row?.after ? <Check color="success" /> : <Close color="error" />}</>
+                        )
+                      }
+
+                      if (
+                        row?.field === "Acessórios da entrada" ||
+                        row?.field === "Avarias relatadas" ||
+                        row?.field === "Trabalhos realizados" ||
+                        row?.field === "Acessórios da intervenção"
+                      ) {
+                        if (row?.after && row?.after.length > 0) {
+                          return row?.after.map((item) => item?.name).join(", ")
+                        } else {
+                          return (
+                            <Typography variant="p" component="p" color="var(--outline)">
+                              Sem valor
+                            </Typography>
+                          )
                         }
                       }
 
@@ -1014,7 +905,7 @@ const ClientTable = () => {
                 >
                   {row?.details[0]?.field === "Anexos" ? (
                     <>
-                      {row?.details[0].after ? (
+                      {row?.details[0]?.after ? (
                         <Table
                           data={row?.details[0]?.after ?? []}
                           columns={interactionsHistoryAttachmentDetailsTableColumns}
@@ -1041,20 +932,6 @@ const ClientTable = () => {
 
         return (
           <Stack sx={{ margin: 3, gap: 3 }}>
-            <Box
-              sx={{
-                border: "1px solid var(--elevation-level5)",
-                borderRadius: 2,
-                overflow: "hidden"
-              }}
-            >
-              <HeaderSection
-                title="Reparações"
-                description="Reparações do equipamento"
-                icon={<Construction />}
-              />
-              <Table mode="datatable" data={row?.repairs ?? []} columns={repairsTableColumns} />
-            </Box>
             <Box
               sx={{
                 border: "1px solid var(--elevation-level5)",
@@ -1104,25 +981,25 @@ const ClientTable = () => {
     <Paper elevation={1}>
       <Box sx={{ marginTop: 3 }}>
         <Loadable
-          isLoading={isEquipmentsLoading}
+          isLoading={isRepairsLoading}
           LoadingComponent={<TableSkeleton mode="datatable" />}
           LoadedComponent={
             <Table
               mode="datatable"
-              data={equipments ?? []}
-              columns={equipmentsTableColumns}
+              data={repairs ?? []}
+              columns={repairsTableColumns}
               ExpandableContentComponent={ExpandableClientsTableContent}
             />
           }
         />
         <Modal
           mode="delete"
-          title="Eliminar Equipamento"
+          title="Eliminar Reparação"
           open={deleteEquipmentModal.isOpen}
           onClose={closeDeleteEquipmentModal}
           onSubmit={handleDeleteClient}
-          description="Tem a certeza que deseja eliminar este equipamento?"
-          subDescription="Ao eliminar este equipamento, todos os dados relacionados, incluindo anexos e reparações associadas, serão removidos de forma permanente."
+          description="Tem a certeza que deseja eliminar esta reparação?"
+          subDescription="Ao eliminar esta reparação, os dados serão removidos de forma permanente."
         />
         <FileViewer
           open={openFileViewer}
@@ -1137,4 +1014,4 @@ const ClientTable = () => {
   )
 }
 
-export default ClientTable
+export default RepairTable

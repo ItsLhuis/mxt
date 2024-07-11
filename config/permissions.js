@@ -22,12 +22,12 @@ module.exports = {
   email: {
     [roles.BOSS]: [permissions.READ, permissions.CREATE],
     [roles.ADMIN]: [permissions.READ, permissions.CREATE],
-    [roles.EMPLOYEE]: [permissions.READ]
+    [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE]
   },
   sms: {
     [roles.BOSS]: [permissions.READ, permissions.CREATE],
     [roles.ADMIN]: [permissions.READ, permissions.CREATE],
-    [roles.EMPLOYEE]: [permissions.READ]
+    [roles.EMPLOYEE]: [permissions.READ, permissions.CREATE]
   },
   client: {
     [roles.BOSS]: [permissions.ALL],

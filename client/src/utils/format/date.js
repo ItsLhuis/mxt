@@ -100,3 +100,9 @@ export const formatTime = (value) => {
   const formattedTime = format(date, "HH:mm")
   return formattedTime
 }
+
+export const formatDateTime = (value) => {
+  const formattedDate = formatDate(value)
+  const formattedTime = formatTime(value)
+  return `${formattedDate}, ${formattedTime}`
+}

@@ -23,6 +23,10 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
         sortable: true
       },
       {
+        id: "responsible_user",
+        visible: false
+      },
+      {
         id: "created_at_datetime",
         label: "Responsável",
         align: "left",
@@ -43,16 +47,16 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                   gap: 1
                 }}
               >
-                {!row.responsible_user ? (
+                {!row?.responsible_user ? (
                   <Typography variant="p" component="p" color="var(--outline)">
                     Utilizador removido
                   </Typography>
                 ) : (
                   <>
                     <Avatar
-                      alt={row.responsible_user.username}
-                      src={`${BASE_URL}/users/${row.responsible_user.id}/avatar?size=80`}
-                      name={row.responsible_user.username}
+                      alt={row?.responsible_user?.username}
+                      src={`${BASE_URL}/users/${row?.responsible_user?.id}/avatar?size=80`}
+                      name={row?.responsible_user?.username}
                     />
                     <Stack
                       sx={{
@@ -62,10 +66,10 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                       }}
                     >
                       <Typography variant="p" component="p" fontWeight={500}>
-                        {row.responsible_user.username}
+                        {row?.responsible_user?.username}
                       </Typography>
                       <Typography variant="p" component="p" color="var(--outline)">
-                        {row.responsible_user.role}
+                        {row?.responsible_user?.role}
                       </Typography>
                     </Stack>
                   </>
@@ -85,10 +89,10 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                 }}
               >
                 <Typography variant="p" component="p" fontWeight={500}>
-                  {formatDate(row.created_at_datetime)}
+                  {formatDate(row?.created_at_datetime)}
                 </Typography>
                 <Typography variant="p" component="p" color="var(--outline)">
-                  {formatTime(row.created_at_datetime)}
+                  {formatTime(row?.created_at_datetime)}
                 </Typography>
               </Stack>
             </Stack>
@@ -116,8 +120,8 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
               align: "left",
               sortable: true,
               renderComponent: ({ row }) => {
-                if (row.field === "Descrição") {
-                  if (row.before) {
+                if (row?.field === "Descrição") {
+                  if (row?.before) {
                     return (
                       <Box
                         sx={{
@@ -131,21 +135,21 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                       >
                         <span
                           className="table-cell-tiptap-editor"
-                          dangerouslySetInnerHTML={formatHTML(row.before)}
+                          dangerouslySetInnerHTML={formatHTML(row?.before)}
                         />
                       </Box>
                     )
                   }
                 }
 
-                if (row.field === "Contacto") {
-                  if (row.before) {
-                    return formatPhoneNumber(row.before)
+                if (row?.field === "Contacto") {
+                  if (row?.before) {
+                    return formatPhoneNumber(row?.before)
                   }
                 }
 
-                return row.before ? (
-                  row.before
+                return row?.before ? (
+                  row?.before
                 ) : (
                   <Typography variant="p" component="p" color="var(--outline)">
                     Sem valor
@@ -159,8 +163,8 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
               align: "left",
               sortable: true,
               renderComponent: ({ row }) => {
-                if (row.field === "Descrição") {
-                  if (row.after) {
+                if (row?.field === "Descrição") {
+                  if (row?.after) {
                     return (
                       <Box
                         sx={{
@@ -174,21 +178,21 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
                       >
                         <span
                           className="table-cell-tiptap-editor"
-                          dangerouslySetInnerHTML={formatHTML(row.after)}
+                          dangerouslySetInnerHTML={formatHTML(row?.after)}
                         />
                       </Box>
                     )
                   }
                 }
 
-                if (row.field === "Contacto") {
-                  if (row.after) {
-                    return formatPhoneNumber(row.after)
+                if (row?.field === "Contacto") {
+                  if (row?.after) {
+                    return formatPhoneNumber(row?.after)
                   }
                 }
 
-                return row.after ? (
-                  row.after
+                return row?.after ? (
+                  row?.after
                 ) : (
                   <Typography variant="p" component="p" color="var(--outline)">
                     Sem valor
@@ -202,7 +206,7 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
               align: "left",
               sortable: true,
               renderComponent: ({ row }) => (
-                <>{row.changed ? <Check color="success" /> : <Close color="error" />}</>
+                <>{row?.changed ? <Check color="success" /> : <Close color="error" />}</>
               )
             }
           ],
@@ -218,7 +222,7 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
               margin: 3
             }}
           >
-            <Table data={row.details ?? []} columns={interactionsHistoryDetailsTableColumns} />
+            <Table data={row?.details ?? []} columns={interactionsHistoryDetailsTableColumns} />
           </Box>
         )
       },
@@ -246,7 +250,7 @@ const ClientInteractionsHistoryTable = ({ client, isLoading, isError }) => {
           >
             <Table
               mode="datatable"
-              data={isClientFinished ? client[0].interactions_history : []}
+              data={isClientFinished ? client[0]?.interactions_history : []}
               columns={clientInteractionsHistoryTableColumns}
               ExpandableContentComponent={ExpandableClientsInteractionsHistoryTableContent}
             />

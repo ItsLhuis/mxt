@@ -167,7 +167,7 @@ const EquipmentTransferForm = ({ equipment, isLoading, isError }) => {
           >
             <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
               {item.name}
-              {item.description && <Caption fontSize="small" title={item.description} isHtml />}
+              {item.description && <Caption fontSize="small" title={item.description} />}
             </Stack>
           </Button>
         )}

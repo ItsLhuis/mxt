@@ -6,6 +6,29 @@ const permissions = require("@constants/permissions")
 const equipmentController = require("@controllers/equipment")
 
 router
+  .route("/types")
+  .get(checkPermissionHandler("equipment.type", permissions.READ), equipmentController.type.findAll)
+  .post(
+    checkPermissionHandler("equipment.type", permissions.CREATE),
+    equipmentController.type.create
+  )
+
+router
+  .route("/types/:typeId")
+  .get(
+    checkPermissionHandler("equipment.type", permissions.READ),
+    equipmentController.type.findByTypeId
+  )
+  .put(
+    checkPermissionHandler("equipment.type", permissions.UPDATE),
+    equipmentController.type.update
+  )
+  .delete(
+    checkPermissionHandler("equipment.type", permissions.DELETE),
+    equipmentController.type.delete
+  )
+
+router
   .route("/brands")
   .get(
     checkPermissionHandler("equipment.brand", permissions.READ),
@@ -62,29 +85,6 @@ router
   .get(
     checkPermissionHandler("equipment.model", permissions.READ),
     equipmentController.model.findByBrandId
-  )
-
-router
-  .route("/types")
-  .get(checkPermissionHandler("equipment.type", permissions.READ), equipmentController.type.findAll)
-  .post(
-    checkPermissionHandler("equipment.type", permissions.CREATE),
-    equipmentController.type.create
-  )
-
-router
-  .route("/types/:typeId")
-  .get(
-    checkPermissionHandler("equipment.type", permissions.READ),
-    equipmentController.type.findByTypeId
-  )
-  .put(
-    checkPermissionHandler("equipment.type", permissions.UPDATE),
-    equipmentController.type.update
-  )
-  .delete(
-    checkPermissionHandler("equipment.type", permissions.DELETE),
-    equipmentController.type.delete
   )
 
 router

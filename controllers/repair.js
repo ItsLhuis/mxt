@@ -115,9 +115,9 @@ const repairController = {
         after: {
           id: existingEquipment[0].id,
           client: existingEquipment[0].client,
+          type: existingEquipment[0].type,
           brand: existingEquipment[0].brand,
           model: existingEquipment[0].model,
-          type: existingEquipment[0].type,
           sn: existingEquipment[0].sn,
           description: existingEquipment[0].description
         }
@@ -127,6 +127,7 @@ const repairController = {
         after: {
           id: existingStatus[0].id,
           name: existingStatus[0].name,
+          color: existingStatus[0].color,
           is_default: existingStatus[0].is_default
         }
       },
@@ -282,6 +283,7 @@ const repairController = {
         before: {
           id: existingRepair[0].status.id,
           name: existingRepair[0].status.name,
+          color: existingRepair[0].status.color,
           is_default: existingRepair[0].status.is_default
         },
         after: {
@@ -362,6 +364,14 @@ const repairController = {
 
     changes.push(
       {
+        field: "Descrição da intervenção",
+        before: existingRepair[0].intervention_description,
+        after: !interventionDescription ? null : interventionDescription,
+        changed:
+          existingRepair[0].intervention_description !==
+          (!interventionDescription ? null : interventionDescription)
+      },
+      {
         field: "Data de conclusão",
         before: existingRepair[0].conclusion_datetime,
         after: conclusionDatetime,
@@ -375,9 +385,9 @@ const repairController = {
       },
       {
         field: "Cliente notificado",
-        before: existingRepair[0].is_client_notified,
+        before: Boolean(existingRepair[0].is_client_notified),
         after: isClientNotified,
-        changed: existingRepair[0].is_client_notified !== isClientNotified
+        changed: Boolean(existingRepair[0].is_client_notified) !== isClientNotified
       }
     )
 
@@ -981,10 +991,11 @@ const repairController = {
 
       const changes = [
         {
-          field: "Attachments",
+          field: "Anexos",
           after: attachments.map((result) => ({
-            id: result.insertId,
             original_filename: result.originalFilename,
+            file_mime_type: result.fileMimeType,
+            file_size: result.fileSize,
             type: result.type
           }))
         }
@@ -1015,10 +1026,11 @@ const repairController = {
 
       const changes = [
         {
-          field: "Attachments",
+          field: "Anexos",
           before: {
-            id: existingAttachment[0].id,
             original_filename: existingAttachment[0].original_filename,
+            file_mime_type: existingAttachment[0].file_mime_type,
+            file_size: existingAttachment[0].file_size,
             type: existingAttachment[0].type
           }
         }

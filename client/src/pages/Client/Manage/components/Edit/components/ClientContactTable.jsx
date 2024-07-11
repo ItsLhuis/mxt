@@ -91,8 +91,8 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
         sortable: true,
         renderComponent: ({ row }) => (
           <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-            <>{formatPhoneNumber(row.contact)}</>
-            {row.description && <Caption fontSize="small" title={row.description} isHtml />}
+            <>{formatPhoneNumber(row?.contact)}</>
+            {row?.description && <Caption fontSize="small" title={row?.description} />}
           </Stack>
         )
       },
@@ -121,16 +121,16 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
                   gap: 1
                 }}
               >
-                {!row.created_by_user ? (
+                {!row?.created_by_user ? (
                   <Typography variant="p" component="p" color="var(--outline)">
                     Utilizador removido
                   </Typography>
                 ) : (
                   <>
                     <Avatar
-                      alt={row.created_by_user.username}
-                      src={`${BASE_URL}/users/${row.created_by_user.id}/avatar?size=80`}
-                      name={row.created_by_user.username}
+                      alt={row?.created_by_user?.username}
+                      src={`${BASE_URL}/users/${row?.created_by_user?.id}/avatar?size=80`}
+                      name={row?.created_by_user?.username}
                     />
                     <Stack
                       sx={{
@@ -140,10 +140,10 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
                       }}
                     >
                       <Typography variant="p" component="p" fontWeight={500}>
-                        {row.created_by_user.username}
+                        {row?.created_by_user?.username}
                       </Typography>
                       <Typography variant="p" component="p" color="var(--outline)">
-                        {row.created_by_user.role}
+                        {row?.created_by_user?.role}
                       </Typography>
                     </Stack>
                   </>
@@ -163,10 +163,10 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
                 }}
               >
                 <Typography variant="p" component="p" fontWeight={500}>
-                  {formatDate(row.created_at_datetime)}
+                  {formatDate(row?.created_at_datetime)}
                 </Typography>
                 <Typography variant="p" component="p" color="var(--outline)">
-                  {formatTime(row.created_at_datetime)}
+                  {formatTime(row?.created_at_datetime)}
                 </Typography>
               </Stack>
             </Stack>
@@ -184,7 +184,7 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
         sortable: true,
         renderComponent: ({ row }) => (
           <>
-            {row.last_modified_datetime ? (
+            {row?.last_modified_datetime ? (
               <Stack
                 sx={{
                   flexDirection: "row",
@@ -199,16 +199,16 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
                     gap: 1
                   }}
                 >
-                  {!row.last_modified_by_user ? (
+                  {!row?.last_modified_by_user ? (
                     <Typography variant="p" component="p" color="var(--outline)">
                       Utilizador removido
                     </Typography>
                   ) : (
                     <>
                       <Avatar
-                        alt={row.last_modified_by_user.username}
-                        src={`${BASE_URL}/users/${row.last_modified_by_user.id}/avatar?size=80`}
-                        name={row.last_modified_by_user.username}
+                        alt={row?.last_modified_by_user?.username}
+                        src={`${BASE_URL}/users/${row?.last_modified_by_user?.id}/avatar?size=80`}
+                        name={row?.last_modified_by_user?.username}
                       />
                       <Stack
                         sx={{
@@ -218,10 +218,10 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
                         }}
                       >
                         <Typography variant="p" component="p" fontWeight={500}>
-                          {row.last_modified_by_user.username}
+                          {row?.last_modified_by_user?.username}
                         </Typography>
                         <Typography variant="p" component="p" color="var(--outline)">
-                          {row.last_modified_by_user.role}
+                          {row?.last_modified_by_user?.role}
                         </Typography>
                       </Stack>
                     </>
@@ -241,10 +241,10 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
                   }}
                 >
                   <Typography variant="p" component="p" fontWeight={500}>
-                    {formatDate(row.last_modified_datetime)}
+                    {formatDate(row?.last_modified_datetime)}
                   </Typography>
                   <Typography variant="p" component="p" color="var(--outline)">
-                    {formatTime(row.last_modified_datetime)}
+                    {formatTime(row?.last_modified_datetime)}
                   </Typography>
                 </Stack>
               </Stack>
@@ -315,7 +315,7 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
           >
             <Table
               mode="datatable"
-              data={isClientFinished ? client[0].contacts : []}
+              data={isClientFinished ? client[0]?.contacts : []}
               columns={clientContactsTableColumns}
             />
           </Box>
