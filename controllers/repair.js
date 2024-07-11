@@ -127,8 +127,7 @@ const repairController = {
         after: {
           id: existingStatus[0].id,
           name: existingStatus[0].name,
-          color: existingStatus[0].color,
-          is_default: existingStatus[0].is_default
+          color: existingStatus[0].color
         }
       },
       { field: "Data de entrada", after: entryDatetime },
@@ -283,13 +282,12 @@ const repairController = {
         before: {
           id: existingRepair[0].status.id,
           name: existingRepair[0].status.name,
-          color: existingRepair[0].status.color,
-          is_default: existingRepair[0].status.is_default
+          color: existingRepair[0].status.color
         },
         after: {
           id: existingStatus[0].id,
           name: existingStatus[0].name,
-          is_default: existingStatus[0].is_default
+          color: existingStatus[0].color
         },
         changed: existingRepair[0].status.id !== Number(statusId)
       },
@@ -420,14 +418,6 @@ const repairController = {
 
       res.status(200).json(existingStatus)
     }),
-    findByDefaultStatus: tryCatch(async (req, res) => {
-      const defaultStatus = await Repair.status.findByDefaultStatus()
-      if (defaultStatus.length <= 0) {
-        throw new AppError(404, REPAIR_STATUS_NOT_FOUND, "Status not found", true)
-      }
-
-      res.status(200).json(defaultStatus)
-    }),
     create: tryCatch(async (req, res) => {
       const { name, color } = req.body
 
@@ -443,7 +433,7 @@ const repairController = {
         )
       }
 
-      await Repair.status.create(name, color, false, req.user.id)
+      await Repair.status.create(name, color, req.user.id)
       res.status(201).json({ message: "Status created successfully" })
     }),
     update: tryCatch(async (req, res) => {
@@ -469,17 +459,6 @@ const repairController = {
 
       await Repair.status.update(statusId, name, color, req.user.id)
       res.status(204).json({ message: "Status updated successfully" })
-    }),
-    updateDefault: tryCatch(async (req, res) => {
-      const { statusId } = req.params
-
-      const existingStatus = await Repair.status.findByStatusId(statusId)
-      if (existingStatus.length <= 0) {
-        throw new AppError(404, REPAIR_STATUS_NOT_FOUND, "Status not found", true)
-      }
-
-      await Repair.status.updateDefault(statusId, req.user.id)
-      res.status(204).json({ message: "Default status set successfully" })
     }),
     delete: tryCatch(async (req, res) => {
       const { statusId } = req.params

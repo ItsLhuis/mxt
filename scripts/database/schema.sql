@@ -241,7 +241,6 @@ CREATE TABLE IF NOT EXISTS repair_status (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL UNIQUE,
     color VARCHAR(50),
-    is_default BOOLEAN NOT NULL DEFAULT false,
     created_by_user_id INT,
     created_at_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     last_modified_by_user_id INT,

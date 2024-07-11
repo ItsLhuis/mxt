@@ -11,13 +11,6 @@ router
   .post(checkPermissionHandler("repair.status", permissions.CREATE), repairController.status.create)
 
 router
-  .route("/status/default")
-  .get(
-    checkPermissionHandler("repair.status", permissions.READ),
-    repairController.status.findByDefaultStatus
-  )
-
-router
   .route("/status/:statusId")
   .get(
     checkPermissionHandler("repair.status", permissions.READ),
@@ -27,13 +20,6 @@ router
   .delete(
     checkPermissionHandler("repair.status", permissions.DELETE),
     repairController.status.delete
-  )
-
-router
-  .route("/status/:statusId/default")
-  .put(
-    checkPermissionHandler("repair.status", permissions.UPDATE),
-    repairController.status.updateDefault
   )
 
 router

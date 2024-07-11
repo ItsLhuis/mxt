@@ -64,8 +64,7 @@ const Repair = {
           status: {
             id: status[0].id,
             name: status[0].name,
-            color: status[0].color,
-            is_default: Boolean(status[0].is_default)
+            color: status[0].color
           },
           entry_accessories: entryAccessories,
           entry_accessories_description: repair.entry_accessories_description,
@@ -148,8 +147,7 @@ const Repair = {
           status: {
             id: status[0].id,
             name: status[0].name,
-            color: status[0].color,
-            is_default: Boolean(status[0].is_default)
+            color: status[0].color
           },
           entry_accessories: entryAccessories,
           entry_accessories_description: repair[0].entry_accessories_description,
@@ -204,8 +202,7 @@ const Repair = {
               status: {
                 id: status[0].id,
                 name: status[0].name,
-                color: status[0].color,
-                is_default: Boolean(status[0].is_default)
+                color: status[0].color
               },
               entry_datetime: repair.entry_datetime,
               conclusion_datetime: repair.conclusion_datetime,
@@ -494,52 +491,17 @@ const Repair = {
         },
         memoryOnlyCache
       )(),
-    findByDefaultStatus: () =>
-      withCache(
-        "repair:defaultStatus",
-        async () => {
-          const statusQuery = "SELECT * FROM repair_status WHERE is_default = true"
-          const status = await dbQueryExecutor.execute(statusQuery)
-
-          if (!status || status.length <= 0) {
-            return []
-          }
-
-          const [createdByUser, lastModifiedByUser] = await Promise.all([
-            User.findByUserId(status[0].created_by_user_id),
-            status[0].last_modified_by_user_id
-              ? User.findByUserId(status[0].last_modified_by_user_id)
-              : null
-          ])
-
-          const statusWithDetails = {
-            id: status[0].id,
-            name: status[0].name,
-            color: status[0].color,
-            created_by_user: createdByUser.length > 0 ? mapUser(createdByUser[0]) : null,
-            created_at_datetime: status[0].created_at_datetime,
-            last_modified_by_user:
-              lastModifiedByUser && lastModifiedByUser.length > 0
-                ? mapUser(lastModifiedByUser[0])
-                : null,
-            last_modified_datetime: status[0].last_modified_datetime
-          }
-
-          return [statusWithDetails]
-        },
-        memoryOnlyCache
-      )(),
     findByName: (name) => {
       const query = "SELECT * FROM repair_status WHERE name = ?"
       return dbQueryExecutor.execute(query, [name])
     },
-    create: (name, color, isDefault, createdByUserId) => {
+    create: (name, color, createdByUserId) => {
       const query =
-        "INSERT INTO repair_status (name, color, is_default, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP())"
+        "INSERT INTO repair_status (name, color, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor
-        .execute(query, [name, color, isDefault ?? false, createdByUserId])
+        .execute(query, [name, color, createdByUserId])
         .then((result) => {
-          return revalidateCache(["repair:status", "repair:defaultStatus"]).then(() => result)
+          return revalidateCache("repair:status").then(() => result)
         })
     },
     update: (statusId, name, color, lastModifiedByUserId) => {
@@ -547,22 +509,6 @@ const Repair = {
         "UPDATE repair_status SET name = ?, color = ?, last_modified_by_user_id = ?, last_modified_datetime = CURRENT_TIMESTAMP() WHERE id = ?"
       return dbQueryExecutor
         .execute(query, [name, color, lastModifiedByUserId, statusId])
-        .then((result) => {
-          return clearAllCaches([multiCache, memoryOnlyCache]).then(() => result)
-        })
-    },
-    updateDefault: (statusId, lastModifiedByUserId) => {
-      const unsetDefaultQuery =
-        "UPDATE repair_status SET is_default = false WHERE is_default = true"
-
-      const setNewDefaultQuery =
-        "UPDATE repair_status SET is_default = true, last_modified_by_user_id = ?, last_modified_datetime = CURRENT_TIMESTAMP() WHERE id = ?"
-
-      return dbQueryExecutor
-        .execute(unsetDefaultQuery)
-        .then(() => {
-          return dbQueryExecutor.execute(setNewDefaultQuery, [lastModifiedByUserId, statusId])
-        })
         .then((result) => {
           return clearAllCaches([multiCache, memoryOnlyCache]).then(() => result)
         })
