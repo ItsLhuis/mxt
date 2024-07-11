@@ -20,18 +20,16 @@ const Caption = ({ fontSize, title }) => {
   return (
     <Tooltip
       title={renderTitle()}
-      placement="right"
       slotProps={{
         popper: {
           className: isHtml && "MuiTooltip-popper-html",
           sx: {
-            [`&.${tooltipClasses.popper}[data-popper-placement*="right"] .${tooltipClasses.tooltip}`]:
-              {
-                marginLeft: "8px",
-                maxHeight: "250px",
-                overflow: "hidden",
-                overflowY: "auto"
-              }
+            [`&.${tooltipClasses.popper} .${tooltipClasses.tooltip}`]: {
+              margin: "16px",
+              maxHeight: "250px",
+              overflow: "hidden",
+              overflowY: "auto"
+            }
           }
         }
       }}

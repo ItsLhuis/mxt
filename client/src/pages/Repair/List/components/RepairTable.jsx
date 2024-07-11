@@ -96,7 +96,11 @@ const RepairTable = () => {
         label: "Estado",
         align: "left",
         sortable: true,
-        renderComponent: ({ row }) => <Chip label={row?.status?.name} color={row?.status?.color} />
+        renderComponent: ({ row }) => (
+          <Link to={`/repair/${row?.id}`}>
+            <Chip label={row?.status?.name} color={row?.status?.color} />
+          </Link>
+        )
       },
       {
         id: "equipment.client.name",

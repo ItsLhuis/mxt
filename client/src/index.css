@@ -530,13 +530,13 @@ input[type=number]::-webkit-outer-spin-button {
 .apexcharts-xaxistooltip-bottom {
   border: 0 !important;
   color: var(--onSurface) !important;
-  background-color: var(--elevation-level5) !important;
+  background-color: var(--elevation-level4) !important;
   box-shadow: 0 0 0.465rem var(--boxShadow) !important;
   border-radius: 10px !important;
 }
 
 .apexcharts-tooltip-series-group {
-  background-color: var(--elevation-level5) !important;
+  background-color: var(--elevation-level4) !important;
 }
 
 .apexcharts-tooltip .apexcharts-tooltip-title {

@@ -23,7 +23,7 @@ const EquipmentBrandAddModal = ({ open, onClose }) => {
     resolver: zodResolver(brandSchema)
   })
 
-  const { createNewEquipmentType } = useEquipment()
+  const { createNewEquipmentBrand } = useEquipment()
 
   const nameInputRef = useRef(null)
 
@@ -44,7 +44,7 @@ const EquipmentBrandAddModal = ({ open, onClose }) => {
 
   const onSubmit = async (data) => {
     return new Promise((resolve, reject) => {
-      createNewEquipmentType
+      createNewEquipmentBrand
         .mutateAsync(data)
         .then(() => {
           onClose()

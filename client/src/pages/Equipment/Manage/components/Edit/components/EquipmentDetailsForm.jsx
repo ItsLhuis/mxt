@@ -7,9 +7,9 @@ import { updateEquipmentSchema } from "@schemas/equipment"
 import { useEquipment } from "@hooks/server/useEquipment"
 
 import { LoadingButton } from "@mui/lab"
-import { Paper, Box, Stack, FormControl, TextField, Skeleton } from "@mui/material"
+import { Paper, Box, Stack, FormControl, TextField, InputAdornment, Skeleton } from "@mui/material"
 
-import { HeaderSection, Loadable, Select, RichEditor } from "@components/ui"
+import { HeaderSection, Loadable, Select, RichEditor, Caption } from "@components/ui"
 import { AppsOutlined } from "@mui/icons-material"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
@@ -102,6 +102,28 @@ const EquipmentDetailsForm = ({ equipment, isLoading, isError }) => {
       />
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack sx={{ padding: 3, gap: 2 }}>
+          <Loadable
+            isLoading={!isEquipmentFinished}
+            LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
+            LoadedComponent={
+              <FormControl fullWidth>
+                <TextField
+                  label="Cliente"
+                  value={equipment?.[0]?.client?.name}
+                  InputProps={{
+                    readOnly: true,
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        {equipment?.[0]?.client?.description && (
+                          <Caption title={equipment?.[0]?.client?.description} />
+                        )}
+                      </InputAdornment>
+                    )
+                  }}
+                />
+              </FormControl>
+            }
+          />
           <Loadable
             isLoading={!isEquipmentFinished || findAllEquipmentTypes.isLoading}
             LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
