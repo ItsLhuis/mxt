@@ -156,10 +156,10 @@ export const useRepair = () => {
     mutationFn: createInterventionAccessoryUsed,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["repairs", "intervention-accessories-used"])
-      showSuccessToast("Acessório utilizado na intervenção adicionado com sucesso!")
+      showSuccessToast("Acessório da intervenção adicionado com sucesso!")
     },
     onError: () => {
-      showErrorToast("Erro ao adicionar acessório utilizado na intervenção!")
+      showErrorToast("Erro ao adicionar acessório da intervenção!")
     }
   })
 
@@ -174,10 +174,10 @@ export const useRepair = () => {
     mutationFn: deleteInterventionAccessoryUsedApi,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["repairs", "intervention-accessories-used"])
-      showSuccessToast("Acessório utilizado na intervenção eliminado com sucesso!")
+      showSuccessToast("Acessório da intervenção eliminado com sucesso!")
     },
     onError: () => {
-      showErrorToast("Erro ao eliminar acessório utilizado na intervenção!")
+      showErrorToast("Erro ao eliminar acessório da intervenção!")
     }
   })
 

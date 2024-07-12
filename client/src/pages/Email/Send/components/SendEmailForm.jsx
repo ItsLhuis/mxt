@@ -208,7 +208,7 @@ const SendEmailForm = () => {
                       padding: "16px !important",
                       width: "100%",
                       border: 2,
-                      borderColor: "var(--elevation-level3)",
+                      borderColor: contact.id === clientModal.contact.id ? "var(--primary)" : "var(--elevation-level3)",
                       borderRadius: 2,
                       color: "var(--onSurface)",
                       lineHeight: 1.5,

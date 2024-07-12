@@ -158,7 +158,7 @@ const sidebarData = [
       {
         icon: <Construction fontSize="small" />,
         path: "/repair/reported-issue",
-        name: "Problema Relatado",
+        name: "Problema Reportado",
         submenu: [
           {
             path: "/repair/reported-issue/list",
