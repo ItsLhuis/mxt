@@ -6,7 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 
 const generateEmailHtml = require("@utils/emailMjmlToHtml")
 
-const sendEmail = (companyName, to, subject, text, data, template, attachments) => {
+const sendEmail = (companyName, to, subject, text, data, template, attachments = []) => {
   return new Promise((resolve, reject) => {
     let emailHtml = ""
 

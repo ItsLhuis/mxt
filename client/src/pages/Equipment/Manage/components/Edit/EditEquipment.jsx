@@ -11,9 +11,10 @@ import { Stack, Alert } from "@mui/material"
 import { PageLoader } from "@components/ui"
 import {
   EquipmentDetailsForm,
-  EquipmentTransferForm,
+  EquipmentRepairsTable,
   EquipmentAttachments,
-  EquipmentInteractionsHistoryTable
+  EquipmentInteractionsHistoryTable,
+  EquipmentTransferForm
 } from "./components"
 
 import { motion } from "framer-motion"
@@ -52,6 +53,11 @@ const EditEquipment = () => {
           </motion.div>
         )}
         <EquipmentDetailsForm
+          equipment={equipment}
+          isLoading={isEquipmentLoading}
+          isError={isEquipmentError}
+        />
+        <EquipmentRepairsTable
           equipment={equipment}
           isLoading={isEquipmentLoading}
           isError={isEquipmentError}

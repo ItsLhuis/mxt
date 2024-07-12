@@ -2073,25 +2073,6 @@
 							"response": []
 						},
 						{
-							"name": "FindByDefaultStatus",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/repairs/status/default",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"repairs",
-										"status",
-										"default"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "FindByStatusId",
 							"request": {
 								"method": "GET",
@@ -2117,7 +2098,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Aberto\",\r\n    \"color\": \"error\"\r\n}\r\n",
+									"raw": "{\r\n    \"name\": \"Aberto\",\r\n    \"color\": \"sucess\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2160,35 +2141,6 @@
 										"repairs",
 										"status",
 										"1"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "UpdateDefault",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{base_url}}/repairs/status/1/default",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"repairs",
-										"status",
-										"1",
-										"default"
 									]
 								}
 							},
@@ -2714,18 +2666,18 @@
 										{
 											"key": "attachments",
 											"type": "file",
-											"src": "postman-cloud:///1ef2189e-4330-4600-83ab-411fff462ba7"
+											"src": "/C:/Users/luisr/OneDrive/Ambiente de Trabalho/OUTROS/porsche.png"
 										}
 									]
 								},
 								"url": {
-									"raw": "{{base_url}}/repairs/1/attachments",
+									"raw": "{{base_url}}/repairs/3/attachments",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"repairs",
-										"1",
+										"3",
 										"attachments"
 									]
 								}
@@ -2846,7 +2798,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"statusId\": 1,\r\n  \"entryAccessoriesDescription\": \"Updated accessories description.\",\r\n  \"entryReportedIssuesDescription\": \"Updated reported issues description.\",\r\n  \"entryDescription\": \"Updated description of the repair entry.\",\r\n  \"entryDatetime\": \"2024-06-17T14:45:11.000Z\",\r\n  \"interventionWorksDoneDescription\": \"Updated description of the works done.\",\r\n  \"interventionAccessoriesUsedDescription\": \"Updated description of the accessories used.\",\r\n  \"interventionDescription\": \"Updated intervention description.\",\r\n  \"conclusionDatetime\": \"2024-06-17T15:45:11.000Z\",\r\n  \"deliveryDatetime\": \"2024-06-17T15:45:11.000Z\",\r\n  \"isClientNotified\": true,\r\n  \"entryAccessoriesIds\": [1],\r\n  \"entryReportedIssuesIds\": [1],\r\n  \"interventionWorksDoneIds\": [1],\r\n  \"interventionAccessoriesUsedIds\": [1]\r\n}\r\n",
+							"raw": "{\r\n  \"statusId\": 1,\r\n  \"entryAccessoriesDescription\": \"Updated accessories description.\",\r\n  \"entryReportedIssuesDescription\": \"Updated reported issues description.\",\r\n  \"entryDescription\": \"Updated description of the repair entry.\",\r\n  \"entryDatetime\": \"2024-06-17T14:45:11.000Z\",\r\n  \"interventionWorksDoneDescription\": \"Updated description of the works done.\",\r\n  \"interventionAccessoriesUsedDescription\": \"Updated description of the accessories used.\",\r\n  \"interventionDescription\": \"Updated intervention description.\",\r\n  \"conclusionDatetime\": \"2024-06-17T15:45:11.000Z\",\r\n  \"deliveryDatetime\": \"2024-06-17T15:45:11.000Z\",\r\n  \"isClientNotified\": false,\r\n  \"entryAccessoriesIds\": [1],\r\n  \"entryReportedIssuesIds\": [1],\r\n  \"interventionWorksDoneIds\": [1],\r\n  \"interventionAccessoriesUsedIds\": [1]\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2854,13 +2806,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/repairs/1",
+							"raw": "{{base_url}}/repairs/3",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"repairs",
-								"1"
+								"3"
 							]
 						}
 					},
@@ -2872,13 +2824,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/repairs/1",
+							"raw": "{{base_url}}/repairs/2",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"repairs",
-								"1"
+								"2"
 							]
 						}
 					},

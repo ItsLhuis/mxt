@@ -5,6 +5,7 @@ const { SMS_NOT_FOUND } = require("@constants/errors/shared/sms")
 const { CLIENT_NOT_FOUND, CONTACT_NOT_FOUND, INVALID_CONTACT } = require("@constants/errors/client")
 
 const Sms = require("@models/sms")
+const { smsSchema } = require("@schemas/sms")
 
 const Client = require("@models/client")
 
@@ -25,6 +26,8 @@ const smsController = {
   }),
   send: tryCatch(async (req, res) => {
     const { clientId, contactId, message } = req.body
+
+    smsSchema.parse(req.body)
 
     const existingClient = await Client.findByClientId(clientId)
     if (existingClient.length <= 0) {

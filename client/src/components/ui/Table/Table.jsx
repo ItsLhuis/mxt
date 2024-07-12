@@ -23,7 +23,9 @@ import {
   Checkbox,
   Tooltip,
   Stack,
-  Grid
+  Grid,
+  useTheme as muiUseTheme,
+  useMediaQuery
 } from "@mui/material"
 import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material"
 
@@ -84,6 +86,9 @@ const Table = ({
   ExpandableContentComponent
 }) => {
   const { dataTheme } = useTheme()
+
+  const theme = muiUseTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"))
 
   const [state, setState] = useState({
     order: "asc",
@@ -497,6 +502,7 @@ const Table = ({
       {mode === "datatable" && data.length !== 0 && (
         <Grid
           container
+          rowGap={1}
           sx={{
             padding: 2,
             paddingBottom: 2,
@@ -506,15 +512,14 @@ const Table = ({
           <Grid
             item
             xs={12}
-            md={6}
-            lg={6}
+            md={4}
             sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
           >
             <Typography variant="p" component="p" sx={{ paddingLeft: 1 }}>
               <b>{formatNumber(sortedData.length)}</b> {getDataCountText(sortedData.length)}
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6} lg={6}>
+          <Grid item xs={12} md={8}>
             <TablePagination
               labelRowsPerPage="Itens por página"
               labelDisplayedRows={({ from, to, count }) => {
@@ -531,6 +536,24 @@ const Table = ({
               onRowsPerPageChange={handleChangeRowsPerPage}
               showLastButton
               showFirstButton
+              sx={
+                isSmallScreen
+                  ? {
+                      "& .MuiTablePagination-selectLabel": { display: "none" },
+                      "& .MuiTablePagination-displayedRows": { display: "none" },
+                      "& .MuiInputBase-root": { marginLeft: 0, marginRight: 1 },
+                      "& .MuiToolbar-root": {
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: 0
+                      },
+                      "& .MuiTablePagination-actions": { margin: 0 }
+                    }
+                  : {
+                      "& .MuiToolbar-root": { padding: 0 }
+                    }
+              }
               slotProps={{
                 select: {
                   IconComponent: KeyboardArrowDown,

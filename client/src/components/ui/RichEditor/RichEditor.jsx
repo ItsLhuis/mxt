@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"
+
 import React, { useState, useRef, useEffect } from "react"
 
 import { EditorContent, useEditor } from "@tiptap/react"
@@ -11,7 +13,7 @@ import TextAlign from "@tiptap/extension-text-align"
 import Underline from "@tiptap/extension-underline"
 import Link from "@tiptap/extension-link"
 
-import { Box, Stack, Typography, Skeleton } from "@mui/material"
+import { Box, Stack, Skeleton, FormHelperText, InputLabel } from "@mui/material"
 
 import { Loadable } from ".."
 
@@ -19,7 +21,7 @@ import MenuBar from "./MenuBar"
 
 import { debounce } from "@utils/debounce"
 
-const RichEditor = ({ label, value, onChange, isLoading = false }) => {
+const RichEditor = ({ label, value, onChange, error, errorMessage, isLoading = false }) => {
   const [isFinished, setIsFinished] = useState(false)
   const isFirstRender = useRef(true)
   const timeoutRef = useRef(null)
@@ -108,9 +110,14 @@ const RichEditor = ({ label, value, onChange, isLoading = false }) => {
       LoadedComponent={
         <Box>
           {label && (
-            <Typography variant="p" component="p" sx={{ marginBottom: 1 }}>
+            <InputLabel
+              sx={{
+                marginBottom: 1,
+                color: error ? "rgb(211, 47, 47) !important" : "var(--onSurface)"
+              }}
+            >
               {label}
-            </Typography>
+            </InputLabel>
           )}
           <MenuBar editor={editor} fullscreen={fullscreen} toggleFullscreen={toggleFullscreen} />
           {fullscreen && (
@@ -138,10 +145,24 @@ const RichEditor = ({ label, value, onChange, isLoading = false }) => {
             </Stack>
           )}
           {!fullscreen && <EditorContent editor={editor} />}
+          {error && (
+            <FormHelperText error={error} sx={{ marginLeft: 2, marginTop: 0.5 }}>
+              {errorMessage}
+            </FormHelperText>
+          )}
         </Box>
       }
     />
   )
+}
+
+RichEditor.propTypes = {
+  label: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  error: PropTypes.bool,
+  errorMessage: PropTypes.string,
+  isLoading: PropTypes.bool
 }
 
 export default RichEditor

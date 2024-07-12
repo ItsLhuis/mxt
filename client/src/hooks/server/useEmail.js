@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
-import { getAllEmails } from "@api/routes/email"
+import { getAllEmails, sendEmail as sendEmailApi } from "@api/routes/email"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
@@ -16,7 +16,19 @@ export const useEmail = () => {
     refetchInterval: 60000
   })
 
+  const sendEmail = useMutation({
+    mutationFn: sendEmailApi,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["emails"])
+      showSuccessToast("E-mail enviado com sucesso!")
+    },
+    onError: () => {
+      showErrorToast("Erro ao enviar e-mail!")
+    }
+  })
+
   return {
-    findAllEmails
+    findAllEmails,
+    sendEmail
   }
 }

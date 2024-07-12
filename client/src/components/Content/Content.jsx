@@ -24,6 +24,8 @@ import {
   EquipmentModelList,
   RepairList,
   EmailList,
+  SendEmail,
+  GetEmail,
   Settings
 } from "@pages"
 
@@ -84,6 +86,8 @@ const Content = () => {
 
             {/* Email */}
             <Route path="/email/list" element={<EmailList />} />
+            <Route path="/email/send" element={<SendEmail />} />
+            <Route path="/email/:emailId" element={<GetEmail />} />
             {/* ---------------------------------------------------------- */}
 
             <Route path="/settings" element={<Settings />} />

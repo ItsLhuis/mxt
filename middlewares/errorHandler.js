@@ -42,6 +42,13 @@ const errorHandler = (error, req, res, next) => {
     })
   }
 
+  console.error({
+    type: INTERNAL_SERVER_ERROR_TYPE,
+    code: "INT-001",
+    message: "Internal Server Error",
+    stack: error.stack
+  })
+
   if (process.env.NODE_ENV === "development") {
     return res.status(500).json({
       error: {

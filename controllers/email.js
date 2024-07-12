@@ -7,6 +7,7 @@ const { EMAIL_NOT_FOUND } = require("@constants/errors/shared/email")
 const { CLIENT_NOT_FOUND, CONTACT_NOT_FOUND, INVALID_CONTACT } = require("@constants/errors/client")
 
 const Email = require("@models/email")
+const { emailSchema } = require("@schemas/email")
 
 const Client = require("@models/client")
 
@@ -33,6 +34,8 @@ const emailController = {
   }),
   send: tryCatch(async (req, res) => {
     const { clientId, contactId, subject, title, message, text } = req.body
+
+    emailSchema.parse({ ...req.body, clientId: Number(clientId), contactId: Number(contactId) })
 
     const existingClient = await Client.findByClientId(clientId)
     if (existingClient.length <= 0) {

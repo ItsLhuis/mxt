@@ -1,5 +1,7 @@
 import React, { useMemo } from "react"
 
+import { useNavigate } from "react-router-dom"
+
 import { BASE_URL } from "@api"
 import { useEmail } from "@hooks/server/useEmail"
 
@@ -12,6 +14,8 @@ import { Loadable, Table, TableSkeleton, Avatar, Caption } from "@components/ui"
 import { formatDate, formatTime } from "@utils/format/date"
 
 const EmailTable = () => {
+  const navigate = useNavigate()
+
   const { findAllEmails } = useEmail()
   const { data: emails, isLoading: isEmailsLoading } = findAllEmails
 
@@ -41,7 +45,8 @@ const EmailTable = () => {
         id: "subject",
         label: "Assunto",
         align: "left",
-        sortable: true
+        sortable: true,
+        renderComponent: ({ row }) => <Link to={`/email/${row.id}`}>{row?.subject}</Link>
       },
       {
         id: "sent_by_user",
@@ -126,7 +131,7 @@ const EmailTable = () => {
         sortable: false,
         renderComponent: ({ row }) => (
           <Tooltip title="Ver e-email" sx={{ margin: -1 }}>
-            <IconButton>
+            <IconButton onClick={() => navigate(`/email/${row.id}`)}>
               <Visibility />
             </IconButton>
           </Tooltip>

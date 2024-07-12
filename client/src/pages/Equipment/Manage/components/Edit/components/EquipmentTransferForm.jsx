@@ -138,6 +138,7 @@ const EquipmentTransferForm = ({ equipment, isLoading, isError }) => {
         data={findAllClients.data ?? []}
         isLoading={findAllClients.isLoading}
         title="Clientes"
+        placeholder="Pesquise por um cliente"
         buttonStructure={(item, onClose) => (
           <Button
             variant="contained"

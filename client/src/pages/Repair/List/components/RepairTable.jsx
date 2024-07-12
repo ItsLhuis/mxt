@@ -36,6 +36,7 @@ import {
   Modal
 } from "@components/ui"
 
+import { getValidChipColor } from "@utils/getValidChipColor"
 import { formatHTML } from "@utils/format/formatHTML"
 import { formatDateTime, formatDate, formatTime } from "@utils/format/date"
 
@@ -98,7 +99,7 @@ const RepairTable = () => {
         sortable: true,
         renderComponent: ({ row }) => (
           <Link to={`/repair/${row?.id}`}>
-            <Chip label={row?.status?.name} color={row?.status?.color} />
+            <Chip label={row?.status?.name} color={getValidChipColor(row?.status?.color)} />
           </Link>
         )
       },
@@ -120,25 +121,37 @@ const RepairTable = () => {
         id: "equipment.type.name",
         label: "Tipo",
         align: "left",
-        sortable: true
+        sortable: true,
+        renderComponent: ({ row }) => (
+          <Link to={`/equipment/${row?.equipment?.id}`}>{row?.equipment?.type?.name}</Link>
+        )
       },
       {
         id: "equipment.brand.name",
-        label: "Marca",
+        label: "Marca ",
         align: "left",
-        sortable: true
+        sortable: true,
+        renderComponent: ({ row }) => (
+          <Link to={`/equipment/${row?.equipment?.id}`}>{row?.equipment?.brand?.name}</Link>
+        )
       },
       {
         id: "equipment.model.name",
         label: "Modelo",
         align: "left",
-        sortable: true
+        sortable: true,
+        renderComponent: ({ row }) => (
+          <Link to={`/equipment/${row?.equipment?.id}`}>{row?.equipment?.model?.name}</Link>
+        )
       },
       {
         id: "equipment.sn",
         label: "Número de série",
         align: "left",
-        sortable: true
+        sortable: true,
+        renderComponent: ({ row }) => (
+          <Link to={`/equipment/${row?.equipment?.id}`}>{row?.equipment?.sn}</Link>
+        )
       },
       {
         id: "entry_datetime",
@@ -197,7 +210,9 @@ const RepairTable = () => {
         align: "left",
         sortable: true,
         renderComponent: ({ row }) => (
-          <>{row?.is_client_notified ? <Check color="success" /> : <Close color="error" />}</>
+          <Stack sx={{ alignItems: "flex-start" }}>
+            {row?.is_client_notified ? <Check color="success" /> : <Close color="error" />}
+          </Stack>
         )
       },
       {
@@ -677,7 +692,12 @@ const RepairTable = () => {
 
                       if (row?.field === "Estado") {
                         if (row?.before) {
-                          return <Chip label={row?.before?.name} color={row?.before?.color} />
+                          return (
+                            <Chip
+                              label={row?.before?.name}
+                              color={getValidChipColor(row?.before?.color)}
+                            />
+                          )
                         }
                       }
 
@@ -796,7 +816,12 @@ const RepairTable = () => {
 
                       if (row?.field === "Estado") {
                         if (row?.after) {
-                          return <Chip label={row?.after?.name} color={row?.after?.color} />
+                          return (
+                            <Chip
+                              label={row?.after?.name}
+                              color={getValidChipColor(row?.after?.color)}
+                            />
+                          )
                         }
                       }
 

@@ -71,7 +71,7 @@ const HeaderPage = ({
       }}
     >
       <Stack sx={{ flexDirection: "row", alignItems: "flex-start", gap: 1 }}>
-        <Stack sx={{ gap: 0.5 }}>
+        <Stack sx={{ gap: 0.8 }}>
           <Stack
             sx={{
               flexDirection: "row",
@@ -88,7 +88,8 @@ const HeaderPage = ({
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
-                gap: 1
+                gap: 1,
+                height: 30
               }}
             >
               {refetchFunction && (

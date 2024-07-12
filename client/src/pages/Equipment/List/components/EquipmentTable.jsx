@@ -37,6 +37,7 @@ import {
   Modal
 } from "@components/ui"
 
+import { getValidChipColor } from "@utils/getValidChipColor"
 import { formatHTML } from "@utils/format/formatHTML"
 import { formatDateTime, formatDate, formatTime } from "@utils/format/date"
 
@@ -348,7 +349,7 @@ const ClientTable = () => {
               sortable: true,
               renderComponent: ({ row }) => (
                 <Link to={`/repair/${row?.id}`}>
-                  <Chip label={row?.status?.name} color={row?.status?.color} />
+                  <Chip label={row?.status?.name} color={getValidChipColor(row?.status?.color)} />
                 </Link>
               )
             },
@@ -409,7 +410,9 @@ const ClientTable = () => {
               align: "left",
               sortable: true,
               renderComponent: ({ row }) => (
-                <>{row?.is_client_notified ? <Check color="success" /> : <Close color="error" />}</>
+                <Stack sx={{ alignItems: "flex-start" }}>
+                  {row?.is_client_notified ? <Check color="success" /> : <Close color="error" />}
+                </Stack>
               )
             },
             {

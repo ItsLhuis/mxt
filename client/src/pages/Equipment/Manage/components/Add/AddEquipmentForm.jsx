@@ -275,12 +275,13 @@ const AddEquipmentForm = () => {
         </Stack>
       </form>
       <Modal
-        open={clientModal.isOpen}
+        open={clientModal.isOpen ?? false}
         onClose={closeClientModal}
         mode="data"
         data={findAllClients.data ?? []}
         isLoading={findAllClients.isLoading}
         title="Clientes"
+        placeholder="Pesquise por um cliente"
         buttonStructure={(item, onClose) => (
           <Button
             variant="contained"

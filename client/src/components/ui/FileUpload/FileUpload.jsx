@@ -16,9 +16,10 @@ import {
   ButtonBase,
   Tooltip,
   ListItem,
-  FormHelperText
+  FormHelperText,
+  InputLabel
 } from "@mui/material"
-import { PictureAsPdf, Image, Close } from "@mui/icons-material"
+import { PictureAsPdf, Image, QuestionMark, Close } from "@mui/icons-material"
 
 import Lottie from "lottie-react"
 import LottieAnimationDark from "./Lottie/dark.json"
@@ -31,6 +32,7 @@ const LottieAnimation = {
 
 const FileUpload = ({
   value = [],
+  label,
   onChange,
   error,
   errorMessage,
@@ -41,6 +43,7 @@ const FileUpload = ({
     "application/pdf": [".pdf"]
   },
   maxSize = 5 * 1024 * 1024,
+  maxTotalFileSize = Infinity,
   ...props
 }) => {
   const { dataTheme } = useTheme()
@@ -62,10 +65,18 @@ const FileUpload = ({
   const isValidFile = (file) => {
     const fileMime = file.type
     const acceptedExtensions = Object.values(acceptedFiles).flat()
-    return (
-      acceptedExtensions.some((extension) => file.name.toLowerCase().endsWith(extension)) &&
-      Object.keys(acceptedFiles).includes(fileMime)
-    )
+    const isAcceptedFile =
+      acceptedFiles !== ""
+        ? acceptedExtensions.some((extension) => file.name.toLowerCase().endsWith(extension)) &&
+          Object.keys(acceptedFiles).includes(fileMime)
+        : true
+
+    const isWithinSizeLimit = file.size <= maxSize
+
+    const totalFileSize = validFiles.reduce((sum, validFile) => sum + validFile.size, 0) + file.size
+    const isWithinTotalSizeLimit = totalFileSize <= maxTotalFileSize
+
+    return isAcceptedFile && isWithinSizeLimit && isWithinTotalSizeLimit
   }
 
   const onDrop = (files) => {
@@ -99,7 +110,7 @@ const FileUpload = ({
 
     setInvalidFiles(invalidFilesToAdd)
 
-    onChange([...validFiles, ...validFilesToAdd])
+    if (typeof onChange === "function") onChange([...validFiles, ...validFilesToAdd])
   }
 
   const handleClickInput = () => {
@@ -143,7 +154,7 @@ const FileUpload = ({
 
     e.target.value = null
 
-    onChange([...validFiles, ...validFilesToAdd])
+    if (typeof onChange === "function") onChange([...validFiles, ...validFilesToAdd])
   }
 
   const removeFile = (fileToRemove) => {
@@ -154,6 +165,8 @@ const FileUpload = ({
         return draft.filter((file) => file !== fileToRemove)
       })
     )
+
+    if (typeof onChange === "function") onChange(validFiles.filter((file) => file !== fileToRemove))
   }
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -245,10 +258,12 @@ const FileUpload = ({
                   gap: 1
                 }}
               >
-                {acceptedFiles["application/pdf"].includes(file.name.toLowerCase().slice(-4)) ? (
+                {file.type && file.type.startsWith("application/pdf") ? (
                   <PictureAsPdf fontSize="large" sx={{ color: "rgb(223, 88, 84)" }} />
-                ) : (
+                ) : file.type && file.type.startsWith("image/") ? (
                   <Image fontSize="large" sx={{ color: "rgb(245, 128, 8)" }} />
+                ) : (
+                  <QuestionMark fontSize="medium" sx={{ color: "var(--outline)" }} />
                 )}
                 <Stack sx={{ overflow: "hidden" }}>
                   <Typography
@@ -287,23 +302,34 @@ const FileUpload = ({
 
   return (
     <Stack sx={{ padding: 0, gap: 1 }} {...props}>
+      {label && (
+        <InputLabel
+          sx={{
+            color: fileUploadError ? "rgb(211, 47, 47) !important" : "var(--onSurface)"
+          }}
+        >
+          {label}
+        </InputLabel>
+      )}
       <ButtonBase
         disabled={disabled}
         {...getRootProps()}
         sx={{
           cursor: "pointer",
           borderRadius: "8px",
-          border: fileUploadError
-            ? "2px dashed rgb(211, 47, 47)"
+          border: "2px dashed",
+          borderColor: fileUploadError
+            ? "rgb(211, 47, 47)"
             : isDragActive
-            ? "2px dashed var(--primary)"
-            : "2px dashed var(--outline)",
+            ? "var(--primary)"
+            : "var(--elevation-level6)",
           margin: 0,
           position: "relative",
           paddingInline: 3,
           "&:hover": {
             backgroundColor:
-              dataTheme === "dark" ? "rgba(20, 20, 20, 0.5)" : "rgba(20, 20, 20, 0.05)"
+              dataTheme === "dark" ? "rgba(20, 20, 20, 0.5)" : "rgba(20, 20, 20, 0.05)",
+            borderColor: !isDragActive && !fileUploadError && "var(--outline)"
           }
         }}
         onClick={handleClickInput}
@@ -316,24 +342,27 @@ const FileUpload = ({
               <u>Clique para carregar</u> ou arraste e solte
             </Typography>
             <Stack>
+              {acceptedFiles !== "" && (
+                <Typography
+                  variant="p"
+                  component="p"
+                  sx={{ color: fileUploadError ? "rgb(211, 47, 47)" : "var(--outline)" }}
+                >
+                  Permitido
+                  {Object.keys(acceptedFiles).map((type, index) => (
+                    <React.Fragment key={index}>
+                      {index > 0 && ", "}*{acceptedFiles[type].join(", *.")}
+                    </React.Fragment>
+                  ))}
+                </Typography>
+              )}
               <Typography
                 variant="p"
                 component="p"
                 sx={{ color: fileUploadError ? "rgb(211, 47, 47)" : "var(--outline)" }}
               >
-                Permitido
-                {Object.keys(acceptedFiles).map((type, index) => (
-                  <React.Fragment key={index}>
-                    {index > 0 && ", "}*{acceptedFiles[type].join(", *.")}
-                  </React.Fragment>
-                ))}
-              </Typography>
-              <Typography
-                variant="p"
-                component="p"
-                sx={{ color: fileUploadError ? "rgb(211, 47, 47)" : "var(--outline)" }}
-              >
-                Tamanho máximo de {Math.floor((maxSize / (1024 * 1024)).toFixed(2))} Mb por ficheiro
+                Tamanho máximo de até {Math.floor((maxSize / (1024 * 1024)).toFixed(2))} Mb por
+                ficheiro
               </Typography>
             </Stack>
           </Stack>
@@ -371,8 +400,9 @@ FileUpload.propTypes = {
   error: PropTypes.bool,
   errorMessage: PropTypes.string,
   disabled: PropTypes.bool,
-  acceptedFiles: PropTypes.object,
-  maxSize: PropTypes.number
+  acceptedFiles: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+  maxSize: PropTypes.number,
+  maxTotalFileSize: PropTypes.number
 }
 
 export default FileUpload
