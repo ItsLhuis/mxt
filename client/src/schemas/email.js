@@ -1,13 +1,17 @@
 import { z } from "zod"
+import { sanitizeHTML } from "@utils/sanitizeHTML"
 
 export const emailSchema = z
   .object({
-    clientId: z.number().int().positive(),
-    contactId: z.number().int().positive(),
-    subject: z.string().min(1).max(255).trim(),
-    title: z.string().min(1).max(255).trim(),
-    message: z.string().min(1).trim(),
-    text: z.string().min(1).trim().optional(),
+    clientId: z.number({ message: "O para é obrigatório" }).int().positive(),
+    contactId: z.number({ message: "O para é obrigatório" }).int().positive(),
+    subject: z.string().trim().min(1, { message: "O assunto é obrigatório" }).max(255),
+    title: z.string().trim().min(1, { message: "O título é obrigatório" }).max(255),
+    message: z
+      .string()
+      .transform((value) => sanitizeHTML(value))
+      .refine((value) => value.trim() !== "", "O campo Mensagem é obrigatório."),
+    text: z.string().trim().min(1).optional(),
     attachments: z.array(z.instanceof(File)).optional()
   })
   .refine(
