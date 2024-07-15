@@ -96,14 +96,11 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
   const onSubmit = async (data) => {
     if (!isUserFinished || !isUserPersonalDataFinished || isFormUnchanged()) return
 
-    await updateUserPersonalData
-      .mutateAsync({
-        userId: user.id,
-        ...data,
-        description: sanitizeHTML(data.description) === "" ? null : data.description
-      })
-      .then(() => showSuccessToast("Dados pessoais atualizados com sucesso!"))
-      .catch(() => showErrorToast("Erro ao atualizar dados pessoais!"))
+    await updateUserPersonalData.mutateAsync({
+      userId: user.id,
+      ...data,
+      description: sanitizeHTML(data.description) === "" ? null : data.description
+    })
   }
 
   return (

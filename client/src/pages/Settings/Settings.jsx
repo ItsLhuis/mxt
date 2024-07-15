@@ -13,11 +13,11 @@ import { Account, AppSettings, Company, Security, Server } from "./components"
 import { motion } from "framer-motion"
 
 const allTabsInfo = [
-  { id: 0, name: "Conta", icon: <Person />, component: <Account /> },
-  { id: 1, name: "Definições", icon: <SettingsIcon />, component: <AppSettings /> },
-  { id: 2, name: "Segurança", icon: <SecurityIcon />, component: <Security /> },
-  { id: 3, name: "Empresa", icon: <Business />, component: <Company /> },
-  { id: 4, name: "Servidor", icon: <Dns />, component: <Server /> }
+  { name: "Conta", icon: <Person />, component: <Account /> },
+  { name: "Definições", icon: <SettingsIcon />, component: <AppSettings /> },
+  { name: "Segurança", icon: <SecurityIcon />, component: <Security /> },
+  { name: "Empresa", icon: <Business />, component: <Company /> },
+  { name: "Servidor", icon: <Dns />, component: <Server /> }
 ]
 
 const TabPanel = (props) => {
@@ -49,10 +49,10 @@ const Settings = () => {
 
   const [tabsInfo, setTabsInfo] = useState(allTabsInfo)
 
-  const [value, setValue] = useState(0)
+  const [tabValue, setTabValue] = useState(0)
 
   const handleChange = (_, newValue) => {
-    setValue(newValue)
+    setTabValue(newValue)
   }
 
   useLayoutEffect(() => {
@@ -77,7 +77,7 @@ const Settings = () => {
             <HeaderPage title="Definições" breadcrumbs={[{ name: "Definições" }]} />
             <Box sx={{ width: "100%", marginTop: 2 }}>
               <Tabs
-                value={value}
+                value={tabValue}
                 onChange={handleChange}
                 aria-label="settings-tabs"
                 variant="scrollable"
@@ -87,16 +87,16 @@ const Settings = () => {
               >
                 {tabsInfo.map((tab) => (
                   <Tab
-                    key={tab.id}
+                    key={tab.name}
                     label={tab.name}
-                    {...tabProps(tab.name)}
                     icon={tab.icon}
                     disableRipple
+                    {...tabProps(tab.name)}
                   />
                 ))}
               </Tabs>
-              {tabsInfo.map((tab) => (
-                <TabPanel key={tab.id} value={value} index={tab.id}>
+              {tabsInfo.map((tab, index) => (
+                <TabPanel key={tab.name} value={tabValue} index={index}>
                   {tab.component}
                 </TabPanel>
               ))}

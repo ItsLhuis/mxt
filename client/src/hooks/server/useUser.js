@@ -84,6 +84,10 @@ export const useUser = () => {
     onSuccess: async (data, variables) => {
       const userId = variables.userId
       await queryClient.invalidateQueries(["users", userId])
+      showSuccessToast("Dados pessoais atualizados com sucesso!")
+    },
+    onError: () => {
+      showErrorToast("Erro ao atualizar dados pessoais!")
     }
   })
 
