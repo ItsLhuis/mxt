@@ -361,7 +361,7 @@ const FileUpload = ({
                 component="p"
                 sx={{ color: fileUploadError ? "rgb(211, 47, 47)" : "var(--outline)" }}
               >
-                Tamanho máximo de até {Math.floor((maxSize / (1024 * 1024)).toFixed(2))} Mb por
+                Tamanho máximo de {Math.floor((maxSize / (1024 * 1024)).toFixed(2))} Mb por
                 ficheiro
               </Typography>
               {maxTotalFileSize !== Infinity && (
@@ -372,7 +372,7 @@ const FileUpload = ({
                 >
                   Tamanho máximo total de{" "}
                   {Math.floor((maxTotalFileSize / (1024 * 1024)).toFixed(2))} Mb para todos os
-                  arquivos
+                  ficheiros
                 </Typography>
               )}
             </Stack>
