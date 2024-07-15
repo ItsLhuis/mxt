@@ -2,17 +2,17 @@ import React, { useEffect, useRef } from "react"
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { brandSchema } from "@schemas/equipment"
+import { optionsSchema } from "@schemas/repair"
 
-import { useEquipment } from "@hooks/server/useEquipment"
+import { useRepair } from "@hooks/server/useRepair"
 
-import { Box, FormControl, TextField } from "@mui/material"
+import { FormControl, Box, TextField } from "@mui/material"
 
 import { Modal } from "@components/ui"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
-const EquipmentBrandAddModal = ({ open, onClose }) => {
+const RepairInterventionAccessoryUsedAddModal = ({ open, onClose }) => {
   const {
     register,
     handleSubmit,
@@ -20,10 +20,10 @@ const EquipmentBrandAddModal = ({ open, onClose }) => {
     setError,
     reset
   } = useForm({
-    resolver: zodResolver(brandSchema)
+    resolver: zodResolver(optionsSchema)
   })
 
-  const { createNewEquipmentBrand } = useEquipment()
+  const { createNewInterventionAccessoryUsed } = useRepair()
 
   const nameInputRef = useRef(null)
 
@@ -44,16 +44,16 @@ const EquipmentBrandAddModal = ({ open, onClose }) => {
 
   const onSubmit = async (data) => {
     return new Promise((resolve, reject) => {
-      createNewEquipmentBrand
+      createNewInterventionAccessoryUsed
         .mutateAsync(data)
         .then(() => {
           onClose()
-          showSuccessToast("Tipo adicionado com sucesso!")
+          showSuccessToast("Acessório da intervenção adicionado com sucesso!")
           reset()
           resolve()
         })
         .catch((error) => {
-          if (error.error.code === "EQU-007") {
+          if (error.error.code === "REP-019") {
             setError("name", {
               type: "manual",
               message: "Nome já existente"
@@ -63,7 +63,7 @@ const EquipmentBrandAddModal = ({ open, onClose }) => {
           }
 
           onClose()
-          showErrorToast("Erro ao adicionar tipo!")
+          showErrorToast("Erro ao adicionar acessório da intervenção!")
           reset()
           reject()
         })
@@ -73,10 +73,10 @@ const EquipmentBrandAddModal = ({ open, onClose }) => {
   return (
     <Modal
       mode="form"
-      title="Adicionar Tipo"
+      title="Adicionar Acessório da Intervenção"
       open={open}
       onClose={onClose}
-      submitButtonText="Adicionar Tipo"
+      submitButtonText="Adicionar Acessório da Intervenção"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Box sx={{ padding: 3 }}>
@@ -86,6 +86,7 @@ const EquipmentBrandAddModal = ({ open, onClose }) => {
             label="Nome"
             error={!!errors.name}
             helperText={errors.name?.message}
+            autoComplete="off"
             inputRef={nameInputRef}
           />
         </FormControl>
@@ -94,4 +95,4 @@ const EquipmentBrandAddModal = ({ open, onClose }) => {
   )
 }
 
-export default EquipmentBrandAddModal
+export default RepairInterventionAccessoryUsedAddModal

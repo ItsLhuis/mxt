@@ -48,7 +48,7 @@ const EquipmentBrandAddModal = ({ open, onClose }) => {
         .mutateAsync(data)
         .then(() => {
           onClose()
-          showSuccessToast("Tipo adicionado com sucesso!")
+          showSuccessToast("Marca adicionada com sucesso!")
           reset()
           resolve()
         })
@@ -63,7 +63,7 @@ const EquipmentBrandAddModal = ({ open, onClose }) => {
           }
 
           onClose()
-          showErrorToast("Erro ao adicionar tipo!")
+          showErrorToast("Erro ao adicionar marca!")
           reset()
           reject()
         })
@@ -73,10 +73,10 @@ const EquipmentBrandAddModal = ({ open, onClose }) => {
   return (
     <Modal
       mode="form"
-      title="Adicionar Tipo"
+      title="Adicionar Marca"
       open={open}
       onClose={onClose}
-      submitButtonText="Adicionar Tipo"
+      submitButtonText="Adicionar Marca"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Box sx={{ padding: 3 }}>
@@ -86,6 +86,7 @@ const EquipmentBrandAddModal = ({ open, onClose }) => {
             label="Nome"
             error={!!errors.name}
             helperText={errors.name?.message}
+            autoComplete="off"
             inputRef={nameInputRef}
           />
         </FormControl>

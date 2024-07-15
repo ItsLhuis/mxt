@@ -26,11 +26,17 @@ const updateRepairSchema = z.object({
 })
 
 const optionsSchema = z.object({
-  name: z.string().max(255).trim()
+  name: z.string().min(1).max(255).trim()
+})
+
+const repairStatusSchema = z.object({
+  name: z.string().min(1).max(255).trim(),
+  color: z.enum(["default", "primary", "error", "info", "success", "warning"])
 })
 
 module.exports = {
   repairSchema,
   updateRepairSchema,
-  optionsSchema
+  optionsSchema,
+  repairStatusSchema
 }

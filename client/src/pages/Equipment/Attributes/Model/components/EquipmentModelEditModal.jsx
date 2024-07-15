@@ -142,6 +142,7 @@ const EquipmentModelEditModal = ({ model, open, onClose }) => {
             label="Nome"
             error={!!errors.name}
             helperText={errors.name?.message}
+            autoComplete="off"
             InputLabelProps={{ shrink: watch("name")?.length > 0 }}
           />
         </FormControl>

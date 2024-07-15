@@ -25,8 +25,8 @@ const MetricSkeleton = () => {
         <Skeleton width={60} />
       </Typography>
       <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-        <Skeleton variant="rounded" width={80} height={32} sx={{ borderRadius: 2 }} />
-        <Skeleton variant="circular" width={13} height={13} />
+        <Skeleton variant="rounded" width={70} height={32} sx={{ borderRadius: 2 }} />
+        <Skeleton variant="circular" width={17} height={17} />
       </Stack>
     </Stack>
   )

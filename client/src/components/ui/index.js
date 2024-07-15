@@ -2,6 +2,10 @@ export { default as Avatar } from "./Avatar/Avatar"
 
 export { default as ButtonDropDownSelect } from "./ButtonDropDownSelect/ButtonDropDownSelect"
 
+export * as Charts from "./Charts"
+
+export { default as ChipColorPicker } from "./ChipColorPicker/ChipColorPicker"
+
 export { default as Caption } from "./Caption/Caption"
 
 export { default as CommandDialog } from "./CommandDialog/CommandDialog"

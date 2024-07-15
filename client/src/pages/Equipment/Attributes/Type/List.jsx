@@ -10,7 +10,7 @@ import { EquipmentTypeTable, EquipmentTypeAddModal } from "./components"
 
 import { motion } from "framer-motion"
 
-const TypeListPage = () => {
+const EquipmentTypeListPage = () => {
   const { findAllEquipmentTypes } = useEquipment()
 
   const [addEquipmentTypeModal, setAddEquipmentTypeModal] = useState(false)
@@ -56,4 +56,4 @@ const TypeListPage = () => {
   )
 }
 
-export default TypeListPage
+export default EquipmentTypeListPage

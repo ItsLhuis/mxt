@@ -118,77 +118,77 @@ export const useEquipment = () => {
   })
 
   const findAllEquipmentTypes = useQuery({
-    queryKey: ["equipment", "types"],
+    queryKey: ["equipments", "types"],
     queryFn: getAllEquipmentTypes,
     onSuccess: (data) => {
-      queryClient.setQueryData(["equipment", "types"], data)
+      queryClient.setQueryData(["equipments", "types"], data)
     }
   })
 
   const createNewEquipmentType = useMutation({
     mutationFn: createEquipmentType,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["equipment", "types"])
+      await queryClient.invalidateQueries(["equipments", "types"])
     }
   })
 
   const updateEquipmentType = useMutation({
     mutationFn: updateEquipmentTypeApi,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["equipment", "types"])
+      await queryClient.invalidateQueries(["equipments", "types"])
     }
   })
 
   const deleteEquipmentType = useMutation({
     mutationFn: deleteEquipmentTypeApi,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["equipment", "types"])
+      await queryClient.invalidateQueries(["equipments", "types"])
     }
   })
 
   const findAllEquipmentBrands = useQuery({
-    queryKey: ["equipment", "brands"],
+    queryKey: ["equipments", "brands"],
     queryFn: getAllEquipmentBrands,
     onSuccess: (data) => {
-      queryClient.setQueryData(["equipment", "brands"], data)
+      queryClient.setQueryData(["equipments", "brands"], data)
     }
   })
 
   const createNewEquipmentBrand = useMutation({
     mutationFn: createEquipmentBrand,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["equipment", "brands"])
+      await queryClient.invalidateQueries(["equipments", "brands"])
     }
   })
 
   const updateEquipmentBrand = useMutation({
     mutationFn: updateEquipmentBrandApi,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["equipment", "brands"])
+      await queryClient.invalidateQueries(["equipments", "brands"])
     }
   })
 
   const deleteEquipmentBrand = useMutation({
     mutationFn: deleteEquipmentBrandApi,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["equipment", "brands"])
+      await queryClient.invalidateQueries(["equipments", "brands"])
     }
   })
 
   const findAllEquipmentModels = useQuery({
-    queryKey: ["equipment", "models"],
+    queryKey: ["equipments", "models"],
     queryFn: getAllEquipmentModels,
     onSuccess: (data) => {
-      queryClient.setQueryData(["equipment", "models"], data)
+      queryClient.setQueryData(["equipments", "models"], data)
     }
   })
 
   const findAllEquipmentModelsByBrandId = (brandId) =>
     useQuery({
-      queryKey: ["equipment", "models", "brand", brandId],
+      queryKey: ["equipments", "models", "brand", brandId],
       queryFn: () => getAllEquipmentModelsByBrandId({ brandId }),
       onSuccess: (data) => {
-        queryClient.setQueryData(["equipment", "models", "brand", brandId], data)
+        queryClient.setQueryData(["equipments", "models", "brand", brandId], data)
       },
       enabled: !!brandId
     })
@@ -197,8 +197,8 @@ export const useEquipment = () => {
     mutationFn: createEquipmentModel,
     onSuccess: async (data, variables) => {
       const brandId = variables.brandId
-      await queryClient.invalidateQueries(["equipment", "models"])
-      await queryClient.invalidateQueries(["equipment", "models", "brand", brandId])
+      await queryClient.invalidateQueries(["equipments", "models"])
+      await queryClient.invalidateQueries(["equipments", "models", "brand", brandId])
     }
   })
 
@@ -206,8 +206,8 @@ export const useEquipment = () => {
     mutationFn: updateEquipmentModelApi,
     onSuccess: async (data, variables) => {
       const brandId = variables.brandId
-      await queryClient.invalidateQueries(["equipment", "models"])
-      await queryClient.invalidateQueries(["equipment", "models", "brand", brandId])
+      await queryClient.invalidateQueries(["equipments", "models"])
+      await queryClient.invalidateQueries(["equipments", "models", "brand", brandId])
     }
   })
 
@@ -215,8 +215,8 @@ export const useEquipment = () => {
     mutationFn: deleteEquipmentModelApi,
     onSuccess: async (data, variables) => {
       const brandId = variables.modbrandIdelId
-      await queryClient.invalidateQueries(["equipment", "models"])
-      await queryClient.removeQueries(["equipment", "models", "brand", brandId])
+      await queryClient.invalidateQueries(["equipments", "models"])
+      await queryClient.removeQueries(["equipments", "models", "brand", brandId])
     }
   })
 

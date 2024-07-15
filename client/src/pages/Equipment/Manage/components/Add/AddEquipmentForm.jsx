@@ -251,6 +251,7 @@ const AddEquipmentForm = () => {
                   label="Número de série"
                   error={!!errors.sn}
                   helperText={errors.sn?.message}
+                  autoComplete="off"
                 />
               </FormControl>
               <Controller

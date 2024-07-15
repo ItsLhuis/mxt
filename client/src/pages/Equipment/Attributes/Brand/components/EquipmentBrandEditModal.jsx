@@ -101,6 +101,7 @@ const EquipmentBrandEditModal = ({ brand, open, onClose }) => {
             label="Nome"
             error={!!errors.name}
             helperText={errors.name?.message}
+            autoComplete="off"
             inputRef={nameInputRef}
             InputLabelProps={{ shrink: watch("name")?.length > 0 }}
           />

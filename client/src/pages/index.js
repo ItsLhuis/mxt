@@ -23,21 +23,33 @@ export const EquipmentList = lazy(() => import("./Equipment/List/List"))
 export const AddEquipment = lazy(() => import("./Equipment/Manage/Add"))
 export const EditEquipment = lazy(() => import("./Equipment/Manage/Edit"))
 
-//Equipment Type
 export const EquipmentTypeList = lazy(() => import("./Equipment/Attributes/Type/List"))
-//----------------------------------------------------------------------
 
-//Equipment Brand
 export const EquipmentBrandList = lazy(() => import("./Equipment/Attributes/Brand/List"))
-//----------------------------------------------------------------------
 
-//Equipment Model
 export const EquipmentModelList = lazy(() => import("./Equipment/Attributes/Model/List"))
-//----------------------------------------------------------------------
 //----------------------------------------------------------------------
 
 //Repair
 export const RepairList = lazy(() => import("./Repair/List/List"))
+
+export const RepairStatusList = lazy(() => import("./Repair/Attributes/Status/List"))
+
+export const RepairEntryAccessoryList = lazy(() =>
+  import("./Repair/Attributes/EntryAccessory/List")
+)
+
+export const RepairEntryReportedIssueList = lazy(() =>
+  import("./Repair/Attributes/EntryReportedIssue/List")
+)
+
+export const RepairInterventionWorkDoneList = lazy(() =>
+  import("./Repair/Attributes/InterventionWorkDone/List")
+)
+
+export const RepairInterventionAccessoryUsedList = lazy(() =>
+  import("./Repair/Attributes/InterventionAccessoryUsed/List")
+)
 //----------------------------------------------------------------------
 
 //Email

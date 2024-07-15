@@ -5,6 +5,26 @@ export const getAllRepairs = async () => {
   return response.data
 }
 
+export const getAllRepairStatuses = async () => {
+  const response = await api.get("/repairs/status")
+  return response.data
+}
+
+export const createRepairStatus = async ({ name, color }) => {
+  const response = await api.post("/repairs/status", { name, color })
+  return response.data
+}
+
+export const updateRepairStatus = async ({ statusId, name, color }) => {
+  const response = await api.put(`/repairs/status/${statusId}`, { name, color })
+  return response.data
+}
+
+export const deleteRepairStatus = async ({ statusId }) => {
+  const response = await api.delete(`/repairs/status/${statusId}`)
+  return response.data
+}
+
 export const getAllEntryAccessories = async () => {
   const response = await api.get("/repairs/entry-accessories")
   return response.data

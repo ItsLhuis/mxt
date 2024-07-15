@@ -143,6 +143,7 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
                   label="E-mail"
                   error={!!errors.contact}
                   helperText={errors.contact?.message}
+                  autoComplete="off"
                   InputLabelProps={{ shrink: watch("contact")?.length > 0 }}
                 />
               </FormControl>
@@ -175,6 +176,7 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
                       label="Contacto"
                       error={!!errors.contact}
                       helperText={errors.contact?.message}
+                      autoComplete="off"
                       InputLabelProps={{ shrink: watch("contact")?.length > 0 }}
                     />
                   </FormControl>

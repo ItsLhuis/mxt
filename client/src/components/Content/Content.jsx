@@ -23,6 +23,11 @@ import {
   EquipmentBrandList,
   EquipmentModelList,
   RepairList,
+  RepairStatusList,
+  RepairEntryAccessoryList,
+  RepairEntryReportedIssueList,
+  RepairInterventionWorkDoneList,
+  RepairInterventionAccessoryUsedList,
   EmailList,
   SendEmail,
   GetEmail,
@@ -67,21 +72,28 @@ const Content = () => {
             <Route path="/equipment/add" element={<AddEquipment />} />
             <Route path="/equipment/:equipmentId" element={<EditEquipment />} />
 
-            {/* Equipment Type */}
             <Route path="/equipment/type/list" element={<EquipmentTypeList />} />
-            {/* ---------------------------------------------------------- */}
 
-            {/* Equipment Brand*/}
             <Route path="/equipment/brand/list" element={<EquipmentBrandList />} />
-            {/* ---------------------------------------------------------- */}
 
-            {/* Equipment Model*/}
             <Route path="/equipment/model/list" element={<EquipmentModelList />} />
-            {/* ---------------------------------------------------------- */}
             {/* ---------------------------------------------------------- */}
 
             {/* Repair */}
             <Route path="/repair/list" element={<RepairList />} />
+
+            <Route path="/repair/status/list" element={<RepairStatusList />} />
+
+            <Route path="/repair/entry-accessory/list" element={<RepairEntryAccessoryList />} />
+
+            <Route path="/repair/reported-issue/list" element={<RepairEntryReportedIssueList />} />
+
+            <Route path="/repair/work-done/list" element={<RepairInterventionWorkDoneList />} />
+
+            <Route
+              path="/repair/intervention-accessory/list"
+              element={<RepairInterventionAccessoryUsedList />}
+            />
             {/* ---------------------------------------------------------- */}
 
             {/* Email */}

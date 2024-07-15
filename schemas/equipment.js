@@ -13,7 +13,7 @@ const updateEquipmentSchema = z.object({
   brandId: z.number(),
   modelId: z.number(),
   typeId: z.number(),
-  sn: z.string().max(255).trim(),
+  sn: z.string().min(1).max(255).trim(),
   description: z.string().optional().nullable()
 })
 
@@ -21,23 +21,24 @@ const updateClientEquipmentSchema = z.object({
   clientId: z.number()
 })
 
+const typeSchema = z.object({
+  name: z.string().min(1).max(255).trim()
+})
+
 const brandSchema = z.object({
-  name: z.string().max(255).trim()
+  name: z.string().min(1).max(255).trim()
 })
 
 const modelSchema = z.object({
-  name: z.string().max(255).trim()
-})
-
-const typeSchema = z.object({
-  name: z.string().max(255).trim()
+  brandId: z.number(),
+  name: z.string().min(1).max(255).trim()
 })
 
 module.exports = {
   equipmentSchema,
   updateEquipmentSchema,
   updateClientEquipmentSchema,
+  typeSchema,
   brandSchema,
-  modelSchema,
-  typeSchema
+  modelSchema
 }

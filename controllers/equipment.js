@@ -42,9 +42,9 @@ const {
   equipmentSchema,
   updateEquipmentSchema,
   updateClientEquipmentSchema,
+  typeSchema,
   brandSchema,
-  modelSchema,
-  typeSchema
+  modelSchema
 } = require("@schemas/equipment")
 
 const Client = require("@models/client")

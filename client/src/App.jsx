@@ -154,13 +154,15 @@ function App() {
               display: "flex",
               justifyContent: "flex-start",
               alignItems: "flex-start",
-              background: "var(--elevation-level5)",
+              background: "var(--elevation-level3)",
               color: "var(--onSurface)",
               fontWeight: 600,
               fontSize: ".875rem",
               padding: 0,
               paddingLeft: 16,
-              paddingBlock: 16
+              paddingBlock: 16,
+              maxWidth: 450,
+              lineHeight: 1.5
             }
           }}
         />

@@ -77,6 +77,7 @@ const ClientAddressForm = ({ client, isLoading, isError }) => {
                   label="País"
                   error={!!errors.country}
                   helperText={errors.country?.message}
+                  autoComplete="off"
                 />
               </FormControl>
             </Grid>
@@ -87,6 +88,7 @@ const ClientAddressForm = ({ client, isLoading, isError }) => {
                   label="Cidade"
                   error={!!errors.city}
                   helperText={errors.city?.message}
+                  autoComplete="off"
                 />
               </FormControl>
             </Grid>
@@ -97,6 +99,7 @@ const ClientAddressForm = ({ client, isLoading, isError }) => {
                   label="Localidade"
                   error={!!errors.locality}
                   helperText={errors.locality?.message}
+                  autoComplete="off"
                 />
               </FormControl>
             </Grid>
@@ -108,6 +111,7 @@ const ClientAddressForm = ({ client, isLoading, isError }) => {
                     label="Morada"
                     error={!!errors.address}
                     helperText={errors.address?.message}
+                    autoComplete="off"
                   />
                 </FormControl>
                 <FormControl fullWidth>
@@ -116,6 +120,7 @@ const ClientAddressForm = ({ client, isLoading, isError }) => {
                     label="Código Postal"
                     error={!!errors.postalCode}
                     helperText={errors.postalCode?.message}
+                    autoComplete="off"
                   />
                 </FormControl>
               </Stack>

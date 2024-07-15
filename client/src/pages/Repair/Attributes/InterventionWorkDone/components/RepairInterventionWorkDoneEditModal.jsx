@@ -2,17 +2,17 @@ import React, { useEffect, useRef } from "react"
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { brandSchema } from "@schemas/equipment"
+import { optionsSchema } from "@schemas/repair"
 
-import { useEquipment } from "@hooks/server/useEquipment"
+import { useRepair } from "@hooks/server/useRepair"
 
-import { Box, FormControl, TextField } from "@mui/material"
+import { FormControl, Box, TextField } from "@mui/material"
 
 import { Modal } from "@components/ui"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
-const EquipmentBrandEditModal = ({ brand, open, onClose }) => {
+const RepairInterventionWorkDoneEditModal = ({ interventionWorkDone, open, onClose }) => {
   const {
     register,
     handleSubmit,
@@ -21,18 +21,21 @@ const EquipmentBrandEditModal = ({ brand, open, onClose }) => {
     reset,
     watch
   } = useForm({
-    resolver: zodResolver(brandSchema),
+    resolver: zodResolver(optionsSchema),
     defaultValues: {
       name: ""
     }
   })
 
-  const { updateEquipmentBrand } = useEquipment()
+  const { updateInterventionWorkDone } = useRepair()
 
   const nameInputRef = useRef(null)
 
   useEffect(() => {
-    if (!open) return
+    if (!open) {
+      reset()
+      return
+    }
 
     const timer = setTimeout(() => {
       if (open && nameInputRef.current) {
@@ -44,32 +47,31 @@ const EquipmentBrandEditModal = ({ brand, open, onClose }) => {
   }, [open])
 
   useEffect(() => {
-    if (brand) {
-      reset({
-        name: brand.name || ""
-      })
+    if (interventionWorkDone) {
+      reset({ name: interventionWorkDone.name || "" })
     }
-  }, [brand])
+  }, [interventionWorkDone])
 
   const isFormUnchanged = () => {
     const values = watch()
-    return values.name === brand?.name
+    return values.name === interventionWorkDone?.name
   }
 
   const onSubmit = async (data) => {
     if (!isFormUnchanged()) {
       return new Promise((resolve, reject) => {
-        updateEquipmentBrand
-          .mutateAsync({ brandId: brand.id, ...data })
+        updateInterventionWorkDone
+          .mutateAsync({ interventionWorkDoneId: interventionWorkDone.id, ...data })
           .then(() => {
             onClose()
-            showSuccessToast("Marca atualizada com sucesso!")
+            showSuccessToast("Trabalho realizado atualizado com sucesso!")
+            reset()
             resolve()
           })
           .catch((error) => {
-            if (error.error.code === "EQU-007") {
+            if (error.error.code === "REP-016") {
               setError("name", {
-                brand: "manual",
+                type: "manual",
                 message: "Nome já existente"
               })
               reject()
@@ -77,7 +79,8 @@ const EquipmentBrandEditModal = ({ brand, open, onClose }) => {
             }
 
             onClose()
-            showErrorToast("Erro ao atualizar marca!")
+            showErrorToast("Erro ao atualizar trabalho realizado!")
+            reset()
             reject()
           })
       })
@@ -87,10 +90,10 @@ const EquipmentBrandEditModal = ({ brand, open, onClose }) => {
   return (
     <Modal
       mode="form"
-      title="Editar Marca"
+      title="Editar Trabalho Realizado"
       open={open}
       onClose={onClose}
-      submitButtonText="Editar Marca"
+      submitButtonText="Editar Trabalho Realizado"
       onSubmit={handleSubmit(onSubmit)}
       disabled={isFormUnchanged()}
     >
@@ -101,8 +104,8 @@ const EquipmentBrandEditModal = ({ brand, open, onClose }) => {
             label="Nome"
             error={!!errors.name}
             helperText={errors.name?.message}
+            autoComplete="off"
             inputRef={nameInputRef}
-            InputLabelProps={{ shrink: watch("name")?.length > 0 }}
           />
         </FormControl>
       </Box>
@@ -110,4 +113,4 @@ const EquipmentBrandEditModal = ({ brand, open, onClose }) => {
   )
 }
 
-export default EquipmentBrandEditModal
+export default RepairInterventionWorkDoneEditModal

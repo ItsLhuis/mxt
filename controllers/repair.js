@@ -17,7 +17,7 @@ const {
   DUPLICATE_REPAIR_STATUS_NAME,
   REPAIRS_ASSOCIATED_WITH_STATUS,
   REPAIR_ENTRY_ACCESSORY_NOT_FOUND,
-  DUPLICATE_ENTRY_ACCESSOR_NAME,
+  DUPLICATE_ENTRY_ACCESSORY_NAME,
   REPAIRS_ASSOCIATED_WITH_ENTRY_ACCESSORY,
   REPAIR_ENTRY_REPORTED_ISSUE_NOT_FOUND,
   DUPLICATE_ENTRY_REPORTED_ISSUE_NAME,
@@ -46,7 +46,12 @@ const {
 const roles = require("@constants/roles")
 
 const Repair = require("@models/repair")
-const { repairSchema, updateRepairSchema, optionsSchema } = require("@schemas/repair")
+const {
+  repairSchema,
+  updateRepairSchema,
+  optionsSchema,
+  repairStatusSchema
+} = require("@schemas/repair")
 
 const Equipment = require("@models/equipment")
 
@@ -421,7 +426,7 @@ const repairController = {
     create: tryCatch(async (req, res) => {
       const { name, color } = req.body
 
-      optionsSchema.parse(req.body)
+      repairStatusSchema.parse(req.body)
 
       const duplicateStatus = await Repair.status.findByName(name)
       if (duplicateStatus.length > 0) {
@@ -440,7 +445,7 @@ const repairController = {
       const { statusId } = req.params
       const { name, color } = req.body
 
-      optionsSchema.parse(req.body)
+      repairStatusSchema.parse(req.body)
 
       const existingStatus = await Repair.status.findByStatusId(statusId)
       if (existingStatus.length <= 0) {
@@ -504,11 +509,11 @@ const repairController = {
 
       optionsSchema.parse(req.body)
 
-      const duplicateduplicateEntryAccessory = await Repair.entryAccessory.findByName(name)
-      if (duplicateduplicateEntryAccessory.length > 0) {
+      const duplicateEntryAccessory = await Repair.entryAccessory.findByName(name)
+      if (duplicateEntryAccessory.length > 0) {
         throw new AppError(
           400,
-          DUPLICATE_ENTRY_ACCESSOR_NAME,
+          DUPLICATE_ENTRY_ACCESSORY_NAME,
           "Entry accessory with the same name already exists",
           true
         )
@@ -530,11 +535,14 @@ const repairController = {
         throw new AppError(404, REPAIR_ENTRY_ACCESSORY_NOT_FOUND, "Entry accessory not found", true)
       }
 
-      const duplicateduplicateEntryAccessory = await Repair.entryAccessory.findByName(name)
-      if (duplicateduplicateEntryAccessory.length > 0) {
+      const duplicateEntryAccessory = await Repair.entryAccessory.findByName(name)
+      if (
+        duplicateEntryAccessory.length > 0 &&
+        duplicateEntryAccessory[0].id !== Number(entryAccessoryId)
+      ) {
         throw new AppError(
           400,
-          DUPLICATE_ENTRY_ACCESSOR_NAME,
+          DUPLICATE_ENTRY_ACCESSORY_NAME,
           "Entry accessory with the same name already exists",
           true
         )
@@ -626,7 +634,10 @@ const repairController = {
       }
 
       const duplicateEntryReportedIssue = await Repair.entryReportedIssue.findByName(name)
-      if (duplicateEntryReportedIssue.length > 0) {
+      if (
+        duplicateEntryReportedIssue.length > 0 &&
+        duplicateEntryReportedIssue[0].id !== Number(entryReportedIssueId)
+      ) {
         throw new AppError(
           400,
           DUPLICATE_ENTRY_REPORTED_ISSUE_NAME,
@@ -724,7 +735,10 @@ const repairController = {
       }
 
       const duplicateInterventionWorkDone = await Repair.interventionWorkDone.findByName(name)
-      if (duplicateInterventionWorkDone.length > 0) {
+      if (
+        duplicateInterventionWorkDone.length > 0 &&
+        duplicateInterventionWorkDone[0].id !== Number(interventionWorkDoneId)
+      ) {
         throw new AppError(
           400,
           DUPLICATE_INTERVENTION_WORK_DONE_NAME,
@@ -829,7 +843,10 @@ const repairController = {
       const duplicateInterventionAccessoryUsed = await Repair.interventionAccessoryUsed.findByName(
         name
       )
-      if (duplicateInterventionAccessoryUsed.length > 0) {
+      if (
+        duplicateInterventionAccessoryUsed.length > 0 &&
+        duplicateInterventionAccessoryUsed[0].id !== Number(interventionAccessoryUsedId)
+      ) {
         throw new AppError(
           400,
           DUPLICATE_INTERVENTION_ACCESSORY_USED_NAME,

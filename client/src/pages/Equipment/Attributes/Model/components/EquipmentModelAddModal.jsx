@@ -126,6 +126,7 @@ const EquipmentModelAddModal = ({ open, onClose }) => {
             label="Nome"
             error={!!errors.name}
             helperText={errors.name?.message}
+            autoComplete="off"
           />
         </FormControl>
       </Stack>

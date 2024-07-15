@@ -3,9 +3,9 @@ import React, { useState, useMemo } from "react"
 import { useAuth } from "@contexts/auth"
 
 import { BASE_URL } from "@api"
-import { useEquipment } from "@hooks/server/useEquipment"
+import { useRepair } from "@hooks/server/useRepair"
 
-import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton } from "@mui/material"
+import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton, Chip } from "@mui/material"
 import { MoreVert, Edit, Delete } from "@mui/icons-material"
 
 import {
@@ -18,73 +18,73 @@ import {
   Caption,
   Modal
 } from "@components/ui"
-import { EquipmentBrandEditModal } from "."
+import { RepairStatusEditModal } from "."
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
 import { formatDate, formatTime } from "@utils/format/date"
 
-const EquipmentBrandTable = () => {
+const RepairStatusTable = () => {
   const { role } = useAuth()
 
-  const { findAllEquipmentBrands, deleteEquipmentBrand } = useEquipment()
-  const { data: brands, isLoading: isBrandsLoading } = findAllEquipmentBrands
+  const { findAllRepairStatuses, deleteRepairStatus } = useRepair()
+  const { data: statuses, isLoading: isStatusesLoading } = findAllRepairStatuses
 
-  const [editEquipmentBrandModal, setEditEquipmentBrandModal] = useState({
+  const [editRepairStatusModal, setEditRepairStatusModal] = useState({
     isOpen: false,
-    brand: null
+    status: null
   })
-  const openEditEquipmentTypeModal = (brand) => {
-    setEditEquipmentBrandModal({ isOpen: true, brand: brand })
+  const openEditRepairStatusModal = (status) => {
+    setEditRepairStatusModal({ isOpen: true, status: status })
   }
-  const closeEditEquipmentTypeModal = () => {
-    setEditEquipmentBrandModal({ isOpen: false, brand: null })
+  const closeEditRepairStatusModal = () => {
+    setEditRepairStatusModal({ isOpen: false, status: null })
   }
 
-  const [deleteEquipmentBrandModal, setDeleteEquipmentBrandModal] = useState({
+  const [deleteRepairStatusModal, setDeleteRepairStatusModal] = useState({
     isOpen: false,
-    brandId: null
+    statusId: null
   })
-  const openDeleteEquipmentBrandModal = (id) => {
-    setDeleteEquipmentBrandModal({ isOpen: true, brandId: id })
+  const openDeleteRepairStatusModal = (id) => {
+    setDeleteRepairStatusModal({ isOpen: true, statusId: id })
   }
-  const closeDeleteEquipmentBrandModal = () => {
-    setDeleteEquipmentBrandModal({ isOpen: false, brandId: null })
+  const closeDeleteRepairStatusModal = () => {
+    setDeleteRepairStatusModal({ isOpen: false, statusId: null })
   }
 
-  const handleDeleteEquipmentBrand = () => {
+  const handleDeleteRepairStatus = () => {
     return new Promise((resolve, reject) => {
-      if (deleteEquipmentBrandModal.brandId) {
-        deleteEquipmentBrand
-          .mutateAsync({ brandId: deleteEquipmentBrandModal.brandId })
+      if (deleteRepairStatusModal.statusId) {
+        deleteRepairStatus
+          .mutateAsync({ statusId: deleteRepairStatusModal.statusId })
           .then(() => {
-            showSuccessToast("Marca eliminada com sucesso!")
-            closeDeleteEquipmentBrandModal()
+            showSuccessToast("Estado eliminado com sucesso!")
+            closeDeleteRepairStatusModal()
             resolve()
           })
           .catch((error) => {
-            if (error.error.code === "EQU-010") {
-              closeDeleteEquipmentBrandModal()
+            if (error.error.code === "REP-008") {
+              closeDeleteRepairStatusModal()
               showErrorToast(
-                "Esta marca está associada a um ou mais equipamentos e não pode ser eliminada!",
+                "Este estado está associado a uma ou mais reparações e não pode ser eliminado!",
                 { duration: 6000 }
               )
               reject()
               return
             }
 
-            closeDeleteEquipmentBrandModal()
-            showErrorToast("Erro ao eliminar marca")
+            closeDeleteRepairStatusModal()
+            showErrorToast("Erro ao eliminar estado")
             reject()
           })
       } else {
-        closeDeleteEquipmentBrandModal()
+        closeDeleteRepairStatusModal()
         reject()
       }
     })
   }
 
-  const brandsTableColumns = useMemo(
+  const statusesTableColumns = useMemo(
     () => [
       {
         id: "name",
@@ -96,6 +96,15 @@ const EquipmentBrandTable = () => {
             {row?.name}
             {row?.description && <Caption fontSize="small" title={row?.description} />}
           </Stack>
+        )
+      },
+      {
+        id: "color",
+        label: "Cor",
+        align: "left",
+        sortable: true,
+        renderComponent: ({ row }) => (
+          <Chip color={row.color} sx={{ borderRadius: "50% !important", width: 20, height: 20 }} />
         )
       },
       {
@@ -278,7 +287,7 @@ const EquipmentBrandTable = () => {
                 {
                   label: "Editar",
                   icon: <Edit fontSize="small" />,
-                  onClick: () => openEditEquipmentTypeModal(row)
+                  onClick: () => openEditRepairStatusModal(row)
                 },
                 ...(role !== "Funcionário"
                   ? [
@@ -287,7 +296,7 @@ const EquipmentBrandTable = () => {
                         icon: <Delete fontSize="small" color="error" />,
                         color: "error",
                         divider: true,
-                        onClick: () => openDeleteEquipmentBrandModal(row?.id)
+                        onClick: () => openDeleteRepairStatusModal(row?.id)
                       }
                     ]
                   : [])
@@ -304,29 +313,29 @@ const EquipmentBrandTable = () => {
     <Paper elevation={1}>
       <Box sx={{ marginTop: 3 }}>
         <Loadable
-          isLoading={isBrandsLoading}
+          isLoading={isStatusesLoading}
           LoadingComponent={<TableSkeleton mode="datatable" />}
           LoadedComponent={
-            <Table mode="datatable" data={brands ?? []} columns={brandsTableColumns} />
+            <Table mode="datatable" data={statuses ?? []} columns={statusesTableColumns} />
           }
         />
-        <EquipmentBrandEditModal
-          brand={editEquipmentBrandModal.brand}
-          open={editEquipmentBrandModal.isOpen}
-          onClose={closeEditEquipmentTypeModal}
+        <RepairStatusEditModal
+          status={editRepairStatusModal.status}
+          open={editRepairStatusModal.isOpen}
+          onClose={closeEditRepairStatusModal}
         />
         <Modal
           mode="delete"
-          title="Eliminar Marca"
-          open={deleteEquipmentBrandModal.isOpen}
-          onClose={closeDeleteEquipmentBrandModal}
-          onSubmit={handleDeleteEquipmentBrand}
-          description="Tem a certeza que deseja eliminar esta marca?"
-          subDescription="Ao eliminar esta marca, todos os dados relacionados, incluindo modelos, serão removidos de forma permanente."
+          title="Eliminar Estado"
+          open={deleteRepairStatusModal.isOpen}
+          onClose={closeDeleteRepairStatusModal}
+          onSubmit={handleDeleteRepairStatus}
+          description="Tem a certeza que deseja eliminar este estado?"
+          subDescription="Ao eliminar este estado, os dados serão removidos de forma permanente."
         />
       </Box>
     </Paper>
   )
 }
 
-export default EquipmentBrandTable
+export default RepairStatusTable

@@ -10,7 +10,7 @@ import { EquipmentBrandTable, EquipmentBrandAddModal } from "./components"
 
 import { motion } from "framer-motion"
 
-const BrandListPage = () => {
+const EquipmentBrandListPage = () => {
   const { findAllEquipmentBrands } = useEquipment()
 
   const [addEquipmentBrandModal, setAddEquipmentBrandModal] = useState(false)
@@ -56,4 +56,4 @@ const BrandListPage = () => {
   )
 }
 
-export default BrandListPage
+export default EquipmentBrandListPage

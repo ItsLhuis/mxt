@@ -1,6 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   getAllRepairs,
+  getAllRepairStatuses,
+  createRepairStatus,
+  updateRepairStatus as updateRepairStatusApi,
+  deleteRepairStatus as deleteRepairStatusApi,
   getAllEntryAccessories,
   createEntryAccessory,
   updateEntryAccessory as updateEntryAccessoryApi,
@@ -33,6 +37,35 @@ export const useRepair = () => {
     refetchInterval: 60000
   })
 
+  const findAllRepairStatuses = useQuery({
+    queryKey: ["repairs", "statuses"],
+    queryFn: getAllRepairStatuses,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["repairs", "statuses"], data)
+    }
+  })
+
+  const createNewRepairStatus = useMutation({
+    mutationFn: createRepairStatus,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["repairs", "statuses"])
+    }
+  })
+
+  const updateRepairStatus = useMutation({
+    mutationFn: updateRepairStatusApi,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["repairs", "statuses"])
+    }
+  })
+
+  const deleteRepairStatus = useMutation({
+    mutationFn: deleteRepairStatusApi,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["repairs", "statuses"])
+    }
+  })
+
   const findAllEntryAccessories = useQuery({
     queryKey: ["repairs", "entry-accessories"],
     queryFn: getAllEntryAccessories,
@@ -45,10 +78,6 @@ export const useRepair = () => {
     mutationFn: createEntryAccessory,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["repairs", "entry-accessories"])
-      showSuccessToast("Acessório de entrada adicionado com sucesso!")
-    },
-    onError: () => {
-      showErrorToast("Erro ao adicionar acessório de entrada!")
     }
   })
 
@@ -63,10 +92,6 @@ export const useRepair = () => {
     mutationFn: deleteEntryAccessoryApi,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["repairs", "entry-accessories"])
-      showSuccessToast("Acessório de entrada eliminado com sucesso!")
-    },
-    onError: () => {
-      showErrorToast("Erro ao eliminar acessório de entrada!")
     }
   })
 
@@ -82,10 +107,6 @@ export const useRepair = () => {
     mutationFn: createEntryReportedIssue,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["repairs", "entry-reported-issues"])
-      showSuccessToast("Problema reportado adicionado com sucesso!")
-    },
-    onError: () => {
-      showErrorToast("Erro ao adicionar problema reportado!")
     }
   })
 
@@ -100,10 +121,6 @@ export const useRepair = () => {
     mutationFn: deleteEntryReportedIssueApi,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["repairs", "entry-reported-issues"])
-      showSuccessToast("Problema reportado eliminado com sucesso!")
-    },
-    onError: () => {
-      showErrorToast("Erro ao eliminar problema reportado!")
     }
   })
 
@@ -119,10 +136,6 @@ export const useRepair = () => {
     mutationFn: createInterventionWorkDone,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["repairs", "intervention-works-done"])
-      showSuccessToast("Trabalho realizado adicionado com sucesso!")
-    },
-    onError: () => {
-      showErrorToast("Erro ao adicionar trabalho realizado!")
     }
   })
 
@@ -137,10 +150,6 @@ export const useRepair = () => {
     mutationFn: deleteInterventionWorkDoneApi,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["repairs", "intervention-works-done"])
-      showSuccessToast("Trabalho realizado eliminado com sucesso!")
-    },
-    onError: () => {
-      showErrorToast("Erro ao eliminar trabalho realizado!")
     }
   })
 
@@ -156,10 +165,6 @@ export const useRepair = () => {
     mutationFn: createInterventionAccessoryUsed,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["repairs", "intervention-accessories-used"])
-      showSuccessToast("Acessório da intervenção adicionado com sucesso!")
-    },
-    onError: () => {
-      showErrorToast("Erro ao adicionar acessório da intervenção!")
     }
   })
 
@@ -174,15 +179,15 @@ export const useRepair = () => {
     mutationFn: deleteInterventionAccessoryUsedApi,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["repairs", "intervention-accessories-used"])
-      showSuccessToast("Acessório da intervenção eliminado com sucesso!")
-    },
-    onError: () => {
-      showErrorToast("Erro ao eliminar acessório da intervenção!")
     }
   })
 
   return {
     findAllRepairs,
+    findAllRepairStatuses,
+    createNewRepairStatus,
+    updateRepairStatus,
+    deleteRepairStatus,
     findAllEntryAccessories,
     createNewEntryAccessory,
     updateEntryAccessory,

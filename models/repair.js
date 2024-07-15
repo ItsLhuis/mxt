@@ -497,7 +497,7 @@ const Repair = {
     },
     create: (name, color, createdByUserId) => {
       const query =
-        "INSERT INTO repair_status (name, color, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP())"
+        "INSERT INTO repair_status (name, color, created_by_user_id, created_at_datetime) VALUES (?, ?, ?, CURRENT_TIMESTAMP())"
       return dbQueryExecutor
         .execute(query, [name, color, createdByUserId])
         .then((result) => {

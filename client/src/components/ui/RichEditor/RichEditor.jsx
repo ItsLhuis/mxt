@@ -70,7 +70,7 @@ const RichEditor = ({ label, value, onChange, error, errorMessage, isLoading = f
     content: value,
     onUpdate: debounce(({ editor }) => {
       const htmlContent = editor.getHTML()
-      onChange(htmlContent)
+      if (typeof onChange === "function") onChange(htmlContent)
     }, 100)
   })
 

@@ -7,7 +7,7 @@ import { Info } from "@mui/icons-material"
 
 import { formatHTML } from "@utils/format/formatHTML"
 
-const Caption = ({ fontSize, title }) => {
+const Caption = ({ fontSize = "small", title }) => {
   const isHtml = typeof title === "string" && /<\/?[a-z][\s\S]*>/i.test(title)
 
   const renderTitle = () => {

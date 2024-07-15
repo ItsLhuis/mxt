@@ -246,6 +246,7 @@ const EquipmentDetailsForm = ({ equipment, isLoading, isError }) => {
                   label="Número de série"
                   error={!!errors.sn}
                   helperText={errors.sn?.message}
+                  autoComplete="off"
                   InputLabelProps={{ shrink: watch("sn")?.length > 0 }}
                 />
               </FormControl>

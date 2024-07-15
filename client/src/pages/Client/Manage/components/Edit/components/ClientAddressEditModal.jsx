@@ -119,6 +119,7 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
                 label="País"
                 error={!!errors.country}
                 helperText={errors.country?.message}
+                autoComplete="off"
                 inputRef={countryInputRef}
                 InputLabelProps={{ shrink: watch("country")?.length > 0 }}
               />
@@ -131,6 +132,7 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
                 label="Cidade"
                 error={!!errors.city}
                 helperText={errors.city?.message}
+                autoComplete="off"
                 InputLabelProps={{ shrink: watch("city")?.length > 0 }}
               />
             </FormControl>
@@ -142,6 +144,7 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
                 label="Localidade"
                 error={!!errors.locality}
                 helperText={errors.locality?.message}
+                autoComplete="off"
                 InputLabelProps={{ shrink: watch("locality")?.length > 0 }}
               />
             </FormControl>
@@ -154,6 +157,7 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
                   label="Morada"
                   error={!!errors.address}
                   helperText={errors.address?.message}
+                  autoComplete="off"
                   InputLabelProps={{ shrink: watch("address")?.length > 0 }}
                 />
               </FormControl>
@@ -163,6 +167,7 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
                   label="Código Postal"
                   error={!!errors.postalCode}
                   helperText={errors.postalCode?.message}
+                  autoComplete="off"
                   InputLabelProps={{ shrink: watch("postalCode")?.length > 0 }}
                 />
               </FormControl>

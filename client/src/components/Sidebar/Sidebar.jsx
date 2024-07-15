@@ -137,7 +137,7 @@ const sidebarData = [
         name: "Estado",
         submenu: [
           {
-            path: "/repair/entry-accessory/list",
+            path: "/repair/status/list",
             name: "Lista",
             className: "__but__lvlDown"
           }

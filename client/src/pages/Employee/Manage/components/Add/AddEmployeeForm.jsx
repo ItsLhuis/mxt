@@ -98,6 +98,7 @@ const AddEmployeeForm = () => {
                 label="Nome de utilizador"
                 error={!!errors.username}
                 helperText={errors.username?.message}
+                autoComplete="off"
               />
             </FormControl>
             <FormControl fullWidth>
@@ -106,6 +107,7 @@ const AddEmployeeForm = () => {
                 label="E-mail"
                 error={!!errors.email}
                 helperText={errors.email?.message}
+                autoComplete="off"
               />
             </FormControl>
             <FormControl fullWidth>
@@ -114,6 +116,7 @@ const AddEmployeeForm = () => {
                 label="Senha"
                 error={!!errors.password}
                 helperText={errors.password?.message}
+                autoComplete="off"
                 InputLabelProps={{ shrink: watch("password")?.length > 0 }}
                 InputProps={{
                   endAdornment: (
