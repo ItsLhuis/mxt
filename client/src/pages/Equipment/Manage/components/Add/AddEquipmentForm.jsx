@@ -20,7 +20,8 @@ import {
   InputAdornment,
   IconButton,
   Tooltip,
-  Skeleton
+  Skeleton,
+  Typography
 } from "@mui/material"
 import { AppsOutlined, Search } from "@mui/icons-material"
 
@@ -111,6 +112,7 @@ const AddEquipmentForm = () => {
               <FormControl fullWidth>
                 <TextField
                   label="Cliente"
+                  placeholder="Selecione um cliente"
                   value={clientModal.client.name}
                   onClick={openClientModal}
                   InputProps={{
@@ -311,7 +313,13 @@ const AddEquipmentForm = () => {
             }}
           >
             <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-              {item.name}
+              <Typography
+                variant="p"
+                component="p"
+                sx={{ wordBreak: "break-all", textAlign: "start" }}
+              >
+                {item.name}
+              </Typography>
               {item.description && <Caption fontSize="small" title={item.description} />}
             </Stack>
           </Button>

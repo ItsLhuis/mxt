@@ -1,10 +1,10 @@
 import { z } from "zod"
 
 export const repairSchema = z.object({
-  equipmentId: z.number(),
-  statusId: z.number(),
+  equipmentId: z.number({ message: "O equipamento é obrigatório" }),
+  statusId: z.number({ message: "O estado é obrigatório" }),
   entryDescription: z.string().optional().nullable(),
-  entryDatetime: z.date()
+  entryDatetime: z.date({ message: "A data de entrada é obrigatória" })
 })
 
 export const updateRepairSchema = z.object({

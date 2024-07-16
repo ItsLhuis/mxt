@@ -4,6 +4,8 @@ CREATE DATABASE IF NOT EXISTS mxt CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_
 -- Use the "mxt" database
 USE mxt;
 
+SET time_zone = '+00:00';
+
 -- Table: company
 CREATE TABLE IF NOT EXISTS company (
     enforce_one_row ENUM('only') NOT NULL PRIMARY KEY DEFAULT 'only',

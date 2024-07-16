@@ -42,6 +42,7 @@ const Modal = ({
   placeholder,
   buttonStructure,
   disabled = false,
+  searchKeys = [],
   children
 }) => {
   const theme = useTheme()
@@ -86,6 +87,24 @@ const Modal = ({
 
   const getDataCountText = (dataSize) => {
     return dataSize === 1 ? "resultado encontrado" : "resultados encontrados"
+  }
+
+  const getNestedValue = (obj, path, defaultValue = undefined) => {
+    const keys = path.split(".")
+    let result = obj
+
+    for (const key of keys) {
+      if (Array.isArray(result)) {
+        result = result.map((item) => getNestedValue(item, keys.slice(1).join("."), defaultValue))
+        return result
+      }
+      result = result ? result[key] : defaultValue
+      if (result === undefined) {
+        return defaultValue
+      }
+    }
+
+    return result
   }
 
   let content
@@ -152,6 +171,7 @@ const Modal = ({
               variant="contained"
               color="secondary"
               onClick={handleClose}
+              sx={{ height: "100%" }}
             >
               {cancelButtonText}
             </LoadingButton>
@@ -228,6 +248,7 @@ const Modal = ({
               variant="contained"
               color="secondary"
               onClick={handleClose}
+              sx={{ height: "100%" }}
             >
               {cancelButtonText}
             </LoadingButton>
@@ -264,17 +285,32 @@ const Modal = ({
         setText(searchText)
       }
 
+      const deepSearch = (value, searchText) => {
+        if (typeof value === "string") {
+          return value.toLowerCase().includes(searchText)
+        } else if (Array.isArray(value)) {
+          return value.some((item) => deepSearch(item, searchText))
+        } else if (typeof value === "object" && value !== null) {
+          return Object.values(value).some((nestedValue) => deepSearch(nestedValue, searchText))
+        }
+
+        return false
+      }
+
       const filterData = () => {
+        if (searchKeys.length === 0) {
+          const filteredResults = data.filter((item) => {
+            return deepSearch(item, text.toLowerCase())
+          })
+          setFilteredData(filteredResults)
+          return
+        }
+
         const filteredResults = data.filter((item) => {
-          for (let key in item) {
-            if (
-              typeof item[key] === "string" &&
-              item[key].toLowerCase().includes(text.toLowerCase())
-            ) {
-              return true
-            }
-          }
-          return false
+          return searchKeys.some((key) => {
+            const value = getNestedValue(item, key)
+            return deepSearch(value, text.toLowerCase())
+          })
         })
 
         setFilteredData(filteredResults)
@@ -505,6 +541,7 @@ Modal.propTypes = {
     }
   },
   disabled: PropTypes.bool,
+  searchKeys: PropTypes.arrayOf(PropTypes.string),
   children: function (props, propName, componentName) {
     if (props.mode !== "delete" && props.mode !== "data" && props[propName] === undefined) {
       return new Error(

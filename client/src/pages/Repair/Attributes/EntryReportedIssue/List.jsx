@@ -27,7 +27,7 @@ const RepairEntryReportedIssueListPage = () => {
         <Box component="main" className="page-main">
           <Container maxWidth={false}>
             <HeaderPage
-              title="Lista de Problemas Reportados"
+              title="Lista de Problemas reportados"
               breadcrumbs={[
                 { name: "Reparação", link: "/repair/list" },
                 { name: "Problema Reportado" },

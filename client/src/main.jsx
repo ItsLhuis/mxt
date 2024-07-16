@@ -40,6 +40,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       dateAdapter={AdapterDateFns}
       adapterLocale={pt}
       localeText={{
+        dateTimePickerToolbarTitle: "Selecione uma data",
         cancelButtonLabel: "Cancelar",
         okButtonLabel: "Selecionar",
         datePickerToolbarTitle: "Selecione uma data"

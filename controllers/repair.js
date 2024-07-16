@@ -92,7 +92,9 @@ const repairController = {
     res.status(200).json([filteredRepairs])
   }),
   create: tryCatch(async (req, res) => {
-    const { equipmentId, statusId, entryDescription, entryDatetime } = req.body
+    let { equipmentId, statusId, entryDescription, entryDatetime } = req.body
+
+    entryDatetime = new Date(entryDatetime).toISOString()
 
     repairSchema.parse(req.body)
 
@@ -144,7 +146,7 @@ const repairController = {
   }),
   update: tryCatch(async (req, res) => {
     const { repairId } = req.params
-    const {
+    let {
       statusId,
       entryAccessoriesDescription,
       entryReportedIssuesDescription,
@@ -161,6 +163,10 @@ const repairController = {
       interventionWorksDoneIds,
       interventionAccessoriesUsedIds
     } = req.body
+
+    entryDatetime = new Date(entryDatetime).toISOString()
+    conclusionDatetime = conclusionDatetime || new Date(entryDatetime).toISOString()
+    deliveryDatetime = deliveryDatetime || new Date(entryDatetime).toISOString()
 
     updateRepairSchema.parse(req.body)
 
@@ -322,10 +328,10 @@ const repairController = {
         (!entryAccessoriesDescription ? null : entryAccessoriesDescription)
     })
 
-    compareAndPushArrayChanges(entryReportedIssuesOld, entryReportedIssuesNew, "Avarias relatadas")
+    compareAndPushArrayChanges(entryReportedIssuesOld, entryReportedIssuesNew, "Problemas reportados")
 
     changes.push({
-      field: "Descrição das avarias relatadas",
+      field: "Descrição dos problemas reportados",
       before: existingRepair[0].entry_reported_issues_description,
       after: !entryReportedIssuesDescription ? null : entryReportedIssuesDescription,
       changed:

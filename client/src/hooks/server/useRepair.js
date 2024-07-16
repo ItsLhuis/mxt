@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   getAllRepairs,
+  createRepair,
+  deleteRepair as deleteRepairApi,
   getAllRepairStatuses,
   createRepairStatus,
   updateRepairStatus as updateRepairStatusApi,
@@ -35,6 +37,30 @@ export const useRepair = () => {
       queryClient.setQueryData(["repairs"], data)
     },
     refetchInterval: 60000
+  })
+
+  const createNewRepair = useMutation({
+    mutationFn: createRepair,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["repairs"])
+      showSuccessToast("Reparação adicionada com sucesso!")
+    },
+    onError: () => {
+      showErrorToast("Erro ao adicionar reparação!")
+    }
+  })
+
+  const deleteRepair = useMutation({
+    mutationFn: deleteRepairApi,
+    onSuccess: async (data, variables) => {
+      const repairId = variables.repairId
+      await queryClient.invalidateQueries(["repairs"])
+      await queryClient.removeQueries(["repairs", repairId])
+      showSuccessToast("Reparação eliminada com sucesso!")
+    },
+    onError: () => {
+      showErrorToast("Erro ao eliminar reparação!")
+    }
   })
 
   const findAllRepairStatuses = useQuery({
@@ -184,6 +210,8 @@ export const useRepair = () => {
 
   return {
     findAllRepairs,
+    createNewRepair,
+    deleteRepair,
     findAllRepairStatuses,
     createNewRepairStatus,
     updateRepairStatus,

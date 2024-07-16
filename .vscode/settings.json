@@ -1,3 +1,5 @@
 {
+  "breadcrumbs.enabled": false,
+  "workbench.editor.labelFormat": "short",
   "javascript.suggestionActions.enabled": false
 }

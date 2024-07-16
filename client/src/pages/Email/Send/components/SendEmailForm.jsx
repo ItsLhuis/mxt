@@ -86,9 +86,10 @@ const SendEmailForm = () => {
               <FormControl fullWidth>
                 <TextField
                   label="Para"
+                  placeholder="Selecione o e-mail de um cliente"
                   value={
                     clientModal.client.name
-                      ? `${clientModal.client.name} | ${clientModal.contact.name}`
+                      ? `${clientModal.contact.name} (${clientModal.client.name})`
                       : ""
                   }
                   onClick={openClientModal}
@@ -171,7 +172,13 @@ const SendEmailForm = () => {
         open={clientModal.isOpen ?? false}
         onClose={closeClientModal}
         mode="data"
-        data={findAllClients.data ?? []}
+        data={(findAllClients.data ?? [])
+          .map((client) => ({
+            ...client,
+            contacts: client.contacts.filter((contact) => contact.type === "E-mail")
+          }))
+          .filter((client) => client.contacts.length > 0)}
+        searchKeys={["name", "contacts.contact"]}
         isLoading={findAllClients.isLoading}
         title="E-mails dos Clientes"
         placeholder="Pesquise por um cliente"
@@ -187,7 +194,11 @@ const SendEmailForm = () => {
                 marginTop: 2
               }}
             >
-              <Typography variant="h6" component="h6">
+              <Typography
+                variant="h5"
+                component="h5"
+                sx={{ wordBreak: "break-all", textAlign: "start" }}
+              >
                 {item.name}
               </Typography>
               {item.description && <Caption fontSize="small" title={item.description} />}
@@ -208,7 +219,10 @@ const SendEmailForm = () => {
                       padding: "16px !important",
                       width: "100%",
                       border: 2,
-                      borderColor: contact.id === clientModal.contact.id ? "var(--primary)" : "var(--elevation-level3)",
+                      borderColor:
+                        contact.id === clientModal.contact.id
+                          ? "var(--primary)"
+                          : "var(--elevation-level3)",
                       borderRadius: 2,
                       color: "var(--onSurface)",
                       lineHeight: 1.5,
@@ -224,7 +238,13 @@ const SendEmailForm = () => {
                     }}
                   >
                     <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-                      {contact.contact}
+                      <Typography
+                        variant="p"
+                        component="p"
+                        sx={{ wordBreak: "break-all", textAlign: "start" }}
+                      >
+                        {contact.contact}
+                      </Typography>
                       {contact.description && (
                         <Caption fontSize="small" title={contact.description} />
                       )}

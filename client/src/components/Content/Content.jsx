@@ -23,6 +23,7 @@ import {
   EquipmentBrandList,
   EquipmentModelList,
   RepairList,
+  AddRepair,
   RepairStatusList,
   RepairEntryAccessoryList,
   RepairEntryReportedIssueList,
@@ -81,6 +82,7 @@ const Content = () => {
 
             {/* Repair */}
             <Route path="/repair/list" element={<RepairList />} />
+            <Route path="/repair/add" element={<AddRepair />} />
 
             <Route path="/repair/status/list" element={<RepairStatusList />} />
 

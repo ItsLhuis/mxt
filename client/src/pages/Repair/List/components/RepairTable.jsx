@@ -45,7 +45,7 @@ const RepairTable = () => {
 
   const { role } = useAuth()
 
-  const { findAllRepairs } = useRepair()
+  const { findAllRepairs, deleteRepair } = useRepair()
   const { data: repairs, isLoading: isRepairsLoading } = findAllRepairs
 
   const [openFileViewer, setOpenFileViewer] = useState(false)
@@ -59,35 +59,35 @@ const RepairTable = () => {
     setAttachment({ url: "", type: "" })
   }
 
-  const [deleteEquipmentModal, setDeleteEquipmentModal] = useState({
+  const [deleteRepairModal, setDeleteRepairModal] = useState({
     isOpen: false,
-    equipmentId: null
+    repairId: null
   })
-  const openDeleteEquipmentModal = (id) => {
-    setDeleteEquipmentModal({ isOpen: true, equipmentId: id })
+  const openDeleteRepairModal = (id) => {
+    setDeleteRepairModal({ isOpen: true, repairId: id })
   }
-  const closeDeleteEquipmentModal = () => {
-    setDeleteEquipmentModal({ isOpen: false, equipmentId: null })
+  const closeDeleteRepairModal = () => {
+    setDeleteRepairModal({ isOpen: false, repairId: null })
   }
 
   const handleDeleteClient = () => {
-    /*     return new Promise((resolve, reject) => {
-      if (deleteEquipmentModal.equipmentId) {
-        deleteEquipment
-          .mutateAsync({ equipmentId: deleteEquipmentModal.equipmentId })
+    return new Promise((resolve, reject) => {
+      if (deleteRepairModal.repairId) {
+        deleteRepair
+          .mutateAsync({ repairId: deleteRepairModal.repairId })
           .then(() => {
-            closeDeleteEquipmentModal()
+            closeDeleteRepairModal()
             resolve()
           })
           .catch(() => {
-            closeDeleteEquipmentModal()
+            closeDeleteRepairModal()
             reject()
           })
       } else {
-        closeDeleteEquipmentModal()
+        closeDeleteRepairModal()
         reject()
       }
-    }) */
+    })
   }
 
   const repairsTableColumns = useMemo(
@@ -395,7 +395,7 @@ const RepairTable = () => {
                 {
                   label: "Editar",
                   icon: <Edit fontSize="small" />,
-                  onClick: () => navigate(`/equipment/${row?.id}`)
+                  onClick: () => navigate(`/repair/${row?.id}`)
                 },
                 ...(role !== "Funcionário"
                   ? [
@@ -404,7 +404,7 @@ const RepairTable = () => {
                         icon: <Delete fontSize="small" color="error" />,
                         color: "error",
                         divider: true,
-                        onClick: () => openDeleteEquipmentModal(row?.id)
+                        onClick: () => openDeleteRepairModal(row?.id)
                       }
                     ]
                   : [])
@@ -644,7 +644,7 @@ const RepairTable = () => {
           []
         )
 
-        const ExpandableEquipmentsInteractionsHistoryTableContent = useMemo(
+        const ExpandableRepairsInteractionsHistoryTableContent = useMemo(
           () =>
             ({ row }) => {
               const interactionsHistoryDetailsTableColumns = useMemo(
@@ -664,7 +664,7 @@ const RepairTable = () => {
                       if (
                         row?.field === "Descrição da entrada" ||
                         row?.field === "Descrição dos acessórios da entrada" ||
-                        row?.field === "Descrição das avarias relatadas" ||
+                        row?.field === "Descrição dos problemas reportados" ||
                         row?.field === "Descrição dos trabalhos realizados" ||
                         row?.field === "Descrição dos acessórios da intervenção" ||
                         row?.field === "Descrição da intervenção"
@@ -719,7 +719,7 @@ const RepairTable = () => {
 
                       if (
                         row?.field === "Acessórios da entrada" ||
-                        row?.field === "Avarias relatadas" ||
+                        row?.field === "Problemas reportados" ||
                         row?.field === "Trabalhos realizados" ||
                         row?.field === "Acessórios da intervenção"
                       ) {
@@ -843,7 +843,7 @@ const RepairTable = () => {
 
                       if (
                         row?.field === "Acessórios da entrada" ||
-                        row?.field === "Avarias relatadas" ||
+                        row?.field === "Problemas reportados" ||
                         row?.field === "Trabalhos realizados" ||
                         row?.field === "Acessórios da intervenção"
                       ) {
@@ -996,7 +996,7 @@ const RepairTable = () => {
                   mode="datatable"
                   data={row?.interactions_history ?? []}
                   columns={interactionsHistoryTableColumns}
-                  ExpandableContentComponent={ExpandableEquipmentsInteractionsHistoryTableContent}
+                  ExpandableContentComponent={ExpandableRepairsInteractionsHistoryTableContent}
                 />
               </Box>
             )}
@@ -1024,8 +1024,8 @@ const RepairTable = () => {
         <Modal
           mode="delete"
           title="Eliminar Reparação"
-          open={deleteEquipmentModal.isOpen}
-          onClose={closeDeleteEquipmentModal}
+          open={deleteRepairModal.isOpen}
+          onClose={closeDeleteRepairModal}
           onSubmit={handleDeleteClient}
           description="Tem a certeza que deseja eliminar esta reparação?"
           subDescription="Ao eliminar esta reparação, os dados serão removidos de forma permanente."

@@ -4,7 +4,7 @@ const repairSchema = z.object({
   equipmentId: z.number(),
   statusId: z.number(),
   entryDescription: z.string().optional().nullable(),
-  entryDatetime: z.date()
+  entryDatetime: z.coerce.date()
 })
 
 const updateRepairSchema = z.object({
@@ -12,12 +12,12 @@ const updateRepairSchema = z.object({
   entryAccessoriesDescription: z.string().optional().nullable(),
   entryReportedIssuesDescription: z.string().optional().nullable(),
   entryDescription: z.string().optional().nullable(),
-  entryDatetime: z.date().optional(),
+  entryDatetime: z.coerce.date(),
   interventionWorksDoneDescription: z.string().optional().nullable(),
   interventionAccessoriesUsedDescription: z.string().optional().nullable(),
   interventionDescription: z.string().optional().nullable(),
-  conclusionDatetime: z.date().optional().nullable(),
-  deliveryDatetime: z.date().optional().nullable(),
+  conclusionDatetime: z.coerce.date().optional().nullable(),
+  deliveryDatetime: z.coerce.date().optional().nullable(),
   isClientNotified: z.boolean(),
   entryAccessoriesIds: z.array(z.number()).optional().nullable(),
   entryReportedIssuesIds: z.array(z.number()).optional().nullable(),

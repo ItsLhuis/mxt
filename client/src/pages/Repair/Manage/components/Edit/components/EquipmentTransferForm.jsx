@@ -99,7 +99,6 @@ const EquipmentTransferForm = ({ equipment, isLoading, isError }) => {
               <FormControl fullWidth>
                 <TextField
                   label="Cliente"
-                  placeholder="Selecione um cliente"
                   value={clientModal.client.name}
                   onClick={openClientModal}
                   InputProps={{

@@ -3,7 +3,7 @@ import React from "react"
 import { startOfDay, isBefore, isAfter } from "date-fns"
 
 import { DateTimePicker } from "@mui/x-date-pickers"
-import { DialogActions, Button, FormHelperText } from "@mui/material"
+import { DialogActions, Button, FormHelperText, FormControl } from "@mui/material"
 import { KeyboardArrowDown } from "@mui/icons-material"
 
 const CustomActionBar = (props) => {
@@ -40,10 +40,10 @@ const DatePicker = (props) => {
     strippedMinDate && strippedValue && isBefore(strippedValue, strippedMinDate)
   const isAfterMaxDate = strippedMaxDate && strippedValue && isAfter(strippedValue, strippedMaxDate)
 
-  const hasHelperText = isBeforeMinDate || isAfterMaxDate || props.helperText
+  const hasError = props.error || isBeforeMinDate || isAfterMaxDate
 
   return (
-    <>
+    <FormControl fullWidth>
       <DateTimePicker
         slots={{
           switchViewIcon: KeyboardArrowDown,
@@ -61,14 +61,14 @@ const DatePicker = (props) => {
         }}
         {...props}
       />
-      {hasHelperText && (
-        <FormHelperText error={props.error || isBeforeMinDate || isAfterMaxDate}>
+      {hasError && (
+        <FormHelperText error={hasError}>
           {(isBeforeMinDate && "A data selecionada está antes do limite mínimo") ||
             (isAfterMaxDate && "A data selecionada está após o limite máximo") ||
             props.helperText}
         </FormHelperText>
       )}
-    </>
+    </FormControl>
   )
 }
 

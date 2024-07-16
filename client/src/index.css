@@ -481,19 +481,54 @@ input[type=number]::-webkit-outer-spin-button {
   display: none;
 }
 
-.MuiDialogContent-root::-webkit-scrollbar {
-  background-color: var(--elevation-level2);
-}
-
 .MuiDialogActions-root {
   padding: 24px !important;
 }
 
-.MuiPickersLayout-root,
-.MuiPickersLayout-contentWrapper,
-.MuiPickersLayout-actionBar {
+.MuiPickersToolbar-content .Mui-selected,
+.MuiClock-clock .MuiClock-wrapper .MuiClockNumber-root:not(.Mui-selected) {
+  color: var(--onSurface) !important;
+}
+
+.MuiPickersLayout-root .MuiPickersToolbar-root,
+.MuiPickersLayout-root .MuiPickersLayout-root,
+.MuiPickersLayout-root .MuiPickersLayout-contentWrapper,
+.MuiPickersLayout-root .MuiPickersLayout-actionBar {
   background-color: var(--elevation-level2);
   border-radius: 8px;
+}
+
+.MuiDialogContent-root .MuiPickersLayout-root .MuiPickersToolbar-root,
+.MuiDialogContent-root .MuiPickersLayout-root .MuiPickersLayout-root,
+.MuiDialogContent-root .MuiPickersLayout-root .MuiPickersLayout-contentWrapper,
+.MuiDialogContent-root .MuiPickersLayout-root .MuiPickersLayout-actionBar {
+  background-color: var(--background);
+  border-radius: 8px;
+}
+
+.MuiDialogContent-root .MuiPickersLayout-root .MuiPickersToolbar-root {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.MuiDialogContent-root .MuiPickersLayout-root .MuiPickersToolbar-root.MuiDateTimePickerToolbar-root>.MuiTypography-root:first-child {
+  margin-left: 16px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.235;
+  letter-spacing: 0.00735em;
+}
+
+.MuiDialogContent-root .MuiPickersLayout-root .MuiPickersLayout-contentWrapper .MuiDateCalendar-root {
+  margin-top: 16px;
+  background-color: rgba(0, 0, 0, .07);
+  border-radius: 8px;
+}
+
+.MuiDialogContent-root .MuiPickersLayout-root .MuiPickersLayout-contentWrapper .MuiTabs-root {
+  box-shadow: 0 -1px 0 0 inset var(--elevation-level5);
 }
 
 .MuiPickersDay-root.Mui-disabled {
