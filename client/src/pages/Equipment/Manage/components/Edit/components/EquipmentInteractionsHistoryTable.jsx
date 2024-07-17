@@ -10,7 +10,7 @@ import { HeaderSection, Loadable, Table, TableSkeleton, Avatar } from "@componen
 import { formatHTML } from "@utils/format/formatHTML"
 import { formatDate, formatTime } from "@utils/format/date"
 
-const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
+const EquipmentInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
   const isEquipmentFinished = !isLoading && !isError
 
   const equipmentInteractionsHistoryTableColumns = useMemo(
@@ -364,4 +364,4 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
   )
 }
 
-export default ClientInteractionsHistoryTable
+export default EquipmentInteractionsHistoryTable

@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }) => {
           })
       })
       .catch(() => {
+        setIsAuthCompany(false)
         setIsAuth(false)
       })
       .finally(() => setTimeout(() => setIsLoading(false), 200))

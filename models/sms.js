@@ -11,7 +11,7 @@ const { withCache, revalidateCache, memoryOnlyCache } = require("@utils/cache")
 const ReleansClient = require("@classes/releans")
 const releans = new ReleansClient(process.env.RELEANS_API_KEY)
 
-const momentTz = require("moment-timezone")
+const convertTimeZone = require("@utils/convertTimeZone ")
 
 const Client = require("@models/client")
 const User = require("@models/user")
@@ -58,16 +58,50 @@ const Sms = {
         }
 
         const apiId = sms[0].api_id
-        let smsReleansData = {}
+        let smsReleansData = { from: null, status: null }
 
         try {
           smsReleansData = await releans.get(apiId)
         } catch (error) {}
 
-        const convertTimeZone = momentTz
-          .tz(smsReleansData.date_sent, "YYYY-MM-DD HH:mm:ss a", smsReleansData.timezone)
-          .utc()
-          .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]")
+        const convertReleansTimeZone = convertTimeZone(
+          smsReleansData.date_sent,
+          smsReleansData.timezone
+        )
+
+        const lowerCaseStatus = smsReleansData.status.toLowerCase()
+
+        const statusText = (() => {
+          switch (lowerCaseStatus) {
+            case "delivered":
+              return "Entregue"
+            case "failed":
+              return "Erro ao Enviar"
+            case "undelivered":
+              return "Rejeitado"
+            case "sent":
+              return "Enviado"
+            case "queued":
+              return "Na Fila"
+            default:
+              return "Desconhecido"
+          }
+        })()
+
+        const statusColor = (() => {
+          switch (lowerCaseStatus) {
+            case "Delivered":
+              return "success"
+            case "Failed":
+            case "Undelivered":
+              return "error"
+            case "Sent":
+            case "Queued":
+              return "info"
+            default:
+              return "default"
+          }
+        })()
 
         const [client, sentByUser] = await Promise.all([
           Client.findByClientId(sms[0].client_id),
@@ -84,10 +118,13 @@ const Sms = {
               : null,
           to: sms[0].contact,
           message: sms[0].message,
-          status: smsReleansData.status,
+          status: {
+            name: statusText,
+            color: statusColor
+          },
           sent_by_user: sentByUser || sentByUser.length > 0 ? mapUser(sentByUser[0]) : null,
           created_at_datetime: sms[0].created_at_datetime,
-          sent_at_datetime: convertTimeZone
+          sent_at_datetime: convertReleansTimeZone
         }
 
         return [smsWithDetails]

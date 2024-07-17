@@ -152,6 +152,7 @@ const EquipmentTransferForm = ({ equipment, isLoading, isError }) => {
               alignItems: "flex-start",
               padding: "16px !important",
               width: "100%",
+              minHeight: "unset !important",
               border: 2,
               borderColor:
                 item.id === clientModal.client.id ? "var(--primary)" : "var(--elevation-level3)",

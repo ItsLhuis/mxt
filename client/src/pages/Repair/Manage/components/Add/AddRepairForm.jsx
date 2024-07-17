@@ -172,7 +172,7 @@ const AddRepairForm = () => {
                 defaultValue={new Date()}
                 render={({ field }) => (
                   <DatePicker
-                    label="Data da entrada"
+                    label="Data de entrada"
                     value={field.value}
                     onChange={field.onChange}
                     error={!!errors.entryDatetime}
@@ -225,6 +225,7 @@ const AddRepairForm = () => {
               alignItems: "flex-start",
               padding: "16px !important",
               width: "100%",
+              minHeight: "unset !important",
               border: 2,
               borderColor:
                 item.id === equipmentModal.equipment.id

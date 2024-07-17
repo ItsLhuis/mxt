@@ -1,15 +1,7 @@
 import { lazy } from "react"
 
-const EquipmentDetailsForm = lazy(() => import("./EquipmentDetailsForm"))
-const EquipmentRepairsTable = lazy(() => import("./EquipmentRepairsTable"))
-const EquipmentAttachments = lazy(() => import("./EquipmentAttachments"))
-const EquipmentInteractionsHistoryTable = lazy(() => import("./EquipmentInteractionsHistoryTable"))
-const EquipmentTransferForm = lazy(() => import("./EquipmentTransferForm"))
+const RepairDetailsForm = lazy(() => import("./RepairDetailsForm"))
+const RepairAttachments = lazy(() => import("./EquipmentAttachments"))
+const RepairInteractionsHistoryTable = lazy(() => import("./RepairInteractionsHistoryTable"))
 
-export {
-  EquipmentDetailsForm,
-  EquipmentRepairsTable,
-  EquipmentAttachments,
-  EquipmentInteractionsHistoryTable,
-  EquipmentTransferForm
-}
+export { RepairDetailsForm, RepairAttachments, RepairInteractionsHistoryTable }

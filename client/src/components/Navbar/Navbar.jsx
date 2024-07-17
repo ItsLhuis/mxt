@@ -74,9 +74,12 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen, isNotFound = false }) => {
                     size="normal"
                     className="but-menu"
                     onClick={() => {
-                      window.dispatchEvent(new Event("resize"))
-
                       const screenWidth = window.innerWidth
+
+                      if (screenWidth >= 900) {
+                        window.dispatchEvent(new Event("resize"))
+                      }
+
                       if (screenWidth < 900) {
                         setDrawerOpen(true)
                       } else {
@@ -87,19 +90,21 @@ const Navbar = ({ toggleSidebarSize, setDrawerOpen, isNotFound = false }) => {
                     <Menu />
                   </IconButton>
                 </Tooltip>
-                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                  <Tooltip title="Pesquisar">
-                    <IconButton
-                      aria-label="Pesquisar"
-                      size="normal"
-                      className="but-menu"
-                      onClick={() => setCommandDialogOpen(true)}
-                    >
-                      <Search />
-                    </IconButton>
-                  </Tooltip>
-                  {!isSmallScreen && <Chip label="Alt + p" />}
-                </Box>
+                {!isSmallScreen && (
+                  <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <Tooltip title="Pesquisar">
+                      <IconButton
+                        aria-label="Pesquisar"
+                        size="normal"
+                        className="but-menu"
+                        onClick={() => setCommandDialogOpen(true)}
+                      >
+                        <Search />
+                      </IconButton>
+                    </Tooltip>
+                    <Chip label="Alt + p" />
+                  </Box>
+                )}
               </Box>
             )}
           </Box>

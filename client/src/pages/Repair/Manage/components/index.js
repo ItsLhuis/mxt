@@ -1,6 +1,6 @@
 import { lazy } from "react"
 
 const AddRepairForm = lazy(() => import("./Add/AddRepairForm"))
-const EditEquipment = lazy(() => import("./Edit/EditEquipment"))
+const EditRepair = lazy(() => import("./Edit/EditRepair"))
 
-export { AddRepairForm, EditEquipment }
+export { AddRepairForm, EditRepair }

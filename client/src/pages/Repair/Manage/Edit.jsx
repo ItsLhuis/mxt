@@ -3,26 +3,21 @@ import React, { Suspense } from "react"
 import { Box, Container } from "@mui/material"
 
 import { PageLoader, HeaderPage } from "@components/ui"
-import { EditEquipment } from "./components"
+import { EditRepair } from "./components"
 
 import { motion } from "framer-motion"
 
-const EditEquipmentPage = () => {
+const EditRepairPage = () => {
   return (
     <Suspense fallback={<PageLoader />}>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.2 }}
-        style={{ height: "100%" }}
-      >
-        <Box component="main" className="page-main" sx={{ height: "100%" }}>
-          <Container maxWidth={false} sx={{ height: "100%" }}>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
+        <Box component="main" className="page-main">
+          <Container maxWidth={false}>
             <HeaderPage
-              title="Editar Equipamento"
-              breadcrumbs={[{ name: "Equipamento", link: "/equipment/list" }, { name: "Editar" }]}
+              title="Editar Reparação"
+              breadcrumbs={[{ name: "Reparação", link: "/repair/list" }, { name: "Editar" }]}
             />
-            <EditEquipment />
+            <EditRepair />
           </Container>
         </Box>
       </motion.div>
@@ -30,4 +25,4 @@ const EditEquipmentPage = () => {
   )
 }
 
-export default EditEquipmentPage
+export default EditRepairPage

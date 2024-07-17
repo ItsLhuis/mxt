@@ -4,7 +4,12 @@ export const repairSchema = z.object({
   equipmentId: z.number({ message: "O equipamento é obrigatório" }),
   statusId: z.number({ message: "O estado é obrigatório" }),
   entryDescription: z.string().optional().nullable(),
-  entryDatetime: z.date({ message: "A data de entrada é obrigatória" })
+  entryDatetime: z.date({
+    message: "A data de entrada é obrigatória",
+    errorMap: () => ({
+      message: "A data de entrada é obrigatória"
+    })
+  })
 })
 
 export const updateRepairSchema = z.object({

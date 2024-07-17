@@ -9,8 +9,7 @@ export const emailSchema = z
     title: z.string().trim().min(1, { message: "O título é obrigatório" }).max(255),
     message: z
       .string()
-      .transform((value) => sanitizeHTML(value))
-      .refine((value) => value.trim() !== "", "O campo Mensagem é obrigatório."),
+      .refine((value) => sanitizeHTML(value).trim() !== "", "O campo mensagem é obrigatório."),
     text: z.string().trim().min(1).optional(),
     attachments: z.array(z.instanceof(File)).optional()
   })

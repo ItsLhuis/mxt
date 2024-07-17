@@ -12,7 +12,14 @@ const getConnection = () => {
       if (err) {
         reject(err)
       } else {
-        resolve(connection)
+        connection.query("SET time_zone = '+00:00'", (error) => {
+          if (error) {
+            connection.release()
+            reject(error)
+          } else {
+            resolve(connection)
+          }
+        })
       }
     })
   })

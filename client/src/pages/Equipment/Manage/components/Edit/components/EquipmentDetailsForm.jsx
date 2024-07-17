@@ -33,9 +33,9 @@ const EquipmentDetailsForm = ({ equipment, isLoading, isError }) => {
   })
 
   const initialValues = {
-    typeId: equipment?.[0]?.type.id || "",
-    brandId: equipment?.[0]?.brand.id || "",
-    modelId: equipment?.[0]?.model.id || "",
+    typeId: equipment?.[0]?.type?.id || "",
+    brandId: equipment?.[0]?.brand?.id || "",
+    modelId: equipment?.[0]?.model?.id || "",
     sn: equipment?.[0]?.sn || "",
     description: equipment?.[0]?.description || ""
   }

@@ -1,7 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   getAllRepairs,
+  getRepairById,
   createRepair,
+  updateRepair as updateRepairApi,
   deleteRepair as deleteRepairApi,
   getAllRepairStatuses,
   createRepairStatus,
@@ -39,6 +41,17 @@ export const useRepair = () => {
     refetchInterval: 60000
   })
 
+  const findRepairById = (repairId) => {
+    return useQuery({
+      queryKey: ["repairs", repairId],
+      queryFn: () => getRepairById({ repairId }),
+      onSuccess: (data) => {
+        queryClient.setQueryData(["repairs", repairId], data)
+      },
+      enabled: !!repairId
+    })
+  }
+
   const createNewRepair = useMutation({
     mutationFn: createRepair,
     onSuccess: async () => {
@@ -47,6 +60,15 @@ export const useRepair = () => {
     },
     onError: () => {
       showErrorToast("Erro ao adicionar reparação!")
+    }
+  })
+
+  const updateRepair = useMutation({
+    mutationFn: updateRepairApi,
+    onSuccess: async (data, variables) => {
+      const repairId = variables.repairId
+      await queryClient.invalidateQueries(["repairs"])
+      await queryClient.invalidateQueries(["repairs", repairId])
     }
   })
 
@@ -210,7 +232,9 @@ export const useRepair = () => {
 
   return {
     findAllRepairs,
+    findRepairById,
     createNewRepair,
+    updateRepair,
     deleteRepair,
     findAllRepairStatuses,
     createNewRepairStatus,

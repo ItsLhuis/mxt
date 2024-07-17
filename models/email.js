@@ -55,7 +55,7 @@ const Email = {
         }
 
         const apiId = email[0].api_id
-        let emailResendData = {}
+        let emailResendData = { from: null, html: null, text: null, last_event: null }
 
         try {
           emailResendData = await mailer.get(apiId)
@@ -65,6 +65,41 @@ const Email = {
           Client.findByClientId(email[0].client_id),
           User.findByUserId(email[0].sent_by_user_id)
         ])
+
+        const lowerCaseStatus = emailResendData.last_event.toLowerCase();
+
+        const statusText = (() => {
+          switch (lowerCaseStatus) {
+            case "sent":
+              return "Enviado";
+            case "delivered":
+              return "Entregue";
+            case "delivery_delayed":
+              return "Entregue Atrasado";
+            case "complained":
+              return "Spam";
+            case "bounced":
+              return "Rejeitado";
+            default:
+              return "Desconhecido";
+          }
+        })();
+
+        const statusColor = (() => {
+          switch (lowerCaseStatus) {
+            case "sent":
+              return "info"
+            case "delivered":
+              return "success"
+            case "delivery_delayed":
+              return "warning"
+            case "complained":
+            case "bounced":
+              return "error"
+            default:
+              return "default"
+          }
+        })()
 
         const emailWithDetails = {
           id: email[0].id,
@@ -78,7 +113,10 @@ const Email = {
           subject: email[0].subject,
           html: emailResendData.html,
           text: emailResendData.text,
-          status: emailResendData.last_event,
+          status: {
+            name: statusText,
+            color: statusColor
+          },
           sent_by_user: sentByUser || sentByUser.length > 0 ? mapUser(sentByUser[0]) : null,
           created_at_datetime: email[0].created_at_datetime,
           sent_at_datetime: email[0].created_at_datetime

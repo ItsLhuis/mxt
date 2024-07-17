@@ -33,6 +33,7 @@ export const EquipmentModelList = lazy(() => import("./Equipment/Attributes/Mode
 //Repair
 export const RepairList = lazy(() => import("./Repair/List/List"))
 export const AddRepair = lazy(() => import("./Repair/Manage/Add"))
+export const EditRepair = lazy(() => import("./Repair/Manage/Edit"))
 
 export const RepairStatusList = lazy(() => import("./Repair/Attributes/Status/List"))
 

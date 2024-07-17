@@ -99,7 +99,7 @@ const ClientTable = () => {
         align: "left",
         sortable: true,
         renderComponent: ({ row }) => (
-          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1, whiteSpace: "pre" }}>
             <Link to={`/client/${row?.client?.id}`}>{row?.client?.name}</Link>
             {row?.client?.description && (
               <Caption fontSize="small" title={row?.client?.description} />

@@ -22,26 +22,6 @@ export const createEquipment = async ({ clientId, brandId, modelId, typeId, sn, 
   return response.data
 }
 
-export const createEquipmentAttachment = async ({ equipmentId, attachments }) => {
-  const formData = new FormData()
-  attachments.forEach((file) => {
-    formData.append("attachments", file)
-  })
-
-  const response = await api.post(`/equipments/${equipmentId}/attachments`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data"
-    }
-  })
-
-  return response.data
-}
-
-export const deleteEquipmentAttachment = async ({ equipmentId, attachmentId }) => {
-  const response = await api.delete(`/equipments/${equipmentId}/attachments/${attachmentId}`)
-  return response.data
-}
-
 export const updateEquipment = async ({
   equipmentId,
   brandId,
@@ -67,6 +47,26 @@ export const transferEquipment = async ({ equipmentId, clientId }) => {
 
 export const deleteEquipment = async ({ equipmentId }) => {
   const response = await api.delete(`/equipments/${equipmentId}`)
+  return response.data
+}
+
+export const createEquipmentAttachment = async ({ equipmentId, attachments }) => {
+  const formData = new FormData()
+  attachments.forEach((file) => {
+    formData.append("attachments", file)
+  })
+
+  const response = await api.post(`/equipments/${equipmentId}/attachments`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  })
+
+  return response.data
+}
+
+export const deleteEquipmentAttachment = async ({ equipmentId, attachmentId }) => {
+  const response = await api.delete(`/equipments/${equipmentId}/attachments/${attachmentId}`)
   return response.data
 }
 

@@ -92,6 +92,7 @@ const UserAccountDataForm = ({ user, isLoading, isError }) => {
                       label="Nome de utilizador"
                       error={!!errors.username}
                       helperText={errors.username?.message}
+                      autoComplete="off"
                       InputLabelProps={{ shrink: watch("username")?.length > 0 }}
                     />
                   </FormControl>
@@ -109,6 +110,7 @@ const UserAccountDataForm = ({ user, isLoading, isError }) => {
                       label="E-mail"
                       error={!!errors.email}
                       helperText={errors.email?.message}
+                      autoComplete="off"
                       InputLabelProps={{ shrink: watch("email")?.length > 0 }}
                     />
                   </FormControl>

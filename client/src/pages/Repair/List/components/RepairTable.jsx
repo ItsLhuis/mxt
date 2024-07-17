@@ -109,7 +109,7 @@ const RepairTable = () => {
         align: "left",
         sortable: true,
         renderComponent: ({ row }) => (
-          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1, whiteSpace: "pre" }}>
             <Link to={`/client/${row?.equipment?.client?.id}`}>{row?.equipment?.client?.name}</Link>
             {row?.equipment?.client?.description && (
               <Caption fontSize="small" title={row?.equipment?.client?.description} />
@@ -749,7 +749,14 @@ const RepairTable = () => {
                     align: "left",
                     sortable: true,
                     renderComponent: ({ row }) => {
-                      if (row?.field === "Descrição da entrada") {
+                      if (
+                        row?.field === "Descrição da entrada" ||
+                        row?.field === "Descrição dos acessórios da entrada" ||
+                        row?.field === "Descrição dos problemas reportados" ||
+                        row?.field === "Descrição dos trabalhos realizados" ||
+                        row?.field === "Descrição dos acessórios da intervenção" ||
+                        row?.field === "Descrição da intervenção"
+                      ) {
                         if (row?.after) {
                           return (
                             <Box
@@ -780,33 +787,46 @@ const RepairTable = () => {
                                 <Stack
                                   sx={{
                                     justifyContent: "center",
-                                    alignItems: "flex-start"
+                                    alignItems: "flex-start",
+                                    gap: 1
                                   }}
                                 >
-                                  <Typography variant="p" component="p">
-                                    <b>Cliente:</b> {row?.after?.client?.name}
-                                  </Typography>
-                                  <Typography variant="p" component="p">
-                                    <b>Tipo:</b> {row?.after?.type?.name}
-                                  </Typography>
-                                  <Typography variant="p" component="p">
-                                    <b>Marca:</b> {row?.after?.brand?.name}
-                                  </Typography>
-                                  <Typography variant="p" component="p">
-                                    <b>Modelo:</b> {row?.after?.model?.name}
-                                  </Typography>
                                   <Typography
-                                    variant="p"
-                                    component="p"
+                                    variant="h5"
+                                    component="h5"
+                                    sx={{ wordBreak: "break-all" }}
+                                  >
+                                    {row?.after?.client?.name}
+                                  </Typography>
+                                  <Stack
                                     sx={{
-                                      maxWidth: 200,
-                                      whiteSpace: "nowrap",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis"
+                                      flexDirection: "row",
+                                      gap: 1,
+                                      width: "100%"
                                     }}
                                   >
-                                    <b>Número de série:</b> {row?.after?.sn}
-                                  </Typography>
+                                    <Typography
+                                      variant="p"
+                                      component="p"
+                                      sx={{ wordBreak: "break-all" }}
+                                    >
+                                      {row?.after?.type?.name}
+                                    </Typography>
+                                    <Divider
+                                      flexItem
+                                      sx={{
+                                        borderColor: "var(--outline)",
+                                        borderWidth: 1
+                                      }}
+                                    />
+                                    <Typography
+                                      variant="p"
+                                      component="p"
+                                      sx={{ wordBreak: "break-all" }}
+                                    >
+                                      {row?.after?.brand?.name} {row?.after?.model?.name}
+                                    </Typography>
+                                  </Stack>
                                 </Stack>
                               }
                             />

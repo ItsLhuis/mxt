@@ -3,7 +3,14 @@ import React from "react"
 import { startOfDay, isBefore, isAfter } from "date-fns"
 
 import { DateTimePicker } from "@mui/x-date-pickers"
-import { DialogActions, Button, FormHelperText, FormControl } from "@mui/material"
+import {
+  DialogActions,
+  Button,
+  FormHelperText,
+  FormControl,
+  useTheme,
+  useMediaQuery
+} from "@mui/material"
 import { KeyboardArrowDown } from "@mui/icons-material"
 
 const CustomActionBar = (props) => {
@@ -28,6 +35,9 @@ const CustomActionBar = (props) => {
 const DatePicker = (props) => {
   const { minDate, maxDate, value } = props
 
+  const theme = useTheme()
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"))
+
   const stripTime = (date) => {
     return date ? startOfDay(date) : null
   }
@@ -49,14 +59,18 @@ const DatePicker = (props) => {
           switchViewIcon: KeyboardArrowDown,
           actionBar: CustomActionBar
         }}
+        slotProps={{
+          dialog: {
+            fullScreen,
+            sx: { "& .MuiPaper-root": { borderRadius: fullScreen && "0 !important" } }
+          }
+        }}
         sx={{
           "& .MuiOutlinedInput-notchedOutline": {
-            borderColor:
-              (props.error || isBeforeMinDate || isAfterMaxDate) && "rgb(211, 47, 47) !important"
+            borderColor: hasError && "rgb(211, 47, 47) !important"
           },
           "& .MuiFormLabel-root": {
-            color:
-              (props.error || isBeforeMinDate || isAfterMaxDate) && "rgb(211, 47, 47) !important"
+            color: hasError && "rgb(211, 47, 47) !important"
           }
         }}
         {...props}

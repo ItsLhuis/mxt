@@ -110,6 +110,7 @@ const Company = () => {
                             label="Nome"
                             error={!!errors.name}
                             helperText={errors.name?.message}
+                            autoComplete="off"
                           />
                         </FormControl>
                         <FormControl fullWidth>
@@ -118,6 +119,7 @@ const Company = () => {
                             label="E-mail"
                             error={!!errors.email}
                             helperText={errors.email?.message}
+                            autoComplete="off"
                           />
                         </FormControl>
                         <FormControl fullWidth>
@@ -135,6 +137,7 @@ const Company = () => {
                                 fullWidth
                                 error={!!errors.phoneNumber}
                                 helperText={errors.phoneNumber?.message}
+                                autoComplete="off"
                                 disableDropdown
                               />
                             )}
@@ -145,7 +148,7 @@ const Company = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <FormControl fullWidth>
-                      <TextField {...register("website")} label="Site" />
+                      <TextField {...register("website")} label="Site" autoComplete="off" />
                     </FormControl>
                   </Grid>
                   <Grid item xs={12}>
@@ -155,6 +158,7 @@ const Company = () => {
                         label="País"
                         error={!!errors.country}
                         helperText={errors.country?.message}
+                        autoComplete="off"
                       />
                     </FormControl>
                   </Grid>
@@ -165,6 +169,7 @@ const Company = () => {
                         label="Cidade"
                         error={!!errors.city}
                         helperText={errors.city?.message}
+                        autoComplete="off"
                       />
                     </FormControl>
                   </Grid>
@@ -175,6 +180,7 @@ const Company = () => {
                         label="Localidade"
                         error={!!errors.locality}
                         helperText={errors.locality?.message}
+                        autoComplete="off"
                       />
                     </FormControl>
                   </Grid>
@@ -186,6 +192,7 @@ const Company = () => {
                           label="Morada"
                           error={!!errors.address}
                           helperText={errors.address?.message}
+                          autoComplete="off"
                         />
                       </FormControl>
                       <FormControl sx={{ width: !isSmallScreen ? "60%" : "100%" }}>
@@ -194,6 +201,7 @@ const Company = () => {
                           label="Código Postal"
                           error={!!errors.postalCode}
                           helperText={errors.postalCode?.message}
+                          autoComplete="off"
                         />
                       </FormControl>
                     </Stack>

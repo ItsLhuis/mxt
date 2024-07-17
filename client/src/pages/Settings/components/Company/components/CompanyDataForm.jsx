@@ -120,6 +120,7 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                           label="Nome"
                           error={!!errors.name}
                           helperText={errors.name?.message}
+                          autoComplete="off"
                         />
                       </FormControl>
                     }
@@ -134,6 +135,7 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                           label="E-mail"
                           error={!!errors.email}
                           helperText={errors.email?.message}
+                          autoComplete="off"
                         />
                       </FormControl>
                     }
@@ -157,6 +159,7 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                               fullWidth
                               error={!!errors.phoneNumber}
                               helperText={errors.phoneNumber?.message}
+                              autoComplete="off"
                               disableDropdown
                             />
                           )}
@@ -173,7 +176,7 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                 LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                 LoadedComponent={
                   <FormControl fullWidth>
-                    <TextField {...register("website")} label="Site" />
+                    <TextField {...register("website")} label="Site" autoComplete="off" />
                   </FormControl>
                 }
               />
@@ -189,6 +192,7 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                       label="País"
                       error={!!errors.country}
                       helperText={errors.country?.message}
+                      autoComplete="off"
                     />
                   </FormControl>
                 }
@@ -205,6 +209,7 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                       label="Cidade"
                       error={!!errors.city}
                       helperText={errors.city?.message}
+                      autoComplete="off"
                     />
                   </FormControl>
                 }
@@ -221,6 +226,7 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                       label="Localidade"
                       error={!!errors.locality}
                       helperText={errors.locality?.message}
+                      autoComplete="off"
                     />
                   </FormControl>
                 }
@@ -239,6 +245,7 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                           label="Morada"
                           error={!!errors.address}
                           helperText={errors.address?.message}
+                          autoComplete="off"
                         />
                       </FormControl>
                     }
@@ -255,6 +262,7 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                           label="Código Postal"
                           error={!!errors.postalCode}
                           helperText={errors.postalCode?.message}
+                          autoComplete="off"
                         />
                       </FormControl>
                     }

@@ -120,6 +120,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                       label="Nome"
                       error={!!errors.name}
                       helperText={errors.name?.message}
+                      autoComplete="off"
                       InputLabelProps={{ shrink: watch("name")?.length > 0 }}
                     />
                   </FormControl>
@@ -145,6 +146,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                           fullWidth
                           error={!!errors.phoneNumber}
                           helperText={errors.phoneNumber?.message}
+                          autoComplete="off"
                           disableDropdown
                         />
                       )}
@@ -164,6 +166,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                       label="País"
                       error={!!errors.country}
                       helperText={errors.country?.message}
+                      autoComplete="off"
                       InputLabelProps={{ shrink: watch("country")?.length > 0 }}
                     />
                   </FormControl>
@@ -181,6 +184,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                       label="Cidade"
                       error={!!errors.city}
                       helperText={errors.city?.message}
+                      autoComplete="off"
                       InputLabelProps={{ shrink: watch("city")?.length > 0 }}
                     />
                   </FormControl>
@@ -198,6 +202,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                       label="Localidade"
                       error={!!errors.locality}
                       helperText={errors.locality?.message}
+                      autoComplete="off"
                       InputLabelProps={{ shrink: watch("locality")?.length > 0 }}
                     />
                   </FormControl>
@@ -217,6 +222,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                           label="Morada"
                           error={!!errors.address}
                           helperText={errors.address?.message}
+                          autoComplete="off"
                           InputLabelProps={{ shrink: watch("address")?.length > 0 }}
                         />
                       </FormControl>
@@ -234,6 +240,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                           label="Código Postal"
                           error={!!errors.postalCode}
                           helperText={errors.postalCode?.message}
+                          autoComplete="off"
                           InputLabelProps={{ shrink: watch("postalCode")?.length > 0 }}
                         />
                       </FormControl>

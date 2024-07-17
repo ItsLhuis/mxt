@@ -67,9 +67,7 @@ const SendEmailForm = () => {
   const { sendEmail } = useEmail()
 
   const onSubmit = async (data) => {
-    await sendEmail
-      .mutateAsync({ ...data, title: data.subject })
-      .then(() => navigate("/email/list"))
+    await sendEmail.mutateAsync({ ...data, text: data.subject }).then(() => navigate("/email/list"))
   }
 
   return (
@@ -172,12 +170,12 @@ const SendEmailForm = () => {
         open={clientModal.isOpen ?? false}
         onClose={closeClientModal}
         mode="data"
-        data={(findAllClients.data ?? [])
-          .map((client) => ({
+        data={
+          findAllClients.data?.map((client) => ({
             ...client,
-            contacts: client.contacts.filter((contact) => contact.type === "E-mail")
-          }))
-          .filter((client) => client.contacts.length > 0)}
+            filteredContacts: client.contacts.filter((contact) => contact.type === "E-mail")
+          })) ?? []
+        }
         searchKeys={["name", "contacts.contact"]}
         isLoading={findAllClients.isLoading}
         title="E-mails dos Clientes"
@@ -218,6 +216,7 @@ const SendEmailForm = () => {
                       alignItems: "flex-start",
                       padding: "16px !important",
                       width: "100%",
+                      minHeight: "unset !important",
                       border: 2,
                       borderColor:
                         contact.id === clientModal.contact.id

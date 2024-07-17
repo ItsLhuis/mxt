@@ -12,6 +12,10 @@ body {
   color: var(--onSurface);
 }
 
+body::-webkit-scrollbar {
+  display: none;
+}
+
 p {
   font-size: 13px;
 }
@@ -504,6 +508,10 @@ input[type=number]::-webkit-outer-spin-button {
 .MuiDialogContent-root .MuiPickersLayout-root .MuiPickersLayout-actionBar {
   background-color: var(--background);
   border-radius: 8px;
+}
+
+.MuiDialogContent-root .MuiPickersLayout-root {
+  height: 100%;
 }
 
 .MuiDialogContent-root .MuiPickersLayout-root .MuiPickersToolbar-root {

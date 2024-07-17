@@ -4,11 +4,11 @@ import {
   getAllEquipments,
   getEquipmentById,
   createEquipment,
-  createEquipmentAttachment,
-  deleteEquipmentAttachment as deleteEquipmentAttachmentApi,
   updateEquipment as updateEquipmentApi,
   transferEquipment as transferEquipmentApi,
   deleteEquipment as deleteEquipmentApi,
+  createEquipmentAttachment,
+  deleteEquipmentAttachment as deleteEquipmentAttachmentApi,
   getAllEquipmentTypes,
   createEquipmentType,
   updateEquipmentType as updateEquipmentTypeApi,
@@ -56,32 +56,6 @@ export const useEquipment = () => {
     }
   })
 
-  const addNewEquipmentAttachment = useMutation({
-    mutationFn: createEquipmentAttachment,
-    onSuccess: async (data, variables) => {
-      const equipmentId = variables.equipmentId
-      await queryClient.invalidateQueries(["equipments"])
-      await queryClient.invalidateQueries(["equipments", equipmentId])
-      showSuccessToast("Anexo adicionado com sucesso!")
-    },
-    onError: () => {
-      showErrorToast("Erro ao adicionar anexo!")
-    }
-  })
-
-  const deleteEquipmentAttachment = useMutation({
-    mutationFn: deleteEquipmentAttachmentApi,
-    onSuccess: async (data, variables) => {
-      const equipmentId = variables.equipmentId
-      await queryClient.invalidateQueries(["equipments"])
-      await queryClient.invalidateQueries(["equipments", equipmentId])
-      showSuccessToast("Anexo eliminado com sucesso!")
-    },
-    onError: () => {
-      showErrorToast("Erro ao eliminar anexo!")
-    }
-  })
-
   const updateEquipment = useMutation({
     mutationFn: updateEquipmentApi,
     onSuccess: async (data, variables) => {
@@ -114,6 +88,32 @@ export const useEquipment = () => {
     },
     onError: () => {
       showErrorToast("Erro ao eliminar equipamento!")
+    }
+  })
+
+  const addNewEquipmentAttachment = useMutation({
+    mutationFn: createEquipmentAttachment,
+    onSuccess: async (data, variables) => {
+      const equipmentId = variables.equipmentId
+      await queryClient.invalidateQueries(["equipments"])
+      await queryClient.invalidateQueries(["equipments", equipmentId])
+      showSuccessToast("Anexo adicionado com sucesso!")
+    },
+    onError: () => {
+      showErrorToast("Erro ao adicionar anexo!")
+    }
+  })
+
+  const deleteEquipmentAttachment = useMutation({
+    mutationFn: deleteEquipmentAttachmentApi,
+    onSuccess: async (data, variables) => {
+      const equipmentId = variables.equipmentId
+      await queryClient.invalidateQueries(["equipments"])
+      await queryClient.invalidateQueries(["equipments", equipmentId])
+      showSuccessToast("Anexo eliminado com sucesso!")
+    },
+    onError: () => {
+      showErrorToast("Erro ao eliminar anexo!")
     }
   })
 
@@ -224,11 +224,11 @@ export const useEquipment = () => {
     findAllEquipments,
     findEquipmentById,
     createNewEquipment,
-    addNewEquipmentAttachment,
-    deleteEquipmentAttachment,
     updateEquipment,
     transferEquipment,
     deleteEquipment,
+    addNewEquipmentAttachment,
+    deleteEquipmentAttachment,
     findAllEquipmentTypes,
     createNewEquipmentType,
     updateEquipmentType,

@@ -2,18 +2,19 @@ import React, { useMemo } from "react"
 
 import { BASE_URL } from "@api"
 
-import { Box, Stack, Paper, Divider, Typography } from "@mui/material"
+import { Box, Stack, Paper, Divider, Typography, Chip } from "@mui/material"
 import { History, Check, Close, PictureAsPdf, Image, QuestionMark } from "@mui/icons-material"
 
-import { HeaderSection, Loadable, Table, TableSkeleton, Avatar } from "@components/ui"
+import { HeaderSection, Loadable, Table, TableSkeleton, Avatar, Caption } from "@components/ui"
 
+import { getValidChipColor } from "@utils/getValidChipColor"
 import { formatHTML } from "@utils/format/formatHTML"
-import { formatDate, formatTime } from "@utils/format/date"
+import { formatDateTime, formatDate, formatTime } from "@utils/format/date"
 
-const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
-  const isEquipmentFinished = !isLoading && !isError
+const RepairInteractionsHistoryTable = ({ repair, isLoading, isError }) => {
+  const isRepairFinished = !isLoading && !isError
 
-  const equipmentInteractionsHistoryTableColumns = useMemo(
+  const repairInteractionsHistoryTableColumns = useMemo(
     () => [
       {
         id: "type",
@@ -96,7 +97,7 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
     []
   )
 
-  const ExpandableEquipmentsInteractionsHistoryTableContent = useMemo(
+  const ExpandableRepairsInteractionsHistoryTableContent = useMemo(
     () =>
       ({ row }) => {
         const interactionsHistoryDetailsTableColumns = useMemo(
@@ -113,8 +114,15 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
               align: "left",
               sortable: true,
               renderComponent: ({ row }) => {
-                if (row.field === "Descrição") {
-                  if (row.before) {
+                if (
+                  row?.field === "Descrição da entrada" ||
+                  row?.field === "Descrição dos acessórios da entrada" ||
+                  row?.field === "Descrição dos problemas reportados" ||
+                  row?.field === "Descrição dos trabalhos realizados" ||
+                  row?.field === "Descrição dos acessórios da intervenção" ||
+                  row?.field === "Descrição da intervenção"
+                ) {
+                  if (row?.before) {
                     return (
                       <Box
                         sx={{
@@ -128,46 +136,57 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
                       >
                         <span
                           className="table-cell-tiptap-editor"
-                          dangerouslySetInnerHTML={formatHTML(row.before)}
+                          dangerouslySetInnerHTML={formatHTML(row?.before)}
                         />
                       </Box>
                     )
                   }
                 }
 
-                if (row.field === "Cliente") {
-                  if (row.before) {
+                if (row?.field === "Estado") {
+                  if (row?.before) {
                     return (
-                      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-                        {row.before.name}
-                        {row.before.description && (
-                          <Caption fontSize="small" title={row.before.description} />
-                        )}
-                      </Stack>
+                      <Chip
+                        label={row?.before?.name}
+                        color={getValidChipColor(row?.before?.color)}
+                      />
                     )
                   }
                 }
 
-                if (row.field === "Tipo") {
-                  if (row.before) {
-                    return <>{row.before.name}</>
+                if (
+                  row?.field === "Data de entrada" ||
+                  row?.field === "Data de conclusão" ||
+                  row?.field === "Data de entrega"
+                ) {
+                  if (row?.before) {
+                    return <>{formatDateTime(row?.before)}</>
                   }
                 }
 
-                if (row.field === "Marca") {
-                  if (row.before) {
-                    return <>{row.before.name}</>
+                if (row?.field === "Cliente notificado") {
+                  return <>{row?.before ? <Check color="success" /> : <Close color="error" />}</>
+                }
+
+                if (
+                  row?.field === "Acessórios da entrada" ||
+                  row?.field === "Problemas reportados" ||
+                  row?.field === "Trabalhos realizados" ||
+                  row?.field === "Acessórios da intervenção"
+                ) {
+                  if (row?.before && row?.before.length > 0) {
+                    return row?.before.map((item) => item?.name).join(", ")
+                  } else {
+                    return (
+                      <Typography variant="p" component="p" color="var(--outline)">
+                        Sem valor
+                      </Typography>
+                    )
                   }
                 }
 
-                if (row.field === "Modelo") {
-                  if (row.before) {
-                    return <>{row.before.name}</>
-                  }
-                }
-
-                return row.before ? (
-                  row.before
+                return row?.before ? (
+                  row?.before
                 ) : (
                   <Typography variant="p" component="p" color="var(--outline)">
                     Sem valor
@@ -181,8 +200,15 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
               align: "left",
               sortable: true,
               renderComponent: ({ row }) => {
-                if (row.field === "Descrição") {
-                  if (row.after) {
+                if (
+                  row?.field === "Descrição da entrada" ||
+                  row?.field === "Descrição dos acessórios da entrada" ||
+                  row?.field === "Descrição dos problemas reportados" ||
+                  row?.field === "Descrição dos trabalhos realizados" ||
+                  row?.field === "Descrição dos acessórios da intervenção" ||
+                  row?.field === "Descrição da intervenção"
+                ) {
+                  if (row?.after) {
                     return (
                       <Box
                         sx={{
@@ -196,46 +222,98 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
                       >
                         <span
                           className="table-cell-tiptap-editor"
-                          dangerouslySetInnerHTML={formatHTML(row.after)}
+                          dangerouslySetInnerHTML={formatHTML(row?.after)}
                         />
                       </Box>
                     )
                   }
                 }
 
-                if (row.field === "Cliente") {
-                  if (row.after) {
+                if (row?.field === "Equipamento") {
+                  if (row?.after) {
                     return (
-                      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-                        {row.after.name}
-                        {row.after.description && (
-                          <Caption fontSize="small" title={row.after.description} />
-                        )}
-                      </Stack>
+                      <Caption
+                        fontSize="small"
+                        title={
+                          <Stack
+                            sx={{
+                              justifyContent: "center",
+                              alignItems: "flex-start",
+                              gap: 1
+                            }}
+                          >
+                            <Typography variant="h5" component="h5" sx={{ wordBreak: "break-all" }}>
+                              {row?.after?.client?.name}
+                            </Typography>
+                            <Stack
+                              sx={{
+                                flexDirection: "row",
+                                gap: 1,
+                                width: "100%"
+                              }}
+                            >
+                              <Typography variant="p" component="p" sx={{ wordBreak: "break-all" }}>
+                                {row?.after?.type?.name}
+                              </Typography>
+                              <Divider
+                                flexItem
+                                sx={{
+                                  borderColor: "var(--outline)",
+                                  borderWidth: 1
+                                }}
+                              />
+                              <Typography variant="p" component="p" sx={{ wordBreak: "break-all" }}>
+                                {row?.after?.brand?.name} {row?.after?.model?.name}
+                              </Typography>
+                            </Stack>
+                          </Stack>
+                        }
+                      />
                     )
                   }
                 }
 
-                if (row.field === "Tipo") {
-                  if (row.after) {
-                    return <>{row.after.name}</>
+                if (row?.field === "Estado") {
+                  if (row?.after) {
+                    return (
+                      <Chip label={row?.after?.name} color={getValidChipColor(row?.after?.color)} />
+                    )
                   }
                 }
 
-                if (row.field === "Marca") {
-                  if (row.after) {
-                    return <>{row.after.name}</>
+                if (
+                  row?.field === "Data de entrada" ||
+                  row?.field === "Data de conclusão" ||
+                  row?.field === "Data de entrega"
+                ) {
+                  if (row?.after) {
+                    return <>{formatDateTime(row?.after)}</>
                   }
                 }
 
-                if (row.field === "Modelo") {
-                  if (row.after) {
-                    return <>{row.after.name}</>
+                if (row?.field === "Cliente notificado") {
+                  return <>{row?.after ? <Check color="success" /> : <Close color="error" />}</>
+                }
+
+                if (
+                  row?.field === "Acessórios da entrada" ||
+                  row?.field === "Problemas reportados" ||
+                  row?.field === "Trabalhos realizados" ||
+                  row?.field === "Acessórios da intervenção"
+                ) {
+                  if (row?.after && row?.after.length > 0) {
+                    return row?.after.map((item) => item?.name).join(", ")
+                  } else {
+                    return (
+                      <Typography variant="p" component="p" color="var(--outline)">
+                        Sem valor
+                      </Typography>
+                    )
                   }
                 }
 
-                return row.after ? (
-                  row.after
+                return row?.after ? (
+                  row?.after
                 ) : (
                   <Typography variant="p" component="p" color="var(--outline)">
                     Sem valor
@@ -249,7 +327,7 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
               align: "left",
               sortable: true,
               renderComponent: ({ row }) => (
-                <>{row.changed ? <Check color="success" /> : <Close color="error" />}</>
+                <>{row?.changed ? <Check color="success" /> : <Close color="error" />}</>
               )
             }
           ],
@@ -336,11 +414,11 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
     <Paper elevation={1}>
       <HeaderSection
         title="Histórico de Atividades"
-        description="Histórico de atividades sobre o equipamento"
+        description="Histórico de atividades sobre a reparação"
         icon={<History />}
       />
       <Loadable
-        isLoading={!isEquipmentFinished}
+        isLoading={!isRepairFinished}
         LoadingComponent={<TableSkeleton mode="datatable" />}
         LoadedComponent={
           <Box
@@ -353,9 +431,9 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
           >
             <Table
               mode="datatable"
-              data={isEquipmentFinished ? equipment[0].interactions_history : []}
-              columns={equipmentInteractionsHistoryTableColumns}
-              ExpandableContentComponent={ExpandableEquipmentsInteractionsHistoryTableContent}
+              data={isRepairFinished ? repair[0].interactions_history : []}
+              columns={repairInteractionsHistoryTableColumns}
+              ExpandableContentComponent={ExpandableRepairsInteractionsHistoryTableContent}
             />
           </Box>
         }
@@ -364,4 +442,4 @@ const ClientInteractionsHistoryTable = ({ equipment, isLoading, isError }) => {
   )
 }
 
-export default ClientInteractionsHistoryTable
+export default RepairInteractionsHistoryTable

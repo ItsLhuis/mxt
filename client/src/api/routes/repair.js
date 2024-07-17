@@ -5,8 +5,23 @@ export const getAllRepairs = async () => {
   return response.data
 }
 
+export const getRepairById = async ({ repairId }) => {
+  const response = await api.get(`/repairs/${repairId}`)
+  return response.data
+}
+
 export const createRepair = async ({ equipmentId, statusId, entryDescription, entryDatetime }) => {
   const response = await api.post("/repairs", {
+    equipmentId,
+    statusId,
+    entryDescription,
+    entryDatetime
+  })
+  return response.data
+}
+
+export const updateRepair = async ({ equipmentId, statusId, entryDescription, entryDatetime }) => {
+  const response = await api.put("/repairs", {
     equipmentId,
     statusId,
     entryDescription,

@@ -24,8 +24,8 @@ const TabPanel = (props) => {
   const { children, value, index, ...other } = props
 
   return (
-    <div
-      style={{ marginTop: "24px" }}
+    <Box
+      sx={{ marginTop: 3 }}
       role="tabpanel"
       hidden={value !== index}
       id={`settings-tabpanel-${index}`}
@@ -33,7 +33,7 @@ const TabPanel = (props) => {
       {...other}
     >
       {children}
-    </div>
+    </Box>
   )
 }
 
@@ -51,7 +51,7 @@ const Settings = () => {
 
   const [tabValue, setTabValue] = useState(0)
 
-  const handleChange = (_, newValue) => {
+  const handleTabChange = (_, newValue) => {
     setTabValue(newValue)
   }
 
@@ -78,12 +78,11 @@ const Settings = () => {
             <Box sx={{ width: "100%", marginTop: 2 }}>
               <Tabs
                 value={tabValue}
-                onChange={handleChange}
+                onChange={handleTabChange}
                 aria-label="settings-tabs"
                 variant="scrollable"
                 scrollButtons="auto"
                 allowScrollButtonsMobile
-                sx={{ borderBottom: "1px solid var(--elevation-level5)" }}
               >
                 {tabsInfo.map((tab) => (
                   <Tab

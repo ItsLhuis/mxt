@@ -74,8 +74,8 @@ const HeaderPage = ({
         <Stack sx={{ gap: 0.8 }}>
           <Stack
             sx={{
-              flexDirection: "row",
-              alignItems: "center",
+              flexDirection: refetchFunction && isMediumScreen ? "column-reverse" : "row",
+              alignItems: refetchFunction && isMediumScreen ? "flex-start" : "center",
               justifyContent: "flex-start",
               gap: 1
             }}
@@ -88,7 +88,7 @@ const HeaderPage = ({
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
-                gap: 1,
+                gap: isMediumScreen ? 1 : 2,
                 height: 30
               }}
             >
@@ -104,7 +104,11 @@ const HeaderPage = ({
                       type: "spring"
                     }}
                   >
-                    <IconButton onClick={handleRefetch} disabled={isRefetching || !isRefetchEnable}>
+                    <IconButton
+                      onClick={handleRefetch}
+                      disabled={isRefetching || !isRefetchEnable}
+                      edge={isMediumScreen ? "start" : ""}
+                    >
                       <Refresh fontSize="small" />
                     </IconButton>
                   </motion.span>
