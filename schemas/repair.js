@@ -19,10 +19,10 @@ const updateRepairSchema = z.object({
   conclusionDatetime: z.coerce.date().optional().nullable(),
   deliveryDatetime: z.coerce.date().optional().nullable(),
   isClientNotified: z.boolean(),
-  entryAccessoriesIds: z.array(z.number()).optional().nullable(),
-  entryReportedIssuesIds: z.array(z.number()).optional().nullable(),
-  interventionWorksDoneIds: z.array(z.number()).optional().nullable(),
-  interventionAccessoriesUsedIds: z.array(z.number()).optional().nullable()
+  entryAccessories: z.array(z.number()).optional().nullable(),
+  entryReportedIssues: z.array(z.number()).optional().nullable(),
+  interventionWorksDone: z.array(z.number()).optional().nullable(),
+  interventionAccessoriesUsed: z.array(z.number()).optional().nullable()
 })
 
 const optionsSchema = z.object({

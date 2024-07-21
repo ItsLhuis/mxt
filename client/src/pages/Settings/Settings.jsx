@@ -85,13 +85,7 @@ const Settings = () => {
                 allowScrollButtonsMobile
               >
                 {tabsInfo.map((tab) => (
-                  <Tab
-                    key={tab.name}
-                    label={tab.name}
-                    icon={tab.icon}
-                    disableRipple
-                    {...tabProps(tab.name)}
-                  />
+                  <Tab key={tab.name} label={tab.name} icon={tab.icon} {...tabProps(tab.name)} />
                 ))}
               </Tabs>
               {tabsInfo.map((tab, index) => (

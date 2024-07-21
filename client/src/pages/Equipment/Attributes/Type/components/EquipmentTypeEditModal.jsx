@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 
-import { useForm } from "react-hook-form"
+import { useForm, useFormState } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { typeSchema } from "@schemas/equipment"
 
@@ -13,22 +13,6 @@ import { Modal } from "@components/ui"
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
 const EquipmentTypeEditModal = ({ type, open, onClose }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-    reset,
-    watch
-  } = useForm({
-    resolver: zodResolver(typeSchema),
-    defaultValues: {
-      name: ""
-    }
-  })
-
-  const { updateEquipmentType } = useEquipment()
-
   const nameInputRef = useRef(null)
 
   useEffect(() => {
@@ -43,18 +27,34 @@ const EquipmentTypeEditModal = ({ type, open, onClose }) => {
     return () => clearTimeout(timer)
   }, [open])
 
+  const {
+    control,
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+    setError,
+    reset,
+  } = useForm({
+    resolver: zodResolver(typeSchema)
+  })
+
+  const initialValues = {
+    name: type?.name || ""
+  }
+
+  const { isDirty } = useFormState({ control })
+  const isFormUnchanged = () => {
+    return !isDirty
+  }
+
   useEffect(() => {
     if (type) {
-      reset({
-        name: type.name || ""
-      })
+      reset(initialValues)
     }
   }, [type])
 
-  const isFormUnchanged = () => {
-    const values = watch()
-    return values.name === type?.name
-  }
+  const { updateEquipmentType } = useEquipment()
 
   const onSubmit = async (data) => {
     if (!isFormUnchanged()) {
@@ -103,7 +103,7 @@ const EquipmentTypeEditModal = ({ type, open, onClose }) => {
             helperText={errors.name?.message}
             autoComplete="off"
             inputRef={nameInputRef}
-            InputLabelProps={{ shrink: watch("name")?.length > 0 }}
+            InputLabelProps={{ shrink: getValues("name")?.length > 0 }}
           />
         </FormControl>
       </Box>

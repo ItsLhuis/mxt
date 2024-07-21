@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 
-import { useForm } from "react-hook-form"
+import { useForm, useFormState } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { brandSchema } from "@schemas/equipment"
 
@@ -13,22 +13,6 @@ import { Modal } from "@components/ui"
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
 const EquipmentBrandEditModal = ({ brand, open, onClose }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-    reset,
-    watch
-  } = useForm({
-    resolver: zodResolver(brandSchema),
-    defaultValues: {
-      name: ""
-    }
-  })
-
-  const { updateEquipmentBrand } = useEquipment()
-
   const nameInputRef = useRef(null)
 
   useEffect(() => {
@@ -43,18 +27,34 @@ const EquipmentBrandEditModal = ({ brand, open, onClose }) => {
     return () => clearTimeout(timer)
   }, [open])
 
+  const {
+    control,
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+    setError,
+    reset
+  } = useForm({
+    resolver: zodResolver(brandSchema)
+  })
+
+  const initialValues = {
+    name: brand?.name || ""
+  }
+
+  const { isDirty } = useFormState({ control })
+  const isFormUnchanged = () => {
+    return !isDirty
+  }
+
   useEffect(() => {
     if (brand) {
-      reset({
-        name: brand.name || ""
-      })
+      reset(initialValues)
     }
   }, [brand])
 
-  const isFormUnchanged = () => {
-    const values = watch()
-    return values.name === brand?.name
-  }
+  const { updateEquipmentBrand } = useEquipment()
 
   const onSubmit = async (data) => {
     if (!isFormUnchanged()) {
@@ -103,7 +103,7 @@ const EquipmentBrandEditModal = ({ brand, open, onClose }) => {
             helperText={errors.name?.message}
             autoComplete="off"
             inputRef={nameInputRef}
-            InputLabelProps={{ shrink: watch("name")?.length > 0 }}
+            InputLabelProps={{ shrink: getValues("name")?.length > 0 }}
           />
         </FormControl>
       </Box>

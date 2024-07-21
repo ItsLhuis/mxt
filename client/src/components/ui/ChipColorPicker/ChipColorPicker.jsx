@@ -14,7 +14,7 @@ const ChipColorPicker = ({
   selected = "default",
   onChange,
   error,
-  errorMessage
+  helperText
 }) => {
   return (
     <Stack>
@@ -69,7 +69,7 @@ const ChipColorPicker = ({
         />
         {error && (
           <FormHelperText error={error} sx={{ marginLeft: 2, marginTop: 0.5 }}>
-            {errorMessage}
+            {helperText}
           </FormHelperText>
         )}
       </Stack>
@@ -83,7 +83,7 @@ ChipColorPicker.propTypes = {
   selected: PropTypes.string,
   onChange: PropTypes.func,
   error: PropTypes.bool,
-  errorMessage: PropTypes.string
+  helperText: PropTypes.string
 }
 
 export default ChipColorPicker

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 
-import { useForm, Controller } from "react-hook-form"
+import { useForm, useFormState, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { modelSchema } from "@schemas/equipment"
 
@@ -13,24 +13,6 @@ import { Modal, Loadable, Select } from "@components/ui"
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
 const EquipmentModelEditModal = ({ model, open, onClose }) => {
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-    reset,
-    watch
-  } = useForm({
-    resolver: zodResolver(modelSchema),
-    defaultValues: {
-      brandId: "",
-      name: ""
-    }
-  })
-
-  const { findAllEquipmentBrands, updateEquipmentModel } = useEquipment()
-
   const brandInputRef = useRef(null)
 
   useEffect(() => {
@@ -45,19 +27,35 @@ const EquipmentModelEditModal = ({ model, open, onClose }) => {
     return () => clearTimeout(timer)
   }, [open])
 
+  const {
+    control,
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+    setError,
+    reset
+  } = useForm({
+    resolver: zodResolver(modelSchema)
+  })
+
+  const initialValues = {
+    brandId: model?.brand?.id || "",
+    name: model?.name || ""
+  }
+
+  const { isDirty } = useFormState({ control })
+  const isFormUnchanged = () => {
+    return !isDirty
+  }
+
   useEffect(() => {
     if (model) {
-      reset({
-        brandId: model.brand.id || "",
-        name: model.name || ""
-      })
+      reset(initialValues)
     }
   }, [model])
 
-  const isFormUnchanged = () => {
-    const values = watch()
-    return values.name === model?.name
-  }
+  const { findAllEquipmentBrands, updateEquipmentModel } = useEquipment()
 
   const onSubmit = async (data) => {
     if (!isFormUnchanged()) {
@@ -143,7 +141,7 @@ const EquipmentModelEditModal = ({ model, open, onClose }) => {
             error={!!errors.name}
             helperText={errors.name?.message}
             autoComplete="off"
-            InputLabelProps={{ shrink: watch("name")?.length > 0 }}
+            InputLabelProps={{ shrink: getValues("name")?.length > 0 }}
           />
         </FormControl>
       </Stack>

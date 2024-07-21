@@ -5,7 +5,7 @@ import { BASE_URL } from "@api"
 import { Box, Stack, Paper, Divider, Typography } from "@mui/material"
 import { History, Check, Close, PictureAsPdf, Image, QuestionMark } from "@mui/icons-material"
 
-import { HeaderSection, Loadable, Table, TableSkeleton, Avatar } from "@components/ui"
+import { HeaderSection, Loadable, Table, TableSkeleton, Avatar, Caption } from "@components/ui"
 
 import { formatHTML } from "@utils/format/formatHTML"
 import { formatDate, formatTime } from "@utils/format/date"

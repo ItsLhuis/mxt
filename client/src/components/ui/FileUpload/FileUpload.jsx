@@ -35,7 +35,7 @@ const FileUpload = ({
   label,
   onChange,
   error,
-  errorMessage,
+  helperText,
   disabled = false,
   acceptedFiles = {
     "image/png": [".png"],
@@ -210,7 +210,7 @@ const FileUpload = ({
               ? "Os seguintes ficheiros selecionados: "
               : "O seguinte ficheiro selecionado: "}
             {files.map((file, index) => (
-              <ListItem sx={{ display: "list-item" }}>
+              <ListItem key={index} sx={{ display: "list-item" }}>
                 {file.name}
                 {index < files.length - 1 ? ", " : ""}
               </ListItem>
@@ -361,8 +361,7 @@ const FileUpload = ({
                 component="p"
                 sx={{ color: fileUploadError ? "rgb(211, 47, 47)" : "var(--outline)" }}
               >
-                Tamanho máximo de {Math.floor((maxSize / (1024 * 1024)).toFixed(2))} Mb por
-                ficheiro
+                Tamanho máximo de {Math.floor((maxSize / (1024 * 1024)).toFixed(2))} Mb por ficheiro
               </Typography>
               {maxTotalFileSize !== Infinity && (
                 <Typography
@@ -396,7 +395,7 @@ const FileUpload = ({
       </ButtonBase>
       {fileUploadError && (
         <FormHelperText error={error} sx={{ marginLeft: 2 }}>
-          {errorMessage}
+          {helperText}
         </FormHelperText>
       )}
       {invalidFiles.length > 0 && <>{renderInvalidFiles(invalidFiles)}</>}
@@ -409,7 +408,7 @@ FileUpload.propTypes = {
   value: PropTypes.array,
   onChange: PropTypes.func,
   error: PropTypes.bool,
-  errorMessage: PropTypes.string,
+  helperText: PropTypes.string,
   disabled: PropTypes.bool,
   acceptedFiles: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   maxSize: PropTypes.number,

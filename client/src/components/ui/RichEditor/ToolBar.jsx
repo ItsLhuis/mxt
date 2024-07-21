@@ -67,7 +67,7 @@ const LinkForm = ({ insertLink, linkUrl, handleLinkUrlChange, onClose }) => {
   )
 }
 
-const MenuBar = ({ editor, fullscreen, toggleFullscreen }) => {
+const ToolBar = ({ editor, fullscreen, toggleFullscreen }) => {
   const textModes = [
     {
       label: "Muito grande",
@@ -584,4 +584,4 @@ const MenuBar = ({ editor, fullscreen, toggleFullscreen }) => {
   )
 }
 
-export default MenuBar
+export default ToolBar

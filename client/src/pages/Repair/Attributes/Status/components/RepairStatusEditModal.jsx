@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 
-import { useForm, Controller } from "react-hook-form"
+import { useForm, useFormState, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { repairStatusSchema } from "@schemas/repair"
 
@@ -13,31 +13,10 @@ import { Modal, ChipColorPicker } from "@components/ui"
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
 const RepairStatusEditModal = ({ status, open, onClose }) => {
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-    reset,
-    watch
-  } = useForm({
-    resolver: zodResolver(repairStatusSchema),
-    defaultValues: {
-      color: "default",
-      name: ""
-    }
-  })
-
-  const { updateRepairStatus } = useRepair()
-
   const nameInputRef = useRef(null)
 
   useEffect(() => {
-    if (!open) {
-      reset()
-      return
-    }
+    if (!open) return
 
     const timer = setTimeout(() => {
       if (open && nameInputRef.current) {
@@ -48,19 +27,35 @@ const RepairStatusEditModal = ({ status, open, onClose }) => {
     return () => clearTimeout(timer)
   }, [open])
 
+  const {
+    control,
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+    setError,
+    reset
+  } = useForm({
+    resolver: zodResolver(repairStatusSchema)
+  })
+
+  const initialValues = {
+    color: status?.color || "default",
+    name: status?.name || ""
+  }
+
+  const { isDirty } = useFormState({ control })
+  const isFormUnchanged = () => {
+    return !isDirty
+  }
+
   useEffect(() => {
     if (status) {
-      reset({
-        color: status.color || "default",
-        name: status.name || ""
-      })
+      reset(initialValues)
     }
   }, [status])
 
-  const isFormUnchanged = () => {
-    const values = watch()
-    return values.color === status?.color && values.name === status?.name
-  }
+  const { updateRepairStatus } = useRepair()
 
   const onSubmit = async (data) => {
     if (!isFormUnchanged()) {
@@ -118,6 +113,7 @@ const RepairStatusEditModal = ({ status, open, onClose }) => {
             helperText={errors.name?.message}
             autoComplete="off"
             inputRef={nameInputRef}
+            InputLabelProps={{ shrink: getValues("name")?.length > 0 }}
           />
         </FormControl>
       </Stack>

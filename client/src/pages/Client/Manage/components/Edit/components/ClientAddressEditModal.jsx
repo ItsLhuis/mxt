@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 
-import { useForm } from "react-hook-form"
+import { useForm, useFormState } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { clientAddressSchema } from "@schemas/client"
 
@@ -13,26 +13,6 @@ import { Modal } from "@components/ui"
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
 const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-    reset,
-    watch
-  } = useForm({
-    resolver: zodResolver(clientAddressSchema),
-    defaultValues: {
-      country: "",
-      city: "",
-      locality: "",
-      address: "",
-      postalCode: ""
-    }
-  })
-
-  const { updateAddressClient } = useClient()
-
   const countryInputRef = useRef(null)
 
   useEffect(() => {
@@ -47,28 +27,38 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
     return () => clearTimeout(timer)
   }, [open])
 
+  const {
+    control,
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+    setError,
+    reset
+  } = useForm({
+    resolver: zodResolver(clientAddressSchema)
+  })
+
+  const initialValues = {
+    country: clientAddress?.country || "",
+    city: clientAddress?.city || "",
+    locality: clientAddress?.locality || "",
+    address: clientAddress?.address || "",
+    postalCode: clientAddress?.postal_code || ""
+  }
+
+  const { isDirty } = useFormState({ control })
+  const isFormUnchanged = () => {
+    return !isDirty
+  }
+
   useEffect(() => {
     if (clientAddress) {
-      reset({
-        country: clientAddress.country || "",
-        city: clientAddress.city || "",
-        locality: clientAddress.locality || "",
-        address: clientAddress.address || "",
-        postalCode: clientAddress.postal_code || ""
-      })
+      reset(initialValues)
     }
   }, [clientAddress])
 
-  const isFormUnchanged = () => {
-    const values = watch()
-    return (
-      values.country === clientAddress?.country &&
-      values.city === clientAddress?.city &&
-      values.locality === clientAddress?.locality &&
-      values.address === clientAddress?.address &&
-      values.postalCode === clientAddress?.postal_code
-    )
-  }
+  const { updateAddressClient } = useClient()
 
   const onSubmit = async (data) => {
     if (!isFormUnchanged()) {
@@ -121,7 +111,7 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
                 helperText={errors.country?.message}
                 autoComplete="off"
                 inputRef={countryInputRef}
-                InputLabelProps={{ shrink: watch("country")?.length > 0 }}
+                InputLabelProps={{ shrink: getValues("country")?.length > 0 }}
               />
             </FormControl>
           </Grid>
@@ -133,7 +123,7 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
                 error={!!errors.city}
                 helperText={errors.city?.message}
                 autoComplete="off"
-                InputLabelProps={{ shrink: watch("city")?.length > 0 }}
+                InputLabelProps={{ shrink: getValues("city")?.length > 0 }}
               />
             </FormControl>
           </Grid>
@@ -145,7 +135,7 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
                 error={!!errors.locality}
                 helperText={errors.locality?.message}
                 autoComplete="off"
-                InputLabelProps={{ shrink: watch("locality")?.length > 0 }}
+                InputLabelProps={{ shrink: getValues("locality")?.length > 0 }}
               />
             </FormControl>
           </Grid>
@@ -158,7 +148,7 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
                   error={!!errors.address}
                   helperText={errors.address?.message}
                   autoComplete="off"
-                  InputLabelProps={{ shrink: watch("address")?.length > 0 }}
+                  InputLabelProps={{ shrink: getValues("address")?.length > 0 }}
                 />
               </FormControl>
               <FormControl fullWidth>
@@ -168,7 +158,7 @@ const ClientAddressEditModal = ({ clientAddress, open, onClose }) => {
                   error={!!errors.postalCode}
                   helperText={errors.postalCode?.message}
                   autoComplete="off"
-                  InputLabelProps={{ shrink: watch("postalCode")?.length > 0 }}
+                  InputLabelProps={{ shrink: getValues("postalCode")?.length > 0 }}
                 />
               </FormControl>
             </Stack>

@@ -88,7 +88,7 @@ const HeaderPage = ({
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
-                gap: isMediumScreen ? 1 : 2,
+                gap: 1,
                 height: 30
               }}
             >
@@ -103,12 +103,9 @@ const HeaderPage = ({
                       duration: 1,
                       type: "spring"
                     }}
+                    style={{ marginLeft: isMediumScreen && "-8px" }}
                   >
-                    <IconButton
-                      onClick={handleRefetch}
-                      disabled={isRefetching || !isRefetchEnable}
-                      edge={isMediumScreen ? "start" : ""}
-                    >
+                    <IconButton onClick={handleRefetch} disabled={isRefetching || !isRefetchEnable}>
                       <Refresh fontSize="small" />
                     </IconButton>
                   </motion.span>

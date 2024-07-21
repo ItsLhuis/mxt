@@ -24,8 +24,6 @@ const RepairStatusAddModal = ({ open, onClose }) => {
     resolver: zodResolver(repairStatusSchema)
   })
 
-  const { createNewRepairStatus } = useRepair()
-
   const nameInputRef = useRef(null)
 
   useEffect(() => {
@@ -42,6 +40,8 @@ const RepairStatusAddModal = ({ open, onClose }) => {
 
     return () => clearTimeout(timer)
   }, [open])
+
+  const { createNewRepairStatus } = useRepair()
 
   const onSubmit = async (data) => {
     return new Promise((resolve, reject) => {

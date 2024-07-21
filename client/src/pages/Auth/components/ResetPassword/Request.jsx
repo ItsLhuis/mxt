@@ -76,7 +76,7 @@ const Login = () => {
               label="E-mail"
               error={!!errors.email}
               helperText={errors.email?.message}
-              autoComplete="email"
+              autoComplete="off"
             />
           </FormControl>
           <Link to="/auth/login" style={{ alignSelf: "flex-end", fontSize: "13px" }}>

@@ -17,17 +17,17 @@ export const updateRepairSchema = z.object({
   entryAccessoriesDescription: z.string().optional().nullable(),
   entryReportedIssuesDescription: z.string().optional().nullable(),
   entryDescription: z.string().optional().nullable(),
-  entryDatetime: z.date().optional(),
+  entryDatetime: z.date(),
   interventionWorksDoneDescription: z.string().optional().nullable(),
   interventionAccessoriesUsedDescription: z.string().optional().nullable(),
   interventionDescription: z.string().optional().nullable(),
   conclusionDatetime: z.date().optional().nullable(),
   deliveryDatetime: z.date().optional().nullable(),
   isClientNotified: z.boolean(),
-  entryAccessoriesIds: z.array(z.number()).optional().nullable(),
-  entryReportedIssuesIds: z.array(z.number()).optional().nullable(),
-  interventionWorksDoneIds: z.array(z.number()).optional().nullable(),
-  interventionAccessoriesUsedIds: z.array(z.number()).optional().nullable()
+  entryAccessories: z.array(z.number()).optional().nullable(),
+  entryReportedIssues: z.array(z.number()).optional().nullable(),
+  interventionWorksDone: z.array(z.number()).optional().nullable(),
+  interventionAccessoriesUsed: z.array(z.number()).optional().nullable()
 })
 
 export const optionsSchema = z.object({

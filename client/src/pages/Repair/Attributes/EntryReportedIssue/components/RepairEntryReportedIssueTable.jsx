@@ -324,12 +324,12 @@ const RepairEntryReportedIssueTable = () => {
         />
         <Modal
           mode="delete"
-          title="Eliminar Acessório de Entrada"
+          title="Eliminar Acessório da Entrada"
           open={deleteRepairEntryReportedIssueModal.isOpen}
           onClose={closeDeleteRepairEntryReportedIssueModal}
           onSubmit={handleDeleteRepairEntryReportedIssue}
-          description="Tem a certeza que deseja eliminar este acessório de entrada?"
-          subDescription="Ao eliminar este acessório de entrada, os dados serão removidos de forma permanente."
+          description="Tem a certeza que deseja eliminar este acessório da entrada?"
+          subDescription="Ao eliminar este acessório da entrada, os dados serão removidos de forma permanente."
         />
       </Box>
     </Paper>

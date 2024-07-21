@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import { Stack, Typography, TextField, InputAdornment, Chip, Button } from "@mui/material"
 import { Search, Delete } from "@mui/icons-material"
 
-import { debounce } from "@utils"
+import { debounce } from "@utils/debounce"
 
 const renderFilterChips = (filterName, values, handleRemoveFilter) => {
   if (!values || (Array.isArray(values) && values.length === 0)) {

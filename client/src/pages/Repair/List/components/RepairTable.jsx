@@ -990,7 +990,7 @@ const RepairTable = () => {
             >
               <HeaderSection
                 title="Anexos"
-                description="Anexos do equipamento"
+                description="Anexos da reparação"
                 icon={<Attachment />}
               />
               <Table
@@ -1009,7 +1009,7 @@ const RepairTable = () => {
               >
                 <HeaderSection
                   title="Histórico de Atividades"
-                  description="Histórico de atividades sobre o equipamento"
+                  description="Histórico de atividades sobre a reparação"
                   icon={<History />}
                 />
                 <Table

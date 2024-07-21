@@ -49,6 +49,11 @@ function App() {
       }
     },
     components: {
+      MuiTab: {
+        defaultProps: {
+          disableRipple: true
+        }
+      },
       MuiButton: {
         styleOverrides: {
           containedPrimary: {
@@ -64,6 +69,7 @@ function App() {
       MuiOutlinedInput: {
         styleOverrides: {
           root: {
+            minHeight: 52,
             color: "var(--onSurface)",
             borderRadius: "8px",
             "& .MuiOutlinedInput-notchedOutline": {
@@ -71,6 +77,9 @@ function App() {
             },
             "&:hover .MuiOutlinedInput-notchedOutline": {
               borderColor: "var(--outline)"
+            },
+            "& .MuiOutlinedInput-notchedOutline legend": {
+              fontSize: "0.75rem"
             },
             "&.Mui-disabled": {
               "& .MuiOutlinedInput-notchedOutline": {
@@ -93,9 +102,6 @@ function App() {
             "&.Mui-error.Mui-focused .MuiOutlinedInput-notchedOutline": {
               border: "2px solid #d32f2f"
             }
-          },
-          shrink: {
-            fontSize: "13px"
           }
         }
       },

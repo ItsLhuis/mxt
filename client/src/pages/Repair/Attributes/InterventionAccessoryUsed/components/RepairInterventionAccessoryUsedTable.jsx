@@ -337,12 +337,12 @@ const RepairInterventionAccessoryUsedTable = () => {
         />
         <Modal
           mode="delete"
-          title="Eliminar Acessório de Intervenção"
+          title="Eliminar Acessório da Intervenção"
           open={deleteRepairInterventionAccessoryUsedModal.isOpen}
           onClose={closeDeleteRepairInterventionAccessoryUsedModal}
           onSubmit={handleDeleteRepairInterventionAccessoryUsed}
-          description="Tem a certeza que deseja eliminar este acessório de intervenção?"
-          subDescription="Ao eliminar este acessório de intervenção, os dados serão removidos de forma permanente."
+          description="Tem a certeza que deseja eliminar este acessório da intervenção?"
+          subDescription="Ao eliminar este acessório da intervenção, os dados serão removidos de forma permanente."
         />
       </Box>
     </Paper>

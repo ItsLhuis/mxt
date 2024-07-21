@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 
-import { useForm, Controller } from "react-hook-form"
+import { useForm, useFormState, useWatch, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateEquipmentSchema } from "@schemas/equipment"
 
@@ -14,8 +14,6 @@ import { AppsOutlined } from "@mui/icons-material"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
-import { sanitizeHTML } from "@utils/sanitizeHTML"
-
 const EquipmentDetailsForm = ({ equipment, isLoading, isError }) => {
   const isEquipmentFinished = !isLoading && !isError
 
@@ -24,10 +22,10 @@ const EquipmentDetailsForm = ({ equipment, isLoading, isError }) => {
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
     setError,
-    reset,
-    watch
+    reset
   } = useForm({
     resolver: zodResolver(updateEquipmentSchema)
   })
@@ -40,16 +38,9 @@ const EquipmentDetailsForm = ({ equipment, isLoading, isError }) => {
     description: equipment?.[0]?.description || ""
   }
 
+  const { isDirty } = useFormState({ control })
   const isFormUnchanged = () => {
-    const values = watch()
-    return (
-      values.typeId === initialValues.typeId &&
-      values.brandId === initialValues.brandId &&
-      values.modelId === initialValues.modelId &&
-      values.sn === initialValues.sn &&
-      (sanitizeHTML(values.description) === "" ? "" : values.description) ===
-        initialValues.description
-    )
+    return !isDirty
   }
 
   useEffect(() => {
@@ -68,7 +59,7 @@ const EquipmentDetailsForm = ({ equipment, isLoading, isError }) => {
     data: modelsByBrandId,
     isLoading: isModelsByBrandIdLoading,
     isError: isModelsByBrandIdError
-  } = findAllEquipmentModelsByBrandId(watch("brandId"))
+  } = findAllEquipmentModelsByBrandId(useWatch({ control, name: "brandId" }))
 
   const onSubmit = async (data) => {
     if (!isEquipmentFinished || isFormUnchanged()) return
@@ -77,7 +68,7 @@ const EquipmentDetailsForm = ({ equipment, isLoading, isError }) => {
       .mutateAsync({
         equipmentId: equipment[0].id,
         ...data,
-        description: sanitizeHTML(data.description) === "" ? null : data.description
+        description: data.description === "" ? null : data.description
       })
       .then(() => showSuccessToast("Equipamento atualizado com sucesso!"))
       .catch((error) => {
@@ -247,7 +238,7 @@ const EquipmentDetailsForm = ({ equipment, isLoading, isError }) => {
                   error={!!errors.sn}
                   helperText={errors.sn?.message}
                   autoComplete="off"
-                  InputLabelProps={{ shrink: watch("sn")?.length > 0 }}
+                  InputLabelProps={{ shrink: getValues("sn")?.length > 0 }}
                 />
               </FormControl>
             }

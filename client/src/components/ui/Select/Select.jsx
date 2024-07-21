@@ -24,13 +24,13 @@ const Select = forwardRef(
 
     return (
       <FormControl fullWidth error={error}>
-        <InputLabel id="status-select-label" size={size} shrink={shrink} error={error}>
+        <InputLabel id="select-label" size={size} shrink={shrink} error={error}>
           {label}
         </InputLabel>
         <MuiSelect
           labelId="select-label"
           id="select"
-          label={label + "o"}
+          label={label}
           value={value}
           onChange={handleChange}
           ref={ref}

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 
-import { useForm, Controller } from "react-hook-form"
+import { useForm, useFormState, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateUserPersonalDataSchema } from "@schemas/user"
 
@@ -21,10 +21,6 @@ import {
 
 import { HeaderSection, Loadable, RichEditor } from "@components/ui"
 
-import { showErrorToast, showSuccessToast } from "@config/toast"
-
-import { sanitizeHTML } from "@utils/sanitizeHTML"
-
 const UserPersonalDataForm = ({ user, isLoading, isError }) => {
   const isUserFinished = !isLoading && !isError
 
@@ -35,21 +31,11 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
     control,
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
-    reset,
-    watch
+    reset
   } = useForm({
-    resolver: zodResolver(updateUserPersonalDataSchema),
-    defaultValues: {
-      name: "",
-      phoneNumber: "",
-      country: "",
-      city: "",
-      locality: "",
-      address: "",
-      postalCode: "",
-      description: ""
-    }
+    resolver: zodResolver(updateUserPersonalDataSchema)
   })
 
   const { updateUserPersonalData, findEmployeeByUserId } = useUser()
@@ -72,26 +58,16 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
     description: userPersonalData?.description || ""
   }
 
+  const { isDirty } = useFormState({ control })
   const isFormUnchanged = () => {
-    const values = watch()
-    return (
-      values.name === initialValues.name &&
-      values.phoneNumber === initialValues.phoneNumber &&
-      values.country === initialValues.country &&
-      values.city === initialValues.city &&
-      values.locality === initialValues.locality &&
-      values.address === initialValues.address &&
-      values.postalCode === initialValues.postalCode &&
-      (sanitizeHTML(values.description) === "" ? "" : values.description) ===
-        initialValues.description
-    )
+    return !isDirty
   }
 
   useEffect(() => {
-    if (isUserFinished && isUserPersonalDataFinished && user) {
+    if (isUserFinished && isUserPersonalDataFinished && userPersonalData && user) {
       reset(initialValues)
     }
-  }, [isUserFinished, isUserPersonalDataFinished, user])
+  }, [isUserFinished, isUserPersonalDataFinished, userPersonalData, user])
 
   const onSubmit = async (data) => {
     if (!isUserFinished || !isUserPersonalDataFinished || isFormUnchanged()) return
@@ -99,7 +75,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
     await updateUserPersonalData.mutateAsync({
       userId: user.id,
       ...data,
-      description: sanitizeHTML(data.description) === "" ? null : data.description
+      description: data.description === "" ? null : data.description
     })
   }
 
@@ -121,7 +97,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                       error={!!errors.name}
                       helperText={errors.name?.message}
                       autoComplete="off"
-                      InputLabelProps={{ shrink: watch("name")?.length > 0 }}
+                      InputLabelProps={{ shrink: getValues("name")?.length > 0 }}
                     />
                   </FormControl>
                 }
@@ -167,7 +143,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                       error={!!errors.country}
                       helperText={errors.country?.message}
                       autoComplete="off"
-                      InputLabelProps={{ shrink: watch("country")?.length > 0 }}
+                      InputLabelProps={{ shrink: getValues("country")?.length > 0 }}
                     />
                   </FormControl>
                 }
@@ -185,7 +161,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                       error={!!errors.city}
                       helperText={errors.city?.message}
                       autoComplete="off"
-                      InputLabelProps={{ shrink: watch("city")?.length > 0 }}
+                      InputLabelProps={{ shrink: getValues("city")?.length > 0 }}
                     />
                   </FormControl>
                 }
@@ -203,7 +179,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                       error={!!errors.locality}
                       helperText={errors.locality?.message}
                       autoComplete="off"
-                      InputLabelProps={{ shrink: watch("locality")?.length > 0 }}
+                      InputLabelProps={{ shrink: getValues("locality")?.length > 0 }}
                     />
                   </FormControl>
                 }
@@ -223,7 +199,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                           error={!!errors.address}
                           helperText={errors.address?.message}
                           autoComplete="off"
-                          InputLabelProps={{ shrink: watch("address")?.length > 0 }}
+                          InputLabelProps={{ shrink: getValues("address")?.length > 0 }}
                         />
                       </FormControl>
                     }
@@ -241,7 +217,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                           error={!!errors.postalCode}
                           helperText={errors.postalCode?.message}
                           autoComplete="off"
-                          InputLabelProps={{ shrink: watch("postalCode")?.length > 0 }}
+                          InputLabelProps={{ shrink: getValues("postalCode")?.length > 0 }}
                         />
                       </FormControl>
                     }

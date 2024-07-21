@@ -97,7 +97,7 @@ const Company = () => {
                               image={field.value}
                               onChange={field.onChange}
                               error={!!errors.logo}
-                              errorMessage={errors.logo?.message}
+                              helperText={errors.logo?.message}
                               sx={{ "& img": { objectFit: "contain !important" } }}
                             />
                           )}

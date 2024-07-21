@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 
-import { useForm } from "react-hook-form"
+import { useForm, useFormState } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateUserAccountSchema } from "@schemas/user"
 
@@ -17,18 +17,15 @@ const UserAccountDataForm = ({ user, isLoading, isError }) => {
   const isUserFinished = !isLoading && !isError
 
   const {
+    control,
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
     setError,
-    reset,
-    watch
+    reset
   } = useForm({
-    resolver: zodResolver(updateUserAccountSchema),
-    defaultValues: {
-      username: "",
-      email: ""
-    }
+    resolver: zodResolver(updateUserAccountSchema)
   })
 
   const initialValues = {
@@ -36,12 +33,9 @@ const UserAccountDataForm = ({ user, isLoading, isError }) => {
     email: user?.email || ""
   }
 
+  const { isDirty } = useFormState({ control })
   const isFormUnchanged = () => {
-    const currentValues = watch()
-    return (
-      currentValues.username === initialValues.username &&
-      currentValues.email === initialValues.email
-    )
+    return !isDirty
   }
 
   useEffect(() => {
@@ -93,7 +87,7 @@ const UserAccountDataForm = ({ user, isLoading, isError }) => {
                       error={!!errors.username}
                       helperText={errors.username?.message}
                       autoComplete="off"
-                      InputLabelProps={{ shrink: watch("username")?.length > 0 }}
+                      InputLabelProps={{ shrink: getValues("username")?.length > 0 }}
                     />
                   </FormControl>
                 }
@@ -111,7 +105,7 @@ const UserAccountDataForm = ({ user, isLoading, isError }) => {
                       error={!!errors.email}
                       helperText={errors.email?.message}
                       autoComplete="off"
-                      InputLabelProps={{ shrink: watch("email")?.length > 0 }}
+                      InputLabelProps={{ shrink: getValues("email")?.length > 0 }}
                     />
                   </FormControl>
                 }

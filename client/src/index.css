@@ -477,6 +477,7 @@ input[type=number]::-webkit-outer-spin-button {
   border-left: 2px solid var(--elevation-level5) !important;
 }
 
+.MuiPickersYear-root .MuiPickersYear-yearButton,
 .MuiPickersLayout-root .MuiList-root .MuiButtonBase-root {
   border-radius: 8px !important;
 }
@@ -492,6 +493,11 @@ input[type=number]::-webkit-outer-spin-button {
 .MuiPickersToolbar-content .Mui-selected,
 .MuiClock-clock .MuiClock-wrapper .MuiClockNumber-root:not(.Mui-selected) {
   color: var(--onSurface) !important;
+}
+
+.MuiPickersToolbar-content .MuiDateTimePickerToolbar-timeContainer .MuiDateTimePickerToolbar-timeDigitsContainer {
+  display: flex;
+  align-items: center;
 }
 
 .MuiPickersLayout-root .MuiPickersToolbar-root,
@@ -519,11 +525,23 @@ input[type=number]::-webkit-outer-spin-button {
   padding-right: 8px;
 }
 
+.MuiDialogContent-root .MuiPickersLayout-root .MuiPickersToolbar-root.MuiDateTimePickerToolbar-root .MuiTypography-root.MuiDateTimePickerToolbar-separator {
+  letter-spacing: 0 !important;
+  margin: 4px 4px !important;
+}
+
+.MuiDialogContent-root .MuiPickersLayout-root .MuiPickersToolbar-root.MuiDateTimePickerToolbar-root .MuiTypography-root {
+  font-size: 1.125rem !important;
+  font-weight: 600;
+  line-height: 1.235;
+  letter-spacing: 0.00735em;
+}
+
 .MuiDialogContent-root .MuiPickersLayout-root .MuiPickersToolbar-root.MuiDateTimePickerToolbar-root>.MuiTypography-root:first-child {
   margin-left: 16px;
   margin-top: 8px;
   margin-bottom: 8px;
-  font-size: 1.4rem;
+  font-size: 1.4rem !important;
   font-weight: 600;
   line-height: 1.235;
   letter-spacing: 0.00735em;

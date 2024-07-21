@@ -2,7 +2,7 @@ import React, { useState } from "react"
 
 import { useNavigate } from "react-router-dom"
 
-import { useForm, Controller } from "react-hook-form"
+import { useForm, useWatch, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { equipmentSchema } from "@schemas/equipment"
 
@@ -29,8 +29,6 @@ import { HeaderSection, Modal, Loadable, Select, RichEditor, Caption } from "@co
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
-import { sanitizeHTML } from "@utils/sanitizeHTML"
-
 const AddEquipmentForm = () => {
   const navigate = useNavigate()
 
@@ -40,8 +38,7 @@ const AddEquipmentForm = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-    setError,
-    watch
+    setError
   } = useForm({
     resolver: zodResolver(equipmentSchema)
   })
@@ -57,7 +54,7 @@ const AddEquipmentForm = () => {
     data: modelsByBrandId,
     isLoading: isModelsByBrandIdLoading,
     isError: isModelsByBrandIdError
-  } = findAllEquipmentModelsByBrandId(watch("brandId"))
+  } = findAllEquipmentModelsByBrandId(useWatch({ control, name: "brandId" }))
 
   const [clientModal, setClientModal] = useState({
     isOpen: false,
@@ -79,7 +76,7 @@ const AddEquipmentForm = () => {
     await createNewEquipment
       .mutateAsync({
         ...data,
-        description: sanitizeHTML(data.description) === "" ? null : data.description
+        description: data.description === "" ? null : data.description
       })
       .then(() => {
         navigate("/equipment/list")

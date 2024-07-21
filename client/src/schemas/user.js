@@ -31,8 +31,8 @@ export const authResetPasswordConfirm = z
   })
   .refine(
     (data) =>
-      !data.password || !data.confirmPassword || data.password === data.confirmPassword,
-    { message: "As senhas não coincidem", path: ["password"] }
+      !data.newPassword || !data.confirmPassword || data.newPassword === data.confirmPassword,
+    { message: "As senhas não coincidem", path: ["newPassword"] }
   )
 
 export const createUserSchema = z.object({

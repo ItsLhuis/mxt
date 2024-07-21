@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 
-import { useForm } from "react-hook-form"
+import { useForm, useFormState } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { optionsSchema } from "@schemas/repair"
 
@@ -13,29 +13,10 @@ import { Modal } from "@components/ui"
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
 const RepairEntryReportedIssueEditModal = ({ entryReportedIssue, open, onClose }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-    reset,
-    watch
-  } = useForm({
-    resolver: zodResolver(optionsSchema),
-    defaultValues: {
-      name: ""
-    }
-  })
-
-  const { updateEntryReportedIssue } = useRepair()
-
   const nameInputRef = useRef(null)
 
   useEffect(() => {
-    if (!open) {
-      reset()
-      return
-    }
+    if (!open) return
 
     const timer = setTimeout(() => {
       if (open && nameInputRef.current) {
@@ -46,16 +27,34 @@ const RepairEntryReportedIssueEditModal = ({ entryReportedIssue, open, onClose }
     return () => clearTimeout(timer)
   }, [open])
 
+  const {
+    control,
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+    setError,
+    reset
+  } = useForm({
+    resolver: zodResolver(optionsSchema)
+  })
+
+  const initialValues = {
+    name: entryReportedIssue?.name || ""
+  }
+
+  const { isDirty } = useFormState({ control })
+  const isFormUnchanged = () => {
+    return !isDirty
+  }
+
   useEffect(() => {
     if (entryReportedIssue) {
-      reset({ name: entryReportedIssue.name || "" })
+      reset(initialValues)
     }
   }, [entryReportedIssue])
 
-  const isFormUnchanged = () => {
-    const values = watch()
-    return values.name === entryReportedIssue?.name
-  }
+  const { updateEntryReportedIssue } = useRepair()
 
   const onSubmit = async (data) => {
     if (!isFormUnchanged()) {
@@ -106,6 +105,7 @@ const RepairEntryReportedIssueEditModal = ({ entryReportedIssue, open, onClose }
             helperText={errors.name?.message}
             autoComplete="off"
             inputRef={nameInputRef}
+            InputLabelProps={{ shrink: getValues("name")?.length > 0 }}
           />
         </FormControl>
       </Box>

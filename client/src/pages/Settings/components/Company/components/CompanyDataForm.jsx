@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 
-import { useForm, Controller } from "react-hook-form"
+import { useForm, useFormState, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { companySchema } from "@schemas/company"
 
@@ -37,18 +37,7 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
     reset,
     watch
   } = useForm({
-    resolver: zodResolver(companySchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      phoneNumber: "+351",
-      website: "",
-      city: "",
-      country: "",
-      locality: "",
-      address: "",
-      postalCode: ""
-    }
+    resolver: zodResolver(companySchema)
   })
 
   const initialValues = {
@@ -63,19 +52,9 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
     postalCode: company?.postal_code || ""
   }
 
+  const { isDirty } = useFormState({ control })
   const isFormUnchanged = () => {
-    const currentValues = watch()
-    return (
-      currentValues.name === initialValues.name &&
-      currentValues.email === initialValues.email &&
-      currentValues.phoneNumber === initialValues.phoneNumber &&
-      currentValues.website === initialValues.website &&
-      currentValues.city === initialValues.city &&
-      currentValues.country === initialValues.country &&
-      currentValues.locality === initialValues.locality &&
-      currentValues.address === initialValues.address &&
-      currentValues.postalCode === initialValues.postalCode
-    )
+    return !isDirty
   }
 
   useEffect(() => {

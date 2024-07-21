@@ -36,8 +36,6 @@ import {
   Caption
 } from "@components/ui"
 
-import { sanitizeHTML } from "@utils/sanitizeHTML"
-
 const AddRepairForm = () => {
   const navigate = useNavigate()
 
@@ -49,9 +47,6 @@ const AddRepairForm = () => {
   } = useForm({
     resolver: zodResolver(repairSchema)
   })
-
-  const { findAllEquipments } = useEquipment()
-  const { createNewRepair, findAllRepairStatuses } = useRepair()
 
   const [equipmentModal, setEquipmentModal] = useState({
     isOpen: false,
@@ -83,11 +78,14 @@ const AddRepairForm = () => {
     setValue("equipmentId", id)
   }
 
+  const { findAllEquipments } = useEquipment()
+  const { createNewRepair, findAllRepairStatuses } = useRepair()
+
   const onSubmit = async (data) => {
     await createNewRepair
       .mutateAsync({
         ...data,
-        entryDescription: sanitizeHTML(data.entryDescription) === "" ? null : data.entryDescription
+        entryDescription: data.entryDescription === "" ? null : data.entryDescription
       })
       .then(() => navigate("/repair/list"))
   }

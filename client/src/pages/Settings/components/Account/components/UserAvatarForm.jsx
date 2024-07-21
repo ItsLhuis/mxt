@@ -84,7 +84,7 @@ const UserAvatarForm = ({ user, isLoading, isError }) => {
                   name={isUserFinished ? user.username : ""}
                   loading={!isUserFinished}
                   error={!!errors.logo}
-                  errorMessage={errors.logo?.message}
+                  helperText={errors.logo?.message}
                 />
               )}
             />

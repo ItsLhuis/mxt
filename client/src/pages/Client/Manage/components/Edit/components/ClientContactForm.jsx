@@ -1,6 +1,6 @@
 import React from "react"
 
-import { useForm, Controller } from "react-hook-form"
+import { useForm, useWatch, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { clientContactSchema } from "@schemas/client"
 
@@ -15,8 +15,6 @@ import { HeaderSection, Select, RichEditor } from "@components/ui"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
-import { sanitizeHTML } from "@utils/sanitizeHTML"
-
 const ClientContactForm = ({ client, isLoading, isError }) => {
   const isClientFinished = !isLoading && !isError
 
@@ -26,7 +24,6 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
     handleSubmit,
     formState: { errors },
     setError,
-    watch,
     reset
   } = useForm({
     resolver: zodResolver(clientContactSchema)
@@ -41,7 +38,7 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
       .mutateAsync({
         clientId: client[0].id,
         ...data,
-        description: sanitizeHTML(data.description) === "" ? null : data.description
+        description: data.description === "" ? null : data.description
       })
       .then(() => {
         reset()
@@ -60,7 +57,7 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
       })
   }
 
-  const watchType = watch("type", "")
+  const watchType = useWatch({ control, name: "type" })
 
   return (
     <Stack>
@@ -117,6 +114,7 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
                         fullWidth
                         error={!!errors.contact}
                         helperText={errors.contact?.message}
+                        autoComplete="off"
                         disableDropdown
                       />
                     )}

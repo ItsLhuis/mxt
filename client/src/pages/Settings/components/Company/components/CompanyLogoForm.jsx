@@ -76,7 +76,7 @@ const CompanyLogoForm = ({ company, isLoading, isError }) => {
                   }}
                   loading={!isCompanyFinished}
                   error={!!errors.logo}
-                  errorMessage={errors.logo?.message}
+                  helperText={errors.logo?.message}
                   sx={{ "& img": { objectFit: "contain !important" } }}
                 />
               )}

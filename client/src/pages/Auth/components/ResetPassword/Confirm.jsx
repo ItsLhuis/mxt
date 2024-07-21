@@ -22,8 +22,7 @@ const Confirm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    setError
+    formState: { errors }
   } = useForm({
     resolver: zodResolver(authResetPasswordConfirm)
   })

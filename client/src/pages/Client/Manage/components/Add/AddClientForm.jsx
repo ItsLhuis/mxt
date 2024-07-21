@@ -16,8 +16,6 @@ import { HeaderSection, RichEditor } from "@components/ui"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
-import { sanitizeHTML } from "@utils/sanitizeHTML"
-
 const AddClientForm = () => {
   const navigate = useNavigate()
 
@@ -36,7 +34,7 @@ const AddClientForm = () => {
     await createNewClient
       .mutateAsync({
         ...data,
-        description: sanitizeHTML(data.description) === "" ? null : data.description
+        description: data.description === "" ? null : data.description
       })
       .then(() => {
         navigate("/client/list")
@@ -61,6 +59,7 @@ const AddClientForm = () => {
                 label="Nome"
                 error={!!errors.name}
                 helperText={errors.name?.message}
+                autoComplete="off"
               />
             </FormControl>
             <Controller

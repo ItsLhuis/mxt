@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 
-import { useForm, Controller } from "react-hook-form"
+import { useForm, useFormState, useWatch, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateUserStatusSchema } from "@schemas/user"
 
@@ -20,12 +20,12 @@ const EmployeeStatusForm = ({ user, isUserFinished }) => {
   })
 
   const initialValues = {
-    isActive: isUserFinished ? Boolean(user?.user.is_active) : true
+    isActive: isUserFinished ? Boolean(user?.user?.is_active) : true
   }
 
+  const { isDirty } = useFormState({ control })
   const isFormUnchanged = () => {
-    const values = watch()
-    return values.isActive === Boolean(user?.user.is_active)
+    return !isDirty
   }
 
   useEffect(() => {
@@ -47,6 +47,8 @@ const EmployeeStatusForm = ({ user, isUserFinished }) => {
         .catch(() => showErrorToast("Erro ao atualizar estado da conta!"))
     }
   }
+
+  const watchStatus = useWatch({ control, name: "isActive" })
 
   return (
     <Paper elevation={1}>
@@ -88,7 +90,7 @@ const EmployeeStatusForm = ({ user, isUserFinished }) => {
                         Estado da conta
                       </Typography>
                       <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
-                        {watch("isActive") ? "Conta ativa" : "Conta inativa"}
+                        {watchStatus ? "Conta ativa" : "Conta inativa"}
                       </Typography>
                     </Stack>
                   </Stack>

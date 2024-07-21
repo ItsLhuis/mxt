@@ -59,7 +59,7 @@ const EquipmentAttachmentsForm = ({ equipment, isLoading, isError }) => {
                 value={field.value}
                 onChange={field.onChange}
                 error={!!errors.attachments}
-                errorMessage={errors.attachments?.message}
+                helperText={errors.attachments?.message}
               />
             )}
           />

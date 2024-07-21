@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 
-import { useForm, Controller } from "react-hook-form"
+import { useForm, useFormState, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { clientSchema } from "@schemas/client"
 
@@ -14,8 +14,6 @@ import { Person } from "@mui/icons-material"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
-import { sanitizeHTML } from "@utils/sanitizeHTML"
-
 const ClientDetailsForm = ({ client, isLoading, isError }) => {
   const isClientFinished = !isLoading && !isError
 
@@ -23,9 +21,9 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
     control,
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
-    reset,
-    watch
+    reset
   } = useForm({
     resolver: zodResolver(clientSchema)
   })
@@ -35,13 +33,9 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
     description: client?.[0]?.description || ""
   }
 
+  const { isDirty } = useFormState({ control })
   const isFormUnchanged = () => {
-    const values = watch()
-    return (
-      values.name === initialValues.name &&
-      (sanitizeHTML(values.description) === "" ? "" : values.description) ===
-        initialValues.description
-    )
+    return !isDirty
   }
 
   useEffect(() => {
@@ -59,7 +53,7 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
       .mutateAsync({
         clientId: client[0].id,
         ...data,
-        description: sanitizeHTML(data.description) === "" ? null : data.description
+        description: data.description === "" ? null : data.description
       })
       .then(() => showSuccessToast("Cliente atualizado com sucesso!"))
       .catch(() => showErrorToast("Erro ao atualizar cliente!"))
@@ -81,7 +75,7 @@ const ClientDetailsForm = ({ client, isLoading, isError }) => {
                   error={!!errors.name}
                   helperText={errors.name?.message}
                   autoComplete="off"
-                  InputLabelProps={{ shrink: watch("name")?.length > 0 }}
+                  InputLabelProps={{ shrink: getValues("name")?.length > 0 }}
                 />
               </FormControl>
             }

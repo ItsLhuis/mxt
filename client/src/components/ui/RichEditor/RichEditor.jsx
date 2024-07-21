@@ -17,11 +17,11 @@ import { Box, Stack, Skeleton, FormHelperText, InputLabel } from "@mui/material"
 
 import { Loadable } from ".."
 
-import MenuBar from "./MenuBar"
+import ToolBar from "./ToolBar"
 
 import { debounce } from "@utils/debounce"
 
-const RichEditor = ({ label, value, onChange, error, errorMessage, isLoading = false }) => {
+const RichEditor = ({ label, value, onChange, error, helperText, isLoading = false }) => {
   const [isFinished, setIsFinished] = useState(false)
   const isFirstRender = useRef(true)
   const timeoutRef = useRef(null)
@@ -70,8 +70,15 @@ const RichEditor = ({ label, value, onChange, error, errorMessage, isLoading = f
     content: value,
     onUpdate: debounce(({ editor }) => {
       const htmlContent = editor.getHTML()
-      if (typeof onChange === "function") onChange(htmlContent)
-    }, 100)
+      const jsonContent = editor.getJSON().content
+
+      const isEmptyContent =
+        Array.isArray(jsonContent) &&
+        jsonContent.length === 1 &&
+        !jsonContent[0].hasOwnProperty("content")
+
+      if (typeof onChange === "function") onChange(isEmptyContent ? "" : htmlContent)
+    }, 50)
   })
 
   useEffect(() => {
@@ -103,6 +110,20 @@ const RichEditor = ({ label, value, onChange, error, errorMessage, isLoading = f
     }
   }, [value])
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape" && fullscreen) {
+        toggleFullscreen()
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [fullscreen])
+
   return (
     <Loadable
       isLoading={!isFinished}
@@ -119,7 +140,7 @@ const RichEditor = ({ label, value, onChange, error, errorMessage, isLoading = f
               {label}
             </InputLabel>
           )}
-          <MenuBar editor={editor} fullscreen={fullscreen} toggleFullscreen={toggleFullscreen} />
+          <ToolBar editor={editor} fullscreen={fullscreen} toggleFullscreen={toggleFullscreen} />
           {fullscreen && (
             <Stack
               className="tiptap-fullscreen"
@@ -133,7 +154,7 @@ const RichEditor = ({ label, value, onChange, error, errorMessage, isLoading = f
                 overflow: "hidden"
               }}
             >
-              <MenuBar
+              <ToolBar
                 editor={editor}
                 fullscreen={fullscreen}
                 toggleFullscreen={toggleFullscreen}
@@ -147,7 +168,7 @@ const RichEditor = ({ label, value, onChange, error, errorMessage, isLoading = f
           {!fullscreen && <EditorContent editor={editor} />}
           {error && (
             <FormHelperText error={error} sx={{ marginLeft: 2, marginTop: 0.5 }}>
-              {errorMessage}
+              {helperText}
             </FormHelperText>
           )}
         </Box>
@@ -161,7 +182,7 @@ RichEditor.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   error: PropTypes.bool,
-  errorMessage: PropTypes.string,
+  helperText: PropTypes.string,
   isLoading: PropTypes.bool
 }
 

@@ -58,7 +58,7 @@ const RepairEntryAccessoryTable = () => {
         deleteEntryAccessory
           .mutateAsync({ entryAccessoryId: deleteRepairEntryAccessoryModal.entryAccessoryId })
           .then(() => {
-            showSuccessToast("Acessório de entrada eliminado com sucesso!")
+            showSuccessToast("Acessório da entrada eliminado com sucesso!")
             closeDeleteRepairEntryAccessoryModal()
             resolve()
           })
@@ -66,7 +66,7 @@ const RepairEntryAccessoryTable = () => {
             if (error.error.code === "REP-011") {
               closeDeleteRepairEntryAccessoryModal()
               showErrorToast(
-                "Este acessório de entrada está associado a uma ou mais reparações e não pode ser eliminado!",
+                "Este acessório da entrada está associado a uma ou mais reparações e não pode ser eliminado!",
                 { duration: 6000 }
               )
               reject()
@@ -74,7 +74,7 @@ const RepairEntryAccessoryTable = () => {
             }
 
             closeDeleteRepairEntryAccessoryModal()
-            showErrorToast("Erro ao eliminar acessório de entrada")
+            showErrorToast("Erro ao eliminar acessório da entrada")
             reject()
           })
       } else {

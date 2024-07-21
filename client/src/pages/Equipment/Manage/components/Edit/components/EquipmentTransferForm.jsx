@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 
-import { useForm } from "react-hook-form"
+import { useForm, useFormState } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateClientEquipmentSchema } from "@schemas/equipment"
 
@@ -29,16 +29,15 @@ const EquipmentTransferForm = ({ equipment, isLoading, isError }) => {
   const isEquipmentFinished = !isLoading && !isError
 
   const {
+    control,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
-    reset,
-    watch
+    reset
   } = useForm({
     resolver: zodResolver(updateClientEquipmentSchema)
   })
-
-  const { findAllClients } = useClient()
 
   const [clientModal, setClientModal] = useState({
     isOpen: false,
@@ -53,16 +52,16 @@ const EquipmentTransferForm = ({ equipment, isLoading, isError }) => {
 
   const handleSelectClient = (id, name) => {
     setClientModal({ client: { id: id, name: name } })
-    setValue("clientId", id)
+    setValue("clientId", id, { shouldDirty: true })
   }
 
   const initialValues = {
     clientId: equipment?.[0]?.client?.id || ""
   }
 
+  const { isDirty } = useFormState({ control })
   const isFormUnchanged = () => {
-    const values = watch()
-    return values.clientId === initialValues.clientId
+    return !isDirty
   }
 
   useEffect(() => {
@@ -72,6 +71,7 @@ const EquipmentTransferForm = ({ equipment, isLoading, isError }) => {
     }
   }, [isEquipmentFinished, equipment])
 
+  const { findAllClients } = useClient()
   const { transferEquipment } = useEquipment()
 
   const onSubmit = async (data) => {

@@ -23,8 +23,6 @@ const RepairEntryReportedIssueAddModal = ({ open, onClose }) => {
     resolver: zodResolver(optionsSchema)
   })
 
-  const { createNewEntryReportedIssue } = useRepair()
-
   const nameInputRef = useRef(null)
 
   useEffect(() => {
@@ -41,6 +39,8 @@ const RepairEntryReportedIssueAddModal = ({ open, onClose }) => {
 
     return () => clearTimeout(timer)
   }, [open])
+
+  const { createNewEntryReportedIssue } = useRepair()
 
   const onSubmit = async (data) => {
     return new Promise((resolve, reject) => {

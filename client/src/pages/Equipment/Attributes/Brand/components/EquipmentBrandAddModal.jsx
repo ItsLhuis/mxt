@@ -23,8 +23,6 @@ const EquipmentBrandAddModal = ({ open, onClose }) => {
     resolver: zodResolver(brandSchema)
   })
 
-  const { createNewEquipmentBrand } = useEquipment()
-
   const nameInputRef = useRef(null)
 
   useEffect(() => {
@@ -41,6 +39,8 @@ const EquipmentBrandAddModal = ({ open, onClose }) => {
 
     return () => clearTimeout(timer)
   }, [open])
+
+  const { createNewEquipmentBrand } = useEquipment()
 
   const onSubmit = async (data) => {
     return new Promise((resolve, reject) => {

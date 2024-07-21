@@ -135,7 +135,7 @@ const SendEmailForm = () => {
                     value={field.value}
                     onChange={field.onChange}
                     error={!!errors.message}
-                    errorMessage={errors.message?.message}
+                    helperText={errors.message?.message}
                   />
                 )}
               />
@@ -153,7 +153,7 @@ const SendEmailForm = () => {
                     value={field.value}
                     onChange={field.onChange}
                     error={!!errors.attachments}
-                    errorMessage={errors.attachments?.message}
+                    helperText={errors.attachments?.message}
                   />
                 )}
               />

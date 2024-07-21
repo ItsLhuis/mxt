@@ -158,15 +158,15 @@ const repairController = {
       conclusionDatetime,
       deliveryDatetime,
       isClientNotified,
-      entryAccessoriesIds,
-      entryReportedIssuesIds,
-      interventionWorksDoneIds,
-      interventionAccessoriesUsedIds
+      entryAccessories,
+      entryReportedIssues,
+      interventionWorksDone,
+      interventionAccessoriesUsed
     } = req.body
 
-    entryDatetime = new Date(entryDatetime).toISOString()
-    conclusionDatetime = conclusionDatetime || new Date(entryDatetime).toISOString()
-    deliveryDatetime = deliveryDatetime || new Date(entryDatetime).toISOString()
+    entryDatetime = entryDatetime ? new Date(entryDatetime).toISOString() : null
+    conclusionDatetime = conclusionDatetime ? new Date(conclusionDatetime).toISOString() : null
+    deliveryDatetime = deliveryDatetime ? new Date(deliveryDatetime).toISOString() : null
 
     updateRepairSchema.parse(req.body)
 
@@ -188,7 +188,7 @@ const repairController = {
     )
 
     const entryAccessoriesNew = []
-    for (const entryAccessoryId of entryAccessoriesIds) {
+    for (const entryAccessoryId of entryAccessories) {
       const existingEntryAccessory = await Repair.entryAccessory.findByAccessoryId(entryAccessoryId)
       if (existingEntryAccessory.length <= 0) {
         throw new AppError(404, ENTRY_ACCESSORY_NOT_FOUND, "Entry accessory not found", true)
@@ -197,7 +197,7 @@ const repairController = {
     }
 
     const entryReportedIssuesNew = []
-    for (const entryReportedIssueId of entryReportedIssuesIds) {
+    for (const entryReportedIssueId of entryReportedIssues) {
       const existingEntryReportedIssue = await Repair.entryReportedIssue.findByReportedIssueId(
         entryReportedIssueId
       )
@@ -216,7 +216,7 @@ const repairController = {
     }
 
     const interventionWorksDoneNew = []
-    for (const interventionWorkDoneId of interventionWorksDoneIds) {
+    for (const interventionWorkDoneId of interventionWorksDone) {
       const existingInterventionWorkDone =
         await Repair.interventionWorkDone.findByInterventionWorkDoneId(interventionWorkDoneId)
       if (existingInterventionWorkDone.length <= 0) {
@@ -234,7 +234,7 @@ const repairController = {
     }
 
     const interventionAccessoriesUsedNew = []
-    for (const interventionAccessoryUsedId of interventionAccessoriesUsedIds) {
+    for (const interventionAccessoryUsedId of interventionAccessoriesUsed) {
       const existingInterventionAccessoryUsed =
         await Repair.interventionAccessoryUsed.findByInterventionAccessoryUsedId(
           interventionAccessoryUsedId
@@ -267,10 +267,10 @@ const repairController = {
       deliveryDatetime,
       isClientNotified,
       req.user.id,
-      entryAccessoriesIds,
-      entryReportedIssuesIds,
-      interventionWorksDoneIds,
-      interventionAccessoriesUsedIds
+      entryAccessories,
+      entryReportedIssues,
+      interventionWorksDone,
+      interventionAccessoriesUsed
     )
 
     const compareAndPushArrayChanges = (oldArray, newArray, fieldName) => {
@@ -306,7 +306,11 @@ const repairController = {
         field: "Data de entrada",
         before: existingRepair[0].entry_datetime,
         after: entryDatetime,
-        changed: existingRepair[0].entry_datetime !== entryDatetime
+        changed:
+          existingRepair[0].entry_datetime !== null
+            ? new Date(existingRepair[0].entry_datetime).getTime() !==
+              (entryDatetime ? new Date(entryDatetime).getTime() : null)
+            : entryDatetime !== null
       },
       {
         field: "Descrição da entrada",
@@ -328,7 +332,11 @@ const repairController = {
         (!entryAccessoriesDescription ? null : entryAccessoriesDescription)
     })
 
-    compareAndPushArrayChanges(entryReportedIssuesOld, entryReportedIssuesNew, "Problemas reportados")
+    compareAndPushArrayChanges(
+      entryReportedIssuesOld,
+      entryReportedIssuesNew,
+      "Problemas reportados"
+    )
 
     changes.push({
       field: "Descrição dos problemas reportados",
@@ -384,13 +392,21 @@ const repairController = {
         field: "Data de conclusão",
         before: existingRepair[0].conclusion_datetime,
         after: conclusionDatetime,
-        changed: existingRepair[0].conclusion_datetime !== conclusionDatetime
+        changed:
+          existingRepair[0].conclusion_datetime !== null
+            ? new Date(existingRepair[0].conclusion_datetime).getTime() !==
+              (conclusionDatetime ? new Date(conclusionDatetime).getTime() : null)
+            : conclusionDatetime !== null
       },
       {
         field: "Data de entrega",
         before: existingRepair[0].delivery_datetime,
         after: deliveryDatetime,
-        changed: existingRepair[0].delivery_datetime !== deliveryDatetime
+        changed:
+          existingRepair[0].delivery_datetime !== null
+            ? new Date(existingRepair[0].delivery_datetime).getTime() !==
+              (deliveryDatetime ? new Date(deliveryDatetime).getTime() : null)
+            : deliveryDatetime !== null
       },
       {
         field: "Cliente notificado",

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 
-import { useForm, Controller } from "react-hook-form"
+import { useForm, useFormState, useWatch, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { clientContactSchema } from "@schemas/client"
 
@@ -13,28 +13,7 @@ import { Modal, Select, RichEditor } from "@components/ui"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
-import { sanitizeHTML } from "@utils/sanitizeHTML"
-
 const ClientContactEditModal = ({ clientContact, open, onClose }) => {
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-    reset,
-    watch
-  } = useForm({
-    resolver: zodResolver(clientContactSchema),
-    defaultValues: {
-      type: clientContact?.type || "",
-      contact: clientContact?.contact || "",
-      description: clientContact?.description || ""
-    }
-  })
-
-  const { updateContactClient } = useClient()
-
   const typeSelectRef = useRef(null)
 
   useEffect(() => {
@@ -43,31 +22,42 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
     const timer = setTimeout(() => {
       if (open && typeSelectRef.current) {
         typeSelectRef.current.focus()
-      }
+      } 
     }, 100)
 
     return () => clearTimeout(timer)
   }, [open])
 
+  const {
+    control,
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+    setError,
+    reset
+  } = useForm({
+    resolver: zodResolver(clientContactSchema)
+  })
+
+  const initialValues = {
+    type: clientContact?.type || "",
+    contact: clientContact?.contact || "",
+    description: clientContact?.description || ""
+  }
+
+  const { isDirty } = useFormState({ control })
   const isFormUnchanged = () => {
-    const values = watch()
-    return (
-      values.type === clientContact?.type &&
-      values.contact.replace(/\s+/g, "") === clientContact?.contact &&
-      (sanitizeHTML(values.description) === "" ? null : values.description) ===
-        clientContact?.description
-    )
+    return !isDirty
   }
 
   useEffect(() => {
     if (clientContact) {
-      reset({
-        type: clientContact.type || "",
-        contact: clientContact.contact || "",
-        description: clientContact.description || ""
-      })
+      reset(initialValues)
     }
-  }, [clientContact, reset])
+  }, [clientContact])
+
+  const { updateContactClient } = useClient()
 
   const onSubmit = async (data) => {
     if (!isFormUnchanged()) {
@@ -77,7 +67,7 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
             clientId: clientContact.client_id,
             contactId: clientContact.id,
             ...data,
-            description: sanitizeHTML(data.description) === "" ? null : data.description
+            description: data.description === "" ? null : data.description
           })
           .then(() => {
             onClose()
@@ -101,7 +91,7 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
     }
   }
 
-  const watchType = watch("type", "")
+  const watchType = useWatch({ control, name: "type" })
 
   return (
     <Modal
@@ -144,7 +134,7 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
                   error={!!errors.contact}
                   helperText={errors.contact?.message}
                   autoComplete="off"
-                  InputLabelProps={{ shrink: watch("contact")?.length > 0 }}
+                  InputLabelProps={{ shrink: getValues("contact")?.length > 0 }}
                 />
               </FormControl>
             ) : (
@@ -157,13 +147,18 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
                       render={({ field }) => (
                         <MuiTelInput
                           {...field}
-                          value={field.value || "+351"}
+                          value={
+                            initialValues.type === "Telefone" || initialValues.type === "Telemóvel"
+                              ? field.value
+                              : "+351"
+                          }
                           defaultCountry={"pt"}
                           label={watchType}
                           variant="outlined"
                           fullWidth
                           error={!!errors.contact}
                           helperText={errors.contact?.message}
+                          autoComplete="off"
                           disableDropdown
                         />
                       )}
@@ -177,7 +172,7 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
                       error={!!errors.contact}
                       helperText={errors.contact?.message}
                       autoComplete="off"
-                      InputLabelProps={{ shrink: watch("contact")?.length > 0 }}
+                      InputLabelProps={{ shrink: getValues("contact")?.length > 0 }}
                     />
                   </FormControl>
                 )}

@@ -1,5 +1,3 @@
-//Count number of files and lines: cloc --exclude-dir=node_modules,tmp,build,dist --exclude-ext=json .
-
 const { addAliases } = require("module-alias")
 
 addAliases({

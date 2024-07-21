@@ -8,7 +8,8 @@ import { Loadable } from ".."
 
 import { motion } from "framer-motion"
 
-import { getStringColor, getContrastColor } from "@utils"
+import { getStringColor } from "@utils/getStringColor"
+import { getContrastColor } from "@utils/getContrastColor"
 
 const Avatar = ({
   alt,

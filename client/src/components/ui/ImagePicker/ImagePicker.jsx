@@ -11,7 +11,7 @@ const ImagePicker = ({
   image,
   onChange,
   error,
-  errorMessage,
+  helperText,
   withLoadingEffect = true,
   alt,
   name,
@@ -182,7 +182,7 @@ const ImagePicker = ({
       >
         {error && (
           <>
-            {errorMessage} <br></br>
+            {helperText} <br></br>
           </>
         )}
         Permitido *.jpeg, *.jpg e *.png <br></br> Tamanho máximo de 5 Mb

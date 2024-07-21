@@ -20,12 +20,40 @@ export const createRepair = async ({ equipmentId, statusId, entryDescription, en
   return response.data
 }
 
-export const updateRepair = async ({ equipmentId, statusId, entryDescription, entryDatetime }) => {
-  const response = await api.put("/repairs", {
-    equipmentId,
+export const updateRepair = async ({
+  repairId,
+  statusId,
+  entryAccessories,
+  entryAccessoriesDescription,
+  entryReportedIssues,
+  entryReportedIssuesDescription,
+  entryDescription,
+  entryDatetime,
+  interventionWorksDone,
+  interventionWorksDoneDescription,
+  interventionAccessoriesUsed,
+  interventionAccessoriesUsedDescription,
+  conclusionDatetime,
+  deliveryDatetime,
+  isClientNotified,
+  interventionDescription
+}) => {
+  const response = await api.put(`/repairs/${repairId}`, {
     statusId,
+    entryAccessories,
+    entryAccessoriesDescription,
+    entryReportedIssues,
+    entryReportedIssuesDescription,
     entryDescription,
-    entryDatetime
+    entryDatetime,
+    interventionWorksDone,
+    interventionWorksDoneDescription,
+    interventionAccessoriesUsed,
+    interventionAccessoriesUsedDescription,
+    conclusionDatetime,
+    deliveryDatetime,
+    isClientNotified,
+    interventionDescription
   })
   return response.data
 }

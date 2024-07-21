@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 
 import { useAuth } from "@contexts/auth"
 
-import { useForm, Controller } from "react-hook-form"
+import { useForm, useFormState, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateUserRoleSchema } from "@schemas/user"
 
@@ -23,19 +23,18 @@ const EmployeeRoleForm = ({ user, isUserFinished }) => {
     control,
     handleSubmit,
     formState: { errors },
-    watch,
     reset
   } = useForm({
     resolver: zodResolver(updateUserRoleSchema)
   })
 
   const initialValues = {
-    role: user?.user.role || ""
+    role: user?.user?.role || ""
   }
 
+  const { isDirty } = useFormState({ control })
   const isFormUnchanged = () => {
-    const values = watch()
-    return values.role === user?.user.role
+    return !isDirty
   }
 
   useEffect(() => {
