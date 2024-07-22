@@ -5,16 +5,10 @@ import { useAuth } from "@contexts/auth"
 import { BASE_URL } from "@api"
 import { useEquipment } from "@hooks/server/useEquipment"
 
+import { FileSvg, ImgSvg, PdfSvg } from "@assets/icons/files"
+
 import { Box, Stack, Divider, Typography, Tooltip, IconButton } from "@mui/material"
-import {
-  Attachment,
-  PictureAsPdf,
-  Image,
-  QuestionMark,
-  Visibility,
-  MoreVert,
-  Delete
-} from "@mui/icons-material"
+import { Attachment, Visibility, MoreVert, Delete } from "@mui/icons-material"
 
 import {
   HeaderSection,
@@ -92,11 +86,11 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
         renderComponent: ({ row }) => (
           <Stack sx={{ alignItems: "flex-start" }}>
             {row?.file_mime_type === "application/pdf" ? (
-              <PictureAsPdf fontSize="medium" sx={{ color: "rgb(223, 88, 84)" }} />
+              <img src={PdfSvg} />
             ) : row?.file_mime_type.startsWith("image/") ? (
-              <Image fontSize="medium" sx={{ color: "rgb(245, 128, 8)" }} />
+              <img src={ImgSvg} />
             ) : (
-              <QuestionMark fontSize="medium" sx={{ color: "var(--outline)" }} />
+              <img src={FileSvg} />
             )}
           </Stack>
         )

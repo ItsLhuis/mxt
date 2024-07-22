@@ -7,6 +7,8 @@ import { useAuth } from "@contexts/auth"
 import { BASE_URL } from "@api"
 import { useEquipment } from "@hooks/server/useEquipment"
 
+import { FileSvg, ImgSvg, PdfSvg } from "@assets/icons/files"
+
 import { Link } from "react-router-dom"
 import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton, Chip } from "@mui/material"
 import {
@@ -15,9 +17,6 @@ import {
   Delete,
   Construction,
   Attachment,
-  PictureAsPdf,
-  Image,
-  QuestionMark,
   Visibility,
   History,
   Check,
@@ -589,11 +588,11 @@ const ClientTable = () => {
               renderComponent: ({ row }) => (
                 <Stack sx={{ alignItems: "flex-start" }}>
                   {row?.file_mime_type === "application/pdf" ? (
-                    <PictureAsPdf fontSize="medium" sx={{ color: "rgb(223, 88, 84)" }} />
+                    <img src={PdfSvg} />
                   ) : row?.file_mime_type.startsWith("image/") ? (
-                    <Image fontSize="medium" sx={{ color: "rgb(245, 128, 8)" }} />
+                    <img src={ImgSvg} />
                   ) : (
-                    <QuestionMark fontSize="medium" sx={{ color: "var(--outline)" }} />
+                    <img src={FileSvg} />
                   )}
                 </Stack>
               )
@@ -973,11 +972,11 @@ const ClientTable = () => {
                     renderComponent: ({ row }) => (
                       <Stack sx={{ alignItems: "flex-start" }}>
                         {row?.file_mime_type === "application/pdf" ? (
-                          <PictureAsPdf fontSize="medium" sx={{ color: "rgb(223, 88, 84)" }} />
+                          <img src={PdfSvg} />
                         ) : row?.file_mime_type.startsWith("image/") ? (
-                          <Image fontSize="medium" sx={{ color: "rgb(245, 128, 8)" }} />
+                          <img src={ImgSvg} />
                         ) : (
-                          <QuestionMark fontSize="medium" sx={{ color: "var(--outline)" }} />
+                          <img src={FileSvg} />
                         )}
                       </Stack>
                     )

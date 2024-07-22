@@ -43,7 +43,7 @@ const TabPanel = (props) => {
       aria-labelledby={`repair-tab-${index}`}
       {...other}
     >
-      {children}
+      {value === index && children}
     </Box>
   )
 }

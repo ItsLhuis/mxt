@@ -4,7 +4,8 @@
     "paths": {
       "@/*": ["src/*"],
       "@api/*": ["src/api/*"],
-      "@assets/*": ["src/assets/*"],
+      "@assets/*": ["assets/*"],
+      "@pulic": ["src/public/*"],
       "@components/*": ["src/components/*"],
       "@config/*": ["src/config/*"],
       "@contexts/*": ["src/contexts/*"],

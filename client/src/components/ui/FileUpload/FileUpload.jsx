@@ -19,7 +19,38 @@ import {
   FormHelperText,
   InputLabel
 } from "@mui/material"
-import { PictureAsPdf, Image, QuestionMark, Close } from "@mui/icons-material"
+import { Close } from "@mui/icons-material"
+
+import {
+  FileSvg,
+  ImgSvg,
+  AudioSvg,
+  VideoSvg,
+  WordSvg,
+  ExcelSvg,
+  PdfSvg,
+  TxtSvg
+} from "@assets/icons/files"
+
+const getIconForFileType = (type) => {
+  if (type.startsWith("image/")) return ImgSvg
+  if (type.startsWith("audio/")) return AudioSvg
+  if (type.startsWith("video/")) return VideoSvg
+  if (type.startsWith("application/pdf")) return PdfSvg
+  if (
+    type === "application/msword" ||
+    type.startsWith("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+  )
+    return WordSvg
+  if (
+    type === "application/vnd.ms-excel" ||
+    type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  )
+    return ExcelSvg
+  if (type.startsWith("text/")) return TxtSvg
+
+  return FileSvg
+}
 
 import Lottie from "lottie-react"
 import LottieAnimationDark from "./Lottie/dark.json"
@@ -258,13 +289,7 @@ const FileUpload = ({
                   gap: 1
                 }}
               >
-                {file.type && file.type.startsWith("application/pdf") ? (
-                  <PictureAsPdf fontSize="large" sx={{ color: "rgb(223, 88, 84)" }} />
-                ) : file.type && file.type.startsWith("image/") ? (
-                  <Image fontSize="large" sx={{ color: "rgb(245, 128, 8)" }} />
-                ) : (
-                  <QuestionMark fontSize="medium" sx={{ color: "var(--outline)" }} />
-                )}
+                <img src={getIconForFileType(file.type)} />
                 <Stack sx={{ overflow: "hidden" }}>
                   <Typography
                     variant="p"

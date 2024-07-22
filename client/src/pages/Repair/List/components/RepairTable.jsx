@@ -7,6 +7,8 @@ import { useAuth } from "@contexts/auth"
 import { BASE_URL } from "@api"
 import { useRepair } from "@hooks/server/useRepair"
 
+import { FileSvg, ImgSvg, PdfSvg } from "@assets/icons/files"
+
 import { Link } from "react-router-dom"
 import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton, Chip } from "@mui/material"
 import {
@@ -14,9 +16,6 @@ import {
   Edit,
   Delete,
   Attachment,
-  PictureAsPdf,
-  Image,
-  QuestionMark,
   Visibility,
   History,
   Check,
@@ -430,11 +429,11 @@ const RepairTable = () => {
               renderComponent: ({ row }) => (
                 <Stack sx={{ alignItems: "flex-start" }}>
                   {row?.file_mime_type === "application/pdf" ? (
-                    <PictureAsPdf fontSize="medium" sx={{ color: "rgb(223, 88, 84)" }} />
+                    <img src={PdfSvg} />
                   ) : row?.file_mime_type.startsWith("image/") ? (
-                    <Image fontSize="medium" sx={{ color: "rgb(245, 128, 8)" }} />
+                    <img src={ImgSvg} />
                   ) : (
-                    <QuestionMark fontSize="medium" sx={{ color: "var(--outline)" }} />
+                    <img src={FileSvg} />
                   )}
                 </Stack>
               )
@@ -910,11 +909,11 @@ const RepairTable = () => {
                     renderComponent: ({ row }) => (
                       <Stack sx={{ alignItems: "flex-start" }}>
                         {row?.file_mime_type === "application/pdf" ? (
-                          <PictureAsPdf fontSize="medium" sx={{ color: "rgb(223, 88, 84)" }} />
+                          <img src={PdfSvg} />
                         ) : row?.file_mime_type.startsWith("image/") ? (
-                          <Image fontSize="medium" sx={{ color: "rgb(245, 128, 8)" }} />
+                          <img src={ImgSvg} />
                         ) : (
-                          <QuestionMark fontSize="medium" sx={{ color: "var(--outline)" }} />
+                          <img src={FileSvg} />
                         )}
                       </Stack>
                     )

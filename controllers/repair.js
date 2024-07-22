@@ -118,6 +118,14 @@ const repairController = {
 
     const changes = [
       {
+        field: "Estado",
+        after: {
+          id: existingStatus[0].id,
+          name: existingStatus[0].name,
+          color: existingStatus[0].color
+        }
+      },
+      {
         field: "Equipamento",
         after: {
           id: existingEquipment[0].id,
@@ -127,14 +135,6 @@ const repairController = {
           model: existingEquipment[0].model,
           sn: existingEquipment[0].sn,
           description: existingEquipment[0].description
-        }
-      },
-      {
-        field: "Estado",
-        after: {
-          id: existingStatus[0].id,
-          name: existingStatus[0].name,
-          color: existingStatus[0].color
         }
       },
       { field: "Data de entrada", after: entryDatetime },
@@ -311,13 +311,6 @@ const repairController = {
             ? new Date(existingRepair[0].entry_datetime).getTime() !==
               (entryDatetime ? new Date(entryDatetime).getTime() : null)
             : entryDatetime !== null
-      },
-      {
-        field: "Descrição da entrada",
-        before: existingRepair[0].entry_description,
-        after: !entryDescription ? null : entryDescription,
-        changed:
-          existingRepair[0].entry_description !== (!entryDescription ? null : entryDescription)
       }
     ]
 
@@ -338,14 +331,23 @@ const repairController = {
       "Problemas reportados"
     )
 
-    changes.push({
-      field: "Descrição dos problemas reportados",
-      before: existingRepair[0].entry_reported_issues_description,
-      after: !entryReportedIssuesDescription ? null : entryReportedIssuesDescription,
-      changed:
-        existingRepair[0].entry_reported_issues_description !==
-        (!entryReportedIssuesDescription ? null : entryReportedIssuesDescription)
-    })
+    changes.push(
+      {
+        field: "Descrição dos problemas reportados",
+        before: existingRepair[0].entry_reported_issues_description,
+        after: !entryReportedIssuesDescription ? null : entryReportedIssuesDescription,
+        changed:
+          existingRepair[0].entry_reported_issues_description !==
+          (!entryReportedIssuesDescription ? null : entryReportedIssuesDescription)
+      },
+      {
+        field: "Descrição da entrada",
+        before: existingRepair[0].entry_description,
+        after: !entryDescription ? null : entryDescription,
+        changed:
+          existingRepair[0].entry_description !== (!entryDescription ? null : entryDescription)
+      }
+    )
 
     compareAndPushArrayChanges(
       interventionWorksDoneOld,
@@ -381,14 +383,6 @@ const repairController = {
 
     changes.push(
       {
-        field: "Descrição da intervenção",
-        before: existingRepair[0].intervention_description,
-        after: !interventionDescription ? null : interventionDescription,
-        changed:
-          existingRepair[0].intervention_description !==
-          (!interventionDescription ? null : interventionDescription)
-      },
-      {
         field: "Data de conclusão",
         before: existingRepair[0].conclusion_datetime,
         after: conclusionDatetime,
@@ -413,6 +407,14 @@ const repairController = {
         before: Boolean(existingRepair[0].is_client_notified),
         after: isClientNotified,
         changed: Boolean(existingRepair[0].is_client_notified) !== isClientNotified
+      },
+      {
+        field: "Descrição da intervenção",
+        before: existingRepair[0].intervention_description,
+        after: !interventionDescription ? null : interventionDescription,
+        changed:
+          existingRepair[0].intervention_description !==
+          (!interventionDescription ? null : interventionDescription)
       }
     )
 

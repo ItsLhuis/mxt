@@ -145,7 +145,9 @@ const HeaderPage = ({
             {breadcrumbs.map((breadcrumb, index) => (
               <Box key={index}>
                 {breadcrumb.link ? (
-                  <Link to={breadcrumb.link}>{breadcrumb.name}</Link>
+                  <Link to={breadcrumb.link} style={{ fontWeight: 600 }}>
+                    {breadcrumb.name}
+                  </Link>
                 ) : (
                   <Typography
                     variant="p"
