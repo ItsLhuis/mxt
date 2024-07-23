@@ -6,7 +6,7 @@ export const emailSchema = z
     contactId: z.number({ message: "O para é obrigatório" }).int().positive(),
     subject: z.string().trim().min(1, { message: "O assunto é obrigatório" }).max(255),
     title: z.string().trim().min(1, { message: "O título é obrigatório" }).max(255),
-    message: z.string().trim().min(1, { message: "A mensagen é obrigatória" }).max(255),
+    message: z.string().trim().min(1, { message: "A mensagen é obrigatória" }),
     text: z.string().trim().min(1).optional(),
     attachments: z.array(z.instanceof(File)).optional()
   })

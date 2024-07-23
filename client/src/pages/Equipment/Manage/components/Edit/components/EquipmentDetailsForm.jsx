@@ -59,7 +59,9 @@ const EquipmentDetailsForm = ({ equipment, isLoading, isError }) => {
     data: modelsByBrandId,
     isLoading: isModelsByBrandIdLoading,
     isError: isModelsByBrandIdError
-  } = findAllEquipmentModelsByBrandId(useWatch({ control, name: "brandId" }))
+  } = findAllEquipmentModelsByBrandId(
+    useWatch({ control, name: "brandId", defaultValue: equipment?.[0]?.brand?.id })
+  )
 
   const onSubmit = async (data) => {
     if (!isEquipmentFinished || isFormUnchanged()) return
@@ -189,7 +191,7 @@ const EquipmentDetailsForm = ({ equipment, isLoading, isError }) => {
             }
           />
           <Loadable
-            isLoading={!isEquipmentFinished || isModelsByBrandIdLoading || isModelsByBrandIdError}
+            isLoading={!isEquipmentFinished || (isModelsByBrandIdLoading && isModelsByBrandIdError)}
             LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
             LoadedComponent={
               <FormControl fullWidth>

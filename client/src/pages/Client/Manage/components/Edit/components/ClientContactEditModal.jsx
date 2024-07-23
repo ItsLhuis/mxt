@@ -22,7 +22,7 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
     const timer = setTimeout(() => {
       if (open && typeSelectRef.current) {
         typeSelectRef.current.focus()
-      } 
+      }
     }, 100)
 
     return () => clearTimeout(timer)
@@ -152,6 +152,9 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
                               ? field.value
                               : "+351"
                           }
+                          onChange={(value) => {
+                            field.onChange(value.replace(/\s+/g, ""))
+                          }}
                           defaultCountry={"pt"}
                           label={watchType}
                           variant="outlined"

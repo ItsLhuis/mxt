@@ -101,11 +101,11 @@ const checkTotalFileSize = (maxTotalSize) => (req, res, next) => {
 }
 
 const upload = {
-  single: (fieldName, validExtensions = VALID_ATTACHMENT_EXTENSIONS) =>
+  single: (fieldName, validExtensions = VALID_ATTACHMENT_EXTENSIONS, fileSize = 5 * 1024 * 1024) =>
     tryCatch(async (req, res, next) => {
       let multerOptions = {
         storage: memoryStorage,
-        limits: { fileSize: 5 * 1024 * 1024 }
+        limits: { fileSize: fileSize }
       }
 
       if (validExtensions && validExtensions.length > 0) {
@@ -129,11 +129,16 @@ const upload = {
         }
       })
     }),
-  multiple: (fieldName, maxCount, validExtensions = VALID_ATTACHMENT_EXTENSIONS) =>
+  multiple: (
+    fieldName,
+    maxCount,
+    validExtensions = VALID_ATTACHMENT_EXTENSIONS,
+    fileSize = 5 * 1024 * 1024
+  ) =>
     tryCatch(async (req, res, next) => {
       let multerOptions = {
         storage: memoryStorage,
-        limits: { fileSize: 5 * 1024 * 1024 }
+        limits: { fileSize: fileSize }
       }
 
       if (validExtensions && validExtensions.length > 0) {

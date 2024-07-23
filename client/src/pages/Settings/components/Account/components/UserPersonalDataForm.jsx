@@ -116,6 +116,9 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                         <MuiTelInput
                           {...field}
                           value={field.value || "+351"}
+                          onChange={(value) => {
+                            field.onChange(value.replace(/\s+/g, ""))
+                          }}
                           defaultCountry={"pt"}
                           label="Contacto"
                           variant="outlined"

@@ -5,6 +5,11 @@ export const getAllEmails = async () => {
   return response.data
 }
 
+export const getEmailById = async ({ emailId }) => {
+  const response = await api.get(`/emails/${emailId}`)
+  return response.data
+}
+
 export const sendEmail = async ({
   clientId,
   contactId,

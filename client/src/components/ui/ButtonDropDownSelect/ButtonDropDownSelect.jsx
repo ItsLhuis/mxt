@@ -98,9 +98,7 @@ const ButtonDropDownSelect = ({
                     <Typography
                       variant="p"
                       component="p"
-                      textAlign="left"
-                      color="var(--outline)"
-                      fontSize="13px"
+                      sx={{ textAlign: "left", color: "var(--outline)", fontWeight: 400 }}
                     >
                       {subTitle}
                     </Typography>

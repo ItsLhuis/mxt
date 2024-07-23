@@ -69,7 +69,15 @@ const EmployeeStatusForm = ({ user, isUserFinished }) => {
           >
             <Loadable
               isLoading={!isUserFinished}
-              LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
+              LoadingComponent={
+                <Stack sx={{ flexDirection: "row", gap: 1 }}>
+                  <Skeleton variant="text" width={40} />
+                  <Stack>
+                    <Skeleton variant="text" width={110} />
+                    <Skeleton variant="text" width={90} />
+                  </Stack>
+                </Stack>
+              }
               LoadedComponent={
                 <FormControl fullWidth>
                   <Stack sx={{ flexDirection: "row", alignItems: "center" }}>

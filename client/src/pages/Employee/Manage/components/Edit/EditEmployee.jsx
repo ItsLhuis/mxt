@@ -137,7 +137,7 @@ const EditEmployee = () => {
                           )
                         ) : (
                           <>
-                            <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
+                            <Typography variant="p" component="p" sx={{ color: "var(--outline)", fontWeight: 550 }}>
                               {field.label}
                             </Typography>
                             {field.value ? (

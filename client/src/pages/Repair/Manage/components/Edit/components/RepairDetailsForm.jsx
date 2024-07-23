@@ -6,9 +6,12 @@ import { updateRepairSchema } from "@schemas/repair"
 
 import { useRepair } from "@hooks/server/useRepair"
 
+import { Link } from "react-router-dom"
 import { LoadingButton } from "@mui/lab"
 import {
   Paper,
+  Grid,
+  Chip,
   Box,
   Stack,
   Tabs,
@@ -25,11 +28,14 @@ import {
   DatePicker,
   Select,
   MultipleSelectCheckmarks,
-  RichEditor
+  RichEditor,
+  Caption
 } from "@components/ui"
-import { Construction } from "@mui/icons-material"
+import { Construction, LocalOffer, HomeRepairService } from "@mui/icons-material"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
+
+import { getValidChipColor } from "@utils/getValidChipColor"
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -154,6 +160,21 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
       })
   }
 
+  const repairFields = [
+    {
+      label: "Cliente",
+      link: `/client/${repair?.[0].equipment?.client?.id}`,
+      value: repair?.[0].equipment?.client?.name,
+      description: repair?.[0].equipment?.client?.description
+    },
+    {
+      label: "Equipamento",
+      link: `/equipment/${repair?.[0].equipment?.id}`,
+      value: `${repair?.[0].equipment?.type?.name} | ${repair?.[0].equipment?.brand?.name} ${repair?.[0].equipment?.model?.name}`,
+      description: repair?.[0].equipment?.description
+    }
+  ]
+
   const watchClientNotified = useWatch({ control, name: "isClientNotified" })
 
   return (
@@ -162,6 +183,66 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack>
           <Stack>
+            <Box sx={{ paddingInline: 3, paddingTop: 2 }}>
+              <Loadable
+                isLoading={!isRepairFinished}
+                LoadingComponent={<Skeleton variant="rounded" width={70} height={32} />}
+                LoadedComponent={
+                  <Chip
+                    label={repair?.[0]?.status?.name}
+                    color={getValidChipColor(repair?.[0]?.status?.color)}
+                  />
+                }
+              />
+            </Box>
+            <Grid container spacing={2} sx={{ paddingInline: 3 }}>
+              {repairFields.map((field, index) => (
+                <Grid key={index} item xs={12}>
+                  <Loadable
+                    isLoading={!isRepairFinished}
+                    LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
+                    LoadedComponent={
+                      <Stack>
+                        <Typography
+                          variant="p"
+                          component="p"
+                          sx={{ color: "var(--outline)", fontWeight: 550 }}
+                        >
+                          {field.label}
+                        </Typography>
+                        {field.value ? (
+                          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+                            <Typography variant="p" component="p">
+                              {field.isHtml ? (
+                                field.link ? (
+                                  <Link
+                                    to={field.link}
+                                    dangerouslySetInnerHTML={{ __html: field.value }}
+                                  />
+                                ) : (
+                                  <span dangerouslySetInnerHTML={{ __html: field.value }} />
+                                )
+                              ) : field.link ? (
+                                <Link to={field.link}>{field.value}</Link>
+                              ) : (
+                                <span>{field.value}</span>
+                              )}
+                            </Typography>
+                            {field.description && (
+                              <Caption fontSize="small" title={field.description} />
+                            )}
+                          </Stack>
+                        ) : (
+                          <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
+                            Sem valor
+                          </Typography>
+                        )}
+                      </Stack>
+                    }
+                  />
+                </Grid>
+              ))}
+            </Grid>
             <Stack sx={{ padding: 3, paddingBottom: 0 }}>
               <Loadable
                 isLoading={!isRepairFinished || findAllRepairStatuses.isLoading}
@@ -217,8 +298,16 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
                 allowScrollButtonsMobile
                 sx={{ borderBottom: "2px solid var(--elevation-level5)", paddingInline: 3 }}
               >
-                <Tab label="Entrada" {...tabProps("Entrada")} />
-                <Tab label="Intervenção" {...tabProps("Intervenção")} />
+                <Tab
+                  icon={<LocalOffer fontSize="inherit" />}
+                  label="Entrada"
+                  {...tabProps("Entrada")}
+                />
+                <Tab
+                  icon={<HomeRepairService fontSize="inherit" />}
+                  label="Intervenção"
+                  {...tabProps("Intervenção")}
+                />
               </Tabs>
               <TabPanel value={tabValue} index={0}>
                 <Stack sx={{ gap: 2 }}>

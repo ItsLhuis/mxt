@@ -34,8 +34,7 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
-    watch
+    reset
   } = useForm({
     resolver: zodResolver(companySchema)
   })
@@ -132,6 +131,9 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                             <MuiTelInput
                               {...field}
                               value={field.value || "+351"}
+                              onChange={(value) => {
+                                field.onChange(value.replace(/\s+/g, ""))
+                              }}
                               defaultCountry={"pt"}
                               label="Contacto"
                               variant="outlined"

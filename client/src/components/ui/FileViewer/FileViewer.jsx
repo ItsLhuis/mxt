@@ -148,12 +148,13 @@ const FileViewer = ({ open, onClose, file, fileName, fileSize, fileType }) => {
               sx={{
                 overflow: "hidden",
                 whiteSpace: "nowrap",
-                textOverflow: "ellipsis"
+                textOverflow: "ellipsis",
+                fontWeight: 500
               }}
             >
               {state.fileName}
             </Typography>
-            <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
+            <Typography variant="p" component="p" sx={{ color: "var(--outline)", fontWeight: 500 }}>
               {`${
                 state.fileSize < 1024 * 1024
                   ? (state.fileSize / 1024).toFixed(2) + " Kb"
