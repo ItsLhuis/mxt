@@ -161,7 +161,7 @@ const AddEmployeeForm = () => {
                     Estado da conta
                   </Typography>
                   <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
-                    {watch("isActive") ? "Conta ativa" : "Conta inativa"}
+                    {watch("isActive") ? "Ativa" : "Inativa"}
                   </Typography>
                 </Stack>
               </Stack>

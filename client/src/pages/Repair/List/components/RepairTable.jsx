@@ -1047,7 +1047,7 @@ const RepairTable = () => {
           onClose={closeDeleteRepairModal}
           onSubmit={handleDeleteClient}
           description="Tem a certeza que deseja eliminar esta reparação?"
-          subDescription="Ao eliminar esta reparação, os dados serão removidos de forma permanente."
+          subDescription="Ao eliminar esta reparação, todos os dados relacionados, incluindo anexos, serão removidos de forma permanente."
         />
         <FileViewer
           open={openFileViewer}

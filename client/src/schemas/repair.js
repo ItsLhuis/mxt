@@ -30,6 +30,12 @@ export const updateRepairSchema = z.object({
   interventionAccessoriesUsed: z.array(z.number()).optional().nullable()
 })
 
+export const repairAttachmentSchema = z.object({
+  attachments: z
+    .array(z.instanceof(File, { message: "Selecione pelo menos um anexo" }))
+    .min(1, { message: "Selecione pelo menos um anexo" })
+})
+
 export const optionsSchema = z.object({
   name: z.string().min(1, { message: "O nome é obrigatório" }).max(255).trim()
 })

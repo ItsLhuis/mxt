@@ -63,6 +63,26 @@ export const deleteRepair = async ({ repairId }) => {
   return response.data
 }
 
+export const createRepairAttachment = async ({ repairId, attachments }) => {
+  const formData = new FormData()
+  attachments.forEach((file) => {
+    formData.append("attachments", file)
+  })
+
+  const response = await api.post(`/repairs/${repairId}/attachments`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  })
+
+  return response.data
+}
+
+export const deleteRepairAttachment = async ({ repairId, attachmentId }) => {
+  const response = await api.delete(`/repairs/${repairId}/attachments/${attachmentId}`)
+  return response.data
+}
+
 export const getAllRepairStatuses = async () => {
   const response = await api.get("/repairs/status")
   return response.data

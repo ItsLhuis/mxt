@@ -3,18 +3,12 @@ import React, { useState, useMemo } from "react"
 import { useAuth } from "@contexts/auth"
 
 import { BASE_URL } from "@api"
-import { useEquipment } from "@hooks/server/useEquipment"
+import { useRepair } from "@hooks/server/useRepair"
+
+import { FileSvg, ImgSvg, PdfSvg } from "@assets/icons/files"
 
 import { Box, Stack, Divider, Typography, Tooltip, IconButton } from "@mui/material"
-import {
-  Attachment,
-  PictureAsPdf,
-  Image,
-  QuestionMark,
-  Visibility,
-  MoreVert,
-  Delete
-} from "@mui/icons-material"
+import { Attachment, Visibility, MoreVert, Delete } from "@mui/icons-material"
 
 import {
   HeaderSection,
@@ -30,12 +24,12 @@ import {
 
 import { formatDate, formatTime } from "@utils/format/date"
 
-const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
-  const isEquipmentFinished = !isLoading && !isError
+const RepairAttachmentsTable = ({ repair, isLoading, isError }) => {
+  const isRepairFinished = !isLoading && !isError
 
   const { role } = useAuth()
 
-  const { deleteEquipmentAttachment } = useEquipment()
+  const { deleteRepairAttachment } = useRepair()
 
   const [openFileViewer, setOpenFileViewer] = useState(false)
   const [attachment, setAttachment] = useState({ url: "", name: "", size: "", type: "" })
@@ -48,41 +42,41 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
     setAttachment({ url: "", type: "" })
   }
 
-  const [equipmentDeleteAttachmentModal, setEquipmentDeleteAttachmentModal] = useState({
+  const [repairDeleteAttachmentModal, setRepairDeleteAttachmentModal] = useState({
     isOpen: false,
-    equipmentAttachment: null
+    repairAttachment: null
   })
-  const openEquipmentDeleteAttachmentModal = (equipmentAttachment) => {
-    setEquipmentDeleteAttachmentModal({ isOpen: true, equipmentAttachment: equipmentAttachment })
+  const openRepairDeleteAttachmentModal = (repairAttachment) => {
+    setRepairDeleteAttachmentModal({ isOpen: true, repairAttachment: repairAttachment })
   }
-  const closeEquipmentDeleteAttachmentModal = () => {
-    setEquipmentDeleteAttachmentModal({ isOpen: false, equipmentAttachment: null })
+  const closeRepairDeleteAttachmentModal = () => {
+    setRepairDeleteAttachmentModal({ isOpen: false, repairAttachment: null })
   }
 
-  const handleDeleteEquipmentAttachment = () => {
+  const handleDeleteRepairAttachment = () => {
     return new Promise((resolve, reject) => {
-      if (equipmentDeleteAttachmentModal.equipmentAttachment) {
-        deleteEquipmentAttachment
+      if (repairDeleteAttachmentModal.repairAttachment) {
+        deleteRepairAttachment
           .mutateAsync({
-            equipmentId: equipmentDeleteAttachmentModal.equipmentAttachment.equipment_id,
-            attachmentId: equipmentDeleteAttachmentModal.equipmentAttachment.id
+            repairId: repairDeleteAttachmentModal.repairAttachment.repair_id,
+            attachmentId: repairDeleteAttachmentModal.repairAttachment.id
           })
           .then(() => {
-            closeEquipmentDeleteAttachmentModal()
+            closeRepairDeleteAttachmentModal()
             resolve()
           })
           .catch(() => {
-            closeEquipmentDeleteAttachmentModal()
+            closeRepairDeleteAttachmentModal()
             reject()
           })
       } else {
-        closeEquipmentDeleteAttachmentModal()
+        closeRepairDeleteAttachmentModal()
         reject()
       }
     })
   }
 
-  const equipmentAttachmentsTableColumns = useMemo(
+  const repairAttachmentsTableColumns = useMemo(
     () => [
       {
         id: "file_mime_type",
@@ -92,11 +86,11 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
         renderComponent: ({ row }) => (
           <Stack sx={{ alignItems: "flex-start" }}>
             {row?.file_mime_type === "application/pdf" ? (
-              <PictureAsPdf fontSize="medium" sx={{ color: "rgb(223, 88, 84)" }} />
+              <img src={PdfSvg} />
             ) : row?.file_mime_type.startsWith("image/") ? (
-              <Image fontSize="medium" sx={{ color: "rgb(245, 128, 8)" }} />
+              <img src={ImgSvg} />
             ) : (
-              <QuestionMark fontSize="medium" sx={{ color: "var(--outline)" }} />
+              <img src={FileSvg} />
             )}
           </Stack>
         )
@@ -207,7 +201,7 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
             <IconButton
               onClick={() =>
                 handleOpenFileViewer(
-                  `${BASE_URL}/equipments/${row?.equipment_id}/attachments/${row?.id}/${row?.original_filename}`,
+                  `${BASE_URL}/repairs/${row?.repair_id}/attachments/${row?.id}/${row?.original_filename}`,
                   row?.original_filename,
                   row?.file_size,
                   row?.file_mime_type
@@ -243,7 +237,7 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
                       label: "Eliminar",
                       icon: <Delete fontSize="small" color="error" />,
                       color: "error",
-                      onClick: () => openEquipmentDeleteAttachmentModal(row)
+                      onClick: () => openRepairDeleteAttachmentModal(row)
                     }
                   ]}
                 />
@@ -260,7 +254,7 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
     <Stack>
       <HeaderSection title="Anexos" description="Anexos do equipamento" icon={<Attachment />} />
       <Loadable
-        isLoading={!isEquipmentFinished}
+        isLoading={!isRepairFinished}
         LoadingComponent={<TableSkeleton mode="datatable" />}
         LoadedComponent={
           <Box
@@ -273,8 +267,8 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
           >
             <Table
               mode="datatable"
-              data={isEquipmentFinished ? equipment[0]?.attachments : []}
-              columns={equipmentAttachmentsTableColumns}
+              data={isRepairFinished ? repair[0]?.attachments : []}
+              columns={repairAttachmentsTableColumns}
             />
           </Box>
         }
@@ -296,9 +290,9 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
       <Modal
         mode="delete"
         title="Eliminar Anexo"
-        open={equipmentDeleteAttachmentModal.isOpen}
-        onClose={closeEquipmentDeleteAttachmentModal}
-        onSubmit={handleDeleteEquipmentAttachment}
+        open={repairDeleteAttachmentModal.isOpen}
+        onClose={closeRepairDeleteAttachmentModal}
+        onSubmit={handleDeleteRepairAttachment}
         description="Tem a certeza que deseja eliminar este anexo?"
         subDescription="Ao eliminar este anexo, os dados serão removidos de forma permanente."
       />
@@ -306,4 +300,4 @@ const EquipmentAttachmentsTable = ({ equipment, isLoading, isError }) => {
   )
 }
 
-export default EquipmentAttachmentsTable
+export default RepairAttachmentsTable

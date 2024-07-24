@@ -98,7 +98,7 @@ const EmployeeStatusForm = ({ user, isUserFinished }) => {
                         Estado da conta
                       </Typography>
                       <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
-                        {watchStatus ? "Conta ativa" : "Conta inativa"}
+                        {watchStatus ? "Ativa" : "Inativa"}
                       </Typography>
                     </Stack>
                   </Stack>

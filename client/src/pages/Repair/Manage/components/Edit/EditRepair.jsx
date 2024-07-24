@@ -47,6 +47,7 @@ const EditRepair = () => {
           </motion.div>
         )}
         <RepairDetailsForm repair={repair} isLoading={isRepairLoading} isError={isRepairError} />
+        <RepairAttachments repair={repair} isLoading={isRepairLoading} isError={isRepairError} />
         {role !== "Funcionário" && (
           <RepairInteractionsHistoryTable
             repair={repair}

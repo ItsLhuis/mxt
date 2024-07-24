@@ -2,9 +2,9 @@ import React from "react"
 
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { equipmentAttachmentSchema } from "@schemas/equipment"
+import { repairAttachmentSchema } from "@schemas/repair"
 
-import { useEquipment } from "@hooks/server/useEquipment"
+import { useRepair } from "@hooks/server/useRepair"
 
 import { LoadingButton } from "@mui/lab"
 import { Box, Stack } from "@mui/material"
@@ -12,8 +12,8 @@ import { Attachment } from "@mui/icons-material"
 
 import { HeaderSection, FileUpload } from "@components/ui"
 
-const EquipmentAttachmentsForm = ({ equipment, isLoading, isError }) => {
-  const isEquipmentFinished = !isLoading && !isError
+const RepairAttachmentsForm = ({ repair, isLoading, isError }) => {
+  const isRepairFinished = !isLoading && !isError
 
   const {
     control,
@@ -21,20 +21,20 @@ const EquipmentAttachmentsForm = ({ equipment, isLoading, isError }) => {
     formState: { errors },
     reset
   } = useForm({
-    resolver: zodResolver(equipmentAttachmentSchema),
+    resolver: zodResolver(repairAttachmentSchema),
     defaultValues: {
       attachments: []
     }
   })
 
-  const { addNewEquipmentAttachment } = useEquipment()
+  const { addNewRepairAttachment } = useRepair()
 
   const onSubmit = async (data) => {
-    if (!isEquipmentFinished) return
+    if (!isRepairFinished) return
 
-    await addNewEquipmentAttachment
+    await addNewRepairAttachment
       .mutateAsync({
-        equipmentId: equipment[0].id,
+        repairId: repair[0].id,
         ...data
       })
       .then(() => reset())
@@ -44,7 +44,7 @@ const EquipmentAttachmentsForm = ({ equipment, isLoading, isError }) => {
     <Stack>
       <HeaderSection
         title="Anexos"
-        description="Adicionar novos anexos ao equipamento"
+        description="Adicionar novos anexos à reparação"
         icon={<Attachment />}
       />
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -55,7 +55,7 @@ const EquipmentAttachmentsForm = ({ equipment, isLoading, isError }) => {
             defaultValue=""
             render={({ field }) => (
               <FileUpload
-                disabled={addNewEquipmentAttachment.isPending}
+                disabled={addNewRepairAttachment.isPending}
                 value={field.value}
                 onChange={field.onChange}
                 error={!!errors.attachments}
@@ -65,10 +65,10 @@ const EquipmentAttachmentsForm = ({ equipment, isLoading, isError }) => {
           />
           <Box sx={{ marginLeft: "auto" }}>
             <LoadingButton
-              loading={addNewEquipmentAttachment.isPending}
+              loading={addNewRepairAttachment.isPending}
               type="submit"
               variant="contained"
-              disabled={!isEquipmentFinished}
+              disabled={!isRepairFinished}
             >
               Adicionar Anexos
             </LoadingButton>
@@ -79,4 +79,4 @@ const EquipmentAttachmentsForm = ({ equipment, isLoading, isError }) => {
   )
 }
 
-export default EquipmentAttachmentsForm
+export default RepairAttachmentsForm

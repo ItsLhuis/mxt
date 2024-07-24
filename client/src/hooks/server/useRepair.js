@@ -5,6 +5,8 @@ import {
   createRepair,
   updateRepair as updateRepairApi,
   deleteRepair as deleteRepairApi,
+  createRepairAttachment,
+  deleteRepairAttachment as deleteRepairAttachmentApi,
   getAllRepairStatuses,
   createRepairStatus,
   updateRepairStatus as updateRepairStatusApi,
@@ -82,6 +84,32 @@ export const useRepair = () => {
     },
     onError: () => {
       showErrorToast("Erro ao eliminar reparação!")
+    }
+  })
+
+  const addNewRepairAttachment = useMutation({
+    mutationFn: createRepairAttachment,
+    onSuccess: async (data, variables) => {
+      const repairId = variables.repairId
+      await queryClient.invalidateQueries(["repairs"])
+      await queryClient.invalidateQueries(["repairs", repairId])
+      showSuccessToast("Anexo adicionado com sucesso!")
+    },
+    onError: () => {
+      showErrorToast("Erro ao adicionar anexo!")
+    }
+  })
+
+  const deleteRepairAttachment = useMutation({
+    mutationFn: deleteRepairAttachmentApi,
+    onSuccess: async (data, variables) => {
+      const repairId = variables.repairId
+      await queryClient.invalidateQueries(["repairs"])
+      await queryClient.invalidateQueries(["repairs", repairId])
+      showSuccessToast("Anexo eliminado com sucesso!")
+    },
+    onError: () => {
+      showErrorToast("Erro ao eliminar anexo!")
     }
   })
 
@@ -236,6 +264,8 @@ export const useRepair = () => {
     createNewRepair,
     updateRepair,
     deleteRepair,
+    addNewRepairAttachment,
+    deleteRepairAttachment,
     findAllRepairStatuses,
     createNewRepairStatus,
     updateRepairStatus,
