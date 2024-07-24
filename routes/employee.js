@@ -11,6 +11,10 @@ router
   .put(checkPermissionHandler("employee", permissions.UPDATE), employeeController.update)
 
 router
+  .route("/summary")
+  .get(checkPermissionHandler("employee", permissions.READ), employeeController.summary)
+
+router
   .route("/:userId")
   .get(checkPermissionHandler("employee", permissions.READ), employeeController.findByUserId)
 

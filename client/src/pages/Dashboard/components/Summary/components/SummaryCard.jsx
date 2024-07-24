@@ -14,27 +14,26 @@ import {
 } from "@mui/material"
 
 import { Caption } from "@components/ui"
+
 import { BasicLineChart } from "@components/ui/Charts"
 
 import { motion } from "framer-motion"
 
-const MetricSkeleton = () => {
-  return (
-    <Stack sx={{ gap: 1.3 }}>
-      <Typography variant="h3" component="h3">
-        <Skeleton width={60} />
-      </Typography>
-      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-        <Skeleton variant="rounded" width={70} height={32} sx={{ borderRadius: 2 }} />
-        <Skeleton variant="circular" width={17} height={17} />
-      </Stack>
+const MetricSkeleton = () => (
+  <Stack sx={{ gap: 1.3 }}>
+    <Typography variant="h3" component="h3">
+      <Skeleton width={60} />
+    </Typography>
+    <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+      <Skeleton variant="rounded" width={70} height={32} sx={{ borderRadius: 2 }} />
+      <Skeleton variant="circular" width={17} height={17} />
     </Stack>
-  )
-}
+  </Stack>
+)
 
-const SummaryCard = ({ icon, title, metricQuery, chartQuery, colorLine, mdSize }) => {
+const SummaryCard = ({ icon, title, metricQuery, chartQuery, colorLine, mdSize, lgSize }) => {
   return (
-    <Grid item xs={12} md={mdSize} lg={4}>
+    <Grid item xs={12} md={mdSize} lg={lgSize}>
       <Paper elevation={1}>
         <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
           <Box
@@ -76,12 +75,12 @@ const SummaryCard = ({ icon, title, metricQuery, chartQuery, colorLine, mdSize }
                 }}
               >
                 <Typography variant="h3" component="h3">
-                  {metricQuery?.data.total}
+                  {metricQuery.data.total}
                 </Typography>
                 <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
                   <Chip
-                    label={metricQuery?.data.change}
-                    color={metricQuery?.data.color}
+                    label={metricQuery.data.percentage.change}
+                    color={metricQuery.data.percentage.color}
                     sx={{ marginTop: "auto" }}
                   />
                   <Caption title="Em comparação com o mês anterior" />
@@ -102,8 +101,8 @@ const SummaryCard = ({ icon, title, metricQuery, chartQuery, colorLine, mdSize }
             ) : (
               <BasicLineChart
                 colorLine={colorLine}
-                xData={chartQuery?.data.xData}
-                yData={[{ name: title, data: chartQuery?.data.yData }]}
+                xData={chartQuery.data.xData}
+                yData={[{ name: title, data: chartQuery.data.yData }]}
               />
             )}
           </Box>
@@ -120,19 +119,22 @@ SummaryCard.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     data: PropTypes.shape({
       total: PropTypes.number.isRequired,
-      change: PropTypes.string.isRequired,
-      color: PropTypes.string.isRequired
-    })
+      percentage: PropTypes.shape({
+        change: PropTypes.string.isRequired,
+        color: PropTypes.string.isRequired
+      }).isRequired
+    }).isRequired
   }).isRequired,
   chartQuery: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
     data: PropTypes.shape({
-      xData: PropTypes.arrayOf(PropTypes.string.isRequired),
-      yData: PropTypes.arrayOf(PropTypes.number.isRequired)
-    })
+      xData: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+      yData: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired
+    }).isRequired
   }).isRequired,
   colorLine: PropTypes.string.isRequired,
-  mdSize: PropTypes.number.isRequired
+  mdSize: PropTypes.number,
+  lgSize: PropTypes.number
 }
 
 export default SummaryCard

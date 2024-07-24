@@ -1,6 +1,6 @@
 import React, { Suspense } from "react"
 
-import { Box, Container } from "@mui/material"
+import { Box, Container, Stack } from "@mui/material"
 
 import { PageLoader, HeaderPage } from "@components/ui"
 import { AnnualActivities, FinancialStatistics, Summary, ReparationsStates } from "./components"
@@ -14,6 +14,7 @@ const Dashboard = () => {
         <Box component="main" className="page-main">
           <Container maxWidth={false}>
             <HeaderPage title="Painel de Controlo" breadcrumbs={[{ name: "Painel de Controlo" }]} />
+            <Summary />
           </Container>
         </Box>
       </motion.div>

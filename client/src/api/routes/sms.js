@@ -1,21 +1,21 @@
 import { api } from ".."
 
-export const getEmailSummary = async () => {
-  const response = await api.get("/emails/summary")
+export const getSmsSummary = async () => {
+  const response = await api.get("/smses/summary")
   return response.data
 }
 
-export const getAllEmails = async () => {
-  const response = await api.get("/emails")
+export const getAllSmses = async () => {
+  const response = await api.get("/smses")
   return response.data
 }
 
-export const getEmailById = async ({ emailId }) => {
-  const response = await api.get(`/emails/${emailId}`)
+export const getSmsById = async ({ emailId }) => {
+  const response = await api.get(`/smses/${emailId}`)
   return response.data
 }
 
-export const sendEmail = async ({
+export const sendSms = async ({
   clientId,
   contactId,
   subject,
@@ -36,7 +36,7 @@ export const sendEmail = async ({
     formData.append("attachments", file)
   })
 
-  const response = await api.post("/emails", formData, {
+  const response = await api.post("/smses", formData, {
     headers: {
       "Content-Type": "multipart/form-data"
     }

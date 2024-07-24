@@ -71,6 +71,64 @@ const Employee = {
       },
       memoryOnlyCache
     )(),
+  getTotal: () => {
+    const query = "SELECT COUNT(*) AS total FROM employees"
+    return dbQueryExecutor.execute(query)
+  },
+  getLastMonthsTotal: () => {
+    const query = `
+      WITH MonthlyTotals AS (
+        SELECT 
+          DATE_FORMAT(u.created_at_datetime, '%Y-%m') AS month,
+          COUNT(*) AS total
+        FROM employees e
+        JOIN users u ON e.user_id = u.id
+        WHERE u.created_at_datetime >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+        GROUP BY month
+      ),
+      FullMonths AS (
+        SELECT
+          DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL (5 - i) MONTH), '%Y-%m') AS month
+        FROM (SELECT 0 i UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5) numbers
+      )
+      SELECT 
+        f.month,
+        COALESCE(m.total, 0) AS total
+      FROM FullMonths f
+      LEFT JOIN MonthlyTotals m ON f.month = m.month
+      ORDER BY f.month
+    `
+    return dbQueryExecutor.execute(query)
+  },
+  getLastMonthsPercentageChange: async () => {
+    const query = `
+      WITH MonthlyTotals AS (
+        SELECT 
+          DATE_FORMAT(u.created_at_datetime, '%Y-%m') AS month,
+          COUNT(*) AS total
+        FROM employees e
+        JOIN users u ON e.user_id = u.id
+        WHERE u.created_at_datetime < CURDATE()
+        GROUP BY month
+      )
+      SELECT 
+        COALESCE(
+          (SELECT total FROM MonthlyTotals ORDER BY month DESC LIMIT 1), 0
+        ) AS latest_total,
+        COALESCE(
+          (SELECT total FROM MonthlyTotals ORDER BY month DESC LIMIT 1 OFFSET 1), 0
+        ) AS previous_total
+    `;
+    
+    const result = await dbQueryExecutor.execute(query);
+    const { latest_total, previous_total } = result[0] || { latest_total: 0, previous_total: 0 };
+
+    if (previous_total === 0) {
+      return latest_total === 0 ? 0 : 100; // Se não houve dados no período anterior, a porcentagem é 100% se houver dados no período atual
+    }
+    
+    return ((latest_total - previous_total) / previous_total) * 100;
+  },
   create: (
     userId,
     name,

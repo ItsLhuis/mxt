@@ -1,5 +1,10 @@
 import { api } from ".."
 
+export const getClientSummary = async () => {
+  const response = await api.get("/clients/summary")
+  return response.data
+}
+
 export const getAllClients = async () => {
   const response = await api.get("/clients")
   return response.data

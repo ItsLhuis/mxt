@@ -46,6 +46,17 @@ const employeeController = {
 
     res.status(200).json(existingUser)
   }),
+  summary: tryCatch(async (req, res) => {
+    const total = await Employee.getTotal()
+    const lastMonthsTotal = await Employee.getLastMonthsTotal()
+    const lastMonthsPercentageChange = await Employee.getLastMonthsPercentageChange()
+
+    res.status(200).json({
+      total: total[0]["total"],
+      last_months_total: lastMonthsTotal,
+      percentage: lastMonthsPercentageChange
+    })
+  }),
   update: tryCatch(async (req, res) => {
     const userId = req.user.id
     const { name, phoneNumber, country, city, locality, address, postalCode, description } =
