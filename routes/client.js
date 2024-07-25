@@ -11,6 +11,10 @@ router
   .post(checkPermissionHandler("client", permissions.CREATE), clientController.create)
 
 router
+  .route("/summary")
+  .get(checkPermissionHandler("client", permissions.READ), clientController.summary)
+
+router
   .route("/:clientId")
   .get(checkPermissionHandler("client", permissions.READ), clientController.findByClientId)
   .put(checkPermissionHandler("client", permissions.UPDATE), clientController.update)

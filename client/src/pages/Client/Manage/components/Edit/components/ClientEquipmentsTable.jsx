@@ -4,7 +4,7 @@ import { BASE_URL } from "@api"
 
 import { Link } from "react-router-dom"
 import { Box, Stack, Paper, Divider, Typography } from "@mui/material"
-import { AppsOutlined } from "@mui/icons-material"
+import { Computer } from "@mui/icons-material"
 
 import { HeaderSection, Loadable, Table, TableSkeleton, Avatar } from "@components/ui"
 
@@ -212,7 +212,7 @@ const ClientEquipmentsTable = ({ client, isLoading, isError }) => {
       <HeaderSection
         title="Equipamentos"
         description="Equipamentos do cliente"
-        icon={<AppsOutlined />}
+        icon={<Computer />}
       />
       <Loadable
         isLoading={!isClientFinished}

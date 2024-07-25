@@ -23,7 +23,7 @@ import {
   Search,
   Dashboard,
   Person,
-  AppsOutlined,
+  Computer,
   Construction,
   FormatListBulleted,
   TableChart,
@@ -191,7 +191,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "MANUTENÇÃO",
       subSection: "Equipamentos",
-      icon: <AppsOutlined />,
+      icon: <Computer />,
       label: "Histórico de Equipamentos",
       description: "Acesso ao histórico de equipamentos",
       link: "/equipments/history"
@@ -199,7 +199,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "MANUTENÇÃO",
       subSection: "Equipamentos",
-      icon: <AppsOutlined />,
+      icon: <Computer />,
       label: "Consultar Equipamentos",
       description: "Consultar equipamentos",
       link: "/equipments/consult"
@@ -207,7 +207,7 @@ const CommandDialog = ({ open, handleClose }) => {
     {
       section: "MANUTENÇÃO",
       subSection: "Equipamentos",
-      icon: <AppsOutlined />,
+      icon: <Computer />,
       label: "Etiquetas de Equipamentos",
       description: "Acesso às etiquetas de equipamentos",
       link: "/equipments/tags"

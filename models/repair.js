@@ -223,6 +223,78 @@ const Repair = {
       },
       memoryOnlyCache
     )(),
+  getTotal: () => {
+    const query = "SELECT COUNT(*) AS total FROM repairs"
+    return dbQueryExecutor.execute(query)
+  },
+  getLastMonthsTotal: () => {
+    const query = `
+        WITH MonthlyTotals AS (
+          SELECT 
+            DATE_FORMAT(entry_datetime, '%Y-%m') AS month,
+            COUNT(*) AS total
+          FROM repairs
+          WHERE entry_datetime >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+          GROUP BY month
+        ),
+        FullMonths AS (
+          SELECT
+            DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL (5 - i) MONTH), '%Y-%m') AS month
+          FROM (SELECT 0 i UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5) numbers
+        )
+        SELECT 
+          f.month,
+          COALESCE(m.total, 0) AS total
+        FROM FullMonths f
+        LEFT JOIN MonthlyTotals m ON f.month = m.month
+        ORDER BY f.month
+      `
+    return dbQueryExecutor.execute(query)
+  },
+  getLastMonthsPercentageChange: async () => {
+    const query = `
+        WITH MonthlyTotals AS (
+          SELECT 
+            DATE_FORMAT(entry_datetime, '%Y-%m') AS month,
+            COUNT(*) AS total
+          FROM repairs
+          WHERE entry_datetime < CURDATE()
+          GROUP BY month
+        ),
+        LastTwoMonths AS (
+          SELECT 
+            month, 
+            total
+          FROM MonthlyTotals
+          WHERE month < DATE_FORMAT(CURDATE(), '%Y-%m')
+          ORDER BY month DESC
+          LIMIT 2
+        )
+        SELECT 
+          COALESCE(
+            MAX(CASE WHEN row_num = 1 THEN total END), 0
+          ) AS latest_total,
+          COALESCE(
+            MAX(CASE WHEN row_num = 2 THEN total END), 0
+          ) AS previous_total
+        FROM (
+          SELECT 
+            month,
+            total,
+            ROW_NUMBER() OVER (ORDER BY month DESC) AS row_num
+          FROM LastTwoMonths
+        ) AS numbered_totals
+      `
+
+    const result = await dbQueryExecutor.execute(query)
+    const { latest_total, previous_total } = result[0] || { latest_total: 0, previous_total: 0 }
+
+    if (previous_total === 0) {
+      return latest_total === 0 ? 0 : 100
+    }
+
+    return ((latest_total - previous_total) / previous_total) * 100
+  },
   create: (equipmentId, statusId, entryDescription, entryDatetime, createdByUserId) => {
     const query = `
     INSERT INTO repairs (

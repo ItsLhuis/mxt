@@ -15,6 +15,10 @@ router
   )
 
 router
+  .route("/summary")
+  .get(checkPermissionHandler("email", permissions.READ), emailController.summary)
+
+router
   .route("/:emailId")
   .get(checkPermissionHandler("email", permissions.READ), emailController.findByEmailId)
 

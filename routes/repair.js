@@ -132,6 +132,10 @@ router
   .post(checkPermissionHandler("repair", permissions.CREATE), repairController.create)
 
 router
+  .route("/summary")
+  .get(checkPermissionHandler("repair", permissions.READ), repairController.summary)
+
+router
   .route("/:repairId")
   .get(checkPermissionHandler("repair", permissions.READ), repairController.findByRepairId)
   .put(checkPermissionHandler("repair", permissions.UPDATE), repairController.update)

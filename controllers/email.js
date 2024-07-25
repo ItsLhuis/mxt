@@ -32,6 +32,17 @@ const emailController = {
 
     res.status(200).json(existingEmail)
   }),
+  summary: tryCatch(async (req, res) => {
+    const total = await Email.getTotal()
+    const lastMonthsTotal = await Email.getLastMonthsTotal()
+    const lastMonthsPercentageChange = await Email.getLastMonthsPercentageChange()
+
+    res.status(200).json({
+      total: total[0]["total"],
+      last_months_total: lastMonthsTotal,
+      percentage: lastMonthsPercentageChange
+    })
+  }),
   send: tryCatch(async (req, res) => {
     const { clientId, contactId, subject, title, message, text } = req.body
 

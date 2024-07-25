@@ -15,7 +15,7 @@ import {
   Delete,
   Phone,
   Place,
-  AppsOutlined,
+  Computer,
   History,
   Check,
   Close
@@ -1126,7 +1126,7 @@ const ClientTable = () => {
               <HeaderSection
                 title="Equipamentos"
                 description="Equipamentos do cliente"
-                icon={<AppsOutlined />}
+                icon={<Computer />}
               />
               <Table
                 mode="datatable"

@@ -24,6 +24,17 @@ const smsController = {
 
     res.status(200).json(existingSms)
   }),
+  summary: tryCatch(async (req, res) => {
+    const total = await Sms.getTotal()
+    const lastMonthsTotal = await Sms.getLastMonthsTotal()
+    const lastMonthsPercentageChange = await Sms.getLastMonthsPercentageChange()
+
+    res.status(200).json({
+      total: total[0]["total"],
+      last_months_total: lastMonthsTotal,
+      percentage: lastMonthsPercentageChange
+    })
+  }),
   send: tryCatch(async (req, res) => {
     const { clientId, contactId, message } = req.body
 

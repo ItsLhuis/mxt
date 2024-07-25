@@ -61,6 +61,17 @@ const clientController = {
 
     res.status(200).json([filteredClient])
   }),
+  summary: tryCatch(async (req, res) => {
+    const total = await Client.getTotal()
+    const lastMonthsTotal = await Client.getLastMonthsTotal()
+    const lastMonthsPercentageChange = await Client.getLastMonthsPercentageChange()
+
+    res.status(200).json({
+      total: total[0]["total"],
+      last_months_total: lastMonthsTotal,
+      percentage: lastMonthsPercentageChange
+    })
+  }),
   create: tryCatch(async (req, res) => {
     const { name, description } = req.body
 

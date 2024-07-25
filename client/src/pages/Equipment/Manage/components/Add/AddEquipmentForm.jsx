@@ -23,7 +23,7 @@ import {
   Skeleton,
   Typography
 } from "@mui/material"
-import { AppsOutlined, Search } from "@mui/icons-material"
+import { Computer, Search } from "@mui/icons-material"
 
 import { HeaderSection, Modal, Loadable, Select, RichEditor, Caption } from "@components/ui"
 
@@ -103,7 +103,7 @@ const AddEquipmentForm = () => {
             <HeaderSection
               title="Detalhes"
               description="Cliente, tipo, marca, modelo,... do equipamento"
-              icon={<AppsOutlined />}
+              icon={<Computer />}
             />
             <Stack sx={{ padding: 3, gap: 2 }}>
               <FormControl fullWidth>

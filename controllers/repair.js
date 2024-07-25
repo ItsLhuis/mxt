@@ -91,6 +91,17 @@ const repairController = {
 
     res.status(200).json([filteredRepairs])
   }),
+  summary: tryCatch(async (req, res) => {
+    const total = await Repair.getTotal()
+    const lastMonthsTotal = await Repair.getLastMonthsTotal()
+    const lastMonthsPercentageChange = await Repair.getLastMonthsPercentageChange()
+
+    res.status(200).json({
+      total: total[0]["total"],
+      last_months_total: lastMonthsTotal,
+      percentage: lastMonthsPercentageChange
+    })
+  }),
   create: tryCatch(async (req, res) => {
     let { equipmentId, statusId, entryDescription, entryDatetime } = req.body
 

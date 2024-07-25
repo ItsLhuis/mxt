@@ -17,6 +17,16 @@ const initializeApp = require("@utils/initializeApp")
 
 const app = express()
 
+/* app.use((req, res, next) => {
+  const minDelay = 1000
+  const maxDelay = 4000
+  const delay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay
+
+  setTimeout(() => {
+    next()
+  }, delay)
+}) */
+
 app.use(express.json())
 
 app.use(cookieParser())

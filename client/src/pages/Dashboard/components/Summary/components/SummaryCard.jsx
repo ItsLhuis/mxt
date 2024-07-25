@@ -13,11 +13,9 @@ import {
   Skeleton
 } from "@mui/material"
 
-import { Caption } from "@components/ui"
+import { Loadable, Caption } from "@components/ui"
 
 import { BasicLineChart } from "@components/ui/Charts"
-
-import { motion } from "framer-motion"
 
 const MetricSkeleton = () => (
   <Stack sx={{ gap: 1.3 }}>
@@ -36,18 +34,16 @@ const SummaryCard = ({ icon, title, metricQuery, chartQuery, colorLine, mdSize, 
     <Grid item xs={12} md={mdSize} lg={lgSize}>
       <Paper elevation={1}>
         <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
-          <Box
+          <Stack
             sx={{
-              display: "flex",
               flexDirection: "column",
               alignItems: "flex-start",
-              gap: 1.3,
+              gap: 1,
               padding: 3
             }}
           >
-            <Box
+            <Stack
               sx={{
-                display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 padding: 1.5,
@@ -56,38 +52,37 @@ const SummaryCard = ({ icon, title, metricQuery, chartQuery, colorLine, mdSize, 
               }}
             >
               {icon}
-            </Box>
-            <Typography variant="p" component="p" sx={{ fontWeight: 600 }}>
+            </Stack>
+            <Typography variant="p" component="p" sx={{ fontWeight: 600, marginTop: 1 }}>
               {title}
             </Typography>
-            {metricQuery.isLoading ? (
-              <MetricSkeleton />
-            ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.2 }}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  gap: "10.4px"
-                }}
-              >
-                <Typography variant="h3" component="h3">
-                  {metricQuery.data.total}
-                </Typography>
-                <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-                  <Chip
-                    label={metricQuery.data.percentage.change}
-                    color={metricQuery.data.percentage.color}
-                    sx={{ marginTop: "auto" }}
-                  />
-                  <Caption title="Em comparação com o mês anterior" />
+            <Loadable
+              isLoading={metricQuery.isLoading}
+              LoadingComponent={<MetricSkeleton />}
+              LoadedComponent={
+                <Stack
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    gap: 1.5
+                  }}
+                >
+                  <Typography variant="h3" component="h3">
+                    {metricQuery.data.total}
+                  </Typography>
+                  <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+                    <Chip
+                      label={metricQuery.data.percentage.change}
+                      color={metricQuery.data.percentage.color}
+                      sx={{ marginTop: "auto" }}
+                    />
+                    <Caption title="Comparado aos últimos dois meses completos" />
+                  </Stack>
                 </Stack>
-              </motion.div>
-            )}
-          </Box>
+              }
+            />
+          </Stack>
           <Box
             sx={{
               width: "100%",
@@ -118,7 +113,7 @@ SummaryCard.propTypes = {
   metricQuery: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
     data: PropTypes.shape({
-      total: PropTypes.number.isRequired,
+      total: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       percentage: PropTypes.shape({
         change: PropTypes.string.isRequired,
         color: PropTypes.string.isRequired

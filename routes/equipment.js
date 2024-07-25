@@ -93,6 +93,10 @@ router
   .post(checkPermissionHandler("equipment", permissions.CREATE), equipmentController.create)
 
 router
+  .route("/summary")
+  .get(checkPermissionHandler("equipment", permissions.READ), equipmentController.summary)
+
+router
   .route("/:equipmentId")
   .get(checkPermissionHandler("equipment", permissions.READ), equipmentController.findByEquipmentId)
   .put(checkPermissionHandler("equipment", permissions.UPDATE), equipmentController.update)

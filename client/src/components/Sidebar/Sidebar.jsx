@@ -10,7 +10,7 @@ import { Box, Collapse, Typography, ButtonBase, Drawer, Tooltip, IconButton } fr
 import {
   Dashboard,
   Person,
-  AppsOutlined,
+  Computer,
   Construction,
   Email,
   Sms,
@@ -64,7 +64,7 @@ const sidebarData = [
     ]
   },
   {
-    icon: <AppsOutlined fontSize="small" />,
+    icon: <Computer fontSize="small" />,
     path: "/equipment",
     name: "Equipamento",
     submenu: [
@@ -79,7 +79,7 @@ const sidebarData = [
         className: ""
       },
       {
-        icon: <AppsOutlined fontSize="small" />,
+        icon: <Computer fontSize="small" />,
         path: "/equipment/type",
         name: "Tipo",
         submenu: [
@@ -91,7 +91,7 @@ const sidebarData = [
         ]
       },
       {
-        icon: <AppsOutlined fontSize="small" />,
+        icon: <Computer fontSize="small" />,
         path: "/equipment/brand",
         name: "Marca",
         submenu: [
@@ -103,7 +103,7 @@ const sidebarData = [
         ]
       },
       {
-        icon: <AppsOutlined fontSize="small" />,
+        icon: <Computer fontSize="small" />,
         path: "/equipment/model",
         name: "Modelo",
         submenu: [

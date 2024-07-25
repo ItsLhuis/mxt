@@ -110,24 +110,40 @@ const Employee = {
         JOIN users u ON e.user_id = u.id
         WHERE u.created_at_datetime < CURDATE()
         GROUP BY month
+      ),
+      LastTwoMonths AS (
+        SELECT 
+          month, 
+          total
+        FROM MonthlyTotals
+        WHERE month < DATE_FORMAT(CURDATE(), '%Y-%m')
+        ORDER BY month DESC
+        LIMIT 2
       )
       SELECT 
         COALESCE(
-          (SELECT total FROM MonthlyTotals ORDER BY month DESC LIMIT 1), 0
+          MAX(CASE WHEN row_num = 1 THEN total END), 0
         ) AS latest_total,
         COALESCE(
-          (SELECT total FROM MonthlyTotals ORDER BY month DESC LIMIT 1 OFFSET 1), 0
+          MAX(CASE WHEN row_num = 2 THEN total END), 0
         ) AS previous_total
-    `;
-    
-    const result = await dbQueryExecutor.execute(query);
-    const { latest_total, previous_total } = result[0] || { latest_total: 0, previous_total: 0 };
+      FROM (
+        SELECT 
+          month,
+          total,
+          ROW_NUMBER() OVER (ORDER BY month DESC) AS row_num
+        FROM LastTwoMonths
+      ) AS numbered_totals
+    `
+
+    const result = await dbQueryExecutor.execute(query)
+    const { latest_total, previous_total } = result[0] || { latest_total: 0, previous_total: 0 }
 
     if (previous_total === 0) {
-      return latest_total === 0 ? 0 : 100; // Se não houve dados no período anterior, a porcentagem é 100% se houver dados no período atual
+      return latest_total === 0 ? 0 : 100
     }
-    
-    return ((latest_total - previous_total) / previous_total) * 100;
+
+    return ((latest_total - previous_total) / previous_total) * 100
   },
   create: (
     userId,

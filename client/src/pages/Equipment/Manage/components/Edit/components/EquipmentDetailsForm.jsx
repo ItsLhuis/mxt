@@ -10,7 +10,7 @@ import { LoadingButton } from "@mui/lab"
 import { Paper, Box, Stack, FormControl, TextField, InputAdornment, Skeleton } from "@mui/material"
 
 import { HeaderSection, Loadable, Select, RichEditor, Caption } from "@components/ui"
-import { AppsOutlined } from "@mui/icons-material"
+import { Computer } from "@mui/icons-material"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
@@ -91,7 +91,7 @@ const EquipmentDetailsForm = ({ equipment, isLoading, isError }) => {
       <HeaderSection
         title="Detalhes"
         description="Cliente, tipo, marca, modelo,... do equipamento"
-        icon={<AppsOutlined />}
+        icon={<Computer />}
       />
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack sx={{ padding: 3, gap: 2 }}>

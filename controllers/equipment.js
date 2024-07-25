@@ -85,6 +85,17 @@ const equipmentController = {
 
     res.status(200).json([filteredEquipment])
   }),
+  summary: tryCatch(async (req, res) => {
+    const total = await Equipment.getTotal()
+    const lastMonthsTotal = await Equipment.getLastMonthsTotal()
+    const lastMonthsPercentageChange = await Equipment.getLastMonthsPercentageChange()
+
+    res.status(200).json({
+      total: total[0]["total"],
+      last_months_total: lastMonthsTotal,
+      percentage: lastMonthsPercentageChange
+    })
+  }),
   create: tryCatch(async (req, res) => {
     const { clientId, brandId, modelId, typeId, sn, description } = req.body
 

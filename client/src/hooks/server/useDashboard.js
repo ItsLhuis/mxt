@@ -11,52 +11,54 @@ export const useDashboard = () => {
   const queryClient = useQueryClient()
 
   const findEmployeeSummary = useQuery({
-    queryKey: ["dashboard", "emplyoees", "summary"],
-    queryFn: getEmployeeSummary,
-    onSuccess: (data) => {
-      queryClient.setQueryData(["dashboard", "emplyoees", "summary"], data)
-    }
+    queryKey: ["dashboard", "employees", "summary"],
+    queryFn: getEmployeeSummary
   })
 
   const findClientSummary = useQuery({
     queryKey: ["dashboard", "clients", "summary"],
-    queryFn: getEmployeeSummary,
-    onSuccess: (data) => {
-      queryClient.setQueryData(["dashboard", "clients", "summary"], data)
-    }
+    queryFn: getClientSummary
   })
 
   const findEquipmentSummary = useQuery({
     queryKey: ["dashboard", "equipments", "summary"],
-    queryFn: getEmployeeSummary,
-    onSuccess: (data) => {
-      queryClient.setQueryData(["dashboard", "equipments", "summary"], data)
-    }
+    queryFn: getEquipmentSummary
   })
 
   const findRepairSummary = useQuery({
     queryKey: ["dashboard", "repairs", "summary"],
-    queryFn: getEmployeeSummary,
-    onSuccess: (data) => {
-      queryClient.setQueryData(["dashboard", "repairs", "summary"], data)
-    }
+    queryFn: getRepairSummary
   })
 
   const findEmailSummary = useQuery({
     queryKey: ["dashboard", "emails", "summary"],
-    queryFn: getEmployeeSummary,
-    onSuccess: (data) => {
-      queryClient.setQueryData(["dashboard", "emails", "summary"], data)
-    }
+    queryFn: getEmailSummary
   })
 
   const findSmsSummary = useQuery({
     queryKey: ["dashboard", "smses", "summary"],
-    queryFn: getEmployeeSummary,
-    onSuccess: (data) => {
-      queryClient.setQueryData(["dashboard", "smses", "summary"], data)
-    }
+    queryFn: getSmsSummary
   })
+
+  const refetchAllQueries = () => {
+    return Promise.all([
+      findEmployeeSummary.refetch(),
+      findClientSummary.refetch(),
+      findEquipmentSummary.refetch(),
+      findRepairSummary.refetch(),
+      findEmailSummary.refetch(),
+      findSmsSummary.refetch()
+    ])
+  }
+
+  const isFetching = [
+    findEmployeeSummary.isFetching,
+    findClientSummary.isFetching,
+    findEquipmentSummary.isFetching,
+    findRepairSummary.isFetching,
+    findEmailSummary.isFetching,
+    findSmsSummary.isFetching
+  ].some(Boolean)
 
   return {
     findEmployeeSummary,
@@ -64,6 +66,10 @@ export const useDashboard = () => {
     findEquipmentSummary,
     findRepairSummary,
     findEmailSummary,
-    findSmsSummary
+    findSmsSummary,
+    refetchAllQueries: {
+      refetch: refetchAllQueries,
+      isFetching
+    }
   }
 }
