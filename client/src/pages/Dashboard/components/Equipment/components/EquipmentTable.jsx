@@ -10,7 +10,7 @@ import { useEquipment } from "@hooks/server/useEquipment"
 import { FileSvg, ImgSvg, PdfSvg } from "@assets/icons/files"
 
 import { Link } from "react-router-dom"
-import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton, Chip } from "@mui/material"
+import { Stack, Box, Typography, Divider, Tooltip, IconButton, Chip } from "@mui/material"
 import {
   MoreVert,
   Edit,
@@ -1103,39 +1103,38 @@ const EquipmentTable = () => {
   )
 
   return (
-    <Paper elevation={1}>
-      <Box sx={{ marginTop: 3 }}>
-        <Loadable
-          isLoading={isEquipmentsLoading}
-          LoadingComponent={<TableSkeleton mode="datatable" />}
-          LoadedComponent={
-            <Table
-              mode="datatable"
-              data={equipments ?? []}
-              columns={equipmentsTableColumns}
-              ExpandableContentComponent={ExpandableEquipmentsTableContent}
-            />
-          }
-        />
-        <Modal
-          mode="delete"
-          title="Eliminar Equipamento"
-          open={deleteEquipmentModal.isOpen}
-          onClose={closeDeleteEquipmentModal}
-          onSubmit={handleDeleteEquipment}
-          description="Tem a certeza que deseja eliminar este equipamento?"
-          subDescription="Ao eliminar este equipamento, todos os dados relacionados, incluindo anexos e reparações associadas, serão removidos de forma permanente."
-        />
-        <FileViewer
-          open={openFileViewer}
-          onClose={handleCloseFileViewer}
-          file={attachment.url}
-          fileName={attachment.name}
-          fileSize={Number(attachment.size)}
-          fileType={attachment.type}
-        />
-      </Box>
-    </Paper>
+    <Stack>
+      <HeaderSection title="Lista" description="Lista de todos os equipamentos" />
+      <Loadable
+        isLoading={isEquipmentsLoading}
+        LoadingComponent={<TableSkeleton mode="datatable" />}
+        LoadedComponent={
+          <Table
+            mode="datatable"
+            data={equipments ?? []}
+            columns={equipmentsTableColumns}
+            ExpandableContentComponent={ExpandableEquipmentsTableContent}
+          />
+        }
+      />
+      <Modal
+        mode="delete"
+        title="Eliminar Equipamento"
+        open={deleteEquipmentModal.isOpen}
+        onClose={closeDeleteEquipmentModal}
+        onSubmit={handleDeleteEquipment}
+        description="Tem a certeza que deseja eliminar este equipamento?"
+        subDescription="Ao eliminar este equipamento, todos os dados relacionados, incluindo anexos e reparações associadas, serão removidos de forma permanente."
+      />
+      <FileViewer
+        open={openFileViewer}
+        onClose={handleCloseFileViewer}
+        file={attachment.url}
+        fileName={attachment.name}
+        fileSize={Number(attachment.size)}
+        fileType={attachment.type}
+      />
+    </Stack>
   )
 }
 

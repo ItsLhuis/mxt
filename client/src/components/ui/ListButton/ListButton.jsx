@@ -46,7 +46,14 @@ const ListButton = ({ buttons, onClose }) => {
                 }
               }}
             >
-              <Stack sx={{ flexDirection: "row", alignItems: "flex-start", justifyContent: "center", gap: 1 }}>
+              <Stack
+                sx={{
+                  flexDirection: "row",
+                  alignItems: "flex-start",
+                  justifyContent: "center",
+                  gap: 1
+                }}
+              >
                 {button.icon}
                 <Typography variant="p" component="p" sx={{ fontWeight: 400 }}>
                   {button.label}
@@ -66,7 +73,8 @@ ListButton.propTypes = {
       label: PropTypes.string.isRequired,
       icon: PropTypes.node,
       onClick: PropTypes.func.isRequired,
-      selected: PropTypes.bool
+      selected: PropTypes.bool,
+      divider: PropTypes.bool
     })
   ).isRequired,
   onClose: PropTypes.func

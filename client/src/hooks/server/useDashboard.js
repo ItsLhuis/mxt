@@ -60,6 +60,15 @@ export const useDashboard = () => {
     findSmsSummary.isFetching
   ].some(Boolean)
 
+  const isRefetching = [
+    findEmployeeSummary.isRefetching,
+    findClientSummary.isRefetching,
+    findEquipmentSummary.isRefetching,
+    findRepairSummary.isRefetching,
+    findEmailSummary.isRefetching,
+    findSmsSummary.isRefetching
+  ].some(Boolean)
+
   return {
     findEmployeeSummary,
     findClientSummary,
@@ -69,7 +78,8 @@ export const useDashboard = () => {
     findSmsSummary,
     refetchAllQueries: {
       refetch: refetchAllQueries,
-      isFetching
+      isFetching,
+      isRefetching
     }
   }
 }

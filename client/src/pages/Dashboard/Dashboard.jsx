@@ -5,7 +5,13 @@ import { useDashboard } from "@hooks/server/useDashboard"
 import { Box, Container, Stack } from "@mui/material"
 
 import { PageLoader, HeaderPage } from "@components/ui"
-import { AnnualActivities, FinancialStatistics, Summary, ReparationsStates } from "./components"
+import {
+  Summary,
+  Equipment,
+  AnnualActivities,
+  FinancialStatistics,
+  ReparationsStates
+} from "./components"
 
 import { motion } from "framer-motion"
 
@@ -22,10 +28,11 @@ const Dashboard = () => {
               breadcrumbs={[{ name: "Painel de Controlo" }]}
               isRefetchEnable={!refetchAllQueries.isFetching}
               refetchFunction={() => refetchAllQueries.refetch()}
-              isRefetching={refetchAllQueries.isFetching}
+              isRefetching={refetchAllQueries.isRefetching}
             />
             <Stack sx={{ gap: 3 }}>
               <Summary />
+              <Equipment />
             </Stack>
           </Container>
         </Box>

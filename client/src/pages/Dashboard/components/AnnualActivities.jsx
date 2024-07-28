@@ -2,7 +2,7 @@ import React from "react"
 
 import { Paper, Typography, Box, Stack } from "@mui/material"
 
-import { ButtonDropDownSelect, ListButton } from "@components/ui"
+import { ButtonDropDownSelect, ListButton, HeaderSection } from "@components/ui"
 import { LineChart } from "@components/ui/Charts"
 
 const OverallChart = () => {
@@ -24,28 +24,24 @@ const OverallChart = () => {
   const colors = ["rgb(248, 112, 96)", "rgb(165, 170, 82)", "rgb(124, 152, 179)"]
 
   return (
-    <Paper elevation={1} sx={{ height: "100%" }}>
-      <Box sx={{ padding: 3 }}>
-        <Stack sx={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Typography variant="h5" component="h5" sx={{ marginBottom: 3 }}>
-            Atividades Anuais
-          </Typography>
-          <Box>
-            <ButtonDropDownSelect title="2024">
-              <ListButton
-                buttons={[
-                  { label: "2024", onClick: () => console.log() },
-                  { label: "2023", onClick: () => console.log() },
-                  { label: "2022", onClick: () => console.log() },
-                  { label: "2021", onClick: () => console.log() },
-                  { label: "2020", onClick: () => console.log() },
-                  { label: "2019", onClick: () => console.log() }
-                ]}
-              />
-            </ButtonDropDownSelect>
-          </Box>
+    <>
+      <HeaderSection title="Gráfico Anual" description="Gráfico anual dos equipamentos" />
+      <Box sx={{ width: "100%", padding: 3, paddingTop: 0 }}>
+        <Stack sx={{marginBlock: 1, alignItems: "flex-end"}}>
+          <ButtonDropDownSelect title="2024">
+            <ListButton
+              buttons={[
+                { label: "2024", onClick: () => console.log() },
+                { label: "2023", onClick: () => console.log() },
+                { label: "2022", onClick: () => console.log() },
+                { label: "2021", onClick: () => console.log() },
+                { label: "2020", onClick: () => console.log() },
+                { label: "2019", onClick: () => console.log() }
+              ]}
+            />
+          </ButtonDropDownSelect>
         </Stack>
-        <Box sx={{ width: "100%", height: 400 }}>
+        <Box sx={{ width: "100%", minHeight: 400 }}>
           <LineChart
             data={data}
             categories={[
@@ -67,7 +63,7 @@ const OverallChart = () => {
           />
         </Box>
       </Box>
-    </Paper>
+    </>
   )
 }
 

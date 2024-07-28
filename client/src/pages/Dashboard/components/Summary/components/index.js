@@ -1,1 +1,5 @@
-export { default as SummaryCard } from "./SummaryCard"
+import { lazy } from "react"
+
+const SummaryCard = lazy(() => import("./SummaryCard"))
+
+export { SummaryCard }

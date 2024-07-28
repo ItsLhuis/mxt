@@ -62,7 +62,7 @@ const Summary = () => {
     {
       type: "employees",
       icon: <AccountBox />,
-      title: "Utilizadores",
+      title: "Funcionários",
       colorLine: "rgb(248, 112, 96)",
       metricQuery: {
         isLoading: isEmployeeSummaryLoading || isEmployeeSummaryError,
