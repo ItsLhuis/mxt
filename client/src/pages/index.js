@@ -60,4 +60,10 @@ export const SendEmail = lazy(() => import("./Email/Send/Send"))
 export const GetEmail = lazy(() => import("./Email/Get/Get"))
 //----------------------------------------------------------------------
 
+//Sms
+export const SmsList = lazy(() => import("./Sms/List/List"))
+export const SendSms = lazy(() => import("./Sms/Send/Send"))
+export const GetSms = lazy(() => import("./Sms/Get/Get"))
+//----------------------------------------------------------------------
+
 export const Settings = lazy(() => import("./Settings/Settings"))

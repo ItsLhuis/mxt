@@ -33,6 +33,9 @@ import {
   EmailList,
   SendEmail,
   GetEmail,
+  SmsList,
+  SendSms,
+  GetSms,
   Settings
 } from "@pages"
 
@@ -104,6 +107,12 @@ const Content = () => {
             <Route path="/email/list" element={<EmailList />} />
             <Route path="/email/send" element={<SendEmail />} />
             <Route path="/email/:emailId" element={<GetEmail />} />
+            {/* ---------------------------------------------------------- */}
+
+            {/* Sms */}
+            <Route path="/sms/list" element={<SmsList />} />
+            <Route path="/sms/send" element={<SendSms />} />
+            <Route path="/sms/:smsId" element={<GetSms />} />
             {/* ---------------------------------------------------------- */}
 
             <Route path="/settings" element={<Settings />} />

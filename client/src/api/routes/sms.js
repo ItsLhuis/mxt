@@ -10,37 +10,12 @@ export const getAllSmses = async () => {
   return response.data
 }
 
-export const getSmsById = async ({ emailId }) => {
-  const response = await api.get(`/smses/${emailId}`)
+export const getSmsById = async ({ smsId }) => {
+  const response = await api.get(`/smses/${smsId}`)
   return response.data
 }
 
-export const sendSms = async ({
-  clientId,
-  contactId,
-  subject,
-  title,
-  message,
-  text,
-  attachments
-}) => {
-  const formData = new FormData()
-  formData.append("clientId", clientId)
-  formData.append("contactId", contactId)
-  formData.append("subject", subject)
-  formData.append("title", title)
-  formData.append("message", message)
-  formData.append("text", text)
-
-  attachments.forEach((file) => {
-    formData.append("attachments", file)
-  })
-
-  const response = await api.post("/smses", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data"
-    }
-  })
-
+export const sendSms = async ({ clientId, contactId, message }) => {
+  const response = await api.post("/smses", { clientId, contactId, message })
   return response.data
 }

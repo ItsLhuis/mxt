@@ -49,7 +49,7 @@ const ListButton = ({ buttons, onClose }) => {
               <Stack
                 sx={{
                   flexDirection: "row",
-                  alignItems: "flex-start",
+                  alignItems: "center",
                   justifyContent: "center",
                   gap: 1
                 }}

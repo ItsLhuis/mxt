@@ -66,7 +66,9 @@ const Email = {
           User.findByUserId(email[0].sent_by_user_id)
         ])
 
-        const lowerCaseStatus = emailResendData.last_event.toLowerCase()
+        const lowerCaseStatus = emailResendData.last_event
+          ? emailResendData.last_event.toLowerCase()
+          : ""
 
         const statusText = (() => {
           switch (lowerCaseStatus) {

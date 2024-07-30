@@ -3,7 +3,7 @@ import React, { useMemo } from "react"
 import { useNavigate } from "react-router-dom"
 
 import { BASE_URL } from "@api"
-import { useEmail } from "@hooks/server/useEmail"
+import { useSms } from "@hooks/server/useSms"
 
 import { Link } from "react-router-dom"
 import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton } from "@mui/material"
@@ -11,15 +11,16 @@ import { Visibility } from "@mui/icons-material"
 
 import { Loadable, Table, TableSkeleton, Avatar, Caption } from "@components/ui"
 
+import { formatPhoneNumber } from "@utils/format/phone"
 import { formatDateTimeExportExcel, formatDate, formatTime } from "@utils/format/date"
 
-const EmailTable = () => {
+const SmsTable = () => {
   const navigate = useNavigate()
 
-  const { findAllEmails } = useEmail()
-  const { data: emails, isLoading: isEmailsLoading } = findAllEmails
+  const { findAllSmses } = useSms()
+  const { data: smses, isLoading: isSmsesLoading } = findAllSmses
 
-  const emailsTableColumns = useMemo(
+  const smsesTableColumns = useMemo(
     () => [
       {
         id: "client.name",
@@ -39,14 +40,15 @@ const EmailTable = () => {
         id: "to",
         label: "Para",
         align: "left",
-        sortable: true
+        sortable: true,
+        formatter: formatPhoneNumber
       },
       {
-        id: "subject",
-        label: "Assunto",
+        id: "message",
+        label: "Mensagem",
         align: "left",
         sortable: true,
-        renderComponent: ({ row }) => <Link to={`/email/${row?.id}`}>{row?.subject}</Link>
+        renderComponent: ({ row }) => <Link to={`/sms/${row?.id}`}>{row?.message}</Link>
       },
       {
         id: "sent_by_user",
@@ -130,8 +132,8 @@ const EmailTable = () => {
         align: "right",
         sortable: false,
         renderComponent: ({ row }) => (
-          <Tooltip title="Ver e-email" sx={{ margin: -1 }}>
-            <IconButton onClick={() => navigate(`/email/${row.id}`)}>
+          <Tooltip title="Ver SMS" sx={{ margin: -1 }}>
+            <IconButton onClick={() => navigate(`/sms/${row.id}`)}>
               <Visibility />
             </IconButton>
           </Tooltip>
@@ -141,7 +143,7 @@ const EmailTable = () => {
     []
   )
 
-  const emailsTableExportColumns = useMemo(
+  const smsesTableExportColumns = useMemo(
     () => [
       {
         id: "client.name",
@@ -152,8 +154,8 @@ const EmailTable = () => {
         label: "Para"
       },
       {
-        id: "subject",
-        label: "Assunto"
+        id: "message",
+        label: "Mensagem"
       },
       {
         id: "sent_by_user.username",
@@ -172,15 +174,15 @@ const EmailTable = () => {
     <Paper elevation={1}>
       <Box sx={{ marginTop: 3 }}>
         <Loadable
-          isLoading={isEmailsLoading}
+          isLoading={isSmsesLoading}
           LoadingComponent={<TableSkeleton mode="datatable" />}
           LoadedComponent={
             <Table
               mode="datatable"
-              data={emails ?? []}
-              columns={emailsTableColumns}
-              exportFileName="emails"
-              exportColumns={emailsTableExportColumns}
+              data={smses ?? []}
+              columns={smsesTableColumns}
+              exportFileName="sms"
+              exportColumns={smsesTableExportColumns}
             />
           }
         />
@@ -189,4 +191,4 @@ const EmailTable = () => {
   )
 }
 
-export default EmailTable
+export default SmsTable

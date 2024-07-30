@@ -6,6 +6,8 @@ import { useTheme } from "@contexts/theme"
 
 import { produce } from "immer"
 
+import * as ExcelJS from "exceljs"
+
 import {
   Box,
   Typography,
@@ -75,8 +77,132 @@ const getDataCountText = (dataSize) => {
   return dataSize === 1 ? "resultado encontrado" : "resultados encontrados"
 }
 
+const getTextColorBasedOnBackground = (backgroundColorHex) => {
+  const hexToRgb = (hex) => {
+    let r = 0,
+      g = 0,
+      b = 0
+
+    hex = hex.replace(/^#/, "")
+
+    if (hex.length === 6) {
+      r = parseInt(hex.slice(0, 2), 16)
+      g = parseInt(hex.slice(2, 4), 16)
+      b = parseInt(hex.slice(4, 6), 16)
+    } else if (hex.length === 3) {
+      r = parseInt(hex[0] + hex[0], 16)
+      g = parseInt(hex[1] + hex[1], 16)
+      b = parseInt(hex[2] + hex[2], 16)
+    }
+
+    return [r, g, b]
+  }
+
+  const [r, g, b] = hexToRgb(backgroundColorHex)
+
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+
+  return luminance > 0.6 ? "000000" : "FFFFFF"
+}
+
+const excelRowsColorMap = {
+  default: "C8C6CF",
+  primary: "5865F2",
+  error: "D32F2F",
+  info: "0288D1",
+  success: "2E7D32",
+  warning: "ED6C02"
+}
+
+const exportToExcel = async (data, columns, fileNamePrefix = "data") => {
+  const workbook = new ExcelJS.Workbook()
+  const worksheet = workbook.addWorksheet("Sheet1")
+
+  worksheet.columns = columns.map((col) => ({
+    header: col.label || col.id,
+    key: col.id,
+    width: 10
+  }))
+
+  worksheet.addTable({
+    name: "Table1",
+    ref: "A1",
+    headerRow: true,
+    style: {
+      showRowStripes: true
+    },
+    columns: columns.map((col) => ({ name: col.label || col.id })),
+    rows: data.map((row) =>
+      columns.map((column) => {
+        const value = getNestedValue(row, column.id)
+        return column.formatter ? column.formatter(value) : value
+      })
+    )
+  })
+
+  data.forEach((row, rowIndex) => {
+    columns.forEach((column, colIndex) => {
+      const value = getNestedValue(row, column.id)
+      let color = null
+
+      if (typeof column.color === "function") {
+        color = column.color(value)
+      } else if (typeof column.color === "string") {
+        color = column.color
+      }
+
+      if (color) {
+        const cell = worksheet.getCell(rowIndex + 2, colIndex + 1)
+
+        cell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: excelRowsColorMap[color] }
+        }
+
+        cell.font = {
+          color: { argb: getTextColorBasedOnBackground(excelRowsColorMap[color]) },
+          bold: true
+        }
+      }
+    })
+  })
+
+  worksheet.columns.forEach((column) => {
+    let maxLength = 0
+    column.eachCell({ includeEmpty: true }, (cell) => {
+      if (cell.value) {
+        const cellLength = cell.value.toString().length
+        if (cellLength > maxLength) {
+          maxLength = cellLength
+        }
+      }
+    })
+    column.width = Math.max(maxLength + 2, 10)
+  })
+
+  const now = new Date()
+  const date = now.toISOString().split("T")[0].replace(/-/g, "")
+  const time = now.toTimeString().split(" ")[0].replace(/:/g, "")
+  const fileName = `${fileNamePrefix}_${date}${time}.xlsx`
+
+  workbook.xlsx.writeBuffer().then((buffer) => {
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = fileName
+    a.click()
+    window.URL.revokeObjectURL(url)
+  })
+}
+
 const Table = ({
   columns,
+  exportFileName,
+  exportColumns = [],
   data,
   mode,
   actions,
@@ -255,6 +381,10 @@ const Table = ({
 
   const hasExpandableContent = !!ExpandableContentComponent && data.length > 0
 
+  const handleExport = () => {
+    exportToExcel(sortedData, exportColumns, exportFileName)
+  }
+
   return (
     <Box
       sx={{
@@ -267,14 +397,18 @@ const Table = ({
         <Stack
           sx={{
             flexDirection: "row",
-            alignItems: "center",
             justifyContent: "flex-end",
             marginInline: 3,
             marginBottom: 3,
             gap: 3
           }}
         >
-          <TableSearch onSearch={handleSearchChange} />
+          <TableSearch
+            onSearch={handleSearchChange}
+            onExport={handleExport}
+            disableExport={exportColumns.length === 0}
+            disableMoreOptions={filteredData.length === 0}
+          />
         </Stack>
       )}
       {hasSelectedRows && (
@@ -605,6 +739,15 @@ Table.propTypes = {
       renderComponent: PropTypes.elementType
     })
   ).isRequired,
+  exportFileName: PropTypes.string,
+  exportColumns: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string,
+      formatter: PropTypes.func,
+      color: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
+    })
+  ),
   data: PropTypes.array.isRequired,
   mode: PropTypes.oneOf(["normal", "datatable"]),
   actions: function (props, propName, componentName) {

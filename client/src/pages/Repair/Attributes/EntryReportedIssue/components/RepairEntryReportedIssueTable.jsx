@@ -22,7 +22,7 @@ import { RepairEntryReportedIssueEditModal } from "."
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
-import { formatDate, formatTime } from "@utils/format/date"
+import { formatDateTimeExportExcel, formatDate, formatTime } from "@utils/format/date"
 
 const RepairEntryReportedIssueTable = () => {
   const { role } = useAuth()
@@ -303,6 +303,34 @@ const RepairEntryReportedIssueTable = () => {
     []
   )
 
+  const entryReportedIssuesTableExportColumns = useMemo(
+    () => [
+      {
+        id: "name",
+        label: "Problema reportado"
+      },
+      {
+        id: "created_by_user.username",
+        label: "Criado por"
+      },
+      {
+        id: "created_at_datetime",
+        label: "Data de criação",
+        formatter: formatDateTimeExportExcel
+      },
+      {
+        id: "last_modified_by_user.username",
+        label: "Modificado pela última vez por"
+      },
+      {
+        id: "last_modified_datetime",
+        label: "Última data de modificação",
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+      }
+    ],
+    []
+  )
+
   return (
     <Paper elevation={1}>
       <Box sx={{ marginTop: 3 }}>
@@ -314,6 +342,8 @@ const RepairEntryReportedIssueTable = () => {
               mode="datatable"
               data={entryReportedIssues ?? []}
               columns={entryReportedIssuesTableColumns}
+              exportFileName="problemas_reportados_reparacao"
+              exportColumns={entryReportedIssuesTableExportColumns}
             />
           }
         />

@@ -69,7 +69,7 @@ const Sms = {
           smsReleansData.timezone
         )
 
-        const lowerCaseStatus = smsReleansData.status.toLowerCase()
+        const lowerCaseStatus = smsReleansData.status ? smsReleansData.status.toLowerCase() : ""
 
         const statusText = (() => {
           switch (lowerCaseStatus) {
@@ -90,13 +90,13 @@ const Sms = {
 
         const statusColor = (() => {
           switch (lowerCaseStatus) {
-            case "Delivered":
+            case "delivered":
               return "success"
-            case "Failed":
-            case "Undelivered":
+            case "failed":
+            case "undelivered":
               return "error"
-            case "Sent":
-            case "Queued":
+            case "sent":
+            case "queued":
               return "info"
             default:
               return "default"

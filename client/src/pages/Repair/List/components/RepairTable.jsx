@@ -37,7 +37,12 @@ import {
 
 import { getValidChipColor } from "@utils/getValidChipColor"
 import { formatHTML } from "@utils/format/formatHTML"
-import { formatDateTime, formatDate, formatTime } from "@utils/format/date"
+import {
+  formatDateTimeExportExcel,
+  formatDateTime,
+  formatDate,
+  formatTime
+} from "@utils/format/date"
 
 const RepairTable = () => {
   const navigate = useNavigate()
@@ -1025,6 +1030,65 @@ const RepairTable = () => {
     []
   )
 
+  const repairsTableExportColumns = useMemo(
+    () => [
+      {
+        id: "equipment.client.name",
+        label: "Cliente"
+      },
+      {
+        id: "equipment",
+        label: "Equipamento",
+        formatter: (value) => `${value?.type?.name} - ${value?.brand?.name} ${value?.model?.name}`
+      },
+      {
+        id: "status",
+        label: "Estado",
+        formatter: (value) => value?.name,
+        color: (value) => value?.color
+      },
+      {
+        id: "entry_datetime",
+        label: "Data de entrada",
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+      },
+      {
+        id: "conclusion_datetime",
+        label: "Data de conclusão",
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+      },
+      {
+        id: "delivery_datetime",
+        label: "Data de entrega",
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+      },
+      {
+        id: "is_client_notified",
+        label: "Cliente notificado",
+        formatter: (value) => (value === true ? "Sim" : "Não")
+      },
+      {
+        id: "created_by_user.username",
+        label: "Criado por"
+      },
+      {
+        id: "created_at_datetime",
+        label: "Data de criação",
+        formatter: formatDateTimeExportExcel
+      },
+      {
+        id: "last_modified_by_user.username",
+        label: "Modificado pela última vez por"
+      },
+      {
+        id: "last_modified_datetime",
+        label: "Última data de modificação",
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+      }
+    ],
+    []
+  )
+
   return (
     <Paper elevation={1}>
       <Box sx={{ marginTop: 3 }}>
@@ -1036,6 +1100,8 @@ const RepairTable = () => {
               mode="datatable"
               data={repairs ?? []}
               columns={repairsTableColumns}
+              exportFileName="reparacoes"
+              exportColumns={repairsTableExportColumns}
               ExpandableContentComponent={ExpandableClientsTableContent}
             />
           }

@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from "react"
 
-import { Stack, Typography, TextField, InputAdornment, Chip, Button } from "@mui/material"
-import { Search, Delete } from "@mui/icons-material"
+import {
+  Stack,
+  Typography,
+  TextField,
+  InputAdornment,
+  Chip,
+  Button,
+  Tooltip,
+  IconButton
+} from "@mui/material"
+import { Search, Delete, MoreVert, Download } from "@mui/icons-material"
+
+import { ButtonDropDownSelect, ListButton } from ".."
 
 import { debounce } from "@utils/debounce"
 
@@ -56,7 +67,7 @@ const renderFilterChips = (filterName, values, handleRemoveFilter) => {
   )
 }
 
-const TableSearch = ({ onSearch }) => {
+const TableSearch = ({ onSearch, onExport, disableExport, disableMoreOptions }) => {
   const [searchInput, setSearchInput] = useState("")
 
   const handleInputChange = (event) => {
@@ -75,21 +86,47 @@ const TableSearch = ({ onSearch }) => {
 
   return (
     <Stack sx={{ width: "100%" }}>
-      <TextField
-        label="Pesquisar"
-        placeholder="O que procura?"
-        sx={{ width: "100%" }}
-        value={searchInput}
-        onChange={handleInputChange}
-        autoComplete="off"
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Search />
-            </InputAdornment>
-          )
-        }}
-      />
+      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
+        <TextField
+          label="Pesquisar"
+          placeholder="O que procura?"
+          sx={{ width: "100%" }}
+          value={searchInput}
+          onChange={handleInputChange}
+          autoComplete="off"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search />
+              </InputAdornment>
+            )
+          }}
+        />
+        {!disableExport && (
+          <ButtonDropDownSelect
+            mode="custom"
+            customButton={
+              <Tooltip title="Mais opções">
+                <span>
+                  <IconButton disabled={disableMoreOptions}>
+                    <MoreVert />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            }
+          >
+            <ListButton
+              buttons={[
+                {
+                  label: "Exportar",
+                  icon: <Download fontSize="small" />,
+                  onClick: () => onExport()
+                }
+              ]}
+            />
+          </ButtonDropDownSelect>
+        )}
+      </Stack>
       {searchInput.trim() !== "" && (
         <Stack sx={{ marginTop: 2, display: "flex", flexDirection: "column", gap: 2 }}>
           <Stack

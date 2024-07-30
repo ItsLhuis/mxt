@@ -34,7 +34,7 @@ import {
 } from "@components/ui"
 
 import { formatHTML } from "@utils/format/formatHTML"
-import { formatDate, formatTime } from "@utils/format/date"
+import { formatDateTimeExportExcel, formatDate, formatTime } from "@utils/format/date"
 import { formatPhoneNumber } from "@utils/format/phone"
 
 const ClientTable = () => {
@@ -289,6 +289,34 @@ const ClientTable = () => {
     []
   )
 
+  const clientsTableExportColumns = useMemo(
+    () => [
+      {
+        id: "name",
+        label: "Cliente"
+      },
+      {
+        id: "created_by_user.username",
+        label: "Criado por"
+      },
+      {
+        id: "created_at_datetime",
+        label: "Data de criação",
+        formatter: formatDateTimeExportExcel
+      },
+      {
+        id: "last_modified_by_user.username",
+        label: "Modificado pela última vez por"
+      },
+      {
+        id: "last_modified_datetime",
+        label: "Última data de modificação",
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+      }
+    ],
+    []
+  )
+
   const ExpandableClientsTableContent = useMemo(
     () =>
       ({ row }) => {
@@ -471,6 +499,44 @@ const ClientTable = () => {
                   )}
                 </>
               )
+            }
+          ],
+          []
+        )
+
+        const contactsTableExportColumns = useMemo(
+          () => [
+            {
+              id: "client",
+              label: "Cliente",
+              formatter: () => row?.name
+            },
+            {
+              id: "type",
+              label: "Tipo"
+            },
+            {
+              id: "contact",
+              label: "Contacto",
+              formatter: formatPhoneNumber
+            },
+            {
+              id: "created_by_user.username",
+              label: "Criado por"
+            },
+            {
+              id: "created_at_datetime",
+              label: "Data de criação",
+              formatter: formatDateTimeExportExcel
+            },
+            {
+              id: "last_modified_by_user.username",
+              label: "Modificado pela última vez por"
+            },
+            {
+              id: "last_modified_datetime",
+              label: "Última data de modificação",
+              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
             }
           ],
           []
@@ -672,6 +738,55 @@ const ClientTable = () => {
           []
         )
 
+        const addressesTableExportColumns = useMemo(
+          () => [
+            {
+              id: "client",
+              label: "Cliente",
+              formatter: () => row?.name
+            },
+            {
+              id: "country",
+              label: "País"
+            },
+            {
+              id: "city",
+              label: "Cidade"
+            },
+            {
+              id: "locality",
+              label: "Localidade"
+            },
+            {
+              id: "address",
+              label: "Morada"
+            },
+            {
+              id: "postal_code",
+              label: "Código postal"
+            },
+            {
+              id: "created_by_user.username",
+              label: "Criado por"
+            },
+            {
+              id: "created_at_datetime",
+              label: "Data de criação",
+              formatter: formatDateTimeExportExcel
+            },
+            {
+              id: "last_modified_by_user.username",
+              label: "Modificado pela última vez por"
+            },
+            {
+              id: "last_modified_datetime",
+              label: "Última data de modificação",
+              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+            }
+          ],
+          []
+        )
+
         const equipmentsTableColumns = useMemo(
           () => [
             {
@@ -867,6 +982,51 @@ const ClientTable = () => {
                   )}
                 </>
               )
+            }
+          ],
+          []
+        )
+
+        const equipmentsTableExportColumns = useMemo(
+          () => [
+            {
+              id: "client",
+              label: "Cliente",
+              formatter: () => row?.name
+            },
+            {
+              id: "type.name",
+              label: "Tipo"
+            },
+            {
+              id: "brand.name",
+              label: "Marca"
+            },
+            {
+              id: "model.name",
+              label: "Modelo"
+            },
+            {
+              id: "sn",
+              label: "Número de série"
+            },
+            {
+              id: "created_by_user.username",
+              label: "Criado por"
+            },
+            {
+              id: "created_at_datetime",
+              label: "Data de criação",
+              formatter: formatDateTimeExportExcel
+            },
+            {
+              id: "last_modified_by_user.username",
+              label: "Modificado pela última vez por"
+            },
+            {
+              id: "last_modified_datetime",
+              label: "Última data de modificação",
+              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
             }
           ],
           []
@@ -1104,7 +1264,13 @@ const ClientTable = () => {
                 description="Contactos do cliente"
                 icon={<Phone />}
               />
-              <Table mode="datatable" data={row?.contacts ?? []} columns={contactsTableColumns} />
+              <Table
+                mode="datatable"
+                data={row?.contacts ?? []}
+                columns={contactsTableColumns}
+                exportFileName="contactos_cliente"
+                exportColumns={contactsTableExportColumns}
+              />
             </Box>
             <Box
               sx={{
@@ -1114,7 +1280,13 @@ const ClientTable = () => {
               }}
             >
               <HeaderSection title="Moradas" description="Moradas do cliente" icon={<Place />} />
-              <Table mode="datatable" data={row?.addresses ?? []} columns={addressesTableColumns} />
+              <Table
+                mode="datatable"
+                data={row?.addresses ?? []}
+                columns={addressesTableColumns}
+                exportFileName="moradas_cliente"
+                exportColumns={addressesTableExportColumns}
+              />
             </Box>
             <Box
               sx={{
@@ -1132,6 +1304,8 @@ const ClientTable = () => {
                 mode="datatable"
                 data={row?.equipments ?? []}
                 columns={equipmentsTableColumns}
+                exportFileName="equipamentos_cliente"
+                exportColumns={equipmentsTableExportColumns}
               />
             </Box>
             {role !== "Funcionário" && (
@@ -1172,6 +1346,8 @@ const ClientTable = () => {
               mode="datatable"
               data={clients ?? []}
               columns={clientsTableColumns}
+              exportFileName="clientes"
+              exportColumns={clientsTableExportColumns}
               ExpandableContentComponent={ExpandableClientsTableContent}
             />
           }

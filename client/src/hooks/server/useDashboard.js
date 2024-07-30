@@ -7,8 +7,12 @@ import { getRepairSummary } from "@api/routes/repair"
 import { getEmailSummary } from "@api/routes/email"
 import { getSmsSummary } from "@api/routes/sms"
 
+import { useEquipment } from "./useEquipment"
+
 export const useDashboard = () => {
   const queryClient = useQueryClient()
+
+  const { findAllEquipments } = useEquipment()
 
   const findEmployeeSummary = useQuery({
     queryKey: ["dashboard", "employees", "summary"],
@@ -47,27 +51,23 @@ export const useDashboard = () => {
       findEquipmentSummary.refetch(),
       findRepairSummary.refetch(),
       findEmailSummary.refetch(),
-      findSmsSummary.refetch()
+      findSmsSummary.refetch(),
+      findAllEquipments.refetch()
     ])
   }
 
-  const isFetching = [
-    findEmployeeSummary.isFetching,
-    findClientSummary.isFetching,
-    findEquipmentSummary.isFetching,
-    findRepairSummary.isFetching,
-    findEmailSummary.isFetching,
-    findSmsSummary.isFetching
-  ].some(Boolean)
+  const queries = [
+    findEmployeeSummary,
+    findClientSummary,
+    findEquipmentSummary,
+    findRepairSummary,
+    findEmailSummary,
+    findSmsSummary,
+    findAllEquipments
+  ]
 
-  const isRefetching = [
-    findEmployeeSummary.isRefetching,
-    findClientSummary.isRefetching,
-    findEquipmentSummary.isRefetching,
-    findRepairSummary.isRefetching,
-    findEmailSummary.isRefetching,
-    findSmsSummary.isRefetching
-  ].some(Boolean)
+  const isFetching = queries.some((query) => query.isFetching)
+  const isRefetching = queries.some((query) => query.isRefetching)
 
   return {
     findEmployeeSummary,

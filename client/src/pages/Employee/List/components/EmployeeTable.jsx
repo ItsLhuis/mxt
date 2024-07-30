@@ -7,6 +7,7 @@ import { useAuth } from "@contexts/auth"
 import { BASE_URL } from "@api"
 import { useUser } from "@hooks/server/useUser"
 
+import { Link } from "react-router-dom"
 import { Stack, Paper, Box, Typography, Tooltip, IconButton, Chip, Divider } from "@mui/material"
 import { MoreVert, Edit, Delete } from "@mui/icons-material"
 
@@ -20,7 +21,7 @@ import {
   Modal
 } from "@components/ui"
 
-import { formatDate, formatTime } from "@utils/format/date"
+import { formatDateTimeExportExcel, formatDate, formatTime } from "@utils/format/date"
 import { formatPhoneNumber } from "@utils/format/phone"
 
 const EmployeeTable = () => {
@@ -124,7 +125,7 @@ const EmployeeTable = () => {
         sortable: true,
         renderComponent: ({ row }) =>
           row?.name ? (
-            row?.name
+            <Link to={`/employee/${row?.user?.id}`}>{row?.name}</Link>
           ) : (
             <Typography variant="p" component="p" color="var(--outline)">
               Sem valor
@@ -358,6 +359,64 @@ const EmployeeTable = () => {
     []
   )
 
+  const employeesTableExportColumns = useMemo(
+    () => [
+      {
+        id: "user.username",
+        label: "Utilizador"
+      },
+      {
+        id: "user.is_active",
+        label: "Estado",
+        formatter: (value) => (value === true ? "Ativo" : "Desativo"),
+        color: (value) => (value === true ? "success" : "error")
+      },
+      {
+        id: "name",
+        label: "Nome"
+      },
+      {
+        id: "user.email",
+        label: "E-mail"
+      },
+      {
+        id: "phone_number",
+        label: "Contacto",
+        formatter: formatPhoneNumber
+      },
+      {
+        id: "country",
+        label: "País"
+      },
+      {
+        id: "city",
+        label: "Cidade"
+      },
+      {
+        id: "locality",
+        label: "Localidade"
+      },
+      {
+        id: "address",
+        label: "Morada"
+      },
+      {
+        id: "postal_code",
+        label: "Código postal"
+      },
+      {
+        id: "created_by_user.username",
+        label: "Criado por"
+      },
+      {
+        id: "created_at_datetime",
+        label: "Data de criação",
+        formatter: formatDateTimeExportExcel
+      }
+    ],
+    []
+  )
+
   return (
     <Paper elevation={1}>
       <Box sx={{ marginTop: 3 }}>
@@ -369,6 +428,8 @@ const EmployeeTable = () => {
               mode="datatable"
               data={filteredEmployees ?? []}
               columns={employeesTableColumns}
+              exportFileName="funcionarios"
+              exportColumns={employeesTableExportColumns}
             />
           }
         />

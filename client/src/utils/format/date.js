@@ -106,3 +106,10 @@ export const formatDateTime = (value) => {
   const formattedTime = formatTime(value)
   return `${formattedDate}, ${formattedTime}`
 }
+
+export const formatDateTimeExportExcel = (value) => {
+  const date = new Date(value)
+  const formattedDate = format(date, "d 'de' MMMM 'de' yyyy", { locale: ptBR })
+  const formattedTime = format(date, "HH:mm")
+  return `${formattedDate}, ${formattedTime}`
+}

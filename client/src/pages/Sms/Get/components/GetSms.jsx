@@ -2,51 +2,48 @@ import React from "react"
 
 import { useParams } from "react-router-dom"
 
-import { useEmail } from "@hooks/server/useEmail"
+import { useSms } from "@hooks/server/useSms"
 
 import { Link } from "react-router-dom"
 import { Paper, Stack, Grid, Box, Typography, Skeleton, Chip } from "@mui/material"
-import { Email } from "@mui/icons-material"
+import { Sms } from "@mui/icons-material"
 
 import { HeaderSection, Loadable, Caption } from "@components/ui"
 
 import { getValidChipColor } from "@utils/getValidChipColor"
 import { formatDateTime } from "@utils/format/date"
+import { formatPhoneNumber } from "@utils/format/phone"
 
-const GetEmail = () => {
-  const { emailId } = useParams()
+const GetSms = () => {
+  const { smsId } = useParams()
 
-  const { findEmailById } = useEmail()
-  const { data: email, isLoading: isEmailLoading, isError: isEmailError } = findEmailById(emailId)
+  const { findSmsById } = useSms()
+  const { data: sms, isLoading: isSmsLoading, isError: isSmsError } = findSmsById(smsId)
 
-  const isEmailFinished = !isEmailLoading && !isEmailError
+  const isSmsFinished = !isSmsLoading && !isSmsError
 
-  const emailFields = [
+  const smsFields = [
     {
       label: "De",
-      value: email?.[0]?.from
+      value: sms?.[0]?.from
     },
     {
       label: "Para",
-      link: `/client/${email?.[0]?.client?.id}`,
-      value: `${email?.[0]?.client?.name} </br> ${email?.[0]?.to}`,
-      description: email?.[0].client?.description,
+      link: `/client/${sms?.[0]?.client?.id}`,
+      value: `${sms?.[0]?.client?.name} </br> ${formatPhoneNumber(sms?.[0]?.to)}`,
+      description: sms?.[0].client?.description,
       isHtml: true
-    },
-    {
-      label: "Assunto",
-      value: email?.[0]?.subject
     }
   ]
 
   return (
     <Paper elevation={1}>
       <Stack sx={{ marginTop: 3 }}>
-        <HeaderSection title="Detalhes" description="Dados do e-mail" icon={<Email />} />
+        <HeaderSection title="Detalhes" description="Dados do SMS" icon={<Sms />} />
         <Stack sx={{ paddingBottom: 3 }}>
           <Stack sx={{ paddingInline: 3, paddingTop: 2 }}>
             <Loadable
-              isLoading={!isEmailFinished}
+              isLoading={!isSmsFinished}
               LoadingComponent={
                 <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
                   <Skeleton variant="rounded" width={80} height={32} />
@@ -57,23 +54,23 @@ const GetEmail = () => {
                 <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
                   <Box>
                     <Chip
-                      label={email?.[0]?.status?.name}
-                      color={getValidChipColor(email?.[0]?.status?.color)}
+                      label={sms?.[0]?.status?.name}
+                      color={getValidChipColor(sms?.[0]?.status?.color)}
                     />
                   </Box>
                   <Typography variant="p" component="p">
-                    {email?.[0]?.sent_at_datetime && (
-                      <>{formatDateTime(email?.[0]?.sent_at_datetime)}</>
+                    {sms?.[0]?.sent_at_datetime && (
+                      <>{formatDateTime(sms?.[0]?.sent_at_datetime)}</>
                     )}
                   </Typography>
                 </Stack>
               }
             />
             <Grid container spacing={2}>
-              {emailFields.map((field, index) => (
-                <Grid key={index} item xs={12} md={4}>
+              {smsFields.map((field, index) => (
+                <Grid key={index} item xs={12} md={6}>
                   <Loadable
-                    isLoading={!isEmailFinished}
+                    isLoading={!isSmsFinished}
                     LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                     LoadedComponent={
                       <Stack>
@@ -119,7 +116,7 @@ const GetEmail = () => {
             </Grid>
             <Box sx={{ paddingTop: 3 }}>
               <Loadable
-                isLoading={!isEmailFinished}
+                isLoading={!isSmsFinished}
                 LoadingComponent={<Skeleton variant="rounded" width="100%" height={535} />}
                 LoadedComponent={
                   <Stack>
@@ -130,71 +127,30 @@ const GetEmail = () => {
                     >
                       Mensagem
                     </Typography>
-                    <iframe
-                      title="Mensagem do e-mail"
-                      srcDoc={`<html>
-                              <head>
-                                <style>
-                                  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
-
-                                  * {
-                                    box-sizing: border-box;
-                                    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Oxygen", "Ubuntu", "Cantarell", "Open Sans", sans-serif !important;
-                                  }
-
-                                  body {
-                                    margin: 0;
-                                    padding: 0;
-                                    overflow: auto;
-                                    background-color: rgb(245, 243, 255);
-                                  }
-
-                                  ::-webkit-scrollbar-thumb {
-                                    background-color: rgb(143, 141, 158);
-                                    border: 6px solid transparent;
-                                    border-radius: 8px;
-                                    background-clip: padding-box;
-                                  }
-
-                                  ::-webkit-scrollbar {
-                                    cursor: pointer !important;
-                                    width: 16px;
-                                    height: 16px;
-                                  }
-
-                                  ::-webkit-scrollbar-corner {
-                                    background-color: transparent;
-                                  }
-
-                                  ::-moz-selection {
-                                    -webkit-text-fill-color: rgb(228, 225, 230) !important;
-                                    color: rgb(228, 225, 230) !important;
-                                    background: rgb(88, 101, 242);
-                                  }
-
-                                  ::selection {
-                                    -webkit-text-fill-color: rgb(228, 225, 230) !important;
-                                    color: rgb(228, 225, 230) !important;
-                                    background: rgb(88, 101, 242);
-                                  }
-                                </style>
-                              </head>
-                              <body>
-                                ${
-                                  email?.[0]?.html ||
-                                  "<p style='margin: 16px; font-size: 13px'>Não foi possível exibir a mensagem.</p>"
-                                }
-                              </body>
-                             </html>`}
-                      style={{
+                    <Stack
+                      sx={{
+                        padding: 2,
                         width: "100%",
                         height: "500px",
-                        backgroundColor: "rgb(245, 243, 255)",
                         border: "2px solid var(--elevation-level5)",
                         borderRadius: "8px",
-                        overflow: "hidden"
+                        overflow: "auto"
                       }}
-                    />
+                    >
+                      {sms?.[0]?.message ? (
+                        <Typography
+                          variant="p"
+                          component="p"
+                          dangerouslySetInnerHTML={{
+                            __html: sms?.[0]?.message.replace(/\n/g, "<br />")
+                          }}
+                        />
+                      ) : (
+                        <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
+                          Não foi possível exibir a mensagem.
+                        </Typography>
+                      )}
+                    </Stack>
                   </Stack>
                 }
               />
@@ -206,4 +162,4 @@ const GetEmail = () => {
   )
 }
 
-export default GetEmail
+export default GetSms

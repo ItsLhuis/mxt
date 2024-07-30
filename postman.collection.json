@@ -173,7 +173,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"Luis\",\r\n    \"password\": \"123123\"\r\n}",
+							"raw": "{\r\n    \"username\": \"Admin\",\r\n    \"password\": \"adminboss\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -800,6 +800,24 @@
 					"response": []
 				},
 				{
+					"name": "Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/employees/summary",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"summary"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Update",
 					"event": [
 						{
@@ -876,6 +894,24 @@
 							"path": [
 								"emails",
 								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/emails/summary",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"emails",
+								"summary"
 							]
 						}
 					},
@@ -969,13 +1005,31 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/smses/1",
+							"raw": "{{base_url}}/smses/2",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"smses",
-								"1"
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/smses/summary",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"smses",
+								"summary"
 							]
 						}
 					},
@@ -1347,6 +1401,24 @@
 							"path": [
 								"clients",
 								"23"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clients/summary",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clients",
+								"summary"
 							]
 						}
 					},
@@ -1942,6 +2014,24 @@
 							"path": [
 								"equipments",
 								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/equipments/summary",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"equipments",
+								"summary"
 							]
 						}
 					},
@@ -2772,7 +2862,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"equipmentId\": 1,\r\n    \"statusId\": 1,\r\n    \"entryDescription\": \"\",\r\n    \"entryDatetime\": \"2024-06-17T14:45:11.000Z\"\r\n}\r\n",
+							"raw": "{\r\n    \"equipmentId\": 1,\r\n    \"statusId\": 1,\r\n    \"entryDescription\": \"\",\r\n    \"entryDatetime\": \"2024-07-16T17:45:11.000Z\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2798,7 +2888,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"statusId\": 1,\r\n  \"entryAccessoriesDescription\": \"Updated accessories description.\",\r\n  \"entryReportedIssuesDescription\": \"Updated reported issues description.\",\r\n  \"entryDescription\": \"Updated description of the repair entry.\",\r\n  \"entryDatetime\": \"2024-06-17T14:45:11.000Z\",\r\n  \"interventionWorksDoneDescription\": \"Updated description of the works done.\",\r\n  \"interventionAccessoriesUsedDescription\": \"Updated description of the accessories used.\",\r\n  \"interventionDescription\": \"Updated intervention description.\",\r\n  \"conclusionDatetime\": \"2024-06-17T15:45:11.000Z\",\r\n  \"deliveryDatetime\": \"2024-06-17T15:45:11.000Z\",\r\n  \"isClientNotified\": false,\r\n  \"entryAccessoriesIds\": [1],\r\n  \"entryReportedIssuesIds\": [1],\r\n  \"interventionWorksDoneIds\": [1],\r\n  \"interventionAccessoriesUsedIds\": [1]\r\n}\r\n",
+							"raw": "{\r\n  \"statusId\": 1,\r\n  \"entryAccessoriesDescription\": \"Updated accessories description.\",\r\n  \"entryReportedIssuesDescription\": \"Updated reported issues description.\",\r\n  \"entryDescription\": \"Updated description of the repair entry.\",\r\n  \"entryDatetime\": \"2024-06-17T14:45:11.000Z\",\r\n  \"interventionWorksDoneDescription\": \"Updated description of the works done.\",\r\n  \"interventionAccessoriesUsedDescription\": \"Updated description of the accessories used.\",\r\n  \"interventionDescription\": \"Updated intervention description.\",\r\n  \"conclusionDatetime\": \"2024-06-17T15:45:11.000Z\",\r\n  \"deliveryDatetime\": \"2024-06-17T15:45:11.000Z\",\r\n  \"isClientNotified\": false,\r\n  \"entryAccessories\": [1],\r\n  \"entryReportedIssues\": [1],\r\n  \"interventionWorksDone\": [1],\r\n  \"interventionAccessoriesUsed\": [1]\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2806,13 +2896,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/repairs/3",
+							"raw": "{{base_url}}/repairs/1",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"repairs",
-								"3"
+								"1"
 							]
 						}
 					},
