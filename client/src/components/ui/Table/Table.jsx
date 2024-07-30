@@ -106,7 +106,7 @@ const getTextColorBasedOnBackground = (backgroundColorHex) => {
 }
 
 const excelRowsColorMap = {
-  default: "C8C6CF",
+  default: "E3E1EC",
   primary: "5865F2",
   error: "D32F2F",
   info: "0288D1",
