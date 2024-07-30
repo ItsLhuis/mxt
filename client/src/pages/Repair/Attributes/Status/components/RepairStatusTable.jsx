@@ -316,6 +316,12 @@ const RepairStatusTable = () => {
         label: "Estado"
       },
       {
+        id: "color",
+        label: "Cor",
+        color: (value) => value,
+        formatter: () => ""
+      },
+      {
         id: "created_by_user.username",
         label: "Criado por"
       },
