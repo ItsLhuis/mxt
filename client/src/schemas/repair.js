@@ -37,11 +37,19 @@ export const repairAttachmentSchema = z.object({
 })
 
 export const optionsSchema = z.object({
-  name: z.string().min(1, { message: "O nome é obrigatório" }).max(255).trim()
+  name: z
+    .string()
+    .trim()
+    .min(1, { message: "O nome é obrigatório" })
+    .max(255, { message: "O nome não pode exceder 255 caracteres" })
 })
 
 export const repairStatusSchema = z.object({
-  name: z.string().trim().min(1, { message: "O nome é obrigatório" }).max(255),
+  name: z
+    .string()
+    .trim()
+    .min(1, { message: "O nome é obrigatório" })
+    .max(255, { message: "O nome não pode exceder 255 caracteres" }),
   color: z.enum(["default", "primary", "error", "info", "success", "warning"], {
     message: "Cor inválida"
   })

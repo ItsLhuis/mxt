@@ -5,7 +5,11 @@ export const equipmentSchema = z.object({
   typeId: z.number({ message: "O tipo é obrigatório" }),
   brandId: z.number({ message: "A marca é obrigatório" }),
   modelId: z.number({ message: "O modelo é obrigatório" }),
-  sn: z.string().min(1, { message: "O número de série é obrigatório" }).max(255).trim(),
+  sn: z
+    .string()
+    .trim()
+    .min(1, { message: "O número de série é obrigatório" })
+    .max(255, { message: "O número de série não pode exceder 255 caracteres" }),
   description: z.string().optional().nullable()
 })
 
@@ -13,7 +17,11 @@ export const updateEquipmentSchema = z.object({
   typeId: z.number({ message: "O tipo é obrigatório" }),
   brandId: z.number({ message: "A marca é obrigatório" }),
   modelId: z.number({ message: "O modelo é obrigatório" }),
-  sn: z.string().min(1, { message: "O número de série é obrigatório" }).max(255).trim(),
+  sn: z
+    .string()
+    .trim()
+    .min(1, { message: "O número de série é obrigatório" })
+    .max(255, { message: "O número de série não pode exceder 255 caracteres" }),
   description: z.string().optional().nullable()
 })
 
@@ -28,14 +36,26 @@ export const equipmentAttachmentSchema = z.object({
 })
 
 export const typeSchema = z.object({
-  name: z.string().trim().min(1, { message: "O nome é obrigatório" }).max(255)
+  name: z
+    .string()
+    .trim()
+    .min(1, { message: "O nome é obrigatório" })
+    .max(255, { message: "O nome não pode exceder 255 caracteres" })
 })
 
 export const brandSchema = z.object({
-  name: z.string().trim().min(1, { message: "O nome é obrigatório" }).max(255)
+  name: z
+    .string()
+    .trim()
+    .min(1, { message: "O nome é obrigatório" })
+    .max(255, { message: "O nome não pode exceder 255 caracteres" })
 })
 
 export const modelSchema = z.object({
   brandId: z.number({ message: "A marca é obrigatória" }),
-  name: z.string().trim().min(1, { message: "O nome é obrigatório" }).max(255)
+  name: z
+    .string()
+    .trim()
+    .min(1, { message: "O nome é obrigatório" })
+    .max(255, { message: "O nome não pode exceder 255 caracteres" })
 })
