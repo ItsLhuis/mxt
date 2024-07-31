@@ -1,7 +1,5 @@
 import React, { useState, useMemo } from "react"
 
-import { useAuth } from "@contexts/auth"
-
 import { BASE_URL } from "@api"
 import { useRepair } from "@hooks/server/useRepair"
 
@@ -25,8 +23,6 @@ import { showSuccessToast, showErrorToast } from "@config/toast"
 import { formatDateTimeExportExcel, formatDate, formatTime } from "@utils/format/date"
 
 const RepairEntryReportedIssueTable = () => {
-  const { role } = useAuth()
-
   const { findAllEntryReportedIssues, deleteEntryReportedIssue } = useRepair()
   const { data: entryReportedIssues, isLoading: isEntryReportedIssuesLoading } =
     findAllEntryReportedIssues
@@ -283,17 +279,13 @@ const RepairEntryReportedIssueTable = () => {
                   icon: <Edit fontSize="small" />,
                   onClick: () => openEditRepairEntryReportedIssueModal(row)
                 },
-                ...(role !== "Funcionário"
-                  ? [
-                      {
-                        label: "Eliminar",
-                        icon: <Delete fontSize="small" color="error" />,
-                        color: "error",
-                        divider: true,
-                        onClick: () => openDeleteRepairEntryReportedIssueModal(row?.id)
-                      }
-                    ]
-                  : [])
+                {
+                  label: "Eliminar",
+                  icon: <Delete fontSize="small" color="error" />,
+                  color: "error",
+                  divider: true,
+                  onClick: () => openDeleteRepairEntryReportedIssueModal(row?.id)
+                }
               ]}
             />
           </ButtonDropDownSelect>

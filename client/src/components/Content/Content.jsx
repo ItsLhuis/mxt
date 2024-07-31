@@ -4,6 +4,8 @@ import "./styles.css"
 
 import { Routes, Route, Navigate, useLocation } from "react-router-dom"
 
+import { useAuth } from "@contexts/auth"
+
 import { Box } from "@mui/material"
 
 import { PageLoader } from "@components/ui"
@@ -42,6 +44,8 @@ import {
 const Content = () => {
   const location = useLocation()
 
+  const { role } = useAuth()
+
   const allContentRef = useRef(null)
 
   useEffect(() => {
@@ -77,11 +81,13 @@ const Content = () => {
             <Route path="/equipment/add" element={<AddEquipment />} />
             <Route path="/equipment/:equipmentId" element={<EditEquipment />} />
 
-            <Route path="/equipment/type/list" element={<EquipmentTypeList />} />
-
-            <Route path="/equipment/brand/list" element={<EquipmentBrandList />} />
-
-            <Route path="/equipment/model/list" element={<EquipmentModelList />} />
+            {role !== "Funcionário" ? (
+              <>
+                <Route path="/equipment/type/list" element={<EquipmentTypeList />} />
+                <Route path="/equipment/brand/list" element={<EquipmentBrandList />} />
+                <Route path="/equipment/model/list" element={<EquipmentModelList />} />
+              </>
+            ) : null}
             {/* ---------------------------------------------------------- */}
 
             {/* Repair */}
@@ -89,18 +95,21 @@ const Content = () => {
             <Route path="/repair/add" element={<AddRepair />} />
             <Route path="/repair/:repairId" element={<EditRepair />} />
 
-            <Route path="/repair/status/list" element={<RepairStatusList />} />
-
-            <Route path="/repair/entry-accessory/list" element={<RepairEntryAccessoryList />} />
-
-            <Route path="/repair/reported-issue/list" element={<RepairEntryReportedIssueList />} />
-
-            <Route path="/repair/work-done/list" element={<RepairInterventionWorkDoneList />} />
-
-            <Route
-              path="/repair/intervention-accessory/list"
-              element={<RepairInterventionAccessoryUsedList />}
-            />
+            {role !== "Funcionário" ? (
+              <>
+                <Route path="/repair/status/list" element={<RepairStatusList />} />
+                <Route path="/repair/entry-accessory/list" element={<RepairEntryAccessoryList />} />
+                <Route
+                  path="/repair/reported-issue/list"
+                  element={<RepairEntryReportedIssueList />}
+                />
+                <Route path="/repair/work-done/list" element={<RepairInterventionWorkDoneList />} />
+                <Route
+                  path="/repair/intervention-accessory/list"
+                  element={<RepairInterventionAccessoryUsedList />}
+                />
+              </>
+            ) : null}
             {/* ---------------------------------------------------------- */}
 
             {/* Email */}

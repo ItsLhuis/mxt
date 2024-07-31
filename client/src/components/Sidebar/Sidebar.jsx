@@ -4,6 +4,8 @@ import "./styles.css"
 
 import { useNavigate, useLocation } from "react-router-dom"
 
+import { useAuth } from "@contexts/auth"
+
 import { BASE_URL } from "@api"
 
 import { Box, Collapse, Typography, ButtonBase, Drawer, Tooltip, IconButton } from "@mui/material"
@@ -21,220 +23,230 @@ import {
 
 import { Image } from "@components/ui"
 
-const sidebarData = [
-  {
-    title: "DATA",
-    icon: <Dashboard fontSize="small" />,
-    path: "/dashboard",
-    name: "Painel de Controlo"
-  },
-  {
-    title: "MANUTENÇÃO",
-    icon: <AccountBox fontSize="small" />,
-    path: "/employee",
-    name: "Funcionário",
-    submenu: [
-      {
-        path: "/employee/list",
-        name: "Lista",
-        className: ""
-      },
-      {
-        path: "/employee/add",
-        name: "Adicionar",
-        className: ""
-      }
-    ]
-  },
-  {
-    icon: <Person fontSize="small" />,
-    path: "/client",
-    name: "Cliente",
-    submenu: [
-      {
-        path: "/client/list",
-        name: "Lista",
-        className: ""
-      },
-      {
-        path: "/client/add",
-        name: "Adicionar",
-        className: ""
-      }
-    ]
-  },
-  {
-    icon: <Computer fontSize="small" />,
-    path: "/equipment",
-    name: "Equipamento",
-    submenu: [
-      {
-        path: "/equipment/list",
-        name: "Lista",
-        className: ""
-      },
-      {
-        path: "/equipment/add",
-        name: "Adicionar",
-        className: ""
-      },
-      {
-        icon: <Computer fontSize="small" />,
-        path: "/equipment/type",
-        name: "Tipo",
-        submenu: [
-          {
-            path: "/equipment/type/list",
-            name: "Lista",
-            className: "__but__lvlDown"
-          }
-        ]
-      },
-      {
-        icon: <Computer fontSize="small" />,
-        path: "/equipment/brand",
-        name: "Marca",
-        submenu: [
-          {
-            path: "/equipment/brand/list",
-            name: "Lista",
-            className: "__but__lvlDown"
-          }
-        ]
-      },
-      {
-        icon: <Computer fontSize="small" />,
-        path: "/equipment/model",
-        name: "Modelo",
-        submenu: [
-          {
-            path: "/equipment/model/list",
-            name: "Lista",
-            className: "__but__lvlDown"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    icon: <Construction fontSize="small" />,
-    path: "/repair",
-    name: "Reparação",
-    submenu: [
-      {
-        path: "/repair/list",
-        name: "Lista",
-        className: ""
-      },
-      {
-        path: "/repair/add",
-        name: "Adicionar",
-        className: ""
-      },
-      {
-        icon: <Construction fontSize="small" />,
-        path: "/repair/status",
-        name: "Estado",
-        submenu: [
-          {
-            path: "/repair/status/list",
-            name: "Lista",
-            className: "__but__lvlDown"
-          }
-        ]
-      },
-      {
-        icon: <Construction fontSize="small" />,
-        path: "/repair/entry-accessory",
-        name: "Acessório da Entrada",
-        submenu: [
-          {
-            path: "/repair/entry-accessory/list",
-            name: "Lista",
-            className: "__but__lvlDown"
-          }
-        ]
-      },
-      {
-        icon: <Construction fontSize="small" />,
-        path: "/repair/reported-issue",
-        name: "Problema Reportado",
-        submenu: [
-          {
-            path: "/repair/reported-issue/list",
-            name: "Lista",
-            className: "__but__lvlDown"
-          }
-        ]
-      },
-      {
-        icon: <Construction fontSize="small" />,
-        path: "/repair/work-done",
-        name: "Trabalho Realizado",
-        submenu: [
-          {
-            path: "/repair/work-done/list",
-            name: "Lista",
-            className: "__but__lvlDown"
-          }
-        ]
-      },
-      {
-        icon: <Construction fontSize="small" />,
-        path: "/repair/intervention-accessory",
-        name: "Acessório da Intervenção",
-        submenu: [
-          {
-            path: "/repair/intervention-accessory/list",
-            name: "Lista",
-            className: "__but__lvlDown"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    title: "OUTROS",
-    path: "/email",
-    icon: <Email fontSize="small" />,
-    name: "E-mail",
-    submenu: [
-      {
-        path: "/email/list",
-        name: "Lista",
-        className: ""
-      },
-      {
-        path: "/email/send",
-        name: "Enviar",
-        className: ""
-      }
-    ]
-  },
-  {
-    path: "/sms",
-    icon: <Sms fontSize="small" />,
-    name: "SMS",
-    submenu: [
-      {
-        path: "/sms/list",
-        name: "Lista",
-        className: ""
-      },
-      {
-        path: "/sms/send",
-        name: "Enviar",
-        className: ""
-      }
-    ]
-  }
-]
-
 const Sidebar = ({ drawerOpen, setDrawerOpen }) => {
   const navigate = useNavigate()
 
   const location = useLocation()
   const isActive = (menuPath) => location.pathname.includes(menuPath)
+
+  const { role } = useAuth()
+
+  const sidebarData = [
+    {
+      title: "DATA",
+      icon: <Dashboard fontSize="small" />,
+      path: "/dashboard",
+      name: "Painel de Controlo"
+    },
+    {
+      title: "MANUTENÇÃO",
+      icon: <AccountBox fontSize="small" />,
+      path: "/employee",
+      name: "Funcionário",
+      submenu: [
+        {
+          path: "/employee/list",
+          name: "Lista",
+          className: ""
+        },
+        {
+          path: "/employee/add",
+          name: "Adicionar",
+          className: ""
+        }
+      ]
+    },
+    {
+      icon: <Person fontSize="small" />,
+      path: "/client",
+      name: "Cliente",
+      submenu: [
+        {
+          path: "/client/list",
+          name: "Lista",
+          className: ""
+        },
+        {
+          path: "/client/add",
+          name: "Adicionar",
+          className: ""
+        }
+      ]
+    },
+    {
+      icon: <Computer fontSize="small" />,
+      path: "/equipment",
+      name: "Equipamento",
+      submenu: [
+        {
+          path: "/equipment/list",
+          name: "Lista",
+          className: ""
+        },
+        {
+          path: "/equipment/add",
+          name: "Adicionar",
+          className: ""
+        },
+        ...(role !== "Funcionário"
+          ? [
+              {
+                icon: <Computer fontSize="small" />,
+                path: "/equipment/type",
+                name: "Tipo",
+                submenu: [
+                  {
+                    path: "/equipment/type/list",
+                    name: "Lista",
+                    className: "__but__lvlDown"
+                  }
+                ]
+              },
+              {
+                icon: <Computer fontSize="small" />,
+                path: "/equipment/brand",
+                name: "Marca",
+                submenu: [
+                  {
+                    path: "/equipment/brand/list",
+                    name: "Lista",
+                    className: "__but__lvlDown"
+                  }
+                ]
+              },
+              {
+                icon: <Computer fontSize="small" />,
+                path: "/equipment/model",
+                name: "Modelo",
+                submenu: [
+                  {
+                    path: "/equipment/model/list",
+                    name: "Lista",
+                    className: "__but__lvlDown"
+                  }
+                ]
+              }
+            ]
+          : [])
+      ]
+    },
+    {
+      icon: <Construction fontSize="small" />,
+      path: "/repair",
+      name: "Reparação",
+      submenu: [
+        {
+          path: "/repair/list",
+          name: "Lista",
+          className: ""
+        },
+        {
+          path: "/repair/add",
+          name: "Adicionar",
+          className: ""
+        },
+        ...(role !== "Funcionário"
+          ? [
+              {
+                icon: <Construction fontSize="small" />,
+                path: "/repair/status",
+                name: "Estado",
+                submenu: [
+                  {
+                    path: "/repair/status/list",
+                    name: "Lista",
+                    className: "__but__lvlDown"
+                  }
+                ]
+              },
+              {
+                icon: <Construction fontSize="small" />,
+                path: "/repair/entry-accessory",
+                name: "Acessório da Entrada",
+                submenu: [
+                  {
+                    path: "/repair/entry-accessory/list",
+                    name: "Lista",
+                    className: "__but__lvlDown"
+                  }
+                ]
+              },
+              {
+                icon: <Construction fontSize="small" />,
+                path: "/repair/reported-issue",
+                name: "Problema Reportado",
+                submenu: [
+                  {
+                    path: "/repair/reported-issue/list",
+                    name: "Lista",
+                    className: "__but__lvlDown"
+                  }
+                ]
+              },
+              {
+                icon: <Construction fontSize="small" />,
+                path: "/repair/work-done",
+                name: "Trabalho Realizado",
+                submenu: [
+                  {
+                    path: "/repair/work-done/list",
+                    name: "Lista",
+                    className: "__but__lvlDown"
+                  }
+                ]
+              },
+              {
+                icon: <Construction fontSize="small" />,
+                path: "/repair/intervention-accessory",
+                name: "Acessório da Intervenção",
+                submenu: [
+                  {
+                    path: "/repair/intervention-accessory/list",
+                    name: "Lista",
+                    className: "__but__lvlDown"
+                  }
+                ]
+              }
+            ]
+          : [])
+      ]
+    },
+    {
+      title: "OUTROS",
+      path: "/email",
+      icon: <Email fontSize="small" />,
+      name: "E-mail",
+      submenu: [
+        {
+          path: "/email/list",
+          name: "Lista",
+          className: ""
+        },
+        {
+          path: "/email/send",
+          name: "Enviar",
+          className: ""
+        }
+      ]
+    },
+    {
+      path: "/sms",
+      icon: <Sms fontSize="small" />,
+      name: "SMS",
+      submenu: [
+        {
+          path: "/sms/list",
+          name: "Lista",
+          className: ""
+        },
+        {
+          path: "/sms/send",
+          name: "Enviar",
+          className: ""
+        }
+      ]
+    }
+  ]
 
   const [open, setOpen] = useState({})
 

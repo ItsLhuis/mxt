@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from "react"
 
 import { useNavigate } from "react-router-dom"
 
+import { useAuth } from "@contexts/auth"
+
 import {
   Dialog,
   IconButton,
@@ -22,15 +24,12 @@ import {
 import {
   Search,
   Dashboard,
+  AccountBox,
   Person,
   Computer,
   Construction,
-  FormatListBulleted,
-  TableChart,
-  Terminal,
   Email,
   Sms,
-  Notifications,
   Settings,
   Close
 } from "@mui/icons-material"
@@ -40,7 +39,9 @@ import { NoData } from ".."
 const CommandDialog = ({ open, handleClose }) => {
   const navigate = useNavigate()
 
-  const SearchData = [
+  const { role } = useAuth()
+
+  const searchData = [
     {
       section: "DATA",
       icon: <Dashboard />,
@@ -49,239 +50,166 @@ const CommandDialog = ({ open, handleClose }) => {
       link: "/dashboard"
     },
     {
-      section: "DATA",
-      subSection: "Tabelas",
-      icon: <TableChart />,
-      label: "Acessórios",
-      description: "Acesso à tabela de acessórios",
-      link: "/tables/accessories"
-    },
-    {
-      section: "DATA",
-      subSection: "Tabelas",
-      icon: <TableChart />,
-      label: "Artigos Wintouch",
-      description: "Acesso à tabela de artigos Wintouch",
-      link: "/tables/wintouch-articles"
-    },
-    {
-      section: "DATA",
-      subSection: "Tabelas",
-      icon: <TableChart />,
-      label: "Tipo de Equipamento",
-      description: "Acesso à tabela de tipo de equipamento",
-      link: "/tables/equipment-type"
-    },
-    {
-      section: "DATA",
-      subSection: "Tabelas",
-      icon: <TableChart />,
-      label: "Marcas",
-      description: "Acesso à tabela de marcas",
-      link: "/tables/brands"
-    },
-    {
-      section: "DATA",
-      subSection: "Tabelas",
-      icon: <TableChart />,
-      label: "Avarias",
-      description: "Acesso à tabela de avarias",
-      link: "/tables/damages"
-    },
-    {
-      section: "DATA",
-      subSection: "Tabelas",
-      icon: <TableChart />,
-      label: "Intervenções",
-      description: "Acesso à tabela de intervenções",
-      link: "/tables/interventions"
-    },
-    {
-      section: "DATA",
-      subSection: "Tabelas",
-      icon: <TableChart />,
-      label: "Transferências de Equipamento",
-      description: "Acesso à tabela de transferências de equipamento",
-      link: "/tables/equipment-transfers"
-    },
-    {
-      section: "DATA",
-      subSection: "Tabelas",
-      icon: <TableChart />,
-      label: "Checklist",
-      description: "Acesso à tabela de checklist",
-      link: "/tables/checklist"
-    },
-    {
-      section: "DATA",
-      subSection: "Tabelas",
-      icon: <TableChart />,
-      label: "Técnicos",
-      description: "Acesso à tabela de técnicos",
-      link: "/tables/technicians"
-    },
-    {
-      section: "DATA",
-      subSection: "Tabelas",
-      icon: <TableChart />,
-      label: "Perfil",
-      description: "Acesso à tabela de perfil",
-      link: "/tables/profile"
-    },
-    {
-      section: "DATA",
-      subSection: "Tabelas",
-      subSubSection: "Logs",
-      icon: <Terminal />,
-      label: "Logs de Reparação",
-      description: "Acesso aos logs de reparação",
-      link: "/tables/logs/repair"
-    },
-    {
-      section: "DATA",
-      subSection: "Tabelas",
-      subSubSection: "Logs",
-      icon: <Terminal />,
-      label: "Logs de Transferências",
-      description: "Acesso aos logs de transferências",
-      link: "/tables/logs/transfers"
-    },
-    {
-      section: "DATA",
-      subSection: "Tabelas",
-      subSubSection: "Logs",
-      icon: <Terminal />,
-      label: "Logs de E-mails",
-      description: "Acesso aos logs de e-mails",
-      link: "/tables/logs/email"
-    },
-    {
-      section: "DATA",
-      subSection: "Tabelas",
-      subSubSection: "Logs",
-      icon: <Terminal />,
-      label: "Logs de SMS",
-      description: "Acesso aos logs de SMS",
-      link: "/tables/logs/sms"
-    },
-    {
-      section: "DATA",
-      subSection: "Tabelas",
-      icon: <TableChart />,
-      label: "Estatísticas por Ano",
-      description: "Acesso às estatísticas por ano",
-      link: "/tables/statistics-by-year"
+      section: "MANUTENÇÃO",
+      icon: <AccountBox />,
+      label: "Todos os Funcionários",
+      description: "Acesso à lista de funcionários",
+      link: "/employee/list"
     },
     {
       section: "MANUTENÇÃO",
-      subSection: "Clientes",
+      icon: <AccountBox />,
+      label: "Adicionar Funcionário",
+      description: "Adicionar um novo funcionário",
+      link: "/employee/add"
+    },
+    {
+      section: "MANUTENÇÃO",
+      icon: <Person />,
+      label: "Todos os Clientes",
+      description: "Acesso à lista de clientes",
+      link: "/client/list"
+    },
+    {
+      section: "MANUTENÇÃO",
       icon: <Person />,
       label: "Adicionar Cliente",
-      description: "Adicionar novo cliente",
-      link: "/clients/add"
+      description: "Adicionar um novo cliente",
+      link: "/client/add"
     },
     {
       section: "MANUTENÇÃO",
-      subSection: "Clientes",
-      icon: <Person />,
-      label: "Listar Clientes",
-      description: "Listar todos os clientes",
-      link: "/clients/list"
-    },
-    {
-      section: "MANUTENÇÃO",
-      subSection: "Equipamentos",
       icon: <Computer />,
-      label: "Histórico de Equipamentos",
-      description: "Acesso ao histórico de equipamentos",
-      link: "/equipments/history"
+      label: "Todos os Equipamentos",
+      description: "Acesso à lista de equipamentos",
+      link: "/equipment/list"
     },
     {
       section: "MANUTENÇÃO",
-      subSection: "Equipamentos",
       icon: <Computer />,
-      label: "Consultar Equipamentos",
-      description: "Consultar equipamentos",
-      link: "/equipments/consult"
+      label: "Adicionar Equipamento",
+      description: "Adicionar um novo equipamento",
+      link: "/equipment/add"
+    },
+    ...(role !== "Funcionário"
+      ? [
+          {
+            section: "MANUTENÇÃO",
+            subSection: "EQUIPAMENTO",
+            icon: <Computer />,
+            label: "Tipos de Equipamento",
+            description: "Gerir tipos",
+            link: "/equipment/type/list"
+          },
+          {
+            section: "MANUTENÇÃO",
+            subSection: "EQUIPAMENTO",
+            icon: <Computer />,
+            label: "Marcas de Equipamento",
+            description: "Gerir marcas",
+            link: "/equipment/brand/list"
+          },
+          {
+            section: "MANUTENÇÃO",
+            subSection: "EQUIPAMENTO",
+            icon: <Computer />,
+            label: "Modelos de Equipamento",
+            description: "Gerir modelos",
+            link: "/equipment/model/list"
+          }
+        ]
+      : []),
+    {
+      section: "MANUTENÇÃO",
+      icon: <Construction />,
+      label: "Todas as Reparações",
+      description: "Acesso à lista de reparações",
+      link: "/repair/list"
     },
     {
       section: "MANUTENÇÃO",
-      subSection: "Equipamentos",
-      icon: <Computer />,
-      label: "Etiquetas de Equipamentos",
-      description: "Acesso às etiquetas de equipamentos",
-      link: "/equipments/tags"
-    },
-    {
-      section: "MANUTENÇÃO",
-      subSection: "Reparações",
       icon: <Construction />,
       label: "Adicionar Reparação",
-      description: "Adicionar nova reparação",
-      link: "/repairs/add"
+      description: "Adicionar uma nova reparação",
+      link: "/repair/add"
     },
+    ...(role !== "Funcionário"
+      ? [
+          {
+            section: "MANUTENÇÃO",
+            subSection: "REPARAÇÃO",
+            icon: <Construction />,
+            label: "Estados de Reparação",
+            description: "Gerir estados",
+            link: "/repair/status/list"
+          },
+          {
+            section: "MANUTENÇÃO",
+            subSection: "REPARAÇÃO",
+            icon: <Construction />,
+            label: "Acessórios da Entrada de Reparação",
+            description: "Gerir acessórios da entrada",
+            link: "/repair/entry-accessory/list"
+          },
+          {
+            section: "MANUTENÇÃO",
+            subSection: "REPARAÇÃO",
+            icon: <Construction />,
+            label: "Problemas Reportados de Reparação",
+            description: "Gerir problemas reportados",
+            link: "/repair/reported-issue/list"
+          },
+          {
+            section: "MANUTENÇÃO",
+            subSection: "REPARAÇÃO",
+            icon: <Construction />,
+            label: "Trabalhos Realizados de Reparação",
+            description: "Gerir trabalhos realizados",
+            link: "/repair/work-done/list"
+          },
+          {
+            section: "MANUTENÇÃO",
+            subSection: "REPARAÇÃO",
+            icon: <Construction />,
+            label: "Acessórios da Intervenção de Reparação",
+            description: "Gerir acessórios da intervenção",
+            link: "/repair/intervention-accessory/list"
+          }
+        ]
+      : []),
     {
-      section: "MANUTENÇÃO",
-      subSection: "Reparações",
-      subSubSection: "Estados",
-      icon: <FormatListBulleted />,
-      label: "Reparações Abertas",
-      description: "Reparações em aberto",
-      link: "/repairs/states/open"
-    },
-    {
-      section: "MANUTENÇÃO",
-      subSection: "Reparações",
-      subSubSection: "Estados",
-      icon: <FormatListBulleted />,
-      label: "Reparações Finalizadas",
-      description: "Reparações concluídas",
-      link: "/repairs/states/repaired"
-    },
-    {
-      section: "MANUTENÇÃO",
-      subSection: "Reparações",
-      subSubSection: "Estados",
-      icon: <FormatListBulleted />,
-      label: "Reparações Fechadas",
-      description: "Reparações fechadas",
-      link: "/repairs/states/closed"
-    },
-    {
-      section: "MANUTENÇÃO",
-      subSection: "Reparações",
-      subSubSection: "Estados",
-      icon: <FormatListBulleted />,
-      label: "Reparações Finalizadas Mas Não Pagas",
-      description: "Reparações DC",
-      link: "/repairs/states/dc"
+      section: "OUTROS",
+      icon: <Email />,
+      label: "Todos os E-mails",
+      description: "Acesso à lista de e-mails",
+      link: "/email/list"
     },
     {
       section: "OUTROS",
       icon: <Email />,
-      label: "Envio de E-mail",
-      description: "Enviar e-mail",
-      link: "/send-email"
+      label: "Enviar E-mail",
+      description: "Enviar um novo e-mail",
+      link: "/email/send"
     },
     {
       section: "OUTROS",
       icon: <Sms />,
-      label: "Envio de SMS",
-      description: "Enviar SMS",
-      link: "/send-sms"
+      label: "Todos os SMS",
+      description: "Acesso à lista de SMS",
+      link: "/sms/list"
     },
     {
-      section: "NOTIFICAÇÕES",
-      icon: <Notifications />,
-      label: "Notificações",
-      description: "Acesso às suas notificações",
-      link: "/notifications"
+      section: "OUTROS",
+      icon: <Sms />,
+      label: "Enviar SMS",
+      description: "Enviar um novo SMS",
+      link: "/sms/send"
     },
     {
       section: "DEFINIÇÕES",
       icon: <Settings />,
       label: "Definições de utilizador",
-      description: "Acesso às suas definições",
+      description: "Acesso às definições",
       link: "/settings"
     }
   ]
@@ -308,7 +236,7 @@ const CommandDialog = ({ open, handleClose }) => {
 
     setText(searchText)
 
-    const results = SearchData.filter((item) =>
+    const results = searchData.filter((item) =>
       Object.values(item).some(
         (value) => value && typeof value === "string" && new RegExp(searchText, "i").test(value)
       )
@@ -320,7 +248,7 @@ const CommandDialog = ({ open, handleClose }) => {
   useEffect(() => {
     setText("")
 
-    setSearchResults(SearchData)
+    setSearchResults(searchData)
 
     const timer = setTimeout(() => {
       if (open && inputRef.current) {
@@ -446,7 +374,11 @@ const CommandDialog = ({ open, handleClose }) => {
                   </Box>
                 </Box>
                 {item.link && (
-                  <Typography variant="body2" component="p" color="var(--primary)">
+                  <Typography
+                    variant="p"
+                    component="p"
+                    sx={{ color: "var(--primary)", fontWeight: 500 }}
+                  >
                     {item.link}
                   </Typography>
                 )}
@@ -462,7 +394,6 @@ const CommandDialog = ({ open, handleClose }) => {
                 >
                   {item.section && <Chip label={item.section} />}
                   {item.subSection && <Chip label={item.subSection} />}
-                  {item.subSubSection && <Chip label={item.subSubSection} />}
                 </Box>
               </Button>
             ))}

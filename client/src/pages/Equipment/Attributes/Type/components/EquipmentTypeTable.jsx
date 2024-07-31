@@ -1,7 +1,5 @@
 import React, { useState, useMemo } from "react"
 
-import { useAuth } from "@contexts/auth"
-
 import { BASE_URL } from "@api"
 import { useEquipment } from "@hooks/server/useEquipment"
 
@@ -25,8 +23,6 @@ import { showSuccessToast, showErrorToast } from "@config/toast"
 import { formatDateTimeExportExcel, formatDate, formatTime } from "@utils/format/date"
 
 const EquipmentTypeTable = () => {
-  const { role } = useAuth()
-
   const { findAllEquipmentTypes, deleteEquipmentType } = useEquipment()
   const { data: types, isLoading: isTypesLoading } = findAllEquipmentTypes
 
@@ -280,17 +276,13 @@ const EquipmentTypeTable = () => {
                   icon: <Edit fontSize="small" />,
                   onClick: () => openEditEquipmentTypeModal(row)
                 },
-                ...(role !== "Funcionário"
-                  ? [
-                      {
-                        label: "Eliminar",
-                        icon: <Delete fontSize="small" color="error" />,
-                        color: "error",
-                        divider: true,
-                        onClick: () => openDeleteEquipmentTypeModal(row?.id)
-                      }
-                    ]
-                  : [])
+                {
+                  label: "Eliminar",
+                  icon: <Delete fontSize="small" color="error" />,
+                  color: "error",
+                  divider: true,
+                  onClick: () => openDeleteEquipmentTypeModal(row?.id)
+                }
               ]}
             />
           </ButtonDropDownSelect>

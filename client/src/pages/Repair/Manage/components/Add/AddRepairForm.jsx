@@ -250,19 +250,7 @@ const AddRepairForm = () => {
           >
             <Stack sx={{ alignItems: "flex-start" }}>
               <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1, marginBottom: 1 }}>
-                <Typography
-                  variant="h5"
-                  component="h5"
-                  sx={{ wordBreak: "break-all", textAlign: "start" }}
-                >
-                  {item.client.name}
-                </Typography>
-                {item.client.description && (
-                  <Caption fontSize="small" title={item.client.description} />
-                )}
-              </Stack>
-              <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-                <Typography variant="p" component="p">
+                <Typography variant="h6" component="h6">
                   {item.type.name}
                 </Typography>
                 <Divider
@@ -273,9 +261,28 @@ const AddRepairForm = () => {
                     borderWidth: 1
                   }}
                 />
-                <Typography variant="p" component="p">
-                  {item.brand.name} {item.model.name}
+                <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+                  <Typography
+                    variant="h6"
+                    component="h6"
+                    sx={{ wordBreak: "break-all", textAlign: "start" }}
+                  >
+                    {item.brand.name} {item.model.name}
+                  </Typography>
+                  {item.description && <Caption fontSize="small" title={item.description} />}
+                </Stack>
+              </Stack>
+              <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+                <Typography
+                  variant="p"
+                  component="p"
+                  sx={{ wordBreak: "break-all", textAlign: "start" }}
+                >
+                  {item.client.name}
                 </Typography>
+                {item.client.description && (
+                  <Caption fontSize="small" title={item.client.description} />
+                )}
               </Stack>
             </Stack>
           </Button>

@@ -33,7 +33,7 @@ const SummaryCard = ({ icon, title, metricQuery, chartQuery, colorLine, mdSize, 
   return (
     <Grid item xs={12} md={mdSize} lg={lgSize}>
       <Paper elevation={1}>
-        <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+        <Stack sx={{ flexDirection: "row", alignItems: "center", width: "100%" }}>
           <Stack
             sx={{
               flexDirection: "column",
@@ -83,25 +83,29 @@ const SummaryCard = ({ icon, title, metricQuery, chartQuery, colorLine, mdSize, 
               }
             />
           </Stack>
-          <Box
+          <Stack
             sx={{
+              justifyContent: "center",
+              alignItems: "center",
+              height: 165,
               width: "100%",
-              marginRight: 3,
-              display: chartQuery.isLoading && "flex",
-              justifyContent: "center"
+              marginRight: 3
             }}
           >
-            {chartQuery.isLoading ? (
-              <CircularProgress />
-            ) : (
-              <BasicLineChart
-                colorLine={colorLine}
-                xData={chartQuery.data.xData}
-                yData={[{ name: title, data: chartQuery.data.yData }]}
-              />
-            )}
-          </Box>
-        </Box>
+            <Loadable
+              isLoading={chartQuery.isLoading}
+              LoadingComponent={<CircularProgress />}
+              LoadedComponent={
+                <BasicLineChart
+                  colorLine={colorLine}
+                  xData={chartQuery.data.xData}
+                  yData={[{ name: title, data: chartQuery.data.yData }]}
+                />
+              }
+              style={{ width: "100%", height: "100%" }}
+            />
+          </Stack>
+        </Stack>
       </Paper>
     </Grid>
   )
