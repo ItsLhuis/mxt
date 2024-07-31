@@ -323,7 +323,7 @@ const EquipmentModelTable = () => {
       {
         id: "created_at_datetime",
         label: "Data de criação",
-        formatter: formatDateTimeExportExcel
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
       },
       {
         id: "last_modified_by_user.username",

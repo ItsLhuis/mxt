@@ -370,7 +370,7 @@ const EquipmentTable = () => {
       {
         id: "created_at_datetime",
         label: "Data de criação",
-        formatter: formatDateTimeExportExcel
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
       },
       {
         id: "last_modified_by_user.username",
@@ -637,7 +637,8 @@ const EquipmentTable = () => {
             {
               id: "equipment",
               label: "Equipamento",
-              formatter: () => `${row?.type?.name} - ${row?.brand?.name} ${row?.model?.name}`
+              formatter: () =>
+                `${row?.type?.name} - ${row?.brand?.name} ${row?.model?.name} (${row?.sn})`
             },
             {
               id: "status",
@@ -672,7 +673,7 @@ const EquipmentTable = () => {
             {
               id: "created_at_datetime",
               label: "Data de criação",
-              formatter: formatDateTimeExportExcel
+              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
             },
             {
               id: "last_modified_by_user.username",

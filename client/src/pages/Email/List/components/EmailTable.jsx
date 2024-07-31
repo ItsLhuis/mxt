@@ -162,7 +162,7 @@ const EmailTable = () => {
       {
         id: "created_at_datetime",
         label: "Data de envio",
-        formatter: formatDateTimeExportExcel
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
       }
     ],
     []

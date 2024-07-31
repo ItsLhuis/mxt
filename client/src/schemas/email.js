@@ -22,10 +22,10 @@ export const emailSchema = z
     (data) => {
       if (!data.attachments) return true
       const totalSize = data.attachments.reduce((sum, file) => sum + file.size, 0)
-      return totalSize <= 40 * 1024 * 1024
+      return totalSize <= 20 * 1024 * 1024
     },
     {
-      message: "O tamanho total de todos os anexos deve ser de 40 MB ou menos",
+      message: "O tamanho total de todos os anexos deve ser de 20 MB ou menos",
       path: ["attachments"]
     }
   )

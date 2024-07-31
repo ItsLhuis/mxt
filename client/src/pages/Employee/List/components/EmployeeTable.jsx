@@ -411,7 +411,7 @@ const EmployeeTable = () => {
       {
         id: "created_at_datetime",
         label: "Data de criação",
-        formatter: formatDateTimeExportExcel
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
       }
     ],
     []

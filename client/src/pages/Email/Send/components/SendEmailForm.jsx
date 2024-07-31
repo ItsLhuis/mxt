@@ -147,8 +147,7 @@ const SendEmailForm = () => {
                   <FileUpload
                     label="Anexos"
                     acceptedFiles=""
-                    maxSize={10 * 1024 * 1024}
-                    maxTotalFileSize={40 * 1024 * 1024}
+                    maxTotalFileSize={20 * 1024 * 1024}
                     disabled={sendEmail.isPending}
                     value={field.value}
                     onChange={field.onChange}

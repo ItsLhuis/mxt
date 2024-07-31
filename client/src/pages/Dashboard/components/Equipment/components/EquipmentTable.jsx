@@ -10,7 +10,7 @@ import { useEquipment } from "@hooks/server/useEquipment"
 import { FileSvg, ImgSvg, PdfSvg } from "@assets/icons/files"
 
 import { Link } from "react-router-dom"
-import { Stack, Box, Typography, Divider, Tooltip, IconButton, Chip } from "@mui/material"
+import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton, Chip } from "@mui/material"
 import {
   MoreVert,
   Edit,
@@ -38,7 +38,12 @@ import {
 
 import { getValidChipColor } from "@utils/getValidChipColor"
 import { formatHTML } from "@utils/format/formatHTML"
-import { formatDateTime, formatDate, formatTime } from "@utils/format/date"
+import {
+  formatDateTimeExportExcel,
+  formatDateTime,
+  formatDate,
+  formatTime
+} from "@utils/format/date"
 
 const EquipmentTable = () => {
   const navigate = useNavigate()
@@ -336,6 +341,50 @@ const EquipmentTable = () => {
     []
   )
 
+  const equipmentsTableExportColumns = useMemo(
+    () => [
+      {
+        id: "client.name",
+        label: "Cliente"
+      },
+      {
+        id: "type.name",
+        label: "Tipo"
+      },
+      {
+        id: "brand.name",
+        label: "Marca"
+      },
+      {
+        id: "model.name",
+        label: "Modelo"
+      },
+      {
+        id: "sn",
+        label: "Número de série"
+      },
+      {
+        id: "created_by_user.username",
+        label: "Criado por"
+      },
+      {
+        id: "created_at_datetime",
+        label: "Data de criação",
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+      },
+      {
+        id: "last_modified_by_user.username",
+        label: "Modificado pela última vez por"
+      },
+      {
+        id: "last_modified_datetime",
+        label: "Última data de modificação",
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+      }
+    ],
+    []
+  )
+
   const ExpandableEquipmentsTableContent = useMemo(
     () =>
       ({ row }) => {
@@ -573,6 +622,67 @@ const EquipmentTable = () => {
                   )}
                 </>
               )
+            }
+          ],
+          []
+        )
+
+        const repairsTableExportColumns = useMemo(
+          () => [
+            {
+              id: "client",
+              label: "Cliente",
+              formatter: () => row?.client?.name
+            },
+            {
+              id: "equipment",
+              label: "Equipamento",
+              formatter: () =>
+                `${row?.type?.name} - ${row?.brand?.name} ${row?.model?.name} (${row?.sn})`
+            },
+            {
+              id: "status",
+              label: "Estado",
+              formatter: (value) => value?.name,
+              color: (value) => value?.color
+            },
+            {
+              id: "entry_datetime",
+              label: "Data de entrada",
+              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+            },
+            {
+              id: "conclusion_datetime",
+              label: "Data de conclusão",
+              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+            },
+            {
+              id: "delivery_datetime",
+              label: "Data de entrega",
+              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+            },
+            {
+              id: "is_client_notified",
+              label: "Cliente notificado",
+              formatter: (value) => (value === true ? "Sim" : "Não")
+            },
+            {
+              id: "created_by_user.username",
+              label: "Criado por"
+            },
+            {
+              id: "created_at_datetime",
+              label: "Data de criação",
+              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+            },
+            {
+              id: "last_modified_by_user.username",
+              label: "Modificado pela última vez por"
+            },
+            {
+              id: "last_modified_datetime",
+              label: "Última data de modificação",
+              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
             }
           ],
           []
@@ -1055,7 +1165,13 @@ const EquipmentTable = () => {
                 description="Reparações do equipamento"
                 icon={<Construction />}
               />
-              <Table mode="datatable" data={row?.repairs ?? []} columns={repairsTableColumns} />
+              <Table
+                mode="datatable"
+                data={row?.repairs ?? []}
+                columns={repairsTableColumns}
+                exportFileName="reparacoes_equipamento"
+                exportColumns={repairsTableExportColumns}
+              />
             </Box>
             <Box
               sx={{
@@ -1103,38 +1219,41 @@ const EquipmentTable = () => {
   )
 
   return (
-    <Stack>
-      <HeaderSection title="Lista" description="Lista de todos os equipamentos" />
-      <Loadable
-        isLoading={isEquipmentsLoading}
-        LoadingComponent={<TableSkeleton mode="datatable" />}
-        LoadedComponent={
-          <Table
-            mode="datatable"
-            data={equipments ?? []}
-            columns={equipmentsTableColumns}
-            ExpandableContentComponent={ExpandableEquipmentsTableContent}
-          />
-        }
-      />
-      <Modal
-        mode="delete"
-        title="Eliminar Equipamento"
-        open={deleteEquipmentModal.isOpen}
-        onClose={closeDeleteEquipmentModal}
-        onSubmit={handleDeleteEquipment}
-        description="Tem a certeza que deseja eliminar este equipamento?"
-        subDescription="Ao eliminar este equipamento, todos os dados relacionados, incluindo anexos e reparações associadas, serão removidos de forma permanente."
-      />
-      <FileViewer
-        open={openFileViewer}
-        onClose={handleCloseFileViewer}
-        file={attachment.url}
-        fileName={attachment.name}
-        fileSize={Number(attachment.size)}
-        fileType={attachment.type}
-      />
-    </Stack>
+    <Paper elevation={1}>
+      <Box sx={{ marginTop: 3 }}>
+        <Loadable
+          isLoading={isEquipmentsLoading}
+          LoadingComponent={<TableSkeleton mode="datatable" />}
+          LoadedComponent={
+            <Table
+              mode="datatable"
+              data={equipments ?? []}
+              columns={equipmentsTableColumns}
+              exportFileName="equipamentos"
+              exportColumns={equipmentsTableExportColumns}
+              ExpandableContentComponent={ExpandableEquipmentsTableContent}
+            />
+          }
+        />
+        <Modal
+          mode="delete"
+          title="Eliminar Equipamento"
+          open={deleteEquipmentModal.isOpen}
+          onClose={closeDeleteEquipmentModal}
+          onSubmit={handleDeleteEquipment}
+          description="Tem a certeza que deseja eliminar este equipamento?"
+          subDescription="Ao eliminar este equipamento, todos os dados relacionados, incluindo anexos e reparações associadas, serão removidos de forma permanente."
+        />
+        <FileViewer
+          open={openFileViewer}
+          onClose={handleCloseFileViewer}
+          file={attachment.url}
+          fileName={attachment.name}
+          fileSize={Number(attachment.size)}
+          fileType={attachment.type}
+        />
+      </Box>
+    </Paper>
   )
 }
 

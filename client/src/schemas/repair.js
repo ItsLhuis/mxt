@@ -13,17 +13,38 @@ export const repairSchema = z.object({
 })
 
 export const updateRepairSchema = z.object({
-  statusId: z.number(),
+  statusId: z.number({ message: "O estado é obrigatório" }),
   entryAccessoriesDescription: z.string().optional().nullable(),
   entryReportedIssuesDescription: z.string().optional().nullable(),
   entryDescription: z.string().optional().nullable(),
-  entryDatetime: z.date(),
+  entryDatetime: z.date({
+    message: "A data de entrada é obrigatória",
+    errorMap: () => ({
+      message: "A data de entrada é obrigatória"
+    })
+  }),
   interventionWorksDoneDescription: z.string().optional().nullable(),
   interventionAccessoriesUsedDescription: z.string().optional().nullable(),
   interventionDescription: z.string().optional().nullable(),
-  conclusionDatetime: z.date().optional().nullable(),
-  deliveryDatetime: z.date().optional().nullable(),
-  isClientNotified: z.boolean(),
+  conclusionDatetime: z
+    .date({
+      message: "Data inválida",
+      errorMap: () => ({
+        message: "Data inválida"
+      })
+    })
+    .optional()
+    .nullable(),
+  deliveryDatetime: z
+    .date({
+      message: "Data inválida",
+      errorMap: () => ({
+        message: "Data inválida"
+      })
+    })
+    .optional()
+    .nullable(),
+  isClientNotified: z.boolean({ message: "Valor inválido" }),
   entryAccessories: z.array(z.number()).optional().nullable(),
   entryReportedIssues: z.array(z.number()).optional().nullable(),
   interventionWorksDone: z.array(z.number()).optional().nullable(),

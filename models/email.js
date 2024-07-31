@@ -14,6 +14,8 @@ const Client = require("@models/client")
 const User = require("@models/user")
 const mapUser = require("@utils/mapUser")
 
+const isProduction = process.env.NODE_ENV === "production"
+
 const Email = {
   findAll: withCache("emails", async () => {
     const emailsQuery = "SELECT * FROM emails ORDER BY created_at_datetime DESC"
@@ -247,9 +249,15 @@ const Email = {
         .then((result) => {
           return revalidateCache("emails").then(() => resolve(result))
         })
-        .catch(() => {
+        .catch((error) => {
           reject(
-            new AppError(500, EMAIL_SEND_ERROR, "Failed to send e-mail", false, EMAIL_ERROR_TYPE)
+            new AppError(
+              500,
+              EMAIL_SEND_ERROR,
+              isProduction ? "Failed to send e-mail" : error,
+              false,
+              EMAIL_ERROR_TYPE
+            )
           )
         })
     })

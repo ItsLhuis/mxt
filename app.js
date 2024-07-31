@@ -5,7 +5,6 @@ const cookieParser = require("cookie-parser")
 const http = require("http")
 const cors = require("cors")
 const helmet = require("helmet")
-const bodyParser = require("body-parser")
 const path = require("path")
 
 const serveClientBuildCodeHandler = require("@middlewares/serveClientBuildCodeHandler")
@@ -17,22 +16,10 @@ const initializeApp = require("@utils/initializeApp")
 
 const app = express()
 
-/* app.use((req, res, next) => {
-  const minDelay = 1000
-  const maxDelay = 4000
-  const delay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay
-
-  setTimeout(() => {
-    next()
-  }, delay)
-}) */
-
-app.use(express.json())
+app.use(express.json({ limit: "50mb" }))
+app.use(express.urlencoded({ limit: "50mb", extended: true }))
 
 app.use(cookieParser())
-
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
 
 const getDomainList = () => {
   const domains =

@@ -11,8 +11,8 @@ import { Visibility } from "@mui/icons-material"
 
 import { Loadable, Table, TableSkeleton, Avatar, Caption } from "@components/ui"
 
-import { formatPhoneNumber } from "@utils/format/phone"
 import { formatDateTimeExportExcel, formatDate, formatTime } from "@utils/format/date"
+import { formatPhoneNumber } from "@utils/format/phone"
 
 const SmsTable = () => {
   const navigate = useNavigate()
@@ -151,7 +151,8 @@ const SmsTable = () => {
       },
       {
         id: "to",
-        label: "Para"
+        label: "Para",
+        formatter: formatPhoneNumber
       },
       {
         id: "message",
@@ -164,7 +165,7 @@ const SmsTable = () => {
       {
         id: "created_at_datetime",
         label: "Data de envio",
-        formatter: formatDateTimeExportExcel
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
       }
     ],
     []

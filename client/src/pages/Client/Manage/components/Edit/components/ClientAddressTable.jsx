@@ -20,7 +20,7 @@ import {
 } from "@components/ui"
 import ClientAddressEditModal from "./ClientAddressEditModal"
 
-import { formatDate, formatTime } from "@utils/format/date"
+import { formatDateTimeExportExcel, formatDate, formatTime } from "@utils/format/date"
 
 const ClientAddressTable = ({ client, isLoading, isError }) => {
   const isClientFinished = !isLoading && !isError
@@ -308,6 +308,55 @@ const ClientAddressTable = ({ client, isLoading, isError }) => {
     []
   )
 
+  const clientAddressesTableExportColumns = useMemo(
+    () => [
+      {
+        id: "client",
+        label: "Cliente",
+        formatter: () => client?.[0]?.name
+      },
+      {
+        id: "country",
+        label: "País"
+      },
+      {
+        id: "city",
+        label: "Cidade"
+      },
+      {
+        id: "locality",
+        label: "Localidade"
+      },
+      {
+        id: "address",
+        label: "Morada"
+      },
+      {
+        id: "postal_code",
+        label: "Código postal"
+      },
+      {
+        id: "created_by_user.username",
+        label: "Criado por"
+      },
+      {
+        id: "created_at_datetime",
+        label: "Data de criação",
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+      },
+      {
+        id: "last_modified_by_user.username",
+        label: "Modificado pela última vez por"
+      },
+      {
+        id: "last_modified_datetime",
+        label: "Última data de modificação",
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+      }
+    ],
+    [client]
+  )
+
   return (
     <Stack>
       <HeaderSection title="Moradas" description="Moradas do cliente" icon={<Place />} />
@@ -327,6 +376,8 @@ const ClientAddressTable = ({ client, isLoading, isError }) => {
               mode="datatable"
               data={isClientFinished ? client[0]?.addresses : []}
               columns={clientAddressesTableColumns}
+              exportFileName="moradas_cliente"
+              exportColumns={clientAddressesTableExportColumns}
             />
           </Box>
         }

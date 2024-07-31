@@ -8,7 +8,7 @@ import { Computer } from "@mui/icons-material"
 
 import { HeaderSection, Loadable, Table, TableSkeleton, Avatar } from "@components/ui"
 
-import { formatDate, formatTime } from "@utils/format/date"
+import { formatDateTimeExportExcel, formatDate, formatTime } from "@utils/format/date"
 
 const ClientEquipmentsTable = ({ client, isLoading, isError }) => {
   const isClientFinished = !isLoading && !isError
@@ -207,6 +207,51 @@ const ClientEquipmentsTable = ({ client, isLoading, isError }) => {
     []
   )
 
+  const clientEquipmentsTableExportColumns = useMemo(
+    () => [
+      {
+        id: "client",
+        label: "Cliente",
+        formatter: () => client?.[0]?.name
+      },
+      {
+        id: "type.name",
+        label: "Tipo"
+      },
+      {
+        id: "brand.name",
+        label: "Marca"
+      },
+      {
+        id: "model.name",
+        label: "Modelo"
+      },
+      {
+        id: "sn",
+        label: "Número de série"
+      },
+      {
+        id: "created_by_user.username",
+        label: "Criado por"
+      },
+      {
+        id: "created_at_datetime",
+        label: "Data de criação",
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+      },
+      {
+        id: "last_modified_by_user.username",
+        label: "Modificado pela última vez por"
+      },
+      {
+        id: "last_modified_datetime",
+        label: "Última data de modificação",
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+      }
+    ],
+    [client]
+  )
+
   return (
     <Paper elevation={1}>
       <HeaderSection
@@ -230,6 +275,8 @@ const ClientEquipmentsTable = ({ client, isLoading, isError }) => {
               mode="datatable"
               data={isClientFinished ? client[0].equipments : []}
               columns={clientEquipmentsTableColumns}
+              exportFileName="equipamentos_cliente"
+              exportColumns={clientEquipmentsTableExportColumns}
             />
           </Box>
         }

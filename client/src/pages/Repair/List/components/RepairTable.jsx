@@ -1039,7 +1039,8 @@ const RepairTable = () => {
       {
         id: "equipment",
         label: "Equipamento",
-        formatter: (value) => `${value?.type?.name} - ${value?.brand?.name} ${value?.model?.name}`
+        formatter: (value) =>
+          `${value?.type?.name} - ${value?.brand?.name} ${value?.model?.name} (${value?.sn})`
       },
       {
         id: "status",
@@ -1074,7 +1075,7 @@ const RepairTable = () => {
       {
         id: "created_at_datetime",
         label: "Data de criação",
-        formatter: formatDateTimeExportExcel
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
       },
       {
         id: "last_modified_by_user.username",

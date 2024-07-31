@@ -15,8 +15,8 @@ const { upload, checkTotalFileSize } = require("@middlewares/uploadFileHandler")
 
 const emailController = {
   addAttachments: [
-    upload.multiple("attachments", Infinity, [], 10 * 1024 * 1024),
-    checkTotalFileSize(40 * 1024 * 1024)
+    upload.multiple("attachments", Infinity, []),
+    checkTotalFileSize(20 * 1024 * 1024)
   ],
   findAll: tryCatch(async (req, res) => {
     const emails = await Email.findAll()

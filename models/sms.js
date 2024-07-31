@@ -17,6 +17,8 @@ const Client = require("@models/client")
 const User = require("@models/user")
 const mapUser = require("@utils/mapUser")
 
+const isProduction = process.env.NODE_ENV === "production"
+
 const Sms = {
   findAll: withCache("smses", async () => {
     const smsesQuery = "SELECT * FROM smses ORDER BY created_at_datetime DESC"
@@ -215,8 +217,16 @@ const Sms = {
         .then((result) => {
           return revalidateCache("smses").then(() => resolve(result))
         })
-        .catch(() => {
-          reject(new AppError(500, SMS_SEND_ERROR, "Failed to send Sms", false, SMS_ERROR_TYPE))
+        .catch((error) => {
+          reject(
+            new AppError(
+              500,
+              SMS_SEND_ERROR,
+              isProduction ? "Failed to send SMS" : error,
+              false,
+              SMS_ERROR_TYPE
+            )
+          )
         })
     })
   }

@@ -90,7 +90,10 @@ const FileUpload = ({
   }, [error])
 
   useEffect(() => {
-    setValidFiles(value.filter((file) => isValidFile(file)))
+    if (value.length === 0) {
+      setValidFiles([])
+      setInvalidFiles([])
+    }
   }, [value])
 
   const isValidFile = (file) => {

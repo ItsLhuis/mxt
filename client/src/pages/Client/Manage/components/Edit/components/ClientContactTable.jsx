@@ -21,7 +21,7 @@ import {
 } from "@components/ui"
 import ClientContactEditModal from "./ClientContactEditModal"
 
-import { formatDate, formatTime } from "@utils/format/date"
+import { formatDateTimeExportExcel, formatDate, formatTime } from "@utils/format/date"
 import { formatPhoneNumber } from "@utils/format/phone"
 
 const ClientContactTable = ({ client, isLoading, isError }) => {
@@ -298,6 +298,44 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
     []
   )
 
+  const clientContactsTableExportColumns = useMemo(
+    () => [
+      {
+        id: "client",
+        label: "Cliente",
+        formatter: () => client?.[0]?.name
+      },
+      {
+        id: "type",
+        label: "Tipo"
+      },
+      {
+        id: "contact",
+        label: "Contacto",
+        formatter: formatPhoneNumber
+      },
+      {
+        id: "created_by_user.username",
+        label: "Criado por"
+      },
+      {
+        id: "created_at_datetime",
+        label: "Data de criação",
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+      },
+      {
+        id: "last_modified_by_user.username",
+        label: "Modificado pela última vez por"
+      },
+      {
+        id: "last_modified_datetime",
+        label: "Última data de modificação",
+        formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+      }
+    ],
+    [client]
+  )
+
   return (
     <Stack>
       <HeaderSection title="Contactos" description="Contactos do cliente" icon={<Phone />} />
@@ -317,6 +355,8 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
               mode="datatable"
               data={isClientFinished ? client[0]?.contacts : []}
               columns={clientContactsTableColumns}
+              exportFileName="contactos_cliente"
+              exportColumns={clientContactsTableExportColumns}
             />
           </Box>
         }
