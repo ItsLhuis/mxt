@@ -77,7 +77,7 @@ const SummaryCard = ({ icon, title, metricQuery, chartQuery, colorLine, mdSize, 
                       color={metricQuery.data.percentage.color}
                       sx={{ marginTop: "auto" }}
                     />
-                    <Caption title="Comparado aos últimos dois meses completos" />
+                    <Caption title="Comparado entre os dois últimos meses completos" />
                   </Stack>
                 </Stack>
               }

@@ -136,6 +136,7 @@ const SendEmailForm = () => {
                     onChange={field.onChange}
                     error={!!errors.message}
                     helperText={errors.message?.message}
+                    shouldImmediatelyRender
                   />
                 )}
               />

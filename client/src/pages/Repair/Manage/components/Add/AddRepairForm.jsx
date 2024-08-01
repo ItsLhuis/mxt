@@ -187,6 +187,7 @@ const AddRepairForm = () => {
                     label="Descrição da entrada"
                     value={field.value}
                     onChange={field.onChange}
+                    shouldImmediatelyRender
                   />
                 )}
               />

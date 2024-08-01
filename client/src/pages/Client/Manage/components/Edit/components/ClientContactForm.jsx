@@ -138,7 +138,7 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
             control={control}
             defaultValue=""
             render={({ field }) => (
-              <RichEditor label="Descrição" value={field.value} onChange={field.onChange} />
+              <RichEditor label="Descrição" value={field.value} onChange={field.onChange} shouldImmediatelyRender />
             )}
           />
           <Box sx={{ marginLeft: "auto", marginTop: 1 }}>

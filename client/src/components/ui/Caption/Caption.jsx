@@ -27,6 +27,7 @@ const Caption = ({ fontSize = "small", title }) => {
             [`&.${tooltipClasses.popper} .${tooltipClasses.tooltip}`]: {
               margin: "16px",
               maxHeight: "250px",
+              maxWidth: "400px",
               overflow: "hidden",
               overflowY: "auto"
             }

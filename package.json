@@ -21,17 +21,17 @@
     "helmet": "^7.1.0",
     "immer": "^10.1.1",
     "jsonwebtoken": "^9.0.2",
-    "libphonenumber-js": "^1.11.2",
+    "libphonenumber-js": "^1.11.5",
     "mjml": "^4.15.3",
     "module-alias": "^2.2.3",
     "moment-timezone": "^0.5.45",
     "multer": "^1.4.5-lts.1",
-    "mysql2": "^3.9.7",
+    "mysql2": "^3.11.0",
     "node-cache": "^5.1.2",
-    "nodemon": "^3.1.0",
-    "resend": "^3.2.0",
+    "nodemon": "^3.1.4",
+    "resend": "^3.5.0",
     "sharp": "^0.33.4",
-    "uuid": "^9.0.1",
+    "uuid": "^10.0.0",
     "zod": "^3.23.8"
   }
 }

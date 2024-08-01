@@ -21,7 +21,15 @@ import ToolBar from "./ToolBar"
 
 import { debounce } from "@utils/debounce"
 
-const RichEditor = ({ label, value, onChange, error, helperText, isLoading = false }) => {
+const RichEditor = ({
+  label,
+  value,
+  onChange,
+  error,
+  helperText,
+  isLoading = false,
+  shouldImmediatelyRender = false
+}) => {
   const [isFinished, setIsFinished] = useState(false)
   const isFirstRender = useRef(true)
   const timeoutRef = useRef(null)
@@ -33,6 +41,8 @@ const RichEditor = ({ label, value, onChange, error, helperText, isLoading = fal
   }
 
   const editor = useEditor({
+    immediatelyRender: shouldImmediatelyRender,
+    shouldRerenderOnTransaction: true,
     extensions: [
       StarterKit.configure({
         bulletList: {
@@ -124,6 +134,50 @@ const RichEditor = ({ label, value, onChange, error, helperText, isLoading = fal
     }
   }, [fullscreen])
 
+  if (shouldImmediatelyRender) {
+    return (
+      <Box>
+        {label && (
+          <InputLabel
+            sx={{
+              marginBottom: 1,
+              color: error ? "rgb(211, 47, 47) !important" : "var(--onSurface)"
+            }}
+          >
+            {label}
+          </InputLabel>
+        )}
+        <ToolBar editor={editor} fullscreen={fullscreen} toggleFullscreen={toggleFullscreen} />
+        {fullscreen && (
+          <Stack
+            className="tiptap-fullscreen"
+            sx={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              zIndex: 900,
+              height: "100%",
+              width: "100%",
+              overflow: "hidden"
+            }}
+          >
+            <ToolBar editor={editor} fullscreen={fullscreen} toggleFullscreen={toggleFullscreen} />
+            <EditorContent
+              className={`tiptap-editor ${fullscreen && "fullscreen"}`}
+              editor={editor}
+            />
+          </Stack>
+        )}
+        {!fullscreen && <EditorContent editor={editor} />}
+        {error && (
+          <FormHelperText error={error} sx={{ marginLeft: 2, marginTop: 0.5 }}>
+            {helperText}
+          </FormHelperText>
+        )}
+      </Box>
+    )
+  }
+
   return (
     <Loadable
       isLoading={!isFinished}
@@ -183,7 +237,8 @@ RichEditor.propTypes = {
   onChange: PropTypes.func,
   error: PropTypes.bool,
   helperText: PropTypes.string,
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
+  shouldImmediatelyRender: PropTypes.bool
 }
 
 export default RichEditor

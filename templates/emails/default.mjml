@@ -5,6 +5,7 @@
       <mj-all font-family="Poppins, Helvetica, Arial, sans-serif"></mj-all>
       <mj-text font-weight="500" font-size="15px" color="#000000" line-height="24px"></mj-text>
       <mj-section padding="0px"></mj-section>
+      <mj-divider border-color="rgb(215, 214, 224)" border-width="2px" border-style="solid"></mj-divider>
     </mj-attributes>
   </mj-head>
   <mj-body background-color="rgb(245, 243, 255)">
@@ -28,7 +29,7 @@
         <mj-column>
           <mj-text font-size="11px" padding="16px 24px 0 24px">{{ data.footer }}</mj-text>
           <mj-text font-weight="700" font-size="18px" padding="0 24px 24px 24px">{{ data.companyName }}</mj-text>
-          <mj-divider border-color="rgb(225, 224, 234)" border-width="2px" border-style="solid" padding="0 24px" />
+          <mj-divider padding="0 24px" />
           <mj-text color="rgb(145, 144, 154)" font-size="11px" padding="16px 24px 0 24px">{{ data.companyAddress }}, {{ data.companyCity }}, {{ data.companyCountry }}</mj-text>
           <mj-text color="rgb(145, 144, 154)" font-size="11px" padding="0 24px 0 24px">{{ data.companyPhoneNumber }} | {{ data.companyEmail }} | {{ data.companyWebsite }}</mj-text>
           <mj-text color="rgb(145, 144, 154)" font-size="11px" padding="0px 24px 24px 24px">Enviado por Mixtech</mj-text>
