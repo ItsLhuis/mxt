@@ -26,7 +26,10 @@ const EquipmentAnnualChart = () => {
 
   return (
     <Stack>
-      <HeaderSection title="Gráfico Anual" description="Gráfico anual dos equipamentos" />
+      <HeaderSection
+        title="Atividades Anuais"
+        description="Gráfico das atividades anuais dos equipamentos"
+      />
       <Box sx={{ width: "100%", padding: 3, paddingTop: 0 }}>
         <Stack sx={{ marginTop: 1, flexDirection: "row", justifyContent: "flex-end", gap: 1 }}>
           <Loadable

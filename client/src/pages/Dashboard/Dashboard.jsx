@@ -1,4 +1,4 @@
-import React, { Suspense } from "react"
+import React, { memo, Suspense } from "react"
 
 import { useDashboard } from "@hooks/server/useDashboard"
 
@@ -14,6 +14,9 @@ import {
 } from "./components"
 
 import { motion } from "framer-motion"
+
+const MemoSummary = memo(Summary)
+const MemoEquipment = memo(Equipment)
 
 const Dashboard = () => {
   const { refetchAllQueries } = useDashboard()
@@ -31,8 +34,8 @@ const Dashboard = () => {
               isRefetching={refetchAllQueries.isRefetching}
             />
             <Stack sx={{ gap: 3 }}>
-              <Summary />
-              <Equipment />
+              <MemoSummary />
+              <MemoEquipment />
             </Stack>
           </Container>
         </Box>
