@@ -2,7 +2,7 @@ import PropTypes from "prop-types"
 
 import React, { useState } from "react"
 
-import { Button, Box, Typography, Popover, Stack } from "@mui/material"
+import { Button, Box, Typography, Popover, Stack, ButtonBase } from "@mui/material"
 import { KeyboardArrowUp } from "@mui/icons-material"
 
 const ButtonDropDownSelect = ({
@@ -27,7 +27,7 @@ const ButtonDropDownSelect = ({
   const id = open ? "button-drop-down-select-popover" : undefined
 
   return (
-    <>
+    <Box>
       {mode === "normal" ? (
         <Button
           variant="contained"
@@ -128,7 +128,13 @@ const ButtonDropDownSelect = ({
               </Stack>
             </Button>
           ) : (
-            <>{mode === "custom" && <Box onClick={handleClick}>{customButton}</Box>}</>
+            <>
+              {mode === "custom" && (
+                <ButtonBase disableRipple sx={{ borderRadius: "50%" }} onClick={handleClick}>
+                  {customButton}
+                </ButtonBase>
+              )}
+            </>
           )}
         </>
       )}
@@ -150,7 +156,7 @@ const ButtonDropDownSelect = ({
           React.cloneElement(child, { onClose: handleClose })
         )}
       </Popover>
-    </>
+    </Box>
   )
 }
 

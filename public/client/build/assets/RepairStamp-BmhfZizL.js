@@ -1,0 +1,1 @@
+import{r as e,j as r,B as t}from"./index-QasZhORg.js";const i=e.forwardRef(({equipmentId:s},a)=>r.jsxs(t,{ref:a,sx:{padding:2},children:[r.jsx("div",{children:"Olá"}),r.jsx("div",{children:s})]}));export{i as default};

@@ -8,7 +8,7 @@ const ListButton = ({ buttons, onClose }) => {
   return (
     <List sx={{ display: "flex", flexDirection: "column", minWidth: "90px", gap: 0.5 }}>
       {buttons.map((button, index) => (
-        <React.Fragment key={index}>
+        <Stack key={index}>
           {button.divider && (
             <Divider
               sx={{
@@ -18,6 +18,25 @@ const ListButton = ({ buttons, onClose }) => {
                 borderWidth: 1
               }}
             />
+          )}
+          {button.title && (
+            <>
+              <Typography
+                variant="p"
+                component="p"
+                sx={{ marginInline: 1, color: "var(--outline)", fontWeight: 600 }}
+              >
+                {button.title}
+              </Typography>
+              <Divider
+                sx={{
+                  marginBottom: 0.5,
+                  marginTop: 0.5,
+                  borderColor: "var(--elevation-level5)",
+                  borderWidth: 1
+                }}
+              />
+            </>
           )}
           <ListItem key={index} disablePadding>
             <Button
@@ -61,7 +80,7 @@ const ListButton = ({ buttons, onClose }) => {
               </Stack>
             </Button>
           </ListItem>
-        </React.Fragment>
+        </Stack>
       ))}
     </List>
   )
@@ -70,6 +89,7 @@ const ListButton = ({ buttons, onClose }) => {
 ListButton.propTypes = {
   buttons: PropTypes.arrayOf(
     PropTypes.shape({
+      title: PropTypes.string,
       label: PropTypes.string.isRequired,
       icon: PropTypes.node,
       onClick: PropTypes.func.isRequired,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback, useRef } from "react"
 
 import { useForm, useFormState, useWatch, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -6,12 +6,16 @@ import { updateRepairSchema } from "@schemas/repair"
 
 import { useRepair } from "@hooks/server/useRepair"
 
+import { useReactToPrint } from "react-to-print"
+
 import { Link } from "react-router-dom"
 import { LoadingButton } from "@mui/lab"
 import {
   Paper,
   Grid,
   Chip,
+  Tooltip,
+  IconButton,
   Box,
   Stack,
   Tabs,
@@ -21,17 +25,20 @@ import {
   Typography,
   Switch
 } from "@mui/material"
+import { Construction, LocalOffer, HomeRepairService, MoreVert } from "@mui/icons-material"
 
 import {
   HeaderSection,
   Loadable,
   DatePicker,
+  ButtonDropDownSelect,
+  ListButton,
   Select,
   MultipleSelectCheckmarks,
   RichEditor,
   Caption
 } from "@components/ui"
-import { Construction, LocalOffer, HomeRepairService } from "@mui/icons-material"
+import { RepairStamp } from "./prints"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
@@ -68,6 +75,14 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
   const handleTabChange = (_, newValue) => {
     setTabValue(newValue)
   }
+
+  const printStampRef = useRef(null)
+
+  const printStampContent = useCallback(() => {
+    return printStampRef.current
+  }, [printStampRef.current])
+
+  const handlePrintStamp = useReactToPrint({ content: printStampContent })
 
   const {
     control,
@@ -289,26 +304,67 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
                 margin: 3
               }}
             >
-              <Tabs
-                value={tabValue}
-                onChange={handleTabChange}
-                aria-label="repair-tabs"
-                variant="scrollable"
-                scrollButtons="auto"
-                allowScrollButtonsMobile
-                sx={{ borderBottom: "2px solid var(--elevation-level5)", paddingInline: 3 }}
+              <Stack
+                sx={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  borderBottom: "2px solid var(--elevation-level5)"
+                }}
               >
-                <Tab
-                  icon={<LocalOffer fontSize="inherit" />}
-                  label="Entrada"
-                  {...tabProps("Entrada")}
-                />
-                <Tab
-                  icon={<HomeRepairService fontSize="inherit" />}
-                  label="Intervenção"
-                  {...tabProps("Intervenção")}
-                />
-              </Tabs>
+                <Tabs
+                  value={tabValue}
+                  onChange={handleTabChange}
+                  aria-label="repair-tabs"
+                  variant="scrollable"
+                  scrollButtons="auto"
+                  allowScrollButtonsMobile
+                  sx={{ paddingInline: 3 }}
+                >
+                  <Tab
+                    icon={<LocalOffer fontSize="inherit" />}
+                    label="Entrada"
+                    {...tabProps("Entrada")}
+                  />
+                  <Tab
+                    icon={<HomeRepairService fontSize="inherit" />}
+                    label="Intervenção"
+                    {...tabProps("Intervenção")}
+                  />
+                </Tabs>
+                <Box sx={{ paddingRight: 0.5 }}>
+                  <Loadable
+                    isLoading={!isRepairFinished}
+                    LoadingComponent={<Skeleton variant="circular" width={40} height={40} />}
+                    LoadedComponent={
+                      <ButtonDropDownSelect
+                        mode="custom"
+                        customButton={
+                          <Tooltip title="Mais opções">
+                            <IconButton>
+                              <MoreVert />
+                            </IconButton>
+                          </Tooltip>
+                        }
+                      >
+                        <ListButton
+                          buttons={[
+                            {
+                              title: "Print",
+                              label: "Selo",
+                              onClick: handlePrintStamp
+                            },
+                            {
+                              label: "Ficha informativa",
+                              onClick: handlePrintStamp
+                            }
+                          ]}
+                        />
+                      </ButtonDropDownSelect>
+                    }
+                  />
+                </Box>
+              </Stack>
               <TabPanel value={tabValue} index={0}>
                 <Stack sx={{ gap: 2 }}>
                   <Loadable
@@ -641,6 +697,7 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
           </Box>
         </Stack>
       </form>
+      <RepairStamp ref={printStampRef} equipmentId={repair?.[0]?.equipment?.id} />
     </Paper>
   )
 }
