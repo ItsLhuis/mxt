@@ -42,7 +42,7 @@ const RichEditor = ({
 
   const editor = useEditor({
     immediatelyRender: shouldImmediatelyRender,
-    shouldRerenderOnTransaction: true,
+    shouldRerenderOnTransaction: false,
     extensions: [
       StarterKit.configure({
         bulletList: {
