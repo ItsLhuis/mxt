@@ -1,13 +1,46 @@
 import React, { forwardRef } from "react"
 
-import { Box } from "@mui/material"
+import { BASE_URL } from "@api"
 
-const RepairStamp = forwardRef(({ equipmentId }, ref) => {
+import { formatPhoneNumber } from "@utils/format/phone"
+
+const RepairStamp = forwardRef(({ equipmentId, companyData }, ref) => {
   return (
-    <Box ref={ref} sx={{ padding: 2 }}>
-      <div>Olá</div>
-      <div>{equipmentId}</div>
-    </Box>
+    <div
+      ref={ref}
+      style={{
+        display: "flex",
+        flexDirection: "column"
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: "36px" }}>
+        <img src={`${BASE_URL}/company/logo?size=1400`} style={{ width: "360px" }} />
+        <h1
+          style={{
+            fontSize: 54,
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis"
+          }}
+        >
+          {equipmentId}
+        </h1>
+      </div>
+      <p
+        style={{
+          fontSize: 28,
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          textOverflow: "ellipsis",
+          fontWeight: 700,
+          marginTop: "8px"
+        }}
+      >
+        {formatPhoneNumber(companyData?.phone_number)}
+        {companyData?.phone_number && companyData?.website && <strong> | </strong>}
+        {companyData?.website}
+      </p>
+    </div>
   )
 })
 

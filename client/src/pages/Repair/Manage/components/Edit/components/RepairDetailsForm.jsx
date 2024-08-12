@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useCallback, useRef } from "react"
+import React, { useRef, useState, useEffect } from "react"
 
 import { useForm, useFormState, useWatch, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateRepairSchema } from "@schemas/repair"
 
 import { useRepair } from "@hooks/server/useRepair"
+import { useCompany } from "@hooks/server/useCompany"
 
-import { useReactToPrint } from "react-to-print"
+import { print } from "@utils/print"
 
 import { Link } from "react-router-dom"
 import { LoadingButton } from "@mui/lab"
@@ -23,7 +24,9 @@ import {
   FormControl,
   Skeleton,
   Typography,
-  Switch
+  Switch,
+  Backdrop,
+  CircularProgress
 } from "@mui/material"
 import { Construction, LocalOffer, HomeRepairService, MoreVert } from "@mui/icons-material"
 
@@ -36,7 +39,8 @@ import {
   Select,
   MultipleSelectCheckmarks,
   RichEditor,
-  Caption
+  Caption,
+  Portal
 } from "@components/ui"
 import { RepairStamp } from "./prints"
 
@@ -76,13 +80,19 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
     setTabValue(newValue)
   }
 
-  const printStampRef = useRef(null)
+  const [isPrintLoading, setIsPrintLoading] = useState(false)
 
-  const printStampContent = useCallback(() => {
-    return printStampRef.current
-  }, [printStampRef.current])
+  const printRepairStampRef = useRef(null)
 
-  const handlePrintStamp = useReactToPrint({ content: printStampContent })
+  const handlePrint = async () => {
+    setIsPrintLoading(true)
+
+    try {
+      await print(printRepairStampRef.current.innerHTML)
+    } finally {
+      setIsPrintLoading(false)
+    }
+  }
 
   const {
     control,
@@ -137,6 +147,7 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
     findAllInterventionAccessoriesUsed,
     updateRepair
   } = useRepair()
+  const { findCompany } = useCompany()
 
   const onSubmit = async (data) => {
     if (!isRepairFinished || isFormUnchanged()) return
@@ -195,6 +206,13 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
   return (
     <Paper elevation={1}>
       <HeaderSection title="Detalhes" description="Dados da reparação" icon={<Construction />} />
+      <Portal>
+        <RepairStamp
+          ref={printRepairStampRef}
+          equipmentId={repair?.[0]?.equipment?.id}
+          companyData={findCompany.data}
+        />
+      </Portal>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack>
           <Stack>
@@ -352,11 +370,20 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
                             {
                               title: "Print",
                               label: "Selo",
-                              onClick: handlePrintStamp
+                              onClick: handlePrint
                             },
                             {
                               label: "Ficha informativa",
-                              onClick: handlePrintStamp
+                              onClick: handlePrint
+                            },
+                            {
+                              label: "Entrada",
+                              onClick: handlePrint
+                            },
+                            ,
+                            {
+                              label: "Saída",
+                              onClick: handlePrint
                             }
                           ]}
                         />
@@ -697,7 +724,9 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
           </Box>
         </Stack>
       </form>
-      <RepairStamp ref={printStampRef} equipmentId={repair?.[0]?.equipment?.id} />
+      <Backdrop sx={{ zIndex: 99999 }} open={isPrintLoading}>
+        <CircularProgress />
+      </Backdrop>
     </Paper>
   )
 }

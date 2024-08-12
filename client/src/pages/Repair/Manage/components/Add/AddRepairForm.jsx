@@ -90,6 +90,8 @@ const AddRepairForm = () => {
       .then(() => navigate("/repair/list"))
   }
 
+  console.log(findAllEquipments.data)
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -144,7 +146,7 @@ const AddRepairForm = () => {
                   placeholder="Selecione um equipamento"
                   value={
                     equipmentModal.equipment.clientName
-                      ? `${equipmentModal.equipment.typeName} | ${equipmentModal.equipment.brandName} ${equipmentModal.equipment.modelName} (${equipmentModal.equipment.clientName})`
+                      ? `${equipmentModal.equipment.typeName} ${equipmentModal.equipment.brandName} ${equipmentModal.equipment.modelName} (${equipmentModal.equipment.clientName})`
                       : ""
                   }
                   onClick={openEquipmentModal}
@@ -214,79 +216,96 @@ const AddRepairForm = () => {
         title="Equipamentos"
         placeholder="Pesquise por um equipamento"
         buttonStructure={(item, onClose) => (
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "flex-start",
-              padding: "16px !important",
-              width: "100%",
-              minHeight: "unset !important",
-              border: 2,
-              borderColor:
-                item.id === equipmentModal.equipment.id
-                  ? "var(--primary)"
-                  : "var(--elevation-level3)",
-              borderRadius: 2,
-              color: "var(--onSurface)",
-              lineHeight: 1.5,
-              fontWeight: 400,
-              "&:hover": {
-                borderColor: "var(--primary)"
-              }
-            }}
-            onClick={() => {
-              handleSelectEquipment(
-                item.id,
-                item.client.name,
-                item.type.name,
-                item.brand.name,
-                item.model.name
-              )
-              onClose()
-            }}
-          >
-            <Stack sx={{ alignItems: "flex-start" }}>
-              <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1, marginBottom: 1 }}>
-                <Typography variant="h6" component="h6">
-                  {item.type.name}
-                </Typography>
-                <Divider
-                  flexItem
-                  sx={{
-                    borderColor: "var(--outline)",
-                    opacity: 0.5,
-                    borderWidth: 1
-                  }}
-                />
-                <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-                  <Typography
-                    variant="h6"
-                    component="h6"
-                    sx={{ wordBreak: "break-all", textAlign: "start" }}
+          <Stack sx={{ border: "2px solid var(--elevation-level5)", borderRadius: "8px" }}>
+            <Stack
+              sx={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                gap: 1,
+                marginInline: 2,
+                marginTop: 2
+              }}
+            >
+              <Typography
+                variant="h5"
+                component="h5"
+                sx={{ wordBreak: "break-all", textAlign: "start" }}
+              >
+                {item.client.name}
+              </Typography>
+              {item.client.description && (
+                <Caption fontSize="small" title={item.client.description} />
+              )}
+            </Stack>
+            <Stack sx={{ padding: 1 }}>
+              {findAllEquipments.data
+                ?.filter((equipment) => equipment.client.name === item.client.name)
+                .map((equipment) => (
+                  <Button
+                    key={equipment.id}
+                    variant="contained"
+                    color="secondary"
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "flex-start",
+                      padding: "16px !important",
+                      width: "100%",
+                      minHeight: "unset !important",
+                      border: 2,
+                      borderColor:
+                        equipment.id === equipmentModal.equipment.id
+                          ? "var(--primary)"
+                          : "var(--elevation-level3)",
+                      borderRadius: 2,
+                      color: "var(--onSurface)",
+                      lineHeight: 1.5,
+                      fontWeight: 400,
+                      marginTop: 1,
+                      "&:hover": {
+                        borderColor: "var(--primary)"
+                      }
+                    }}
+                    onClick={() => {
+                      handleSelectEquipment(
+                        equipment.id,
+                        equipment.client.name,
+                        equipment.type.name,
+                        equipment.brand.name,
+                        equipment.model.name
+                      )
+                      onClose()
+                    }}
                   >
-                    {item.brand.name} {item.model.name}
-                  </Typography>
-                  {item.description && <Caption fontSize="small" title={item.description} />}
-                </Stack>
-              </Stack>
-              <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+                    <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+                      <Typography
+                        variant="p"
+                        component="p"
+                        sx={{ wordBreak: "break-all", textAlign: "start" }}
+                      >
+                        {equipment.type.name} {equipment.brand.name} {equipment.model.name}
+                      </Typography>
+                      {equipment.description && (
+                        <Caption fontSize="small" title={equipment.description} />
+                      )}
+                    </Stack>
+                  </Button>
+                ))}
+              {findAllEquipments.data?.filter(
+                (equipment) => equipment.client.name === item.client.name
+              ).length === 0 && (
                 <Typography
                   variant="p"
                   component="p"
-                  sx={{ wordBreak: "break-all", textAlign: "start" }}
+                  sx={{ color: "var(--outline)", margin: 1, marginTop: 0 }}
                 >
-                  {item.client.name}
+                  Não há equipamentos disponíveis para este cliente!
                 </Typography>
-                {item.client.description && (
-                  <Caption fontSize="small" title={item.client.description} />
-                )}
-              </Stack>
+              )}
             </Stack>
-          </Button>
+          </Stack>
         )}
       />
     </>

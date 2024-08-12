@@ -130,9 +130,9 @@ const ButtonDropDownSelect = ({
           ) : (
             <>
               {mode === "custom" && (
-                <ButtonBase disableRipple sx={{ borderRadius: "50%" }} onClick={handleClick}>
+                <div onClick={handleClick}>
                   {customButton}
-                </ButtonBase>
+                </div>
               )}
             </>
           )}
