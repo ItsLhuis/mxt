@@ -3,11 +3,21 @@ import PropTypes from "prop-types"
 import { useEffect } from "react"
 import ReactDOM from "react-dom"
 
-const Portal = ({ children }) => {
+const Portal = ({ children, style }) => {
   const createPortalRoot = (id) => {
     const newPortalRoot = document.createElement("div")
     newPortalRoot.id = id
+
     newPortalRoot.setAttribute("aria-hidden", "true")
+
+    newPortalRoot.style.position = "fixed"
+    newPortalRoot.style.top = "0"
+    newPortalRoot.style.left = "0"
+    newPortalRoot.style.width = "100%"
+    newPortalRoot.style.height = "100%"
+    newPortalRoot.style.zIndex = "4999"
+
+    Object.assign(newPortalRoot.style, style)
 
     document.body.appendChild(newPortalRoot)
 

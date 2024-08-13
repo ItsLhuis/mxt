@@ -50,13 +50,7 @@ const EditEmployee = () => {
 
   return (
     <Suspense fallback={<PageLoader />}>
-      <Stack
-        sx={{
-          marginTop: 3,
-          paddingBottom: 3,
-          gap: 3
-        }}
-      >
+      <Stack sx={{ marginTop: 3, gap: 3 }}>
         {!canEdit && isUserFinished && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -137,7 +131,11 @@ const EditEmployee = () => {
                           )
                         ) : (
                           <>
-                            <Typography variant="p" component="p" sx={{ color: "var(--outline)", fontWeight: 550 }}>
+                            <Typography
+                              variant="p"
+                              component="p"
+                              sx={{ color: "var(--outline)", fontWeight: 550 }}
+                            >
                               {field.label}
                             </Typography>
                             {field.value ? (

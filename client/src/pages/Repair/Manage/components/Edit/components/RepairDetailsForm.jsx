@@ -148,6 +148,7 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
     updateRepair
   } = useRepair()
   const { findCompany } = useCompany()
+  const isCompanyLoading = findCompany.isLoading
 
   const onSubmit = async (data) => {
     if (!isRepairFinished || isFormUnchanged()) return
@@ -206,7 +207,7 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
   return (
     <Paper elevation={1}>
       <HeaderSection title="Detalhes" description="Dados da reparação" icon={<Construction />} />
-      <Portal>
+      <Portal style={{ display: "none" }}>
         <RepairStamp
           ref={printRepairStampRef}
           equipmentId={repair?.[0]?.equipment?.id}
@@ -370,20 +371,24 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
                             {
                               title: "Print",
                               label: "Selo",
-                              onClick: handlePrint
+                              onClick: handlePrint,
+                              isSkeletonLoading: isCompanyLoading
                             },
                             {
                               label: "Ficha informativa",
-                              onClick: handlePrint
+                              onClick: handlePrint,
+                              isSkeletonLoading: isCompanyLoading
                             },
                             {
                               label: "Entrada",
-                              onClick: handlePrint
+                              onClick: handlePrint,
+                              isSkeletonLoading: isCompanyLoading
                             },
                             ,
                             {
                               label: "Saída",
-                              onClick: handlePrint
+                              onClick: handlePrint,
+                              isSkeletonLoading: isCompanyLoading
                             }
                           ]}
                         />

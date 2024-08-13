@@ -34,13 +34,7 @@ const EditClient = () => {
 
   return (
     <Suspense fallback={<PageLoader />}>
-      <Stack
-        sx={{
-          marginTop: 3,
-          paddingBottom: 3,
-          gap: 3
-        }}
-      >
+      <Stack sx={{ marginTop: 3, gap: 3 }}>
         {isClientError && clientError.error.code === "CLI-001" && (
           <motion.div
             initial={{ opacity: 0 }}
