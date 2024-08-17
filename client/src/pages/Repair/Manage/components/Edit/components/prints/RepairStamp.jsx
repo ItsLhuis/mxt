@@ -15,23 +15,11 @@ const RepairStamp = forwardRef(({ equipmentId, companyData }, ref) => {
     >
       <div style={{ display: "flex", alignItems: "center", gap: "36px" }}>
         <img src={`${BASE_URL}/company/logo?size=1400`} style={{ width: "360px" }} />
-        <h1
-          style={{
-            fontSize: 54,
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-            textOverflow: "ellipsis"
-          }}
-        >
-          {equipmentId}
-        </h1>
+        <h1 style={{ fontSize: 54 }}>{equipmentId}</h1>
       </div>
       <p
         style={{
           fontSize: 28,
-          overflow: "hidden",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
           fontWeight: 700,
           marginTop: "8px"
         }}

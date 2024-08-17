@@ -39,17 +39,18 @@ export const print = (html, { margin = 0 } = {}) => {
     iframeDoc.close()
 
     fakeIFrame.onload = () => {
-      setTimeout(() => {
-        try {
-          fakeIFrame.contentWindow.focus()
-          fakeIFrame.contentWindow.print()
+      try {
+        fakeIFrame.contentWindow.focus()
+        fakeIFrame.contentWindow.print()
+
+        setTimeout(() => {
           document.body.removeChild(fakeIFrame)
           resolve()
-        } catch (error) {
-          document.body.removeChild(fakeIFrame)
-          reject(error)
-        }
-      })
+        }, 500)
+      } catch (error) {
+        document.body.removeChild(fakeIFrame)
+        reject(error)
+      }
     }
 
     fakeIFrame.onerror = (error) => {

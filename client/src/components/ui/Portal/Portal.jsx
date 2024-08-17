@@ -1,45 +1,50 @@
 import PropTypes from "prop-types"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import ReactDOM from "react-dom"
 
-const Portal = ({ children, style }) => {
-  const createPortalRoot = (id) => {
-    const newPortalRoot = document.createElement("div")
-    newPortalRoot.id = id
+import { v4 as uuidv4 } from "uuid"
 
-    newPortalRoot.setAttribute("aria-hidden", "true")
-
-    newPortalRoot.style.position = "fixed"
-    newPortalRoot.style.top = "0"
-    newPortalRoot.style.left = "0"
-    newPortalRoot.style.width = "100%"
-    newPortalRoot.style.height = "100%"
-    newPortalRoot.style.zIndex = "4999"
-
-    Object.assign(newPortalRoot.style, style)
-
-    document.body.appendChild(newPortalRoot)
-
-    return newPortalRoot
-  }
-
-  const portalRootId = "portal-root"
-  const portalRoot = document.getElementById(portalRootId) || createPortalRoot(portalRootId)
+const Portal = ({ children, portalId, style }) => {
+  const portalRootRef = useRef(null)
 
   useEffect(() => {
+    const id = portalId || uuidv4()
+    let portalRoot = document.getElementById(id)
+
+    if (!portalRoot) {
+      portalRoot = document.createElement("div")
+      portalRoot.id = id
+
+      portalRoot.setAttribute("aria-hidden", "true")
+
+      portalRoot.style.position = "fixed"
+      portalRoot.style.top = "0"
+      portalRoot.style.left = "0"
+      portalRoot.style.width = "100%"
+      portalRoot.style.height = "100%"
+      portalRoot.style.zIndex = "4999"
+      Object.assign(portalRoot.style, style)
+
+      document.body.appendChild(portalRoot)
+    }
+
+    portalRootRef.current = portalRoot
+
     return () => {
       if (portalRoot && document.body.contains(portalRoot)) {
         document.body.removeChild(portalRoot)
       }
     }
-  }, [portalRoot])
+  }, [portalId])
 
-  return ReactDOM.createPortal(children, portalRoot)
+  return portalRootRef.current ? ReactDOM.createPortal(children, portalRootRef.current) : null
 }
 
 Portal.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  portalId: PropTypes.string,
+  style: PropTypes.object
 }
 
 export default Portal

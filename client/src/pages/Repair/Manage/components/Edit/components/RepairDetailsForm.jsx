@@ -42,7 +42,7 @@ import {
   Caption,
   Portal
 } from "@components/ui"
-import { RepairStamp } from "./prints"
+import { RepairStamp, RepairDetailsSheet } from "./prints"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
@@ -83,12 +83,13 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
   const [isPrintLoading, setIsPrintLoading] = useState(false)
 
   const printRepairStampRef = useRef(null)
+  const printRepairDetailsSheetRef = useRef(null)
 
-  const handlePrint = async () => {
+  const handlePrint = async (printRef) => {
     setIsPrintLoading(true)
 
     try {
-      await print(printRepairStampRef.current.innerHTML)
+      await print(printRef.current.innerHTML)
     } finally {
       setIsPrintLoading(false)
     }
@@ -207,9 +208,35 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
   return (
     <Paper elevation={1}>
       <HeaderSection title="Detalhes" description="Dados da reparação" icon={<Construction />} />
+      <Portal>
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "var(--background)",
+            display: "flex",
+            justifyContent: "center",
+            overflow: "auto",
+            padding: 3
+          }}
+        >
+          <Box sx={{ width: "794px", height: "1123px", border: "1px solid white", padding: 2 }}>
+            <RepairDetailsSheet
+              ref={printRepairDetailsSheetRef}
+              equipmentId={repair?.[0]?.equipment?.id}
+              companyData={findCompany.data}
+            />
+          </Box>
+        </Box>
+      </Portal>
       <Portal style={{ display: "none" }}>
         <RepairStamp
           ref={printRepairStampRef}
+          equipmentId={repair?.[0]?.equipment?.id}
+          companyData={findCompany.data}
+        />
+        <RepairDetailsSheet
+          ref={printRepairDetailsSheetRef}
           equipmentId={repair?.[0]?.equipment?.id}
           companyData={findCompany.data}
         />
@@ -277,7 +304,7 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
                 </Grid>
               ))}
             </Grid>
-            <Stack sx={{ padding: 3, paddingBottom: 0 }}>
+            <Stack sx={{ padding: 3, paddingTop: 2, paddingBottom: 0 }}>
               <Loadable
                 isLoading={!isRepairFinished || findAllRepairStatuses.isLoading}
                 LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
@@ -371,23 +398,23 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
                             {
                               title: "Print",
                               label: "Selo",
-                              onClick: handlePrint,
+                              onClick: () => handlePrint(printRepairStampRef),
                               isSkeletonLoading: isCompanyLoading
                             },
                             {
                               label: "Ficha informativa",
-                              onClick: handlePrint,
+                              onClick: () => handlePrint(printRepairDetailsSheetRef),
                               isSkeletonLoading: isCompanyLoading
                             },
                             {
                               label: "Entrada",
-                              onClick: handlePrint,
+                              onClick: () => handlePrint(printRepairStampRef),
                               isSkeletonLoading: isCompanyLoading
                             },
                             ,
                             {
                               label: "Saída",
-                              onClick: handlePrint,
+                              onClick: () => handlePrint(printRepairStampRef),
                               isSkeletonLoading: isCompanyLoading
                             }
                           ]}
