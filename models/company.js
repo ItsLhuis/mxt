@@ -6,7 +6,6 @@ const Company = {
   find: withCache("company", async () => {
     const query = `
       SELECT
-        enforce_one_row,
         name,
         address,
         city,

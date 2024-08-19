@@ -46,6 +46,8 @@ export { default as PageProgress } from "./PageProgress/PageProgress"
 
 export { default as Portal } from "./Portal/Portal"
 
+export { default as PrintLayout } from "./PrintLayout/PrintLayout"
+
 export { default as RichEditor } from "./RichEditor/RichEditor"
 
 export { default as Select } from "./Select/Select"

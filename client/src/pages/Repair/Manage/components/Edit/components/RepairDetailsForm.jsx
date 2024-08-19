@@ -220,10 +220,10 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
             padding: 3
           }}
         >
-          <Box sx={{ width: "794px", height: "1123px", border: "1px solid white", padding: 2 }}>
+          <Box sx={{ width: "794px", height: "1123px", border: "1px solid white" }}>
             <RepairDetailsSheet
               ref={printRepairDetailsSheetRef}
-              equipmentId={repair?.[0]?.equipment?.id}
+              repairData={repair?.[0]}
               companyData={findCompany.data}
             />
           </Box>
@@ -237,7 +237,7 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
         />
         <RepairDetailsSheet
           ref={printRepairDetailsSheetRef}
-          equipmentId={repair?.[0]?.equipment?.id}
+          repairData={repair?.[0]}
           companyData={findCompany.data}
         />
       </Portal>

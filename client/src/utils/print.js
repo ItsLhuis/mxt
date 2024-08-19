@@ -17,13 +17,14 @@ export const print = (html, { margin = 0 } = {}) => {
                     margin: 0;
                 }
 
-                @page { 
+                @page {
                     margin: ${margin};
                 }
 
                 body {
+                    position: relative;
+                    min-height: 100vh;
                     font-family: 'Poppins', Arial, sans-serif;
-                    padding: 16px;
                     font-size: 13px;
                 }
             </style>

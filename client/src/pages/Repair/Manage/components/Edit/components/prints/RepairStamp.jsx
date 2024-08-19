@@ -5,29 +5,33 @@ import { BASE_URL } from "@api"
 import { formatPhoneNumber } from "@utils/format/phone"
 
 const RepairStamp = forwardRef(({ equipmentId, companyData }, ref) => {
+  const { website, phone_number: phoneNumber } = companyData
+
   return (
-    <div
-      ref={ref}
-      style={{
-        display: "flex",
-        flexDirection: "column"
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: "36px" }}>
-        <img src={`${BASE_URL}/company/logo?size=1400`} style={{ width: "360px" }} />
-        <h1 style={{ fontSize: 54 }}>{equipmentId}</h1>
-      </div>
-      <p
+    <div ref={ref}>
+      <div
         style={{
-          fontSize: 28,
-          fontWeight: 700,
-          marginTop: "8px"
+          display: "flex",
+          flexDirection: "column",
+          padding: "16px"
         }}
       >
-        {formatPhoneNumber(companyData?.phone_number)}
-        {companyData?.phone_number && companyData?.website && <strong> | </strong>}
-        {companyData?.website}
-      </p>
+        <div style={{ display: "flex", alignItems: "center", gap: "36px" }}>
+          <img src={`${BASE_URL}/company/logo?size=1400`} style={{ width: "360px" }} />
+          <h1 style={{ fontSize: 54 }}>{equipmentId}</h1>
+        </div>
+        <p
+          style={{
+            fontSize: 28,
+            fontWeight: 700,
+            marginTop: "8px"
+          }}
+        >
+          {formatPhoneNumber(phoneNumber)}
+          {phoneNumber && website && <strong> | </strong>}
+          {website}
+        </p>
+      </div>
     </div>
   )
 })
