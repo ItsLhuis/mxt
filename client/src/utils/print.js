@@ -15,6 +15,7 @@ export const print = (html, { margin = 0 } = {}) => {
             <style type="text/css" media="print">
                 * {
                     margin: 0;
+                    -webkit-print-color-adjust: exact;
                 }
 
                 @page {
@@ -26,6 +27,14 @@ export const print = (html, { margin = 0 } = {}) => {
                     min-height: 100vh;
                     font-family: 'Poppins', Arial, sans-serif;
                     font-size: 13px;
+                }
+
+                hr {
+                    display: block;
+                    height: 1px;
+                    border: 0;
+                    border-top: 1px solid #ccc;
+                    padding: 0;
                 }
             </style>
         </head>

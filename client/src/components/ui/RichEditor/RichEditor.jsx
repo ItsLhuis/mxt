@@ -12,6 +12,7 @@ import Placeholder from "@tiptap/extension-placeholder"
 import TextAlign from "@tiptap/extension-text-align"
 import Underline from "@tiptap/extension-underline"
 import Link from "@tiptap/extension-link"
+import HardBreak from "@tiptap/extension-hard-break"
 
 import { Box, Stack, Skeleton, FormHelperText, InputLabel } from "@mui/material"
 
@@ -45,6 +46,7 @@ const RichEditor = ({
     shouldRerenderOnTransaction: false,
     extensions: [
       StarterKit.configure({
+        hardBreak: false,
         bulletList: {
           keepMarks: true,
           keepAttributes: false
@@ -75,7 +77,23 @@ const RichEditor = ({
         ]
       }),
       Underline,
-      Link.configure({ openOnClick: true, defaultProtocol: "https" })
+      Link.configure({ openOnClick: true, defaultProtocol: "https" }),
+      HardBreak.extend({
+        addKeyboardShortcuts() {
+          return {
+            Enter: () => {
+              if (
+                this.editor.isActive("orderedList") ||
+                this.editor.isActive("bulletList") ||
+                this.editor.isActive("blockquote")
+              ) {
+                return this.editor.chain().createParagraphNear().run()
+              }
+              return this.editor.commands.setHardBreak()
+            }
+          }
+        }
+      })
     ],
     content: value,
     onUpdate: debounce(({ editor }) => {

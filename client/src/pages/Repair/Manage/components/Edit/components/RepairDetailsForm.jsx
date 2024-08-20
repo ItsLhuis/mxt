@@ -208,7 +208,7 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
   return (
     <Paper elevation={1}>
       <HeaderSection title="Detalhes" description="Dados da reparação" icon={<Construction />} />
-      <Portal>
+      {/*       <Portal>
         <Box
           sx={{
             width: "100%",
@@ -225,20 +225,23 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
               ref={printRepairDetailsSheetRef}
               repairData={repair?.[0]}
               companyData={findCompany.data}
+              isFinished={!isCompanyLoading && isRepairFinished}
             />
           </Box>
         </Box>
-      </Portal>
+      </Portal> */}
       <Portal style={{ display: "none" }}>
         <RepairStamp
           ref={printRepairStampRef}
           equipmentId={repair?.[0]?.equipment?.id}
           companyData={findCompany.data}
+          isFinished={!isCompanyLoading && isRepairFinished}
         />
         <RepairDetailsSheet
           ref={printRepairDetailsSheetRef}
           repairData={repair?.[0]}
           companyData={findCompany.data}
+          isFinished={!isCompanyLoading && isRepairFinished}
         />
       </Portal>
       <form onSubmit={handleSubmit(onSubmit)}>

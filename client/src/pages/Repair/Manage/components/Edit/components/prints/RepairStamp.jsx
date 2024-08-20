@@ -4,7 +4,9 @@ import { BASE_URL } from "@api"
 
 import { formatPhoneNumber } from "@utils/format/phone"
 
-const RepairStamp = forwardRef(({ equipmentId, companyData }, ref) => {
+const RepairStamp = forwardRef(({ equipmentId, companyData, isFinished }, ref) => {
+  if (!isFinished) return
+  
   const { website, phone_number: phoneNumber } = companyData
 
   return (
