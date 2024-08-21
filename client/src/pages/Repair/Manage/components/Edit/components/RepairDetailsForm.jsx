@@ -42,7 +42,7 @@ import {
   Caption,
   Portal
 } from "@components/ui"
-import { RepairStamp, RepairDetailsSheet } from "./prints"
+import { RepairStamp, RepairDetailsSheet, RepairEntry, RepairDelivery } from "./prints"
 
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
@@ -84,6 +84,8 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
 
   const printRepairStampRef = useRef(null)
   const printRepairDetailsSheetRef = useRef(null)
+  const printRepairEntryRef = useRef(null)
+  const printRepairDeliveryRef = useRef(null)
 
   const handlePrint = async (printRef) => {
     setIsPrintLoading(true)
@@ -208,7 +210,7 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
   return (
     <Paper elevation={1}>
       <HeaderSection title="Detalhes" description="Dados da reparação" icon={<Construction />} />
-      {/*       <Portal>
+      {/* <Portal>
         <Box
           sx={{
             width: "100%",
@@ -220,8 +222,10 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
             padding: 3
           }}
         >
-          <Box sx={{ width: "794px", height: "1123px", border: "1px solid white" }}>
-            <RepairDetailsSheet
+          <Box
+            sx={{ width: "794px", height: "1123px", border: "1px solid white", overflow: "auto" }}
+          >
+            <RepairDelivery
               ref={printRepairDetailsSheetRef}
               repairData={repair?.[0]}
               companyData={findCompany.data}
@@ -239,6 +243,18 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
         />
         <RepairDetailsSheet
           ref={printRepairDetailsSheetRef}
+          repairData={repair?.[0]}
+          companyData={findCompany.data}
+          isFinished={!isCompanyLoading && isRepairFinished}
+        />
+        <RepairEntry
+          ref={printRepairEntryRef}
+          repairData={repair?.[0]}
+          companyData={findCompany.data}
+          isFinished={!isCompanyLoading && isRepairFinished}
+        />
+        <RepairDelivery
+          ref={printRepairDeliveryRef}
           repairData={repair?.[0]}
           companyData={findCompany.data}
           isFinished={!isCompanyLoading && isRepairFinished}
@@ -411,13 +427,13 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
                             },
                             {
                               label: "Entrada",
-                              onClick: () => handlePrint(printRepairStampRef),
+                              onClick: () => handlePrint(printRepairEntryRef),
                               isSkeletonLoading: isCompanyLoading
                             },
                             ,
                             {
-                              label: "Saída",
-                              onClick: () => handlePrint(printRepairStampRef),
+                              label: "Entrega",
+                              onClick: () => handlePrint(printRepairDeliveryRef),
                               isSkeletonLoading: isCompanyLoading
                             }
                           ]}

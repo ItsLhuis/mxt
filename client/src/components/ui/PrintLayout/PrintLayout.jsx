@@ -2,9 +2,7 @@ import PropTypes from "prop-types"
 
 import React, { forwardRef } from "react"
 
-const PrintLayout = forwardRef(({ header, body, footer }, ref) => {
-  const isToAnalyze = false
-
+const PrintLayout = forwardRef(({ header, body, footer, isToAnalyze = false }, ref) => {
   return (
     <div ref={ref} style={{ height: "100%" }}>
       <style>
@@ -30,9 +28,7 @@ const PrintLayout = forwardRef(({ header, body, footer }, ref) => {
           }
        `}
       </style>
-      <table
-        style={{ display: "table", borderCollapse: "collapse", width: "100%" }}
-      >
+      <table style={{ display: "table", borderCollapse: "collapse", width: "100%" }}>
         <thead style={{ visibility: !isToAnalyze && "hidden" }}>
           <tr>
             <th>{header}</th>
@@ -88,7 +84,8 @@ const PrintLayout = forwardRef(({ header, body, footer }, ref) => {
 PrintLayout.propTypes = {
   header: PropTypes.node.isRequired,
   body: PropTypes.node.isRequired,
-  footer: PropTypes.node.isRequired
+  footer: PropTypes.node.isRequired,
+  isToAnalyze: PropTypes.bool
 }
 
 export default PrintLayout

@@ -10,7 +10,7 @@ import { formatHTML } from "@utils/format/formatHTML"
 import { formatPhoneNumber } from "@utils/format/phone"
 import { formatDateTimeExportExcel } from "@utils/format/date"
 
-const RepairStamp = forwardRef(({ repairData, companyData, isFinished }, ref) => {
+const RepairDetailsSheet = forwardRef(({ repairData, companyData, isFinished }, ref) => {
   const theme = useTheme()
 
   if (!isFinished) return
@@ -24,15 +24,13 @@ const RepairStamp = forwardRef(({ repairData, companyData, isFinished }, ref) =>
     entry_accessories_description,
     entry_reported_issues,
     entry_reported_issues_description,
-    entry_description,
     intervention_works_done,
     intervention_works_done_description,
     intervention_accessories_used,
     intervention_accessories_used_description,
     conclusion_datetime,
     delivery_datetime,
-    is_client_notified,
-    intervention_description
+    is_client_notified
   } = repairData
 
   const {
@@ -115,7 +113,7 @@ const RepairStamp = forwardRef(({ repairData, companyData, isFinished }, ref) =>
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <label className="label-main">Equipamento</label>
-            <p>{`${equipment?.type?.name}, ${equipment?.brand?.name} ${equipment?.model?.name}`}</p>
+            <p>{`${equipment?.type?.name}, ${equipment?.brand?.name} ${equipment?.model?.name} #${equipment?.sn}`}</p>
           </div>
           <div style={{ width: "100%", borderBottom: "1px solid #ccc", marginTop: "8px" }}>
             <h2>Entrada</h2>
@@ -132,7 +130,14 @@ const RepairStamp = forwardRef(({ repairData, companyData, isFinished }, ref) =>
                 : "Sem valor"}
             </p>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: entry_accessories_description && "4px",
+              width: "100%"
+            }}
+          >
             <label className="label-main">Descrição dos acessórios</label>
             <div
               style={
@@ -160,7 +165,14 @@ const RepairStamp = forwardRef(({ repairData, companyData, isFinished }, ref) =>
                 : "Sem valor"}
             </p>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: entry_reported_issues_description && "4px",
+              width: "100%"
+            }}
+          >
             <label className="label-main">Descrição dos problemas reportados</label>
             <div
               style={
@@ -173,24 +185,6 @@ const RepairStamp = forwardRef(({ repairData, companyData, isFinished }, ref) =>
             >
               {entry_reported_issues_description ? (
                 <span dangerouslySetInnerHTML={formatHTML(entry_reported_issues_description)} />
-              ) : (
-                <p>Sem valor</p>
-              )}
-            </div>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
-            <label className="label-main">Descrição da entrada</label>
-            <div
-              style={
-                entry_description && {
-                  border: "1px solid #ccc",
-                  padding: "16px",
-                  borderRadius: "8px"
-                }
-              }
-            >
-              {entry_description ? (
-                <span dangerouslySetInnerHTML={formatHTML(entry_description)} />
               ) : (
                 <p>Sem valor</p>
               )}
@@ -209,7 +203,14 @@ const RepairStamp = forwardRef(({ repairData, companyData, isFinished }, ref) =>
                 : "Sem valor"}
             </p>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: intervention_works_done_description && "4px",
+              width: "100%"
+            }}
+          >
             <label className="label-main">Descrição dos trabalhos realizados</label>
             <div
               style={
@@ -237,7 +238,14 @@ const RepairStamp = forwardRef(({ repairData, companyData, isFinished }, ref) =>
                 : "Sem valor"}
             </p>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: intervention_accessories_used_description && "4px",
+              width: "100%"
+            }}
+          >
             <label className="label-main">Descrição dos acessórios usados</label>
             <div
               style={
@@ -270,24 +278,6 @@ const RepairStamp = forwardRef(({ repairData, companyData, isFinished }, ref) =>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <label className="label-main">Cliente notificado</label>
             <p>{is_client_notified ? "Sim" : "Não"}</p>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
-            <label className="label-main">Descrição da intervenção</label>
-            <div
-              style={
-                intervention_description && {
-                  border: "1px solid #ccc",
-                  padding: "16px",
-                  borderRadius: "8px"
-                }
-              }
-            >
-              {intervention_description ? (
-                <span dangerouslySetInnerHTML={formatHTML(intervention_description)} />
-              ) : (
-                <p>Sem valor</p>
-              )}
-            </div>
           </div>
         </main>
       }
@@ -327,4 +317,4 @@ const RepairStamp = forwardRef(({ repairData, companyData, isFinished }, ref) =>
   )
 })
 
-export default RepairStamp
+export default RepairDetailsSheet
