@@ -33,7 +33,7 @@ const SummaryCard = ({ icon, title, metricQuery, chartQuery, colorLine, mdSize, 
   return (
     <Grid item xs={12} md={mdSize} lg={lgSize}>
       <Paper elevation={1}>
-        <Stack sx={{ flexDirection: "row", alignItems: "center", width: "100%" }}>
+        <Stack sx={{ flexDirection: "row", alignItems: "center", width: "100%", minHeight: 215 }}>
           <Stack
             sx={{
               flexDirection: "column",

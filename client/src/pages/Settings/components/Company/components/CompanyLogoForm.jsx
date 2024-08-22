@@ -12,9 +12,9 @@ import { Box } from "@mui/material"
 
 import { HeaderSection, ImagePicker } from "@components/ui"
 
-import { showErrorToast, showSuccessToast } from "@/config/toast"
+import { showErrorToast, showSuccessToast } from "@config/toast"
 
-const CompanyLogoForm = ({ company, isLoading, isError }) => {
+const CompanyLogoForm = ({ isLoading, isError }) => {
   const isCompanyFinished = !isLoading && !isError
 
   const [logoChanged, setLogoChanged] = useState(false)

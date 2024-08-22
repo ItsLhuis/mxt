@@ -19,7 +19,7 @@ const Company = () => {
         description="Dados relacionados com a empresa"
         icon={<Business />}
       />
-      <CompanyLogoForm company={company} isLoading={isCompanyLoading} isError={isCompanyError} />
+      <CompanyLogoForm isLoading={isCompanyLoading} isError={isCompanyError} />
       <Divider
         sx={{
           borderColor: "var(--elevation-level5)",

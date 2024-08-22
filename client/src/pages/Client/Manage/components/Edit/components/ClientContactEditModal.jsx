@@ -187,7 +187,12 @@ const ClientContactEditModal = ({ clientContact, open, onClose }) => {
               name="description"
               control={control}
               render={({ field }) => (
-                <RichEditor label="Descrição" value={field.value} onChange={field.onChange} shouldImmediatelyRender />
+                <RichEditor
+                  label="Descrição"
+                  value={field.value}
+                  onChange={field.onChange}
+                  shouldImmediatelyRender
+                />
               )}
             />
           </Grid>

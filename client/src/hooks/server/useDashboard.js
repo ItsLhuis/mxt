@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 
 import { getEmployeeSummary } from "@api/routes/user"
 import { getClientSummary } from "@api/routes/client"
@@ -8,11 +8,11 @@ import { getEmailSummary } from "@api/routes/email"
 import { getSmsSummary } from "@api/routes/sms"
 
 import { useEquipment } from "./useEquipment"
+import { useRepair } from "./useRepair"
 
 export const useDashboard = () => {
-  const queryClient = useQueryClient()
-
   const { findAllEquipments } = useEquipment()
+  const { findAllRepairs } = useRepair()
 
   const findEmployeeSummary = useQuery({
     queryKey: ["dashboard", "employees", "summary"],
@@ -52,7 +52,8 @@ export const useDashboard = () => {
       findRepairSummary.refetch(),
       findEmailSummary.refetch(),
       findSmsSummary.refetch(),
-      findAllEquipments.refetch()
+      findAllEquipments.refetch(),
+      findAllRepairs.refetch()
     ])
   }
 
@@ -63,7 +64,8 @@ export const useDashboard = () => {
     findRepairSummary,
     findEmailSummary,
     findSmsSummary,
-    findAllEquipments
+    findAllEquipments,
+    findAllRepairs
   ]
 
   const isFetching = queries.some((query) => query.isFetching)

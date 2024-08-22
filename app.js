@@ -56,7 +56,7 @@ app.use(
     ieNoOpen: true,
     noSniff: true,
     xssFilter: true,
-    crossOriginEmbedderPolicy: { policy: "require-corp" },
+    crossOriginEmbedderPolicy: { policy: "credentialless" },
     crossOriginOpenerPolicy: { policy: "same-origin" }
   })
 )

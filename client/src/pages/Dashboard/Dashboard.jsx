@@ -5,18 +5,14 @@ import { useDashboard } from "@hooks/server/useDashboard"
 import { Box, Container, Stack } from "@mui/material"
 
 import { PageLoader, HeaderPage } from "@components/ui"
-import {
-  Summary,
-  Equipment,
-  AnnualActivities,
-  FinancialStatistics,
-  ReparationsStates
-} from "./components"
+import { Summary, AnnualActivities, Equipment, Repair } from "./components"
 
 import { motion } from "framer-motion"
 
 const MemoSummary = memo(Summary)
+const MemoAnnualActivities = memo(AnnualActivities)
 const MemoEquipment = memo(Equipment)
+const MemoRepair = memo(Repair)
 
 const Dashboard = () => {
   const { refetchAllQueries } = useDashboard()
@@ -35,7 +31,9 @@ const Dashboard = () => {
             />
             <Stack sx={{ gap: 3 }}>
               <MemoSummary />
+              <MemoAnnualActivities />
               <MemoEquipment />
+              <MemoRepair />
             </Stack>
           </Container>
         </Box>

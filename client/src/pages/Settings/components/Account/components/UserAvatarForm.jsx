@@ -5,14 +5,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { updateUserAvatarSchema } from "@schemas/user"
 
 import { BASE_URL } from "@api"
-import { useUser } from "@/hooks/server/useUser"
+import { useUser } from "@hooks/server/useUser"
 
 import { LoadingButton } from "@mui/lab"
 import { Box } from "@mui/material"
 
 import { HeaderSection, ImagePicker } from "@components/ui"
 
-import { showErrorToast, showSuccessToast } from "@/config/toast"
+import { showErrorToast, showSuccessToast } from "@config/toast"
 
 const UserAvatarForm = ({ user, isLoading, isError }) => {
   const isUserFinished = !isLoading && !isError

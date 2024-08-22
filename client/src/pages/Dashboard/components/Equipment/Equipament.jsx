@@ -1,11 +1,11 @@
 import React from "react"
 
-import { Divider, Paper, Stack } from "@mui/material"
+import { Paper, Stack } from "@mui/material"
 import { Computer } from "@mui/icons-material"
 
-import { HeaderSection } from "@/components/ui"
+import { HeaderSection } from "@components/ui"
 
-import { EquipmentTable, EquipmentAnnualChart } from "./components"
+import { EquipmentTable } from "./components"
 
 const Equipament = () => {
   return (
@@ -17,13 +17,6 @@ const Equipament = () => {
           icon={<Computer />}
         />
         <EquipmentTable />
-        <Divider
-          sx={{
-            borderColor: "var(--elevation-level5)",
-            borderWidth: 1
-          }}
-        />
-        <EquipmentAnnualChart />
       </Stack>
     </Paper>
   )

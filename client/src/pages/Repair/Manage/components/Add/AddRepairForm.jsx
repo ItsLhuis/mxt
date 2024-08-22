@@ -90,8 +90,6 @@ const AddRepairForm = () => {
       .then(() => navigate("/repair/list"))
   }
 
-  console.log(findAllEquipments.data)
-
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>

@@ -2,7 +2,7 @@ import PropTypes from "prop-types"
 
 import React, { useState } from "react"
 
-import { Button, Box, Typography, Popover, Stack, ButtonBase } from "@mui/material"
+import { Button, Box, Typography, Popover, Stack } from "@mui/material"
 import { KeyboardArrowUp } from "@mui/icons-material"
 
 const ButtonDropDownSelect = ({
@@ -53,7 +53,7 @@ const ButtonDropDownSelect = ({
               <Typography
                 variant="p"
                 component="p"
-                sx={{ textAlign: "left", whiteSpace: "nowrap" }}
+                sx={{ textAlign: "left", whiteSpace: "nowrap", paddingTop: 0.3 }}
               >
                 {title}
               </Typography>
@@ -128,13 +128,7 @@ const ButtonDropDownSelect = ({
               </Stack>
             </Button>
           ) : (
-            <>
-              {mode === "custom" && (
-                <div onClick={handleClick}>
-                  {customButton}
-                </div>
-              )}
-            </>
+            <>{mode === "custom" && <div onClick={handleClick}>{customButton}</div>}</>
           )}
         </>
       )}
