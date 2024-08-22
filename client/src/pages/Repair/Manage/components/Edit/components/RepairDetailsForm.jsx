@@ -210,30 +210,6 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
   return (
     <Paper elevation={1}>
       <HeaderSection title="Detalhes" description="Dados da reparação" icon={<Construction />} />
-      {/* <Portal>
-        <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: "var(--background)",
-            display: "flex",
-            justifyContent: "center",
-            overflow: "auto",
-            padding: 3
-          }}
-        >
-          <Box
-            sx={{ width: "794px", height: "1123px", border: "1px solid white", overflow: "auto" }}
-          >
-            <RepairDelivery
-              ref={printRepairDetailsSheetRef}
-              repairData={repair?.[0]}
-              companyData={findCompany.data}
-              isFinished={!isCompanyLoading && isRepairFinished}
-            />
-          </Box>
-        </Box>
-      </Portal> */}
       <Portal style={{ display: "none" }}>
         <RepairStamp
           ref={printRepairStampRef}

@@ -147,7 +147,7 @@ const RepairDelivery = forwardRef(({ repairData, companyData, isFinished }, ref)
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  width: "60%",
+                  width: "50%",
                   padding: "32px",
                   paddingBottom: "0px"
                 }}
