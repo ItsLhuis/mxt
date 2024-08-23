@@ -11,8 +11,8 @@ router
   .post(checkPermissionHandler("client", permissions.CREATE), clientController.create)
 
 router
-  .route("/summary")
-  .get(checkPermissionHandler("client", permissions.READ), clientController.summary)
+  .route("/analytics/summary")
+  .get(checkPermissionHandler("client", permissions.READ), clientController.analytics.summary)
 
 router
   .route("/:clientId")

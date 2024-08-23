@@ -11,8 +11,8 @@ router
   .put(checkPermissionHandler("employee", permissions.UPDATE), employeeController.update)
 
 router
-  .route("/summary")
-  .get(checkPermissionHandler("employee", permissions.READ), employeeController.summary)
+  .route("/analytics/summary")
+  .get(checkPermissionHandler("employee", permissions.READ), employeeController.analytics.summary)
 
 router
   .route("/:userId")

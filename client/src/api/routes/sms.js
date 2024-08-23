@@ -1,7 +1,7 @@
 import { api } from ".."
 
 export const getSmsSummary = async () => {
-  const response = await api.get("/smses/summary")
+  const response = await api.get("/smses/analytics/summary")
   return response.data
 }
 

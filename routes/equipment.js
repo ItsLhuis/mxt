@@ -93,8 +93,8 @@ router
   .post(checkPermissionHandler("equipment", permissions.CREATE), equipmentController.create)
 
 router
-  .route("/summary")
-  .get(checkPermissionHandler("equipment", permissions.READ), equipmentController.summary)
+  .route("/analytics/summary")
+  .get(checkPermissionHandler("equipment", permissions.READ), equipmentController.analytics.summary)
 
 router
   .route("/:equipmentId")

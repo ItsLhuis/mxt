@@ -132,8 +132,8 @@ router
   .post(checkPermissionHandler("repair", permissions.CREATE), repairController.create)
 
 router
-  .route("/summary")
-  .get(checkPermissionHandler("repair", permissions.READ), repairController.summary)
+  .route("/analytics/summary")
+  .get(checkPermissionHandler("repair", permissions.READ), repairController.analytics.summary)
 
 router
   .route("/:repairId")

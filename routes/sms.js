@@ -10,7 +10,7 @@ router
   .get(checkPermissionHandler("sms", permissions.READ), smsController.findAll)
   .post(checkPermissionHandler("sms", permissions.CREATE), smsController.send)
 
-router.route("/summary").get(checkPermissionHandler("sms", permissions.READ), smsController.summary)
+router.route("/analytics/summary").get(checkPermissionHandler("sms", permissions.READ), smsController.analytics.summary)
 
 router
   .route("/:smsId")

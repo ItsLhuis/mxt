@@ -1,8 +1,8 @@
 import React from "react"
 
-import { Box, Stack } from "@mui/material"
+import { Box, Skeleton, Stack } from "@mui/material"
 
-import { ButtonDropDownSelect, ListButton } from "@components/ui"
+import { ButtonDropDownSelect, ListButton, Loadable } from "@components/ui"
 import { LineChart } from "@components/ui/Charts"
 
 const AnnualActivitiesChart = () => {
@@ -45,18 +45,24 @@ const AnnualActivitiesChart = () => {
   return (
     <Box sx={{ width: "100%", padding: 3, paddingTop: 0 }}>
       <Stack sx={{ marginBlock: 1, alignItems: "flex-end" }}>
-        <ButtonDropDownSelect title="2024">
-          <ListButton
-            buttons={[
-              { label: "2024", onClick: () => console.log() },
-              { label: "2023", onClick: () => console.log() },
-              { label: "2022", onClick: () => console.log() },
-              { label: "2021", onClick: () => console.log() },
-              { label: "2020", onClick: () => console.log() },
-              { label: "2019", onClick: () => console.log() }
-            ]}
-          />
-        </ButtonDropDownSelect>
+        <Loadable
+          isLoading={false}
+          LoadingComponent={<Skeleton variant="rounded" height={41} width={87} />}
+          LoadedComponent={
+            <ButtonDropDownSelect title="2024">
+              <ListButton
+                buttons={[
+                  { label: "2024", onClick: () => console.log() },
+                  { label: "2023", onClick: () => console.log() },
+                  { label: "2022", onClick: () => console.log() },
+                  { label: "2021", onClick: () => console.log() },
+                  { label: "2020", onClick: () => console.log() },
+                  { label: "2019", onClick: () => console.log() }
+                ]}
+              />
+            </ButtonDropDownSelect>
+          }
+        />
       </Stack>
       <Box sx={{ width: "100%", minHeight: 500 }}>
         <LineChart

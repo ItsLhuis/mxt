@@ -1,7 +1,7 @@
 import { api } from ".."
 
 export const getRepairSummary = async () => {
-  const response = await api.get("/repairs/summary")
+  const response = await api.get("/repairs/analytics/summary")
   return response.data
 }
 

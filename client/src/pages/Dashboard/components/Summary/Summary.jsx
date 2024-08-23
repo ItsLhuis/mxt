@@ -69,11 +69,11 @@ const Summary = () => {
         data: {
           total: formatNumber(employeeSummaryData?.total || 0),
           percentage: {
-            change: formatValueToPercentage(employeeSummaryData?.percentage),
+            change: formatValueToPercentage(employeeSummaryData?.percentage_change_last_two_months),
             color:
-              employeeSummaryData?.percentage > 0
+              employeeSummaryData?.percentage_change_last_two_months > 0
                 ? "success"
-                : employeeSummaryData?.percentage === 0
+                : employeeSummaryData?.percentage_change_last_two_months === 0
                 ? "default"
                 : "error"
           }
@@ -98,11 +98,11 @@ const Summary = () => {
         data: {
           total: formatNumber(clientSummaryData?.total || 0),
           percentage: {
-            change: formatValueToPercentage(clientSummaryData?.percentage),
+            change: formatValueToPercentage(clientSummaryData?.percentage_change_last_two_months),
             color:
-              clientSummaryData?.percentage > 0
+              clientSummaryData?.percentage_change_last_two_months > 0
                 ? "success"
-                : clientSummaryData?.percentage === 0
+                : clientSummaryData?.percentage_change_last_two_months === 0
                 ? "default"
                 : "error"
           }
@@ -126,11 +126,13 @@ const Summary = () => {
         data: {
           total: formatNumber(equipmentSummaryData?.total || 0),
           percentage: {
-            change: formatValueToPercentage(equipmentSummaryData?.percentage),
+            change: formatValueToPercentage(
+              equipmentSummaryData?.percentage_change_last_two_months
+            ),
             color:
-              equipmentSummaryData?.percentage > 0
+              equipmentSummaryData?.percentage_change_last_two_months > 0
                 ? "success"
-                : equipmentSummaryData?.percentage === 0
+                : equipmentSummaryData?.percentage_change_last_two_months === 0
                 ? "default"
                 : "error"
           }
@@ -155,11 +157,11 @@ const Summary = () => {
         data: {
           total: formatNumber(repairSummaryData?.total || 0),
           percentage: {
-            change: formatValueToPercentage(repairSummaryData?.percentage),
+            change: formatValueToPercentage(repairSummaryData?.percentage_change_last_two_months),
             color:
-              repairSummaryData?.percentage > 0
+              repairSummaryData?.percentage_change_last_two_months > 0
                 ? "success"
-                : repairSummaryData?.percentage === 0
+                : repairSummaryData?.percentage_change_last_two_months === 0
                 ? "default"
                 : "error"
           }
@@ -183,11 +185,11 @@ const Summary = () => {
         data: {
           total: formatNumber(emailSummaryData?.total || 0),
           percentage: {
-            change: formatValueToPercentage(emailSummaryData?.percentage),
+            change: formatValueToPercentage(emailSummaryData?.percentage_change_last_two_months),
             color:
-              emailSummaryData?.percentage > 0
+              emailSummaryData?.percentage_change_last_two_months > 0
                 ? "success"
-                : emailSummaryData?.percentage === 0
+                : emailSummaryData?.percentage_change_last_two_months === 0
                 ? "default"
                 : "error"
           }
@@ -211,11 +213,11 @@ const Summary = () => {
         data: {
           total: formatNumber(smsSummaryData?.total || 0),
           percentage: {
-            change: formatValueToPercentage(smsSummaryData?.percentage),
+            change: formatValueToPercentage(smsSummaryData?.percentage_change_last_two_months),
             color:
-              smsSummaryData?.percentage > 0
+              smsSummaryData?.percentage_change_last_two_months > 0
                 ? "success"
-                : smsSummaryData?.percentage === 0
+                : smsSummaryData?.percentage_change_last_two_months === 0
                 ? "default"
                 : "error"
           }

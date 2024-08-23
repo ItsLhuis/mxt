@@ -15,8 +15,8 @@ router
   )
 
 router
-  .route("/summary")
-  .get(checkPermissionHandler("email", permissions.READ), emailController.summary)
+  .route("/analytics/summary")
+  .get(checkPermissionHandler("email", permissions.READ), emailController.analytics.summary)
 
 router
   .route("/:emailId")

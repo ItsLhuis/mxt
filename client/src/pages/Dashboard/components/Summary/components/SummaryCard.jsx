@@ -17,23 +17,11 @@ import { Loadable, Caption } from "@components/ui"
 
 import { BasicLineChart } from "@components/ui/Charts"
 
-const MetricSkeleton = () => (
-  <Stack sx={{ gap: 1.3 }}>
-    <Typography variant="h3" component="h3">
-      <Skeleton width={60} />
-    </Typography>
-    <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-      <Skeleton variant="rounded" width={70} height={32} sx={{ borderRadius: 2 }} />
-      <Skeleton variant="circular" width={17} height={17} />
-    </Stack>
-  </Stack>
-)
-
 const SummaryCard = ({ icon, title, metricQuery, chartQuery, colorLine, mdSize, lgSize }) => {
   return (
     <Grid item xs={12} md={mdSize} lg={lgSize}>
       <Paper elevation={1}>
-        <Stack sx={{ flexDirection: "row", alignItems: "center", width: "100%", minHeight: 215 }}>
+        <Stack sx={{ flexDirection: "row", alignItems: "center", width: "100%" }}>
           <Stack
             sx={{
               flexDirection: "column",
@@ -58,7 +46,17 @@ const SummaryCard = ({ icon, title, metricQuery, chartQuery, colorLine, mdSize, 
             </Typography>
             <Loadable
               isLoading={metricQuery.isLoading}
-              LoadingComponent={<MetricSkeleton />}
+              LoadingComponent={
+                <Stack sx={{ gap: 1.5 }}>
+                  <Typography variant="h3" component="h3">
+                    <Skeleton width={60} />
+                  </Typography>
+                  <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+                    <Skeleton variant="rounded" width={70} height={32} sx={{ borderRadius: 2 }} />
+                    <Skeleton variant="circular" width={17} height={17} />
+                  </Stack>
+                </Stack>
+              }
               LoadedComponent={
                 <Stack
                   sx={{

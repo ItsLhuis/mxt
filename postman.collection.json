@@ -750,6 +750,30 @@
 			"name": "Employee",
 			"item": [
 				{
+					"name": "Analytics",
+					"item": [
+						{
+							"name": "Summary",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/employees/analytics/summary",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"employees",
+										"analytics",
+										"summary"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "FindAll",
 					"event": [
 						{
@@ -794,24 +818,6 @@
 							"path": [
 								"employees",
 								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Summary",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/employees/summary",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"employees",
-								"summary"
 							]
 						}
 					},
@@ -865,6 +871,30 @@
 			"name": "Email",
 			"item": [
 				{
+					"name": "Analytics",
+					"item": [
+						{
+							"name": "Summary",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/emails/analytics/summary",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"emails",
+										"analytics",
+										"summary"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "FindAll",
 					"request": {
 						"method": "GET",
@@ -894,24 +924,6 @@
 							"path": [
 								"emails",
 								"2"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Summary",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/emails/summary",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"emails",
-								"summary"
 							]
 						}
 					},
@@ -983,6 +995,30 @@
 			"name": "Sms",
 			"item": [
 				{
+					"name": "Analytics",
+					"item": [
+						{
+							"name": "Summary",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/smses/analytics/summary",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"smses",
+										"analytics",
+										"summary"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "FindAll",
 					"request": {
 						"method": "GET",
@@ -1012,24 +1048,6 @@
 							"path": [
 								"smses",
 								"2"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Summary",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/smses/summary",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"smses",
-								"summary"
 							]
 						}
 					},
@@ -1357,6 +1375,30 @@
 					]
 				},
 				{
+					"name": "Analytics",
+					"item": [
+						{
+							"name": "Summary",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/clients/analytics/summary",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"clients",
+										"analytics",
+										"summary"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "FindAll",
 					"event": [
 						{
@@ -1401,24 +1443,6 @@
 							"path": [
 								"clients",
 								"23"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Summary",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/clients/summary",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"clients",
-								"summary"
 							]
 						}
 					},
@@ -1985,6 +2009,30 @@
 					]
 				},
 				{
+					"name": "Analytics",
+					"item": [
+						{
+							"name": "Summary",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/equipments/analytics/summary",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"analytics",
+										"summary"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "FindAll",
 					"request": {
 						"method": "GET",
@@ -2014,24 +2062,6 @@
 							"path": [
 								"equipments",
 								"7"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Summary",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/equipments/summary",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"equipments",
-								"summary"
 							]
 						}
 					},
@@ -2813,6 +2843,30 @@
 										"repairs",
 										"2",
 										"interactionsHistory"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Analytics",
+					"item": [
+						{
+							"name": "Summary",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/analytics/summary",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"analytics",
+										"summary"
 									]
 								}
 							},
