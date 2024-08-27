@@ -5,7 +5,6 @@ import React from "react"
 import {
   Grid,
   Paper,
-  Box,
   Typography,
   Chip,
   Stack,
