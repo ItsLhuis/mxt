@@ -15,6 +15,10 @@ router
   .get(checkPermissionHandler("client", permissions.READ), clientController.analytics.summary)
 
 router
+  .route("/analytics/activity/:year")
+  .get(checkPermissionHandler("client", permissions.READ), clientController.analytics.activity)
+
+router
   .route("/:clientId")
   .get(checkPermissionHandler("client", permissions.READ), clientController.findByClientId)
   .put(checkPermissionHandler("client", permissions.UPDATE), clientController.update)

@@ -208,12 +208,13 @@ const Equipment = {
 
     return dbQueryExecutor.execute(query, params)
   },
-  getTotal: () => {
-    const query = "SELECT COUNT(*) AS total FROM equipments"
-    return dbQueryExecutor.execute(query)
-  },
-  getLastMonthsTotal: () => {
-    const query = `
+  analytics: {
+    getTotal: () => {
+      const query = "SELECT COUNT(*) AS total FROM equipments"
+      return dbQueryExecutor.execute(query)
+    },
+    getLastTwoCompleteMonthsTotal: () => {
+      const query = `
       WITH MonthlyTotals AS (
         SELECT 
           DATE_FORMAT(created_at_datetime, '%Y-%m') AS month,
@@ -234,10 +235,10 @@ const Equipment = {
       LEFT JOIN MonthlyTotals m ON f.month = m.month
       ORDER BY f.month
     `
-    return dbQueryExecutor.execute(query)
-  },
-  getLastMonthsPercentageChange: async () => {
-    const query = `
+      return dbQueryExecutor.execute(query)
+    },
+    getLastTwoCompleteMonthsPercentageChange: async () => {
+      const query = `
       WITH MonthlyTotals AS (
         SELECT 
           DATE_FORMAT(created_at_datetime, '%Y-%m') AS month,
@@ -271,14 +272,40 @@ const Equipment = {
       ) AS numbered_totals
     `
 
-    const result = await dbQueryExecutor.execute(query)
-    const { latest_total, previous_total } = result[0] || { latest_total: 0, previous_total: 0 }
+      const result = await dbQueryExecutor.execute(query)
+      const { latest_total, previous_total } = result[0] || { latest_total: 0, previous_total: 0 }
 
-    if (previous_total === 0) {
-      return latest_total === 0 ? 0 : 100
+      if (previous_total === 0) {
+        return latest_total === 0 ? 0 : 100
+      }
+
+      return ((latest_total - previous_total) / previous_total) * 100
+    },
+    getTotalsByMonthForYear: async (year) => {
+      const query = `
+        WITH MonthlyTotals AS (
+          SELECT 
+            DATE_FORMAT(e.created_at_datetime, '%Y-%m') AS month,
+            COUNT(*) AS total
+          FROM equipments e
+          WHERE YEAR(e.created_at_datetime) = ?
+          GROUP BY month
+        ),
+        FullMonths AS (
+          SELECT
+            DATE_FORMAT(STR_TO_DATE(CONCAT(?, '-', numbers.i, '-01'), '%Y-%m-%d'), '%Y-%m') AS month
+          FROM (SELECT 1 i UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12) numbers
+        )
+        SELECT 
+          f.month,
+          COALESCE(m.total, 0) AS total
+        FROM FullMonths f
+        LEFT JOIN MonthlyTotals m ON f.month = m.month
+        ORDER BY f.month;
+      `
+
+      return dbQueryExecutor.execute(query, [year, year])
     }
-
-    return ((latest_total - previous_total) / previous_total) * 100
   },
   create: (clientId, brandId, modelId, typeId, sn, description, createdByUserId) => {
     const query =

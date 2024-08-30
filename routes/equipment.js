@@ -97,6 +97,13 @@ router
   .get(checkPermissionHandler("equipment", permissions.READ), equipmentController.analytics.summary)
 
 router
+  .route("/analytics/activity/:year")
+  .get(
+    checkPermissionHandler("equipment", permissions.READ),
+    equipmentController.analytics.activity
+  )
+
+router
   .route("/:equipmentId")
   .get(checkPermissionHandler("equipment", permissions.READ), equipmentController.findByEquipmentId)
   .put(checkPermissionHandler("equipment", permissions.UPDATE), equipmentController.update)

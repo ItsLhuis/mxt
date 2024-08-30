@@ -15,6 +15,10 @@ router
   .get(checkPermissionHandler("employee", permissions.READ), employeeController.analytics.summary)
 
 router
+  .route("/analytics/activity/:year")
+  .get(checkPermissionHandler("employee", permissions.READ), employeeController.analytics.activity)
+
+router
   .route("/:userId")
   .get(checkPermissionHandler("employee", permissions.READ), employeeController.findByUserId)
 

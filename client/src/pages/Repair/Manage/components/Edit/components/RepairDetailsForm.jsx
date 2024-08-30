@@ -200,7 +200,7 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
     {
       label: "Equipamento",
       link: `/equipment/${repair?.[0].equipment?.id}`,
-      value: `${repair?.[0].equipment?.type?.name} | ${repair?.[0].equipment?.brand?.name} ${repair?.[0].equipment?.model?.name}`,
+      value: `${repair?.[0].equipment?.type?.name}, ${repair?.[0].equipment?.brand?.name} ${repair?.[0].equipment?.model?.name}`,
       description: repair?.[0].equipment?.description
     }
   ]

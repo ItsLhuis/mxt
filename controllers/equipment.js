@@ -25,6 +25,7 @@ const {
 } = require("@constants/errors/equipment")
 const { CLIENT_NOT_FOUND } = require("@constants/errors/client")
 const { ATTACHMENT_STREAMING_ERROR } = require("@constants/errors/shared/attachment")
+const { ACTIVITY_YEAR_NOT_PROVIDED } = require("@constants/errors/shared/analytics")
 
 const { ATTACHMENT_ERROR_TYPE } = require("@constants/errors/shared/types")
 
@@ -87,14 +88,42 @@ const equipmentController = {
   }),
   analytics: {
     summary: tryCatch(async (req, res) => {
-      const total = await Equipment.getTotal()
-      const lastMonthsTotal = await Equipment.getLastMonthsTotal()
-      const lastMonthsPercentageChange = await Equipment.getLastMonthsPercentageChange()
+      const total = await Equipment.analytics.getTotal()
+      const lastMonthsTotal = await Equipment.analytics.getLastTwoCompleteMonthsTotal()
+      const lastMonthsPercentageChange =
+        await Equipment.analytics.getLastTwoCompleteMonthsPercentageChange()
 
       res.status(200).json({
         total: total[0]["total"],
         last_months_total: lastMonthsTotal,
         percentage_change_last_two_months: lastMonthsPercentageChange
+      })
+    }),
+    activity: tryCatch(async (req, res) => {
+      let { year } = req.params
+
+      if (!year) {
+        throw new AppError(400, ACTIVITY_YEAR_NOT_PROVIDED, "Year is required", true)
+      }
+
+      year = Number(year)
+
+      if (
+        isNaN(year) ||
+        year.toString().length !== 4 ||
+        year < 1900 ||
+        year > new Date().getFullYear()
+      ) {
+        throw new AppError(400, ACTIVITY_YEAR_NOT_PROVIDED, "Invalid year provided", true)
+      }
+
+      const totalsByMonthForYear = await Equipment.analytics.getTotalsByMonthForYear(year)
+      const totalForYear = totalsByMonthForYear.reduce((acc, monthData) => acc + monthData.total, 0)
+
+      res.status(200).json({
+        year: year,
+        total_for_year: totalForYear,
+        totals_by_month_for_year: totalsByMonthForYear
       })
     })
   },

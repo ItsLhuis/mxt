@@ -136,6 +136,10 @@ router
   .get(checkPermissionHandler("repair", permissions.READ), repairController.analytics.summary)
 
 router
+  .route("/analytics/activity/:year")
+  .get(checkPermissionHandler("repair", permissions.READ), repairController.analytics.activity)
+
+router
   .route("/:repairId")
   .get(checkPermissionHandler("repair", permissions.READ), repairController.findByRepairId)
   .put(checkPermissionHandler("repair", permissions.UPDATE), repairController.update)

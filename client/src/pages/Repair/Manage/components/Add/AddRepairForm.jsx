@@ -21,7 +21,6 @@ import {
   IconButton,
   Tooltip,
   Typography,
-  Divider,
   Skeleton
 } from "@mui/material"
 import { Construction, Search } from "@mui/icons-material"
@@ -144,7 +143,7 @@ const AddRepairForm = () => {
                   placeholder="Selecione um equipamento"
                   value={
                     equipmentModal.equipment.clientName
-                      ? `${equipmentModal.equipment.typeName} ${equipmentModal.equipment.brandName} ${equipmentModal.equipment.modelName} (${equipmentModal.equipment.clientName})`
+                      ? `${equipmentModal.equipment.typeName}, ${equipmentModal.equipment.brandName} ${equipmentModal.equipment.modelName} (${equipmentModal.equipment.clientName})`
                       : ""
                   }
                   onClick={openEquipmentModal}
@@ -283,7 +282,7 @@ const AddRepairForm = () => {
                         component="p"
                         sx={{ wordBreak: "break-all", textAlign: "start" }}
                       >
-                        {equipment.type.name} {equipment.brand.name} {equipment.model.name}
+                        {equipment.type.name}, {equipment.brand.name} {equipment.model.name}
                       </Typography>
                       {equipment.description && (
                         <Caption fontSize="small" title={equipment.description} />

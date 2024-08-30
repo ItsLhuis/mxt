@@ -19,6 +19,10 @@ router
   .get(checkPermissionHandler("email", permissions.READ), emailController.analytics.summary)
 
 router
+  .route("/analytics/activity/:year")
+  .get(checkPermissionHandler("email", permissions.READ), emailController.analytics.activity)
+
+router
   .route("/:emailId")
   .get(checkPermissionHandler("email", permissions.READ), emailController.findByEmailId)
 

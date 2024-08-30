@@ -5,6 +5,7 @@ const formatPhoneNumber = require("@utils/formatPhoneNumber")
 
 const { EMAIL_NOT_FOUND } = require("@constants/errors/shared/email")
 const { CLIENT_NOT_FOUND, CONTACT_NOT_FOUND, INVALID_CONTACT } = require("@constants/errors/client")
+const { ACTIVITY_YEAR_NOT_PROVIDED } = require("@constants/errors/shared/analytics")
 
 const Email = require("@models/email")
 const { emailSchema } = require("@schemas/email")
@@ -34,14 +35,42 @@ const emailController = {
   }),
   analytics: {
     summary: tryCatch(async (req, res) => {
-      const total = await Email.getTotal()
-      const lastMonthsTotal = await Email.getLastMonthsTotal()
-      const lastMonthsPercentageChange = await Email.getLastMonthsPercentageChange()
+      const total = await Email.analytics.getTotal()
+      const lastMonthsTotal = await Email.analytics.getLastTwoCompleteMonthsTotal()
+      const lastMonthsPercentageChange =
+        await Email.analytics.getLastTwoCompleteMonthsPercentageChange()
 
       res.status(200).json({
         total: total[0]["total"],
         last_months_total: lastMonthsTotal,
         percentage_change_last_two_months: lastMonthsPercentageChange
+      })
+    }),
+    activity: tryCatch(async (req, res) => {
+      let { year } = req.params
+
+      if (!year) {
+        throw new AppError(400, ACTIVITY_YEAR_NOT_PROVIDED, "Year is required", true)
+      }
+
+      year = Number(year)
+
+      if (
+        isNaN(year) ||
+        year.toString().length !== 4 ||
+        year < 1900 ||
+        year > new Date().getFullYear()
+      ) {
+        throw new AppError(400, ACTIVITY_YEAR_NOT_PROVIDED, "Invalid year provided", true)
+      }
+
+      const totalsByMonthForYear = await Email.analytics.getTotalsByMonthForYear(year)
+      const totalForYear = totalsByMonthForYear.reduce((acc, monthData) => acc + monthData.total, 0)
+
+      res.status(200).json({
+        year: year,
+        total_for_year: totalForYear,
+        totals_by_month_for_year: totalsByMonthForYear
       })
     })
   },
