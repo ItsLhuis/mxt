@@ -22,229 +22,93 @@ const Summary = () => {
     findSmsSummary
   } = useDashboard()
 
-  const {
-    data: employeeSummaryData,
-    isLoading: isEmployeeSummaryLoading,
-    isError: isEmployeeSummaryError
-  } = findEmployeeSummary
-
-  const {
-    data: clientSummaryData,
-    isLoading: isClientSummaryLoading,
-    isError: isClientSummaryError
-  } = findClientSummary
-
-  const {
-    data: equipmentSummaryData,
-    isLoading: isEquipmentSummaryLoading,
-    isError: isEquipmentSummaryError
-  } = findEquipmentSummary
-
-  const {
-    data: repairSummaryData,
-    isLoading: isRepairSummaryLoading,
-    isError: isRepairSummaryError
-  } = findRepairSummary
-
-  const {
-    data: emailSummaryData,
-    isLoading: isEmailSummaryLoading,
-    isError: isEmailSummaryError
-  } = findEmailSummary
-
-  const {
-    data: smsSummaryData,
-    isLoading: isSmsSummaryLoading,
-    isError: isSmsSummaryError
-  } = findSmsSummary
-
-  const types = [
+  const summaryConfigs = [
     {
       type: "employees",
       icon: <AccountBox />,
       title: "Funcionários",
       colorLine: "rgb(248, 112, 96)",
-      metricQuery: {
-        isLoading: isEmployeeSummaryLoading || isEmployeeSummaryError,
-        data: {
-          total: formatNumber(employeeSummaryData?.total || 0),
-          percentage: {
-            change: formatValueToPercentage(employeeSummaryData?.percentage_change_last_two_months),
-            color:
-              employeeSummaryData?.percentage_change_last_two_months > 0
-                ? "success"
-                : employeeSummaryData?.percentage_change_last_two_months === 0
-                ? "default"
-                : "error"
-          }
-        }
-      },
-      chartQuery: {
-        isLoading: isEmployeeSummaryLoading || isEmployeeSummaryError,
-        data: {
-          xData:
-            employeeSummaryData?.last_months_total?.map((item) => formatMonth(item.month)) || [],
-          yData: employeeSummaryData?.last_months_total?.map((item) => item.total) || []
-        }
-      }
+      dataHook: findEmployeeSummary
     },
     {
       type: "clients",
       icon: <Person />,
       title: "Clientes",
       colorLine: "rgb(92, 107, 192)",
-      metricQuery: {
-        isLoading: isClientSummaryLoading || isClientSummaryError,
-        data: {
-          total: formatNumber(clientSummaryData?.total || 0),
-          percentage: {
-            change: formatValueToPercentage(clientSummaryData?.percentage_change_last_two_months),
-            color:
-              clientSummaryData?.percentage_change_last_two_months > 0
-                ? "success"
-                : clientSummaryData?.percentage_change_last_two_months === 0
-                ? "default"
-                : "error"
-          }
-        }
-      },
-      chartQuery: {
-        isLoading: isClientSummaryLoading || isClientSummaryError,
-        data: {
-          xData: clientSummaryData?.last_months_total?.map((item) => formatMonth(item.month)) || [],
-          yData: clientSummaryData?.last_months_total?.map((item) => item.total) || []
-        }
-      }
+      dataHook: findClientSummary
     },
     {
       type: "equipments",
       icon: <Computer />,
       title: "Equipamentos",
       colorLine: "rgb(139, 195, 74)",
-      metricQuery: {
-        isLoading: isEquipmentSummaryLoading || isEquipmentSummaryError,
-        data: {
-          total: formatNumber(equipmentSummaryData?.total || 0),
-          percentage: {
-            change: formatValueToPercentage(
-              equipmentSummaryData?.percentage_change_last_two_months
-            ),
-            color:
-              equipmentSummaryData?.percentage_change_last_two_months > 0
-                ? "success"
-                : equipmentSummaryData?.percentage_change_last_two_months === 0
-                ? "default"
-                : "error"
-          }
-        }
-      },
-      chartQuery: {
-        isLoading: isEquipmentSummaryLoading || isEquipmentSummaryError,
-        data: {
-          xData:
-            equipmentSummaryData?.last_months_total?.map((item) => formatMonth(item.month)) || [],
-          yData: equipmentSummaryData?.last_months_total?.map((item) => item.total) || []
-        }
-      }
+      dataHook: findEquipmentSummary
     },
     {
       type: "repairs",
       icon: <Construction />,
       title: "Reparações",
       colorLine: "rgb(255, 152, 0)",
-      metricQuery: {
-        isLoading: isRepairSummaryLoading || isRepairSummaryError,
-        data: {
-          total: formatNumber(repairSummaryData?.total || 0),
-          percentage: {
-            change: formatValueToPercentage(repairSummaryData?.percentage_change_last_two_months),
-            color:
-              repairSummaryData?.percentage_change_last_two_months > 0
-                ? "success"
-                : repairSummaryData?.percentage_change_last_two_months === 0
-                ? "default"
-                : "error"
-          }
-        }
-      },
-      chartQuery: {
-        isLoading: isRepairSummaryLoading || isRepairSummaryError,
-        data: {
-          xData: repairSummaryData?.last_months_total?.map((item) => formatMonth(item.month)) || [],
-          yData: repairSummaryData?.last_months_total?.map((item) => item.total) || []
-        }
-      }
+      dataHook: findRepairSummary
     },
     {
       type: "emails",
       icon: <Email />,
       title: "E-mails",
       colorLine: "rgb(33, 150, 243)",
-      metricQuery: {
-        isLoading: isEmailSummaryLoading || isEmailSummaryError,
-        data: {
-          total: formatNumber(emailSummaryData?.total || 0),
-          percentage: {
-            change: formatValueToPercentage(emailSummaryData?.percentage_change_last_two_months),
-            color:
-              emailSummaryData?.percentage_change_last_two_months > 0
-                ? "success"
-                : emailSummaryData?.percentage_change_last_two_months === 0
-                ? "default"
-                : "error"
-          }
-        }
-      },
-      chartQuery: {
-        isLoading: isEmailSummaryLoading || isEmailSummaryError,
-        data: {
-          xData: emailSummaryData?.last_months_total?.map((item) => formatMonth(item.month)) || [],
-          yData: emailSummaryData?.last_months_total?.map((item) => item.total) || []
-        }
-      }
+      dataHook: findEmailSummary
     },
     {
       type: "smses",
       icon: <Sms />,
       title: "SMS",
       colorLine: "rgb(255, 87, 34)",
+      dataHook: findSmsSummary
+    }
+  ]
+
+  const createTypeConfig = ({ icon, title, colorLine, dataHook }) => {
+    const { data, isLoading, isError } = dataHook
+
+    return {
+      icon,
+      title,
+      colorLine,
       metricQuery: {
-        isLoading: isSmsSummaryLoading || isSmsSummaryError,
+        isLoading: isLoading || isError,
         data: {
-          total: formatNumber(smsSummaryData?.total || 0),
+          total: formatNumber(data?.total || 0),
           percentage: {
-            change: formatValueToPercentage(smsSummaryData?.percentage_change_last_two_months),
+            change: formatValueToPercentage(data?.percentage_change_last_two_months),
             color:
-              smsSummaryData?.percentage_change_last_two_months > 0
+              data?.percentage_change_last_two_months > 0
                 ? "success"
-                : smsSummaryData?.percentage_change_last_two_months === 0
+                : data?.percentage_change_last_two_months === 0
                 ? "default"
                 : "error"
           }
         }
       },
       chartQuery: {
-        isLoading: isSmsSummaryLoading || isSmsSummaryError,
+        isLoading: isLoading || isError,
         data: {
-          xData: smsSummaryData?.last_months_total?.map((item) => formatMonth(item.month)) || [],
-          yData: smsSummaryData?.last_months_total?.map((item) => item.total) || []
+          xData: data?.last_months_total?.map((item) => formatMonth(item.month)) || [],
+          yData: data?.last_months_total?.map((item) => item.total) || []
         }
       }
     }
-  ]
+  }
 
   return (
     <Grid container spacing={3}>
-      {types.map(({ type, icon, title, colorLine, metricQuery, chartQuery }, index) => (
+      {summaryConfigs.map((config, index) => (
         <SummaryCard
-          key={type}
-          icon={icon}
-          title={title}
-          metricQuery={metricQuery}
-          chartQuery={chartQuery}
-          colorLine={colorLine}
-          mdSize={index === types.length - 1 ? (types.length % 2 === 0 ? 6 : 12) : 6}
-          lgSize={types.length >= 3 ? 4 : types.length === 1 ? 12 : 6}
+          key={config.type}
+          {...createTypeConfig(config)}
+          mdSize={
+            index === summaryConfigs.length - 1 ? (summaryConfigs.length % 2 === 0 ? 6 : 12) : 6
+          }
+          lgSize={summaryConfigs.length >= 3 ? 4 : summaryConfigs.length === 1 ? 12 : 6}
         />
       ))}
     </Grid>

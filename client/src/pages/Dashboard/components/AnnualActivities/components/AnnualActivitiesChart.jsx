@@ -200,10 +200,10 @@ const AnnualActivitiesChart = () => {
       >
         <Stack
           sx={{
-            width: isSmallScreen ? "100%" : "70%",
+            width: isSmallScreen ? "100%" : "60%",
             justifyContent: "center",
             alignItems: "center",
-            paddingTop: 1
+            paddingTop: 2
           }}
         >
           <Tabs
@@ -247,7 +247,7 @@ const AnnualActivitiesChart = () => {
         <Divider sx={{ borderColor: "var(--elevation-level5)", borderWidth: 1 }} />
         <Stack
           sx={{
-            width: isSmallScreen ? "100%" : "30%",
+            width: isSmallScreen ? "100%" : "40%",
             padding: 3,
             gap: 1,
             justifyContent: "center",
