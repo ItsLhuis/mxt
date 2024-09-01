@@ -5,6 +5,13 @@ export const getClientSummary = async () => {
   return response.data
 }
 
+export const getClientActivity = async ({ year }) => {
+  const response = await api.get(
+    `/clients/analytics/activity/${year ? year : new Date().getFullYear()}`
+  )
+  return response.data
+}
+
 export const getAllClients = async () => {
   const response = await api.get("/clients")
   return response.data

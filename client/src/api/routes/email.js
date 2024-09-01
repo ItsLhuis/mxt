@@ -5,6 +5,13 @@ export const getEmailSummary = async () => {
   return response.data
 }
 
+export const getEmailActivity = async ({ year }) => {
+  const response = await api.get(
+    `/emails/analytics/activity/${year ? year : new Date().getFullYear()}`
+  )
+  return response.data
+}
+
 export const getAllEmails = async () => {
   const response = await api.get("/emails")
   return response.data

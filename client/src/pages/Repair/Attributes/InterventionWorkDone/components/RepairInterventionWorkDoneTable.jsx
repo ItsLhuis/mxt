@@ -97,7 +97,7 @@ const RepairInterventionWorkDoneTable = () => {
         renderComponent: ({ row }) => (
           <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
             {row?.name}
-            {row?.description && <Caption fontSize="small" title={row?.description} />}
+            {row?.description && <Caption title={row?.description} />}
           </Stack>
         )
       },

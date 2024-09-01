@@ -5,6 +5,13 @@ export const getEmployeeSummary = async () => {
   return response.data
 }
 
+export const getEmployeeActivity = async ({ year }) => {
+  const response = await api.get(
+    `/employees/analytics/activity/${year ? year : new Date().getFullYear()}`
+  )
+  return response.data
+}
+
 export const getUserProfile = async () => {
   const response = await api.get("/users/profile")
   return response.data[0]

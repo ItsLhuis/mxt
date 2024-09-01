@@ -770,6 +770,26 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Activity",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/employees/analytics/activity/2024",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"employees",
+										"analytics",
+										"activity",
+										"2024"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -887,6 +907,26 @@
 										"emails",
 										"analytics",
 										"summary"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Activity",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/emails/analytics/activity/2024",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"emails",
+										"analytics",
+										"activity",
+										"2024"
 									]
 								}
 							},
@@ -1011,6 +1051,26 @@
 										"smses",
 										"analytics",
 										"summary"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Activity",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/smses/analytics/activity/2024",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"smses",
+										"analytics",
+										"activity",
+										"2024"
 									]
 								}
 							},
@@ -1391,6 +1451,26 @@
 										"clients",
 										"analytics",
 										"summary"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Activity",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/clients/analytics/activity/2024",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"clients",
+										"analytics",
+										"activity",
+										"2024"
 									]
 								}
 							},
@@ -2025,6 +2105,26 @@
 										"equipments",
 										"analytics",
 										"summary"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Activity",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/equipments/analytics/activity/2024",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"equipments",
+										"analytics",
+										"activity",
+										"2024"
 									]
 								}
 							},
@@ -2867,6 +2967,26 @@
 										"repairs",
 										"analytics",
 										"summary"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Activity",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/repairs/analytics/activity/2024",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"repairs",
+										"analytics",
+										"activity",
+										"2024"
 									]
 								}
 							},

@@ -232,7 +232,7 @@ const AddRepairForm = () => {
                 {item.client.name}
               </Typography>
               {item.client.description && (
-                <Caption fontSize="small" title={item.client.description} />
+                <Caption title={item.client.description} />
               )}
             </Stack>
             <Stack sx={{ padding: 1 }}>
@@ -285,7 +285,7 @@ const AddRepairForm = () => {
                         {equipment.type.name}, {equipment.brand.name} {equipment.model.name}
                       </Typography>
                       {equipment.description && (
-                        <Caption fontSize="small" title={equipment.description} />
+                        <Caption title={equipment.description} />
                       )}
                     </Stack>
                   </Button>

@@ -30,7 +30,7 @@ const EmailTable = () => {
           <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
             <Link to={`/client/${row?.client?.id}`}>{row?.client?.name}</Link>
             {row?.client?.description && (
-              <Caption fontSize="small" title={row?.client?.description} />
+              <Caption title={row?.client?.description} />
             )}
           </Stack>
         )

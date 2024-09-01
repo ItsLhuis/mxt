@@ -285,7 +285,7 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
                               )}
                             </Typography>
                             {field.description && (
-                              <Caption fontSize="small" title={field.description} />
+                              <Caption title={field.description} />
                             )}
                           </Stack>
                         ) : (

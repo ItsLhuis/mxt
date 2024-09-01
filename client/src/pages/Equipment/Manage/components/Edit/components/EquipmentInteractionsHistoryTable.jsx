@@ -141,7 +141,7 @@ const EquipmentInteractionsHistoryTable = ({ equipment, isLoading, isError }) =>
                       <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
                         {row.before.name}
                         {row.before.description && (
-                          <Caption fontSize="small" title={row.before.description} />
+                          <Caption title={row.before.description} />
                         )}
                       </Stack>
                     )
@@ -209,7 +209,7 @@ const EquipmentInteractionsHistoryTable = ({ equipment, isLoading, isError }) =>
                       <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
                         {row.after.name}
                         {row.after.description && (
-                          <Caption fontSize="small" title={row.after.description} />
+                          <Caption title={row.after.description} />
                         )}
                       </Stack>
                     )

@@ -92,7 +92,7 @@ const ClientContactTable = ({ client, isLoading, isError }) => {
         renderComponent: ({ row }) => (
           <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
             <>{formatPhoneNumber(row?.contact)}</>
-            {row?.description && <Caption fontSize="small" title={row?.description} />}
+            {row?.description && <Caption title={row?.description} />}
           </Stack>
         )
       },

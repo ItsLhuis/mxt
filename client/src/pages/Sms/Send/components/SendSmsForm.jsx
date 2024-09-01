@@ -162,7 +162,7 @@ const SendSmsForm = () => {
               >
                 {item.name}
               </Typography>
-              {item.description && <Caption fontSize="small" title={item.description} />}
+              {item.description && <Caption title={item.description} />}
             </Stack>
             <Stack sx={{ padding: 1 }}>
               {item.contacts
@@ -208,7 +208,7 @@ const SendSmsForm = () => {
                         {formatPhoneNumber(contact.contact)}
                       </Typography>
                       {contact.description && (
-                        <Caption fontSize="small" title={contact.description} />
+                        <Caption title={contact.description} />
                       )}
                     </Stack>
                   </Button>

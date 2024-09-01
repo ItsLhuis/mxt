@@ -5,12 +5,13 @@ import { useDashboard } from "@hooks/server/useDashboard"
 import { Box, Container, Stack } from "@mui/material"
 
 import { PageLoader, HeaderPage } from "@components/ui"
-import { Summary, AnnualActivities, Equipment, Repair } from "./components"
+import { Summary, AnnualActivities, Client, Equipment, Repair } from "./components"
 
 import { motion } from "framer-motion"
 
 const MemoSummary = memo(Summary)
 const MemoAnnualActivities = memo(AnnualActivities)
+const MemoClient = memo(Client)
 const MemoEquipment = memo(Equipment)
 const MemoRepair = memo(Repair)
 
@@ -32,6 +33,7 @@ const Dashboard = () => {
             <Stack sx={{ gap: 3 }}>
               <MemoSummary />
               <MemoAnnualActivities />
+              <MemoClient />
               <MemoEquipment />
               <MemoRepair />
             </Stack>

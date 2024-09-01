@@ -5,19 +5,17 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "@contexts/auth"
 
 import { BASE_URL } from "@api"
-import { useEquipment } from "@hooks/server/useEquipment"
-
-import { FileSvg, ImgSvg, PdfSvg } from "@assets/icons/files"
+import { useClient } from "@hooks/server/useClient"
 
 import { Link } from "react-router-dom"
-import { Stack, Paper, Box, Typography, Divider, Tooltip, IconButton, Chip } from "@mui/material"
+import { Stack, Box, Typography, Divider, Tooltip, IconButton } from "@mui/material"
 import {
   MoreVert,
   Edit,
   Delete,
-  Construction,
-  Attachment,
-  Visibility,
+  Phone,
+  Place,
+  Computer,
   History,
   Check,
   Close
@@ -32,112 +30,62 @@ import {
   ButtonDropDownSelect,
   ListButton,
   Caption,
-  FileViewer,
   Modal
 } from "@components/ui"
 
-import { getValidChipColor } from "@utils/getValidChipColor"
 import { formatHTML } from "@utils/format/formatHTML"
-import {
-  formatDateTimeExportExcel,
-  formatDateTime,
-  formatDate,
-  formatTime
-} from "@utils/format/date"
+import { formatDateTimeExportExcel, formatDate, formatTime } from "@utils/format/date"
+import { formatPhoneNumber } from "@utils/format/phone"
 
-const EquipmentTable = () => {
+const ClientTable = () => {
   const navigate = useNavigate()
 
   const { role } = useAuth()
 
-  const { findAllEquipments, deleteEquipment } = useEquipment()
-  const { data: equipments, isLoading: isEquipmentsLoading } = findAllEquipments
+  const { findAllClients, deleteClient } = useClient()
+  const { data: clients, isLoading: isClientsLoading } = findAllClients
 
-  const [openFileViewer, setOpenFileViewer] = useState(false)
-  const [attachment, setAttachment] = useState({ url: "", name: "", size: "", type: "" })
-  const handleOpenFileViewer = (url, name, size, type) => {
-    setAttachment({ url, name, size, type })
-    setOpenFileViewer(true)
+  const [deleteClientModal, setDeleteClientModal] = useState({ isOpen: false, clientId: null })
+  const openDeleteClientModal = (id) => {
+    setDeleteClientModal({ isOpen: true, clientId: id })
   }
-  const handleCloseFileViewer = () => {
-    setOpenFileViewer(false)
-    setAttachment({ url: "", type: "" })
+  const closeDeleteClientModal = () => {
+    setDeleteClientModal({ isOpen: false, clientId: null })
   }
 
-  const [deleteEquipmentModal, setDeleteEquipmentModal] = useState({
-    isOpen: false,
-    equipmentId: null
-  })
-  const openDeleteEquipmentModal = (id) => {
-    setDeleteEquipmentModal({ isOpen: true, equipmentId: id })
-  }
-  const closeDeleteEquipmentModal = () => {
-    setDeleteEquipmentModal({ isOpen: false, equipmentId: null })
-  }
-
-  const handleDeleteEquipment = () => {
+  const handleDeleteClient = () => {
     return new Promise((resolve, reject) => {
-      if (deleteEquipmentModal.equipmentId) {
-        deleteEquipment
-          .mutateAsync({ equipmentId: deleteEquipmentModal.equipmentId })
+      if (deleteClientModal.clientId) {
+        deleteClient
+          .mutateAsync({ clientId: deleteClientModal.clientId })
           .then(() => {
-            closeDeleteEquipmentModal()
+            closeDeleteClientModal()
             resolve()
           })
           .catch(() => {
-            closeDeleteEquipmentModal()
+            closeDeleteClientModal()
             reject()
           })
       } else {
-        closeDeleteEquipmentModal()
+        closeDeleteClientModal()
         reject()
       }
     })
   }
 
-  const equipmentsTableColumns = useMemo(
+  const clientsTableColumns = useMemo(
     () => [
       {
-        id: "client.name",
-        label: "Cliente",
+        id: "name",
+        label: "Nome",
         align: "left",
         sortable: true,
         renderComponent: ({ row }) => (
-          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1, whiteSpace: "pre" }}>
-            <Link to={`/client/${row?.client?.id}`}>{row?.client?.name}</Link>
-            {row?.client?.description && (
-              <Caption title={row?.client?.description} />
-            )}
+          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+            <Link to={`/client/${row?.id}`}>{row?.name}</Link>
+            {row?.description && <Caption title={row?.description} />}
           </Stack>
         )
-      },
-      {
-        id: "type.name",
-        label: "Tipo",
-        align: "left",
-        sortable: true,
-        renderComponent: ({ row }) => <Link to={`/equipment/${row?.id}`}>{row?.type?.name}</Link>
-      },
-      {
-        id: "brand.name",
-        label: "Marca ",
-        align: "left",
-        sortable: true,
-        renderComponent: ({ row }) => <Link to={`/equipment/${row?.id}`}>{row?.brand?.name}</Link>
-      },
-      {
-        id: "model.name",
-        label: "Modelo",
-        align: "left",
-        sortable: true,
-        renderComponent: ({ row }) => <Link to={`/equipment/${row?.id}`}>{row?.model?.name}</Link>
-      },
-      {
-        id: "sn",
-        label: "Número de série",
-        align: "left",
-        sortable: true,
-        renderComponent: ({ row }) => <Link to={`/equipment/${row?.id}`}>{row?.sn}</Link>
       },
       {
         id: "created_by_user",
@@ -319,7 +267,7 @@ const EquipmentTable = () => {
                 {
                   label: "Editar",
                   icon: <Edit fontSize="small" />,
-                  onClick: () => navigate(`/equipment/${row?.id}`)
+                  onClick: () => navigate(`/client/${row?.id}`)
                 },
                 ...(role !== "Funcionário"
                   ? [
@@ -328,7 +276,7 @@ const EquipmentTable = () => {
                         icon: <Delete fontSize="small" color="error" />,
                         color: "error",
                         divider: true,
-                        onClick: () => openDeleteEquipmentModal(row?.id)
+                        onClick: () => openDeleteClientModal(row?.id)
                       }
                     ]
                   : [])
@@ -341,27 +289,11 @@ const EquipmentTable = () => {
     []
   )
 
-  const equipmentsTableExportColumns = useMemo(
+  const clientsTableExportColumns = useMemo(
     () => [
       {
-        id: "client.name",
+        id: "name",
         label: "Cliente"
-      },
-      {
-        id: "type.name",
-        label: "Tipo"
-      },
-      {
-        id: "brand.name",
-        label: "Marca"
-      },
-      {
-        id: "model.name",
-        label: "Modelo"
-      },
-      {
-        id: "sn",
-        label: "Número de série"
       },
       {
         id: "created_by_user.username",
@@ -385,81 +317,26 @@ const EquipmentTable = () => {
     []
   )
 
-  const ExpandableEquipmentsTableContent = useMemo(
+  const ExpandableClientsTableContent = useMemo(
     () =>
       ({ row }) => {
-        const repairsTableColumns = useMemo(
+        const contactsTableColumns = useMemo(
           () => [
             {
-              id: "status.name",
-              label: "Estado",
+              id: "type",
+              label: "Tipo",
               align: "left",
-              sortable: true,
-              renderComponent: ({ row }) => (
-                <Link to={`/repair/${row?.id}`}>
-                  <Chip label={row?.status?.name} color={getValidChipColor(row?.status?.color)} />
-                </Link>
-              )
+              sortable: true
             },
             {
-              id: "entry_datetime",
-              label: "Data de entrada",
+              id: "contact",
+              label: "Contacto",
               align: "left",
               sortable: true,
               renderComponent: ({ row }) => (
-                <>
-                  {row?.entry_datetime ? (
-                    <>{formatDateTime(row?.entry_datetime)}</>
-                  ) : (
-                    <Typography variant="p" component="p" color="var(--outline)">
-                      Sem valor
-                    </Typography>
-                  )}
-                </>
-              )
-            },
-            {
-              id: "conclusion_datetime",
-              label: "Data de conclusão",
-              align: "left",
-              sortable: true,
-              renderComponent: ({ row }) => (
-                <>
-                  {row?.conclusion_datetime ? (
-                    <>{formatDateTime(row?.conclusion_datetime)}</>
-                  ) : (
-                    <Typography variant="p" component="p" color="var(--outline)">
-                      Sem valor
-                    </Typography>
-                  )}
-                </>
-              )
-            },
-            {
-              id: "delivery_datetime",
-              label: "Data de entrega",
-              align: "left",
-              sortable: true,
-              renderComponent: ({ row }) => (
-                <>
-                  {row?.delivery_datetime ? (
-                    <>{formatDateTime(row?.delivery_datetime)}</>
-                  ) : (
-                    <Typography variant="p" component="p" color="var(--outline)">
-                      Sem valor
-                    </Typography>
-                  )}
-                </>
-              )
-            },
-            {
-              id: "is_client_notified",
-              label: "Cliente notificado",
-              align: "left",
-              sortable: true,
-              renderComponent: ({ row }) => (
-                <Stack sx={{ alignItems: "flex-start" }}>
-                  {row?.is_client_notified ? <Check color="success" /> : <Close color="error" />}
+                <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+                  <>{formatPhoneNumber(row?.contact)}</>
+                  {row?.description && <Caption title={row?.description} />}
                 </Stack>
               )
             },
@@ -627,44 +504,21 @@ const EquipmentTable = () => {
           []
         )
 
-        const repairsTableExportColumns = useMemo(
+        const contactsTableExportColumns = useMemo(
           () => [
             {
               id: "client",
               label: "Cliente",
-              formatter: () => row?.client?.name
+              formatter: () => row?.name
             },
             {
-              id: "equipment",
-              label: "Equipamento",
-              formatter: () =>
-                `${row?.type?.name} - ${row?.brand?.name} ${row?.model?.name} (${row?.sn})`
+              id: "type",
+              label: "Tipo"
             },
             {
-              id: "status",
-              label: "Estado",
-              formatter: (value) => value?.name,
-              color: (value) => value?.color
-            },
-            {
-              id: "entry_datetime",
-              label: "Data de entrada",
-              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
-            },
-            {
-              id: "conclusion_datetime",
-              label: "Data de conclusão",
-              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
-            },
-            {
-              id: "delivery_datetime",
-              label: "Data de entrega",
-              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
-            },
-            {
-              id: "is_client_notified",
-              label: "Cliente notificado",
-              formatter: (value) => (value === true ? "Sim" : "Não")
+              id: "contact",
+              label: "Contacto",
+              formatter: formatPhoneNumber
             },
             {
               id: "created_by_user.username",
@@ -688,52 +542,45 @@ const EquipmentTable = () => {
           []
         )
 
-        const attachmentsTableColumns = useMemo(
+        const addressesTableColumns = useMemo(
           () => [
             {
-              id: "file_mime_type",
-              label: "Tipo",
+              id: "country",
+              label: "País",
               align: "left",
-              sortable: true,
-              renderComponent: ({ row }) => (
-                <Stack sx={{ alignItems: "flex-start" }}>
-                  {row?.file_mime_type === "application/pdf" ? (
-                    <img src={PdfSvg} />
-                  ) : row?.file_mime_type.startsWith("image/") ? (
-                    <img src={ImgSvg} />
-                  ) : (
-                    <img src={FileSvg} />
-                  )}
-                </Stack>
-              )
+              sortable: true
             },
             {
-              id: "original_filename",
-              label: "Ficheiro",
+              id: "city",
+              label: "Cidade",
               align: "left",
-              sortable: true,
-              renderComponent: ({ row }) => (
-                <Stack>
-                  <Typography variant="p" component="p">
-                    {row?.original_filename}
-                  </Typography>
-                  <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
-                    {`${
-                      row?.file_size < 1024 * 1024
-                        ? (row?.file_size / 1024).toFixed(2) + " Kb"
-                        : (row?.file_size / (1024 * 1024)).toFixed(2) + " Mb"
-                    }`}
-                  </Typography>
-                </Stack>
-              )
+              sortable: true
             },
             {
-              id: "uploaded_by_user",
+              id: "locality",
+              label: "Localidade",
+              align: "left",
+              sortable: true
+            },
+            {
+              id: "address",
+              label: "Morada",
+              align: "left",
+              sortable: true
+            },
+            {
+              id: "postal_code",
+              label: "Código postal",
+              align: "left",
+              sortable: true
+            },
+            {
+              id: "created_by_user",
               visible: false
             },
             {
-              id: "uploaded_at_datetime",
-              label: "Carregado por",
+              id: "created_at_datetime",
+              label: "Criado por",
               align: "left",
               sortable: true,
               renderComponent: ({ row }) => (
@@ -752,16 +599,16 @@ const EquipmentTable = () => {
                         gap: 1
                       }}
                     >
-                      {!row?.uploaded_by_user ? (
+                      {!row?.created_by_user ? (
                         <Typography variant="p" component="p" color="var(--outline)">
                           Utilizador removido
                         </Typography>
                       ) : (
                         <>
                           <Avatar
-                            alt={row?.uploaded_by_user?.username}
-                            src={`${BASE_URL}/users/${row?.uploaded_by_user?.id}/avatar?size=80`}
-                            name={row?.uploaded_by_user?.username}
+                            alt={row?.created_by_user?.username}
+                            src={`${BASE_URL}/users/${row?.created_by_user?.id}/avatar?size=80`}
+                            name={row?.created_by_user?.username}
                           />
                           <Stack
                             sx={{
@@ -771,10 +618,10 @@ const EquipmentTable = () => {
                             }}
                           >
                             <Typography variant="p" component="p" fontWeight={500}>
-                              {row?.uploaded_by_user?.username}
+                              {row?.created_by_user?.username}
                             </Typography>
                             <Typography variant="p" component="p" color="var(--outline)">
-                              {row?.uploaded_by_user?.role}
+                              {row?.created_by_user?.role}
                             </Typography>
                           </Stack>
                         </>
@@ -794,10 +641,10 @@ const EquipmentTable = () => {
                       }}
                     >
                       <Typography variant="p" component="p" fontWeight={500}>
-                        {formatDate(row?.uploaded_at_datetime)}
+                        {formatDate(row?.created_at_datetime)}
                       </Typography>
                       <Typography variant="p" component="p" color="var(--outline)">
-                        {formatTime(row?.uploaded_at_datetime)}
+                        {formatTime(row?.created_at_datetime)}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -805,46 +652,17 @@ const EquipmentTable = () => {
               )
             },
             {
-              id: "view_file",
-              align: "right",
-              sortable: false,
-              renderComponent: ({ row }) => (
-                <Tooltip title="Ver anexo" sx={{ margin: -1 }}>
-                  <IconButton
-                    onClick={() =>
-                      handleOpenFileViewer(
-                        `${BASE_URL}/equipments/${row?.equipment_id}/attachments/${row?.id}/${row?.original_filename}`,
-                        row?.original_filename,
-                        row?.file_size,
-                        row?.file_mime_type
-                      )
-                    }
-                  >
-                    <Visibility />
-                  </IconButton>
-                </Tooltip>
-              )
-            }
-          ],
-          []
-        )
-
-        const interactionsHistoryTableColumns = useMemo(
-          () => [
-            {
-              id: "type",
-              label: "Atividade",
-              align: "left",
-              sortable: true
+              id: "last_modified_by_user",
+              visible: false
             },
             {
-              id: "responsible_user",
-              label: "Responsável",
+              id: "last_modified_datetime",
+              label: "Modificado pela última vez por",
               align: "left",
-              sortable: false,
+              sortable: true,
               renderComponent: ({ row }) => (
                 <>
-                  {row?.responsible_user ? (
+                  {row?.last_modified_datetime ? (
                     <Stack
                       sx={{
                         flexDirection: "row",
@@ -859,25 +677,33 @@ const EquipmentTable = () => {
                           gap: 1
                         }}
                       >
-                        <Avatar
-                          alt={row?.responsible_user?.username}
-                          src={`${BASE_URL}/users/${row?.responsible_user?.id}/avatar?size=80`}
-                          name={row?.responsible_user?.username}
-                        />
-                        <Stack
-                          sx={{
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis"
-                          }}
-                        >
-                          <Typography variant="p" component="p" fontWeight={500}>
-                            {row?.responsible_user?.username}
-                          </Typography>
+                        {!row?.last_modified_by_user ? (
                           <Typography variant="p" component="p" color="var(--outline)">
-                            {row?.responsible_user?.role}
+                            Utilizador removido
                           </Typography>
-                        </Stack>
+                        ) : (
+                          <>
+                            <Avatar
+                              alt={row?.last_modified_by_user?.username}
+                              src={`${BASE_URL}/users/${row?.last_modified_by_user?.id}/avatar?size=80`}
+                              name={row?.last_modified_by_user?.username}
+                            />
+                            <Stack
+                              sx={{
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis"
+                              }}
+                            >
+                              <Typography variant="p" component="p" fontWeight={500}>
+                                {row?.last_modified_by_user?.username}
+                              </Typography>
+                              <Typography variant="p" component="p" color="var(--outline)">
+                                {row?.last_modified_by_user?.role}
+                              </Typography>
+                            </Stack>
+                          </>
+                        )}
                       </Stack>
                       <Divider
                         sx={{
@@ -893,16 +719,16 @@ const EquipmentTable = () => {
                         }}
                       >
                         <Typography variant="p" component="p" fontWeight={500}>
-                          {formatDate(row?.created_at_datetime)}
+                          {formatDate(row?.last_modified_datetime)}
                         </Typography>
                         <Typography variant="p" component="p" color="var(--outline)">
-                          {formatTime(row?.created_at_datetime)}
+                          {formatTime(row?.last_modified_datetime)}
                         </Typography>
                       </Stack>
                     </Stack>
                   ) : (
                     <Typography variant="p" component="p" color="var(--outline)">
-                      Utilizador removido
+                      Ainda não foi modificado
                     </Typography>
                   )}
                 </>
@@ -912,7 +738,390 @@ const EquipmentTable = () => {
           []
         )
 
-        const ExpandableEquipmentsInteractionsHistoryTableContent = useMemo(
+        const addressesTableExportColumns = useMemo(
+          () => [
+            {
+              id: "client",
+              label: "Cliente",
+              formatter: () => row?.name
+            },
+            {
+              id: "country",
+              label: "País"
+            },
+            {
+              id: "city",
+              label: "Cidade"
+            },
+            {
+              id: "locality",
+              label: "Localidade"
+            },
+            {
+              id: "address",
+              label: "Morada"
+            },
+            {
+              id: "postal_code",
+              label: "Código postal"
+            },
+            {
+              id: "created_by_user.username",
+              label: "Criado por"
+            },
+            {
+              id: "created_at_datetime",
+              label: "Data de criação",
+              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+            },
+            {
+              id: "last_modified_by_user.username",
+              label: "Modificado pela última vez por"
+            },
+            {
+              id: "last_modified_datetime",
+              label: "Última data de modificação",
+              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+            }
+          ],
+          []
+        )
+
+        const equipmentsTableColumns = useMemo(
+          () => [
+            {
+              id: "type.name",
+              label: "Tipo",
+              align: "left",
+              sortable: true,
+              renderComponent: ({ row }) => (
+                <Link to={`/equipment/${row?.id}`}>{row?.type?.name}</Link>
+              )
+            },
+            {
+              id: "brand.name",
+              label: "Marca ",
+              align: "left",
+              sortable: true,
+              renderComponent: ({ row }) => (
+                <Link to={`/equipment/${row?.id}`}>{row?.brand?.name}</Link>
+              )
+            },
+            {
+              id: "model.name",
+              label: "Modelo",
+              align: "left",
+              sortable: true,
+              renderComponent: ({ row }) => (
+                <Link to={`/equipment/${row?.id}`}>{row?.model?.name}</Link>
+              )
+            },
+            {
+              id: "sn",
+              label: "Número de série",
+              align: "left",
+              sortable: true,
+              renderComponent: ({ row }) => <Link to={`/equipment/${row?.id}`}>{row?.sn}</Link>
+            },
+            {
+              id: "created_by_user",
+              visible: false
+            },
+            {
+              id: "created_at_datetime",
+              label: "Criado por",
+              align: "left",
+              sortable: true,
+              renderComponent: ({ row }) => (
+                <>
+                  <Stack
+                    sx={{
+                      flexDirection: "row",
+                      gap: 2
+                    }}
+                  >
+                    <Stack
+                      sx={{
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: 1
+                      }}
+                    >
+                      {!row?.created_by_user ? (
+                        <Typography variant="p" component="p" color="var(--outline)">
+                          Utilizador removido
+                        </Typography>
+                      ) : (
+                        <>
+                          <Avatar
+                            alt={row?.created_by_user?.username}
+                            src={`${BASE_URL}/users/${row?.created_by_user?.id}/avatar?size=80`}
+                            name={row?.created_by_user?.username}
+                          />
+                          <Stack
+                            sx={{
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis"
+                            }}
+                          >
+                            <Typography variant="p" component="p" fontWeight={500}>
+                              {row?.created_by_user.username}
+                            </Typography>
+                            <Typography variant="p" component="p" color="var(--outline)">
+                              {row?.created_by_user.role}
+                            </Typography>
+                          </Stack>
+                        </>
+                      )}
+                    </Stack>
+                    <Divider
+                      sx={{
+                        borderColor: "var(--elevation-level5)",
+                        borderWidth: 1
+                      }}
+                    />
+                    <Stack
+                      sx={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis"
+                      }}
+                    >
+                      <Typography variant="p" component="p" fontWeight={500}>
+                        {formatDate(row?.created_at_datetime)}
+                      </Typography>
+                      <Typography variant="p" component="p" color="var(--outline)">
+                        {formatTime(row?.created_at_datetime)}
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                </>
+              )
+            },
+            {
+              id: "last_modified_by_user",
+              visible: false
+            },
+            {
+              id: "last_modified_datetime",
+              label: "Modificado pela última vez por",
+              align: "left",
+              sortable: true,
+              renderComponent: ({ row }) => (
+                <>
+                  {row?.last_modified_datetime ? (
+                    <Stack
+                      sx={{
+                        flexDirection: "row",
+                        gap: 2
+                      }}
+                    >
+                      <Stack
+                        sx={{
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: 1
+                        }}
+                      >
+                        {!row?.last_modified_by_user ? (
+                          <Typography variant="p" component="p" color="var(--outline)">
+                            Utilizador removido
+                          </Typography>
+                        ) : (
+                          <>
+                            <Avatar
+                              alt={row?.last_modified_by_user?.username}
+                              src={`${BASE_URL}/users/${row?.last_modified_by_user?.id}/avatar?size=80`}
+                              name={row?.last_modified_by_user?.username}
+                            />
+                            <Stack
+                              sx={{
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis"
+                              }}
+                            >
+                              <Typography variant="p" component="p" fontWeight={500}>
+                                {row?.last_modified_by_user?.username}
+                              </Typography>
+                              <Typography variant="p" component="p" color="var(--outline)">
+                                {row?.last_modified_by_user?.role}
+                              </Typography>
+                            </Stack>
+                          </>
+                        )}
+                      </Stack>
+                      <Divider
+                        sx={{
+                          borderColor: "var(--elevation-level5)",
+                          borderWidth: 1
+                        }}
+                      />
+                      <Stack
+                        sx={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis"
+                        }}
+                      >
+                        <Typography variant="p" component="p" fontWeight={500}>
+                          {formatDate(row?.last_modified_datetime)}
+                        </Typography>
+                        <Typography variant="p" component="p" color="var(--outline)">
+                          {formatTime(row?.last_modified_datetime)}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                  ) : (
+                    <Typography variant="p" component="p" color="var(--outline)">
+                      Ainda não foi modificado
+                    </Typography>
+                  )}
+                </>
+              )
+            }
+          ],
+          []
+        )
+
+        const equipmentsTableExportColumns = useMemo(
+          () => [
+            {
+              id: "client",
+              label: "Cliente",
+              formatter: () => row?.name
+            },
+            {
+              id: "type.name",
+              label: "Tipo"
+            },
+            {
+              id: "brand.name",
+              label: "Marca"
+            },
+            {
+              id: "model.name",
+              label: "Modelo"
+            },
+            {
+              id: "sn",
+              label: "Número de série"
+            },
+            {
+              id: "created_by_user.username",
+              label: "Criado por"
+            },
+            {
+              id: "created_at_datetime",
+              label: "Data de criação",
+              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+            },
+            {
+              id: "last_modified_by_user.username",
+              label: "Modificado pela última vez por"
+            },
+            {
+              id: "last_modified_datetime",
+              label: "Última data de modificação",
+              formatter: (value) => (value ? formatDateTimeExportExcel(value) : "")
+            }
+          ],
+          []
+        )
+
+        const interactionsHistoryTableColumns = useMemo(
+          () => [
+            {
+              id: "type",
+              label: "Atividade",
+              align: "left",
+              sortable: true
+            },
+            {
+              id: "responsible_user",
+              visible: false
+            },
+            {
+              id: "created_at_datetime",
+              label: "Responsável",
+              align: "left",
+              sortable: true,
+              renderComponent: ({ row }) => (
+                <>
+                  <Stack
+                    sx={{
+                      flexDirection: "row",
+                      gap: 2
+                    }}
+                  >
+                    <Stack
+                      sx={{
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: 1
+                      }}
+                    >
+                      {!row?.responsible_user ? (
+                        <Typography variant="p" component="p" color="var(--outline)">
+                          Utilizador removido
+                        </Typography>
+                      ) : (
+                        <>
+                          <Avatar
+                            alt={row?.responsible_user?.username}
+                            src={`${BASE_URL}/users/${row?.responsible_user?.id}/avatar?size=80`}
+                            name={row?.responsible_user?.username}
+                          />
+                          <Stack
+                            sx={{
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis"
+                            }}
+                          >
+                            <Typography variant="p" component="p" fontWeight={500}>
+                              {row?.responsible_user?.username}
+                            </Typography>
+                            <Typography variant="p" component="p" color="var(--outline)">
+                              {row?.responsible_user?.role}
+                            </Typography>
+                          </Stack>
+                        </>
+                      )}
+                    </Stack>
+                    <Divider
+                      sx={{
+                        borderColor: "var(--elevation-level5)",
+                        borderWidth: 1
+                      }}
+                    />
+                    <Stack
+                      sx={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis"
+                      }}
+                    >
+                      <Typography variant="p" component="p" fontWeight={500}>
+                        {formatDate(row?.created_at_datetime)}
+                      </Typography>
+                      <Typography variant="p" component="p" color="var(--outline)">
+                        {formatTime(row?.created_at_datetime)}
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                </>
+              )
+            }
+          ],
+          []
+        )
+
+        const ExpandableClientsInteractionsHistoryTableContent = useMemo(
           () =>
             ({ row }) => {
               const interactionsHistoryDetailsTableColumns = useMemo(
@@ -951,34 +1160,9 @@ const EquipmentTable = () => {
                         }
                       }
 
-                      if (row?.field === "Cliente") {
+                      if (row?.field === "Contacto") {
                         if (row?.before) {
-                          return (
-                            <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-                              {row?.before.name}
-                              {row?.before.description && (
-                                <Caption title={row?.before.description} />
-                              )}
-                            </Stack>
-                          )
-                        }
-                      }
-
-                      if (row?.field === "Tipo") {
-                        if (row?.before) {
-                          return <>{row?.before?.name}</>
-                        }
-                      }
-
-                      if (row?.field === "Marca") {
-                        if (row?.before) {
-                          return <>{row?.before?.name}</>
-                        }
-                      }
-
-                      if (row?.field === "Modelo") {
-                        if (row?.before) {
-                          return <>{row?.before?.name}</>
+                          return formatPhoneNumber(row?.before)
                         }
                       }
 
@@ -1019,34 +1203,9 @@ const EquipmentTable = () => {
                         }
                       }
 
-                      if (row?.field === "Cliente") {
+                      if (row?.field === "Contacto") {
                         if (row?.after) {
-                          return (
-                            <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-                              {row?.after.name}
-                              {row?.after.description && (
-                                <Caption title={row?.after.description} />
-                              )}
-                            </Stack>
-                          )
-                        }
-                      }
-
-                      if (row?.field === "Tipo") {
-                        if (row?.after) {
-                          return <>{row?.after?.name}</>
-                        }
-                      }
-
-                      if (row?.field === "Marca") {
-                        if (row?.after) {
-                          return <>{row?.after?.name}</>
-                        }
-                      }
-
-                      if (row?.field === "Modelo") {
-                        if (row?.after) {
-                          return <>{row?.after?.name}</>
+                          return formatPhoneNumber(row?.after)
                         }
                       }
 
@@ -1072,49 +1231,6 @@ const EquipmentTable = () => {
                 []
               )
 
-              const interactionsHistoryAttachmentDetailsTableColumns = useMemo(
-                () => [
-                  {
-                    id: "file_mime_type",
-                    label: "Tipo",
-                    align: "left",
-                    sortable: true,
-                    renderComponent: ({ row }) => (
-                      <Stack sx={{ alignItems: "flex-start" }}>
-                        {row?.file_mime_type === "application/pdf" ? (
-                          <img src={PdfSvg} />
-                        ) : row?.file_mime_type.startsWith("image/") ? (
-                          <img src={ImgSvg} />
-                        ) : (
-                          <img src={FileSvg} />
-                        )}
-                      </Stack>
-                    )
-                  },
-                  {
-                    id: "original_filename",
-                    label: "Ficheiro",
-                    align: "left",
-                    sortable: true,
-                    renderComponent: ({ row }) => (
-                      <Stack>
-                        <Typography variant="p" component="p">
-                          {row?.original_filename}
-                        </Typography>
-                        <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
-                          {`${
-                            row?.file_size < 1024 * 1024
-                              ? (row?.file_size / 1024).toFixed(2) + " Kb"
-                              : (row?.file_size / (1024 * 1024)).toFixed(2) + " Mb"
-                          }`}
-                        </Typography>
-                      </Stack>
-                    )
-                  }
-                ],
-                []
-              )
-
               return (
                 <Box
                   sx={{
@@ -1124,27 +1240,10 @@ const EquipmentTable = () => {
                     margin: 3
                   }}
                 >
-                  {row?.details[0]?.field === "Anexos" ? (
-                    <>
-                      {row?.details[0].after ? (
-                        <Table
-                          data={row?.details[0]?.after ?? []}
-                          columns={interactionsHistoryAttachmentDetailsTableColumns}
-                        />
-                      ) : (
-                        <Table
-                          showSearch={false}
-                          data={[row?.details[0]?.before]}
-                          columns={interactionsHistoryAttachmentDetailsTableColumns}
-                        />
-                      )}
-                    </>
-                  ) : (
-                    <Table
-                      data={row?.details ?? []}
-                      columns={interactionsHistoryDetailsTableColumns}
-                    />
-                  )}
+                  <Table
+                    data={row?.details ?? []}
+                    columns={interactionsHistoryDetailsTableColumns}
+                  />
                 </Box>
               )
             },
@@ -1161,16 +1260,32 @@ const EquipmentTable = () => {
               }}
             >
               <HeaderSection
-                title="Reparações"
-                description="Reparações do equipamento"
-                icon={<Construction />}
+                title="Contactos"
+                description="Contactos do cliente"
+                icon={<Phone />}
               />
               <Table
                 mode="datatable"
-                data={row?.repairs ?? []}
-                columns={repairsTableColumns}
-                exportFileName="reparacoes_equipamento"
-                exportColumns={repairsTableExportColumns}
+                data={row?.contacts ?? []}
+                columns={contactsTableColumns}
+                exportFileName="contactos_cliente"
+                exportColumns={contactsTableExportColumns}
+              />
+            </Box>
+            <Box
+              sx={{
+                border: "1px solid var(--elevation-level5)",
+                borderRadius: 2,
+                overflow: "hidden"
+              }}
+            >
+              <HeaderSection title="Moradas" description="Moradas do cliente" icon={<Place />} />
+              <Table
+                mode="datatable"
+                data={row?.addresses ?? []}
+                columns={addressesTableColumns}
+                exportFileName="moradas_cliente"
+                exportColumns={addressesTableExportColumns}
               />
             </Box>
             <Box
@@ -1181,14 +1296,16 @@ const EquipmentTable = () => {
               }}
             >
               <HeaderSection
-                title="Anexos"
-                description="Anexos do equipamento"
-                icon={<Attachment />}
+                title="Equipamentos"
+                description="Equipamentos do cliente"
+                icon={<Computer />}
               />
               <Table
                 mode="datatable"
-                data={row?.attachments ?? []}
-                columns={attachmentsTableColumns}
+                data={row?.equipments ?? []}
+                columns={equipmentsTableColumns}
+                exportFileName="equipamentos_cliente"
+                exportColumns={equipmentsTableExportColumns}
               />
             </Box>
             {role !== "Funcionário" && (
@@ -1201,14 +1318,14 @@ const EquipmentTable = () => {
               >
                 <HeaderSection
                   title="Histórico de Atividades"
-                  description="Histórico de atividades sobre o equipamento"
+                  description="Histórico de atividades sobre o cliente"
                   icon={<History />}
                 />
                 <Table
                   mode="datatable"
                   data={row?.interactions_history ?? []}
                   columns={interactionsHistoryTableColumns}
-                  ExpandableContentComponent={ExpandableEquipmentsInteractionsHistoryTableContent}
+                  ExpandableContentComponent={ExpandableClientsInteractionsHistoryTableContent}
                 />
               </Box>
             )}
@@ -1219,42 +1336,32 @@ const EquipmentTable = () => {
   )
 
   return (
-    <Paper elevation={1}>
-      <Box sx={{ marginTop: 3 }}>
-        <Loadable
-          isLoading={isEquipmentsLoading}
-          LoadingComponent={<TableSkeleton mode="datatable" />}
-          LoadedComponent={
-            <Table
-              mode="datatable"
-              data={equipments ?? []}
-              columns={equipmentsTableColumns}
-              exportFileName="equipamentos"
-              exportColumns={equipmentsTableExportColumns}
-              ExpandableContentComponent={ExpandableEquipmentsTableContent}
-            />
-          }
-        />
-        <Modal
-          mode="delete"
-          title="Eliminar Equipamento"
-          open={deleteEquipmentModal.isOpen}
-          onClose={closeDeleteEquipmentModal}
-          onSubmit={handleDeleteEquipment}
-          description="Tem a certeza que deseja eliminar este equipamento?"
-          subDescription="Ao eliminar este equipamento, todos os dados relacionados, incluindo anexos e reparações associadas, serão removidos de forma permanente."
-        />
-        <FileViewer
-          open={openFileViewer}
-          onClose={handleCloseFileViewer}
-          file={attachment.url}
-          fileName={attachment.name}
-          fileSize={Number(attachment.size)}
-          fileType={attachment.type}
-        />
-      </Box>
-    </Paper>
+    <Box>
+      <Loadable
+        isLoading={isClientsLoading}
+        LoadingComponent={<TableSkeleton mode="datatable" />}
+        LoadedComponent={
+          <Table
+            mode="datatable"
+            data={clients ?? []}
+            columns={clientsTableColumns}
+            exportFileName="clientes"
+            exportColumns={clientsTableExportColumns}
+            ExpandableContentComponent={ExpandableClientsTableContent}
+          />
+        }
+      />
+      <Modal
+        mode="delete"
+        title="Eliminar Cliente"
+        open={deleteClientModal.isOpen}
+        onClose={closeDeleteClientModal}
+        onSubmit={handleDeleteClient}
+        description="Tem a certeza que deseja eliminar este cliente?"
+        subDescription="Ao eliminar este cliente, todos os dados relacionados, incluindo contactos, moradas, equipamentos e reparações associadas, serão removidos de forma permanente."
+      />
+    </Box>
   )
 }
 
-export default EquipmentTable
+export default ClientTable

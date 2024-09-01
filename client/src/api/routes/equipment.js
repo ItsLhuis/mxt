@@ -5,6 +5,13 @@ export const getEquipmentSummary = async () => {
   return response.data
 }
 
+export const getEquipmentActivity = async ({ year }) => {
+  const response = await api.get(
+    `/equipments/analytics/activity/${year ? year : new Date().getFullYear()}`
+  )
+  return response.data
+}
+
 export const getAllEquipments = async () => {
   const response = await api.get("/equipments")
   return response.data

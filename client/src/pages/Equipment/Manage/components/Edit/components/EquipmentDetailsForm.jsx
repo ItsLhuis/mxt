@@ -115,7 +115,7 @@ const EquipmentDetailsForm = ({ equipment, isLoading, isError }) => {
                     </Link>
                   </Typography>
                   {equipment?.[0]?.client?.description && (
-                    <Caption fontSize="small" title={equipment?.[0]?.client?.description} />
+                    <Caption title={equipment?.[0]?.client?.description} />
                   )}
                 </Stack>
               </Stack>

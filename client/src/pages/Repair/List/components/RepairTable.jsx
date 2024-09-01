@@ -116,7 +116,7 @@ const RepairTable = () => {
           <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1, whiteSpace: "pre" }}>
             <Link to={`/client/${row?.equipment?.client?.id}`}>{row?.equipment?.client?.name}</Link>
             {row?.equipment?.client?.description && (
-              <Caption fontSize="small" title={row?.equipment?.client?.description} />
+              <Caption title={row?.equipment?.client?.description} />
             )}
           </Stack>
         )

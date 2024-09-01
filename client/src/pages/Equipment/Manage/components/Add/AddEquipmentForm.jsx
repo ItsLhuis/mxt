@@ -323,7 +323,7 @@ const AddEquipmentForm = () => {
               >
                 {item.name}
               </Typography>
-              {item.description && <Caption fontSize="small" title={item.description} />}
+              {item.description && <Caption title={item.description} />}
             </Stack>
           </Button>
         )}

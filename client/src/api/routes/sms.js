@@ -5,6 +5,13 @@ export const getSmsSummary = async () => {
   return response.data
 }
 
+export const getSmsActivity = async ({ year }) => {
+  const response = await api.get(
+    `/smses/analytics/activity/${year ? year : new Date().getFullYear()}`
+  )
+  return response.data
+}
+
 export const getAllSmses = async () => {
   const response = await api.get("/smses")
   return response.data

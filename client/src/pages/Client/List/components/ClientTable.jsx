@@ -83,7 +83,7 @@ const ClientTable = () => {
         renderComponent: ({ row }) => (
           <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
             <Link to={`/client/${row?.id}`}>{row?.name}</Link>
-            {row?.description && <Caption fontSize="small" title={row?.description} />}
+            {row?.description && <Caption title={row?.description} />}
           </Stack>
         )
       },
@@ -336,7 +336,7 @@ const ClientTable = () => {
               renderComponent: ({ row }) => (
                 <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
                   <>{formatPhoneNumber(row?.contact)}</>
-                  {row?.description && <Caption fontSize="small" title={row?.description} />}
+                  {row?.description && <Caption title={row?.description} />}
                 </Stack>
               )
             },

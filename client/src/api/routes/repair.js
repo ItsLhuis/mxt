@@ -5,6 +5,13 @@ export const getRepairSummary = async () => {
   return response.data
 }
 
+export const getRepairActivity = async ({ year }) => {
+  const response = await api.get(
+    `/repairs/analytics/activity/${year ? year : new Date().getFullYear()}`
+  )
+  return response.data
+}
+
 export const getAllRepairs = async () => {
   const response = await api.get("/repairs")
   return response.data
