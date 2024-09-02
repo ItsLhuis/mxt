@@ -81,21 +81,21 @@ const AnnualActivitiesChart = () => {
     },
     {
       label: "Clientes",
-      icon: <Person sx={{ color: chartColors[0] }} />,
+      icon: <Person sx={{ color: chartColors[1] }} />,
       hook: findClientActivity
     },
     {
       label: "Equipamentos",
-      icon: <Computer sx={{ color: chartColors[1] }} />,
+      icon: <Computer sx={{ color: chartColors[2] }} />,
       hook: findEquipmentActivity
     },
     {
       label: "Reparações",
-      icon: <Construction sx={{ color: chartColors[2] }} />,
+      icon: <Construction sx={{ color: chartColors[3] }} />,
       hook: findRepairActivity
     },
-    { label: "E-mails", icon: <Email sx={{ color: chartColors[3] }} />, hook: findEmailActivity },
-    { label: "SMS", icon: <Sms sx={{ color: chartColors[4] }} />, hook: findSmsActivity }
+    { label: "E-mails", icon: <Email sx={{ color: chartColors[4] }} />, hook: findEmailActivity },
+    { label: "SMS", icon: <Sms sx={{ color: chartColors[5] }} />, hook: findSmsActivity }
   ]
 
   const activityData = activities.reduce((acc, { label, hook }) => {
