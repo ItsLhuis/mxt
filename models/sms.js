@@ -172,14 +172,13 @@ const Sms = {
           WHERE created_at_datetime < CURDATE()
           GROUP BY month
         ),
-        LastTwoMonths AS (
+        LastTwoCompleteMonths AS (
           SELECT 
             month, 
             total
           FROM MonthlyTotals
-          WHERE month < DATE_FORMAT(CURDATE(), '%Y-%m') -- Exclude the current month
+          WHERE month BETWEEN DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y-%m') AND DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m')
           ORDER BY month DESC
-          LIMIT 2
         )
         SELECT 
           COALESCE(
@@ -193,19 +192,19 @@ const Sms = {
             month,
             total,
             ROW_NUMBER() OVER (ORDER BY month DESC) AS row_num
-          FROM LastTwoMonths
+          FROM LastTwoCompleteMonths
         ) AS numbered_totals
-      `
-
-      const result = await dbQueryExecutor.execute(query)
-      const { latest_total, previous_total } = result[0] || { latest_total: 0, previous_total: 0 }
-
+      `;
+    
+      const result = await dbQueryExecutor.execute(query);
+      const { latest_total, previous_total } = result[0] || { latest_total: 0, previous_total: 0 };
+    
       if (previous_total === 0) {
-        return latest_total === 0 ? 0 : 100
+        return latest_total === 0 ? 0 : 100; // Se o total anterior for 0 e o total atual for diferente de 0, retorno 100%, senão 0%
       }
-
-      return ((latest_total - previous_total) / previous_total) * 100
-    },
+    
+      return ((latest_total - previous_total) / previous_total) * 100; // Calcula a mudança percentual
+    },    
     getTotalsByMonthForYear: async (year) => {
       const query = `
         WITH MonthlyTotals AS (

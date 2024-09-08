@@ -169,14 +169,13 @@ const Email = {
           WHERE created_at_datetime < CURDATE()
           GROUP BY month
         ),
-        LastTwoMonths AS (
+        LastTwoCompleteMonths AS (
           SELECT 
             month, 
             total
           FROM MonthlyTotals
-          WHERE month < DATE_FORMAT(CURDATE(), '%Y-%m')
+          WHERE month BETWEEN DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y-%m') AND DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m')
           ORDER BY month DESC
-          LIMIT 2
         )
         SELECT 
           COALESCE(
@@ -190,7 +189,7 @@ const Email = {
             month,
             total,
             ROW_NUMBER() OVER (ORDER BY month DESC) AS row_num
-          FROM LastTwoMonths
+          FROM LastTwoCompleteMonths
         ) AS numbered_totals
       `
 
