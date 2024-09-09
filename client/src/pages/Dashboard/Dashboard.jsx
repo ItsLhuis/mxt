@@ -1,4 +1,4 @@
-import React, { memo, Suspense } from "react"
+import React, { useState, memo, Suspense } from "react"
 
 import { useDashboard } from "@hooks/server/useDashboard"
 
@@ -16,7 +16,12 @@ const MemoEquipment = memo(Equipment)
 const MemoRepair = memo(Repair)
 
 const Dashboard = () => {
-  const { refetchAllQueries } = useDashboard()
+  const [activityYear, setActivityYear] = useState(new Date().getFullYear())
+  const toggleActivityYear = (year) => {
+    setActivityYear(year)
+  }
+
+  const { refetchAllQueries } = useDashboard(activityYear)
 
   return (
     <Suspense fallback={<PageLoader />}>
@@ -32,7 +37,7 @@ const Dashboard = () => {
             />
             <Stack sx={{ gap: 3 }}>
               <MemoSummary />
-              <MemoAnnualActivities />
+              <MemoAnnualActivities toggleActivityYear={toggleActivityYear} />
               <MemoClient />
               <MemoEquipment />
               <MemoRepair />

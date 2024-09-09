@@ -43,12 +43,14 @@ const tabProps = (index) => ({
   "aria-controls": `tab-panel-${index}`
 })
 
-const AnnualActivitiesChart = () => {
+const AnnualActivitiesChart = ({ toggleActivityYear }) => {
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"))
 
   const [tabValue, setTabValue] = useState(0)
   const handleTabChange = (_, newValue) => setTabValue(newValue)
+
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
 
   const {
     findEmployeeActivity,
@@ -56,9 +58,8 @@ const AnnualActivitiesChart = () => {
     findEquipmentActivity,
     findRepairActivity,
     findEmailActivity,
-    findSmsActivity,
-    updateActivityYear
-  } = useDashboard()
+    findSmsActivity
+  } = useDashboard(selectedYear)
 
   const { findCompany } = useCompany()
 
@@ -70,8 +71,6 @@ const AnnualActivitiesChart = () => {
     "rgb(33, 150, 243)",
     "rgb(255, 87, 34)"
   ]
-
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
 
   const activities = [
     {
@@ -141,14 +140,8 @@ const AnnualActivitiesChart = () => {
                   buttons={availableYears.map((year) => ({
                     label: year.toString(),
                     onClick: () => {
+                      toggleActivityYear(year)
                       setSelectedYear(year)
-
-                      updateActivityYear("employee", year)
-                      updateActivityYear("client", year)
-                      updateActivityYear("equipment", year)
-                      updateActivityYear("repair", year)
-                      updateActivityYear("email", year)
-                      updateActivityYear("sms", year)
                     },
                     selected: selectedYear === year
                   }))}

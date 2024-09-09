@@ -1,5 +1,3 @@
-import { useState } from "react"
-
 import { useQuery } from "@tanstack/react-query"
 
 import { getEmployeeSummary, getEmployeeActivity } from "@api/routes/user"
@@ -13,16 +11,7 @@ import { useClient } from "./useClient"
 import { useEquipment } from "./useEquipment"
 import { useRepair } from "./useRepair"
 
-export const useDashboard = () => {
-  const [activityYears, setActivityYears] = useState({
-    employee: new Date().getFullYear(),
-    client: new Date().getFullYear(),
-    equipment: new Date().getFullYear(),
-    repair: new Date().getFullYear(),
-    email: new Date().getFullYear(),
-    sms: new Date().getFullYear()
-  })
-
+export const useDashboard = (activityYear) => {
   const { findAllClients } = useClient()
   const { findAllEquipments } = useEquipment()
   const { findAllRepairs } = useRepair()
@@ -33,9 +22,9 @@ export const useDashboard = () => {
   })
 
   const findEmployeeActivity = useQuery({
-    queryKey: ["dashboard", "employees", "activity", activityYears.employee],
-    queryFn: () => getEmployeeActivity({ year: activityYears.employee }),
-    enabled: !!activityYears.employee
+    queryKey: ["dashboard", "employees", "activity", activityYear],
+    queryFn: () => getEmployeeActivity({ year: activityYear }),
+    enabled: !!activityYear
   })
 
   const findClientSummary = useQuery({
@@ -44,9 +33,9 @@ export const useDashboard = () => {
   })
 
   const findClientActivity = useQuery({
-    queryKey: ["dashboard", "clients", "activity", activityYears.client],
-    queryFn: () => getClientActivity({ year: activityYears.client }),
-    enabled: !!activityYears.client
+    queryKey: ["dashboard", "clients", "activity", activityYear],
+    queryFn: () => getClientActivity({ year: activityYear }),
+    enabled: !!activityYear
   })
 
   const findEquipmentSummary = useQuery({
@@ -55,9 +44,9 @@ export const useDashboard = () => {
   })
 
   const findEquipmentActivity = useQuery({
-    queryKey: ["dashboard", "equipments", "activity", activityYears.equipment],
-    queryFn: () => getEquipmentActivity({ year: activityYears.equipment }),
-    enabled: !!activityYears.equipment
+    queryKey: ["dashboard", "equipments", "activity", activityYear],
+    queryFn: () => getEquipmentActivity({ year: activityYear }),
+    enabled: !!activityYear
   })
 
   const findRepairSummary = useQuery({
@@ -66,9 +55,9 @@ export const useDashboard = () => {
   })
 
   const findRepairActivity = useQuery({
-    queryKey: ["dashboard", "repairs", "activity", activityYears.repair],
-    queryFn: () => getRepairActivity({ year: activityYears.repair }),
-    enabled: !!activityYears.repair
+    queryKey: ["dashboard", "repairs", "activity", activityYear],
+    queryFn: () => getRepairActivity({ year: activityYear }),
+    enabled: !!activityYear
   })
 
   const findEmailSummary = useQuery({
@@ -77,9 +66,9 @@ export const useDashboard = () => {
   })
 
   const findEmailActivity = useQuery({
-    queryKey: ["dashboard", "emails", "activity", activityYears.email],
-    queryFn: () => getEmailActivity({ year: activityYears.email }),
-    enabled: !!activityYears.email
+    queryKey: ["dashboard", "emails", "activity", activityYear],
+    queryFn: () => getEmailActivity({ year: activityYear }),
+    enabled: !!activityYear
   })
 
   const findSmsSummary = useQuery({
@@ -88,9 +77,9 @@ export const useDashboard = () => {
   })
 
   const findSmsActivity = useQuery({
-    queryKey: ["dashboard", "smses", "activity", activityYears.sms],
-    queryFn: () => getSmsActivity({ year: activityYears.sms }),
-    enabled: !!activityYears.sms
+    queryKey: ["dashboard", "smses", "activity", activityYear],
+    queryFn: () => getSmsActivity({ year: activityYear }),
+    enabled: !!activityYear
   })
 
   const refetchAllQueries = () => {
@@ -131,15 +120,8 @@ export const useDashboard = () => {
     findAllRepairs
   ]
 
-  const isFetching = queries.some((query) => query.isFetching)
-  const isRefetching = queries.some((query) => query.isRefetching)
-
-  const updateActivityYear = (type, newYear) => {
-    setActivityYears((prev) => ({
-      ...prev,
-      [type]: newYear
-    }))
-  }
+  const isFetching = () => queries.some((query) => query.isFetching)
+  const isRefetching = () => queries.some((query) => query.isRefetching)
 
   return {
     findEmployeeSummary,
@@ -156,9 +138,8 @@ export const useDashboard = () => {
     findSmsActivity,
     refetchAllQueries: {
       refetch: refetchAllQueries,
-      isFetching,
-      isRefetching
-    },
-    updateActivityYear
+      isFetching: isFetching(),
+      isRefetching: isRefetching()
+    }
   }
 }
