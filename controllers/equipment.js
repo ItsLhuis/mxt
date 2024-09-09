@@ -89,7 +89,7 @@ const equipmentController = {
   analytics: {
     summary: tryCatch(async (req, res) => {
       const total = await Equipment.analytics.getTotal()
-      const lastMonthsTotal = await Equipment.analytics.getLastTwoCompleteMonthsTotal()
+      const lastMonthsTotal = await Equipment.analytics.getLastSixCompleteMonthsTotal()
       const lastMonthsPercentageChange =
         await Equipment.analytics.getLastTwoCompleteMonthsPercentageChange()
 

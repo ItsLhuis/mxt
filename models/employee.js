@@ -76,7 +76,7 @@ const Employee = {
       const query = "SELECT COUNT(*) AS total FROM employees"
       return dbQueryExecutor.execute(query)
     },
-    getLastTwoCompleteMonthsTotal: () => {
+    getLastSixCompleteMonthsTotal: () => {
       const query = `
         WITH MonthlyTotals AS (
           SELECT 

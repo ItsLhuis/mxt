@@ -213,7 +213,7 @@ const Equipment = {
       const query = "SELECT COUNT(*) AS total FROM equipments"
       return dbQueryExecutor.execute(query)
     },
-    getLastTwoCompleteMonthsTotal: () => {
+    getLastSixCompleteMonthsTotal: () => {
       const query = `
         WITH MonthlyTotals AS (
           SELECT 

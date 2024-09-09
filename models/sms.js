@@ -138,7 +138,7 @@ const Sms = {
       const query = "SELECT COUNT(*) AS total FROM smses"
       return dbQueryExecutor.execute(query)
     },
-    getLastTwoCompleteMonthsTotal: () => {
+    getLastSixCompleteMonthsTotal: () => {
       const query = `
         WITH MonthlyTotals AS (
           SELECT 

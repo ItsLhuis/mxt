@@ -158,7 +158,7 @@ const Client = {
       const query = "SELECT COUNT(*) AS total FROM clients"
       return dbQueryExecutor.execute(query)
     },
-    getLastTwoCompleteMonthsTotal: () => {
+    getLastSixCompleteMonthsTotal: () => {
       const query = `
         WITH MonthlyTotals AS (
           SELECT 

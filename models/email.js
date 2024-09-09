@@ -135,7 +135,7 @@ const Email = {
       const query = "SELECT COUNT(*) AS total FROM emails"
       return dbQueryExecutor.execute(query)
     },
-    getLastTwoCompleteMonthsTotal: () => {
+    getLastSixCompleteMonthsTotal: () => {
       const query = `
         WITH MonthlyTotals AS (
           SELECT 

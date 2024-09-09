@@ -95,7 +95,7 @@ const repairController = {
   analytics: {
     summary: tryCatch(async (req, res) => {
       const total = await Repair.analytics.getTotal()
-      const lastMonthsTotal = await Repair.analytics.getLastTwoCompleteMonthsTotal()
+      const lastMonthsTotal = await Repair.analytics.getLastSixCompleteMonthsTotal()
       const lastMonthsPercentageChange =
         await Repair.analytics.getLastTwoCompleteMonthsPercentageChange()
 

@@ -36,7 +36,7 @@ const emailController = {
   analytics: {
     summary: tryCatch(async (req, res) => {
       const total = await Email.analytics.getTotal()
-      const lastMonthsTotal = await Email.analytics.getLastTwoCompleteMonthsTotal()
+      const lastMonthsTotal = await Email.analytics.getLastSixCompleteMonthsTotal()
       const lastMonthsPercentageChange =
         await Email.analytics.getLastTwoCompleteMonthsPercentageChange()
 

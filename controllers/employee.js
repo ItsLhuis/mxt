@@ -50,7 +50,7 @@ const employeeController = {
   analytics: {
     summary: tryCatch(async (req, res) => {
       const total = await Employee.analytics.getTotal()
-      const lastMonthsTotal = await Employee.analytics.getLastTwoCompleteMonthsTotal()
+      const lastMonthsTotal = await Employee.analytics.getLastSixCompleteMonthsTotal()
       const lastMonthsPercentageChange =
         await Employee.analytics.getLastTwoCompleteMonthsPercentageChange()
 

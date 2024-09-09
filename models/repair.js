@@ -228,14 +228,14 @@ const Repair = {
       const query = "SELECT COUNT(*) AS total FROM repairs"
       return dbQueryExecutor.execute(query)
     },
-    getLastTwoCompleteMonthsTotal: () => {
+    getLastSixCompleteMonthsTotal: () => {
       const query = `
         WITH MonthlyTotals AS (
           SELECT 
-            DATE_FORMAT(entry_datetime, '%Y-%m') AS month,
+            DATE_FORMAT(created_at_datetime, '%Y-%m') AS month,
             COUNT(*) AS total
           FROM repairs
-          WHERE entry_datetime >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+          WHERE created_at_datetime >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
           GROUP BY month
         ),
         FullMonths AS (
@@ -256,10 +256,10 @@ const Repair = {
       const query = `
         WITH MonthlyTotals AS (
           SELECT 
-            DATE_FORMAT(entry_datetime, '%Y-%m') AS month,
+            DATE_FORMAT(created_at_datetime, '%Y-%m') AS month,
             COUNT(*) AS total
           FROM repairs
-          WHERE entry_datetime < CURDATE()
+          WHERE created_at_datetime < CURDATE()
           GROUP BY month
         ),
         LastTwoCompleteMonths AS (

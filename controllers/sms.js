@@ -28,7 +28,7 @@ const smsController = {
   analytics: {
     summary: tryCatch(async (req, res) => {
       const total = await Sms.analytics.getTotal()
-      const lastMonthsTotal = await Sms.analytics.getLastTwoCompleteMonthsTotal()
+      const lastMonthsTotal = await Sms.analytics.getLastSixCompleteMonthsTotal()
       const lastMonthsPercentageChange =
         await Sms.analytics.getLastTwoCompleteMonthsPercentageChange()
 

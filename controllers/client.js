@@ -65,7 +65,7 @@ const clientController = {
   analytics: {
     summary: tryCatch(async (req, res) => {
       const total = await Client.analytics.getTotal()
-      const lastMonthsTotal = await Client.analytics.getLastTwoCompleteMonthsTotal()
+      const lastMonthsTotal = await Client.analytics.getLastSixCompleteMonthsTotal()
       const lastMonthsPercentageChange =
         await Client.analytics.getLastTwoCompleteMonthsPercentageChange()
 
