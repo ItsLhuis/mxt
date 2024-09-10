@@ -24,8 +24,7 @@ export const useUser = () => {
     queryFn: getAllEmployees,
     onSuccess: (data) => {
       queryClient.setQueryData(["users"], data)
-    },
-    refetchInterval: 60000
+    }
   })
 
   const findEmployeeByUserId = (userId) => {

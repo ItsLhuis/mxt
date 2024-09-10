@@ -12,8 +12,7 @@ export const useEmail = () => {
     queryFn: getAllEmails,
     onSuccess: (data) => {
       queryClient.setQueryData(["emails"], data)
-    },
-    refetchInterval: 60000
+    }
   })
 
   const findEmailById = (emailId) => {

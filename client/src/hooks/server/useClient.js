@@ -24,8 +24,7 @@ export const useClient = () => {
     queryFn: getAllClients,
     onSuccess: (data) => {
       queryClient.setQueryData(["clients"], data)
-    },
-    refetchInterval: 60000
+    }
   })
 
   const findClientById = (clientId) => {

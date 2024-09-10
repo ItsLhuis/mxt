@@ -12,8 +12,7 @@ export const useSms = () => {
     queryFn: getAllSmses,
     onSuccess: (data) => {
       queryClient.setQueryData(["smses"], data)
-    },
-    refetchInterval: 60000
+    }
   })
 
   const findSmsById = (smsId) => {

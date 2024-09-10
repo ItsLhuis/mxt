@@ -39,8 +39,7 @@ export const useRepair = () => {
     queryFn: getAllRepairs,
     onSuccess: (data) => {
       queryClient.setQueryData(["repairs"], data)
-    },
-    refetchInterval: 60000
+    }
   })
 
   const findRepairById = (repairId) => {

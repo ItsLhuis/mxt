@@ -34,8 +34,7 @@ export const useEquipment = () => {
     queryFn: getAllEquipments,
     onSuccess: (data) => {
       queryClient.setQueryData(["equipments"], data)
-    },
-    refetchInterval: 60000
+    }
   })
 
   const findEquipmentById = (equipmentId) => {
