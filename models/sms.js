@@ -11,7 +11,7 @@ const { withCache, revalidateCache, memoryOnlyCache } = require("@utils/cache")
 const ReleansClient = require("@classes/releans")
 const releans = new ReleansClient(process.env.RELEANS_API_KEY)
 
-const convertTimeZone = require("@utils/convertTimeZone ")
+const convertTimeZone = require("@utils/convertTimeZone")
 
 const Client = require("@models/client")
 const User = require("@models/user")
@@ -66,10 +66,10 @@ const Sms = {
           smsReleansData = await releans.get(apiId)
         } catch (error) {}
 
-        const convertReleansTimeZone = convertTimeZone(
-          smsReleansData.date_sent,
-          smsReleansData.timezone
-        )
+        const convertReleansTimeZone =
+          smsReleansData && smsReleansData.date_sent && smsReleansData.timezone
+            ? convertTimeZone(smsReleansData.date_sent, smsReleansData.timezone)
+            : sms[0].created_at_datetime
 
         const lowerCaseStatus = smsReleansData.status ? smsReleansData.status.toLowerCase() : ""
 
@@ -194,17 +194,17 @@ const Sms = {
             ROW_NUMBER() OVER (ORDER BY month DESC) AS row_num
           FROM LastTwoCompleteMonths
         ) AS numbered_totals
-      `;
-    
-      const result = await dbQueryExecutor.execute(query);
-      const { latest_total, previous_total } = result[0] || { latest_total: 0, previous_total: 0 };
-    
+      `
+
+      const result = await dbQueryExecutor.execute(query)
+      const { latest_total, previous_total } = result[0] || { latest_total: 0, previous_total: 0 }
+
       if (previous_total === 0) {
-        return latest_total === 0 ? 0 : 100; // Se o total anterior for 0 e o total atual for diferente de 0, retorno 100%, senão 0%
+        return latest_total === 0 ? 0 : 100 // Se o total anterior for 0 e o total atual for diferente de 0, retorno 100%, senão 0%
       }
-    
-      return ((latest_total - previous_total) / previous_total) * 100; // Calcula a mudança percentual
-    },    
+
+      return ((latest_total - previous_total) / previous_total) * 100 // Calcula a mudança percentual
+    },
     getTotalsByMonthForYear: async (year) => {
       const query = `
         WITH MonthlyTotals AS (
