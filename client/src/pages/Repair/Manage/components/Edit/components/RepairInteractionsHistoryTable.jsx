@@ -239,7 +239,7 @@ const RepairInteractionsHistoryTable = ({ repair, isLoading, isError }) => {
                             sx={{
                               justifyContent: "center",
                               alignItems: "flex-start",
-                              gap: 1
+                              gap: 0.5
                             }}
                           >
                             <Typography variant="h5" component="h5" sx={{ wordBreak: "break-all" }}>
@@ -248,22 +248,12 @@ const RepairInteractionsHistoryTable = ({ repair, isLoading, isError }) => {
                             <Stack
                               sx={{
                                 flexDirection: "row",
-                                gap: 1,
                                 width: "100%"
                               }}
                             >
                               <Typography variant="p" component="p" sx={{ wordBreak: "break-all" }}>
-                                {row?.after?.type?.name}
-                              </Typography>
-                              <Divider
-                                flexItem
-                                sx={{
-                                  borderColor: "var(--outline)",
-                                  borderWidth: 1
-                                }}
-                              />
-                              <Typography variant="p" component="p" sx={{ wordBreak: "break-all" }}>
-                                {row?.after?.brand?.name} {row?.after?.model?.name}
+                                {row?.after?.type?.name}, {row?.after?.brand?.name}
+                                {row?.after?.model?.name}
                               </Typography>
                             </Stack>
                           </Stack>
