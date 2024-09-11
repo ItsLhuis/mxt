@@ -18,7 +18,8 @@ const Security = () => {
     register,
     handleSubmit,
     formState: { errors },
-    setError
+    setError,
+    reset
   } = useForm({
     resolver: zodResolver(updateUserPasswordSchema)
   })
@@ -28,6 +29,11 @@ const Security = () => {
   const currentPasswordRef = useRef(null)
 
   useEffect(() => {
+    if (!changePasswordModal) {
+      reset()
+      return
+    }
+
     const timer = setTimeout(() => {
       if (changePasswordModal && currentPasswordRef.current) {
         currentPasswordRef.current.focus()
@@ -48,7 +54,7 @@ const Security = () => {
           .mutateAsync({ userId: findUserProfile?.data?.id, ...data })
           .then(() => {
             setChangePasswordModal(false)
-            showSuccessToast("Senha atualizada com sucesso!")
+            showSuccessToast("Senha alterada com sucesso!")
             resolve()
           })
           .catch((error) => {
@@ -61,12 +67,12 @@ const Security = () => {
               return
             }
             setChangePasswordModal(false)
-            showErrorToast("Erro ao atualizar senha!")
+            showErrorToast("Erro ao alterar senha!")
             reject()
           })
       } else {
         setChangePasswordModal(false)
-        showErrorToast("Erro ao atualizar senha!")
+        showErrorToast("Erro ao alterar senha!")
         reject()
       }
     })
