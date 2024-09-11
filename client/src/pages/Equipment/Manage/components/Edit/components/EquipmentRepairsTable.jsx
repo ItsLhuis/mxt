@@ -340,7 +340,7 @@ const EquipmentRepairsTable = ({ equipment, isLoading, isError }) => {
           >
             <Table
               mode="datatable"
-              data={isEquipmentFinished ? equipment[0].repairs : []}
+              data={isEquipmentFinished ? equipment[0]?.repairs : []}
               columns={equipmentRepairsTableColumns}
               exportFileName="reparacoes_equipamento"
               exportColumns={equipmentRepairsTableExportColumns}

@@ -100,7 +100,7 @@ const RepairStatusTable = () => {
         align: "left",
         sortable: true,
         renderComponent: ({ row }) => (
-          <Chip color={row.color} sx={{ borderRadius: "50% !important", width: 20, height: 20 }} />
+          <Chip color={row?.color} sx={{ borderRadius: "50% !important", width: 20, height: 20 }} />
         )
       },
       {

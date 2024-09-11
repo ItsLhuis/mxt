@@ -273,7 +273,7 @@ const ClientEquipmentsTable = ({ client, isLoading, isError }) => {
           >
             <Table
               mode="datatable"
-              data={isClientFinished ? client[0].equipments : []}
+              data={isClientFinished ? client[0]?.equipments : []}
               columns={clientEquipmentsTableColumns}
               exportFileName="equipamentos_cliente"
               exportColumns={clientEquipmentsTableExportColumns}

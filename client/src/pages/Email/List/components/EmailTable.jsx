@@ -131,7 +131,7 @@ const EmailTable = () => {
         sortable: false,
         renderComponent: ({ row }) => (
           <Tooltip title="Ver e-email" sx={{ margin: -1 }}>
-            <IconButton onClick={() => navigate(`/email/${row.id}`)}>
+            <IconButton onClick={() => navigate(`/email/${row?.id}`)}>
               <Visibility />
             </IconButton>
           </Tooltip>

@@ -133,7 +133,7 @@ const SmsTable = () => {
         sortable: false,
         renderComponent: ({ row }) => (
           <Tooltip title="Ver SMS" sx={{ margin: -1 }}>
-            <IconButton onClick={() => navigate(`/sms/${row.id}`)}>
+            <IconButton onClick={() => navigate(`/sms/${row?.id}`)}>
               <Visibility />
             </IconButton>
           </Tooltip>

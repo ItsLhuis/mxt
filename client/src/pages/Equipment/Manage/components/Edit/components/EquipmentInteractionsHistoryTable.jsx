@@ -2,8 +2,10 @@ import React, { useMemo } from "react"
 
 import { BASE_URL } from "@api"
 
+import { FileSvg, ImgSvg, PdfSvg } from "@assets/icons/files"
+
 import { Box, Stack, Paper, Divider, Typography } from "@mui/material"
-import { History, Check, Close, PictureAsPdf, Image, QuestionMark } from "@mui/icons-material"
+import { History, Check, Close } from "@mui/icons-material"
 
 import { HeaderSection, Loadable, Table, TableSkeleton, Avatar, Caption } from "@components/ui"
 
@@ -113,8 +115,8 @@ const EquipmentInteractionsHistoryTable = ({ equipment, isLoading, isError }) =>
               align: "left",
               sortable: true,
               renderComponent: ({ row }) => {
-                if (row.field === "Descrição") {
-                  if (row.before) {
+                if (row?.field === "Descrição") {
+                  if (row?.before) {
                     return (
                       <Box
                         sx={{
@@ -128,46 +130,44 @@ const EquipmentInteractionsHistoryTable = ({ equipment, isLoading, isError }) =>
                       >
                         <span
                           className="table-cell-tiptap-editor"
-                          dangerouslySetInnerHTML={formatHTML(row.before)}
+                          dangerouslySetInnerHTML={formatHTML(row?.before)}
                         />
                       </Box>
                     )
                   }
                 }
 
-                if (row.field === "Cliente") {
-                  if (row.before) {
+                if (row?.field === "Cliente") {
+                  if (row?.before) {
                     return (
                       <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-                        {row.before.name}
-                        {row.before.description && (
-                          <Caption title={row.before.description} />
-                        )}
+                        {row?.before?.name}
+                        {row?.before?.description && <Caption title={row?.before?.description} />}
                       </Stack>
                     )
                   }
                 }
 
-                if (row.field === "Tipo") {
-                  if (row.before) {
-                    return <>{row.before.name}</>
+                if (row?.field === "Tipo") {
+                  if (row?.before) {
+                    return <>{row?.before?.name}</>
                   }
                 }
 
-                if (row.field === "Marca") {
-                  if (row.before) {
-                    return <>{row.before.name}</>
+                if (row?.field === "Marca") {
+                  if (row?.before) {
+                    return <>{row?.before?.name}</>
                   }
                 }
 
-                if (row.field === "Modelo") {
-                  if (row.before) {
-                    return <>{row.before.name}</>
+                if (row?.field === "Modelo") {
+                  if (row?.before) {
+                    return <>{row?.before?.name}</>
                   }
                 }
 
-                return row.before ? (
-                  row.before
+                return row?.before ? (
+                  row?.before
                 ) : (
                   <Typography variant="p" component="p" color="var(--outline)">
                     Sem valor
@@ -181,8 +181,8 @@ const EquipmentInteractionsHistoryTable = ({ equipment, isLoading, isError }) =>
               align: "left",
               sortable: true,
               renderComponent: ({ row }) => {
-                if (row.field === "Descrição") {
-                  if (row.after) {
+                if (row?.field === "Descrição") {
+                  if (row?.after) {
                     return (
                       <Box
                         sx={{
@@ -196,46 +196,44 @@ const EquipmentInteractionsHistoryTable = ({ equipment, isLoading, isError }) =>
                       >
                         <span
                           className="table-cell-tiptap-editor"
-                          dangerouslySetInnerHTML={formatHTML(row.after)}
+                          dangerouslySetInnerHTML={formatHTML(row?.after)}
                         />
                       </Box>
                     )
                   }
                 }
 
-                if (row.field === "Cliente") {
-                  if (row.after) {
+                if (row?.field === "Cliente") {
+                  if (row?.after) {
                     return (
                       <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-                        {row.after.name}
-                        {row.after.description && (
-                          <Caption title={row.after.description} />
-                        )}
+                        {row?.after?.name}
+                        {row?.after?.description && <Caption title={row?.after?.description} />}
                       </Stack>
                     )
                   }
                 }
 
-                if (row.field === "Tipo") {
-                  if (row.after) {
-                    return <>{row.after.name}</>
+                if (row?.field === "Tipo") {
+                  if (row?.after) {
+                    return <>{row?.after?.name}</>
                   }
                 }
 
-                if (row.field === "Marca") {
-                  if (row.after) {
-                    return <>{row.after.name}</>
+                if (row?.field === "Marca") {
+                  if (row?.after) {
+                    return <>{row?.after?.name}</>
                   }
                 }
 
-                if (row.field === "Modelo") {
-                  if (row.after) {
-                    return <>{row.after.name}</>
+                if (row?.field === "Modelo") {
+                  if (row?.after) {
+                    return <>{row?.after?.name}</>
                   }
                 }
 
-                return row.after ? (
-                  row.after
+                return row?.after ? (
+                  row?.after
                 ) : (
                   <Typography variant="p" component="p" color="var(--outline)">
                     Sem valor
@@ -249,7 +247,7 @@ const EquipmentInteractionsHistoryTable = ({ equipment, isLoading, isError }) =>
               align: "left",
               sortable: true,
               renderComponent: ({ row }) => (
-                <>{row.changed ? <Check color="success" /> : <Close color="error" />}</>
+                <>{row?.changed ? <Check color="success" /> : <Close color="error" />}</>
               )
             }
           ],
@@ -265,12 +263,12 @@ const EquipmentInteractionsHistoryTable = ({ equipment, isLoading, isError }) =>
               sortable: true,
               renderComponent: ({ row }) => (
                 <Stack sx={{ alignItems: "flex-start" }}>
-                  {row.file_mime_type === "application/pdf" ? (
-                    <PictureAsPdf fontSize="medium" sx={{ color: "rgb(223, 88, 84)" }} />
-                  ) : row.file_mime_type.startsWith("image/") ? (
-                    <Image fontSize="medium" sx={{ color: "rgb(245, 128, 8)" }} />
+                  {row?.file_mime_type === "application/pdf" ? (
+                    <img src={PdfSvg} />
+                  ) : row?.file_mime_type.startsWith("image/") ? (
+                    <img src={ImgSvg} />
                   ) : (
-                    <QuestionMark fontSize="medium" sx={{ color: "var(--outline)" }} />
+                    <img src={FileSvg} />
                   )}
                 </Stack>
               )
@@ -283,13 +281,13 @@ const EquipmentInteractionsHistoryTable = ({ equipment, isLoading, isError }) =>
               renderComponent: ({ row }) => (
                 <Stack>
                   <Typography variant="p" component="p">
-                    {row.original_filename}
+                    {row?.original_filename}
                   </Typography>
                   <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
                     {`${
-                      row.file_size < 1024 * 1024
-                        ? (row.file_size / 1024).toFixed(2) + " Kb"
-                        : (row.file_size / (1024 * 1024)).toFixed(2) + " Mb"
+                      row?.file_size < 1024 * 1024
+                        ? (row?.file_size / 1024).toFixed(2) + " Kb"
+                        : (row?.file_size / (1024 * 1024)).toFixed(2) + " Mb"
                     }`}
                   </Typography>
                 </Stack>
@@ -308,23 +306,23 @@ const EquipmentInteractionsHistoryTable = ({ equipment, isLoading, isError }) =>
               margin: 3
             }}
           >
-            {row.details[0].field === "Anexos" ? (
+            {row?.details[0]?.field === "Anexos" ? (
               <>
-                {row.details[0].after ? (
+                {row?.details[0]?.after ? (
                   <Table
-                    data={row.details[0].after ?? []}
+                    data={row?.details[0]?.after ?? []}
                     columns={interactionsHistoryAttachmentDetailsTableColumns}
                   />
                 ) : (
                   <Table
                     showSearch={false}
-                    data={[row.details[0].before]}
+                    data={[row?.details[0]?.before]}
                     columns={interactionsHistoryAttachmentDetailsTableColumns}
                   />
                 )}
               </>
             ) : (
-              <Table data={row.details ?? []} columns={interactionsHistoryDetailsTableColumns} />
+              <Table data={row?.details ?? []} columns={interactionsHistoryDetailsTableColumns} />
             )}
           </Box>
         )
@@ -353,7 +351,7 @@ const EquipmentInteractionsHistoryTable = ({ equipment, isLoading, isError }) =>
           >
             <Table
               mode="datatable"
-              data={isEquipmentFinished ? equipment[0].interactions_history : []}
+              data={isEquipmentFinished ? equipment[0]?.interactions_history : []}
               columns={equipmentInteractionsHistoryTableColumns}
               ExpandableContentComponent={ExpandableEquipmentsInteractionsHistoryTableContent}
             />

@@ -2,8 +2,10 @@ import React, { useMemo } from "react"
 
 import { BASE_URL } from "@api"
 
+import { FileSvg, ImgSvg, PdfSvg } from "@assets/icons/files"
+
 import { Box, Stack, Paper, Divider, Typography, Chip } from "@mui/material"
-import { History, Check, Close, PictureAsPdf, Image, QuestionMark } from "@mui/icons-material"
+import { History, Check, Close } from "@mui/icons-material"
 
 import { HeaderSection, Loadable, Table, TableSkeleton, Avatar, Caption } from "@components/ui"
 
@@ -333,12 +335,12 @@ const RepairInteractionsHistoryTable = ({ repair, isLoading, isError }) => {
               sortable: true,
               renderComponent: ({ row }) => (
                 <Stack sx={{ alignItems: "flex-start" }}>
-                  {row.file_mime_type === "application/pdf" ? (
-                    <PictureAsPdf fontSize="medium" sx={{ color: "rgb(223, 88, 84)" }} />
-                  ) : row.file_mime_type.startsWith("image/") ? (
-                    <Image fontSize="medium" sx={{ color: "rgb(245, 128, 8)" }} />
+                  {row?.file_mime_type === "application/pdf" ? (
+                    <img src={PdfSvg} />
+                  ) : row?.file_mime_type.startsWith("image/") ? (
+                    <img src={ImgSvg} />
                   ) : (
-                    <QuestionMark fontSize="medium" sx={{ color: "var(--outline)" }} />
+                    <img src={FileSvg} />
                   )}
                 </Stack>
               )
@@ -351,13 +353,13 @@ const RepairInteractionsHistoryTable = ({ repair, isLoading, isError }) => {
               renderComponent: ({ row }) => (
                 <Stack>
                   <Typography variant="p" component="p">
-                    {row.original_filename}
+                    {row?.original_filename}
                   </Typography>
                   <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
                     {`${
-                      row.file_size < 1024 * 1024
-                        ? (row.file_size / 1024).toFixed(2) + " Kb"
-                        : (row.file_size / (1024 * 1024)).toFixed(2) + " Mb"
+                      row?.file_size < 1024 * 1024
+                        ? (row?.file_size / 1024).toFixed(2) + " Kb"
+                        : (row?.file_size / (1024 * 1024)).toFixed(2) + " Mb"
                     }`}
                   </Typography>
                 </Stack>
@@ -376,23 +378,23 @@ const RepairInteractionsHistoryTable = ({ repair, isLoading, isError }) => {
               margin: 3
             }}
           >
-            {row.details[0].field === "Anexos" ? (
+            {row?.details[0]?.field === "Anexos" ? (
               <>
-                {row.details[0].after ? (
+                {row?.details[0]?.after ? (
                   <Table
-                    data={row.details[0].after ?? []}
+                    data={row?.details[0]?.after ?? []}
                     columns={interactionsHistoryAttachmentDetailsTableColumns}
                   />
                 ) : (
                   <Table
                     showSearch={false}
-                    data={[row.details[0].before]}
+                    data={[row?.details[0]?.before]}
                     columns={interactionsHistoryAttachmentDetailsTableColumns}
                   />
                 )}
               </>
             ) : (
-              <Table data={row.details ?? []} columns={interactionsHistoryDetailsTableColumns} />
+              <Table data={row?.details ?? []} columns={interactionsHistoryDetailsTableColumns} />
             )}
           </Box>
         )
@@ -421,7 +423,7 @@ const RepairInteractionsHistoryTable = ({ repair, isLoading, isError }) => {
           >
             <Table
               mode="datatable"
-              data={isRepairFinished ? repair[0].interactions_history : []}
+              data={isRepairFinished ? repair[0]?.interactions_history : []}
               columns={repairInteractionsHistoryTableColumns}
               ExpandableContentComponent={ExpandableRepairsInteractionsHistoryTableContent}
             />
