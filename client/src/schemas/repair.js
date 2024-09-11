@@ -12,44 +12,69 @@ export const repairSchema = z.object({
   })
 })
 
-export const updateRepairSchema = z.object({
-  statusId: z.number({ message: "O estado é obrigatório" }),
-  entryAccessoriesDescription: z.string().optional().nullable(),
-  entryReportedIssuesDescription: z.string().optional().nullable(),
-  entryDescription: z.string().optional().nullable(),
-  entryDatetime: z.date({
-    message: "A data de entrada é obrigatória",
-    errorMap: () => ({
-      message: "A data de entrada é obrigatória"
-    })
-  }),
-  interventionWorksDoneDescription: z.string().optional().nullable(),
-  interventionAccessoriesUsedDescription: z.string().optional().nullable(),
-  interventionDescription: z.string().optional().nullable(),
-  conclusionDatetime: z
-    .date({
-      message: "Data inválida",
+export const updateRepairSchema = z
+  .object({
+    statusId: z.number({ message: "O estado é obrigatório" }),
+    entryAccessoriesDescription: z.string().optional().nullable(),
+    entryReportedIssuesDescription: z.string().optional().nullable(),
+    entryDescription: z.string().optional().nullable(),
+    entryDatetime: z.date({
+      message: "A data de entrada é obrigatória",
       errorMap: () => ({
-        message: "Data inválida"
+        message: "A data de entrada é obrigatória"
       })
-    })
-    .optional()
-    .nullable(),
-  deliveryDatetime: z
-    .date({
-      message: "Data inválida",
-      errorMap: () => ({
-        message: "Data inválida"
+    }),
+    interventionWorksDoneDescription: z.string().optional().nullable(),
+    interventionAccessoriesUsedDescription: z.string().optional().nullable(),
+    interventionDescription: z.string().optional().nullable(),
+    conclusionDatetime: z
+      .date({
+        message: "Data inválida",
+        errorMap: () => ({
+          message: "Data inválida"
+        })
       })
-    })
-    .optional()
-    .nullable(),
-  isClientNotified: z.boolean({ message: "Valor inválido" }),
-  entryAccessories: z.array(z.number()).optional().nullable(),
-  entryReportedIssues: z.array(z.number()).optional().nullable(),
-  interventionWorksDone: z.array(z.number()).optional().nullable(),
-  interventionAccessoriesUsed: z.array(z.number()).optional().nullable()
-})
+      .optional()
+      .nullable(),
+    deliveryDatetime: z
+      .date({
+        message: "Data inválida",
+        errorMap: () => ({
+          message: "Data inválida"
+        })
+      })
+      .optional()
+      .nullable(),
+    isClientNotified: z.boolean({ message: "Valor inválido" }),
+    entryAccessories: z.array(z.number()).optional().nullable(),
+    entryReportedIssues: z.array(z.number()).optional().nullable(),
+    interventionWorksDone: z.array(z.number()).optional().nullable(),
+    interventionAccessoriesUsed: z.array(z.number()).optional().nullable()
+  })
+  .refine(
+    (data) => {
+      if (data.conclusionDatetime && data.entryDatetime) {
+        return data.conclusionDatetime >= data.entryDatetime
+      }
+      return true
+    },
+    {
+      path: ["conclusionDatetime"],
+      message: "A data selecionada está antes do limite mínimo"
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.deliveryDatetime && data.conclusionDatetime) {
+        return data.deliveryDatetime >= data.conclusionDatetime
+      }
+      return true
+    },
+    {
+      path: ["deliveryDatetime"],
+      message: "A data selecionada está antes do limite mínimo"
+    }
+  )
 
 export const repairAttachmentSchema = z.object({
   attachments: z

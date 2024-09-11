@@ -660,6 +660,7 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
                           <DatePicker
                             label="Data de conclusão"
                             value={field.value}
+                            minDate={getValues("entryDatetime")}
                             onChange={field.onChange}
                             error={!!errors.conclusionDatetime}
                             helperText={errors.conclusionDatetime?.message}
@@ -683,6 +684,7 @@ const RepairDetailsForm = ({ repair, isLoading, isError }) => {
                           <DatePicker
                             label="Data de entrega"
                             value={field.value}
+                            minDate={getValues("conclusionDatetime")}
                             onChange={field.onChange}
                             error={!!errors.deliveryDatetime}
                             helperText={errors.deliveryDatetime?.message}

@@ -38,17 +38,8 @@ const DatePicker = (props) => {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"))
 
-  const stripTime = (date) => {
-    return date ? startOfDay(date) : null
-  }
-
-  const strippedValue = stripTime(value)
-  const strippedMinDate = stripTime(minDate)
-  const strippedMaxDate = stripTime(maxDate)
-
-  const isBeforeMinDate =
-    strippedMinDate && strippedValue && isBefore(strippedValue, strippedMinDate)
-  const isAfterMaxDate = strippedMaxDate && strippedValue && isAfter(strippedValue, strippedMaxDate)
+  const isBeforeMinDate = minDate && value && isBefore(value, minDate)
+  const isAfterMaxDate = maxDate && value && isAfter(value, maxDate)
 
   const hasError = props.error || isBeforeMinDate || isAfterMaxDate
 
