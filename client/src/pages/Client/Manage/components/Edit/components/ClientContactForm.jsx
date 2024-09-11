@@ -41,7 +41,11 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
         description: data.description === "" ? null : data.description
       })
       .then(() => {
-        reset()
+        reset({
+          type: "",
+          contact: "",
+          description: ""
+        })
         showSuccessToast("Contacto adicionado com sucesso!")
       })
       .catch((error) => {
@@ -138,7 +142,12 @@ const ClientContactForm = ({ client, isLoading, isError }) => {
             control={control}
             defaultValue=""
             render={({ field }) => (
-              <RichEditor label="Descrição" value={field.value} onChange={field.onChange} shouldImmediatelyRender />
+              <RichEditor
+                label="Descrição"
+                value={field.value}
+                onChange={field.onChange}
+                shouldImmediatelyRender
+              />
             )}
           />
           <Box sx={{ marginLeft: "auto", marginTop: 1 }}>
