@@ -1,1 +1,0 @@
-import{u as o}from"./useMutation-CF3YA1Lc.js";import{b1 as n,b2 as e}from"./index-Njxcp4Ni.js";const r=()=>o({mutationFn:async t=>(await new Promise(u=>setTimeout(u,300)),n(t))}),i=()=>o({mutationFn:async()=>(await new Promise(t=>setTimeout(t,300)),e())});export{i as a,r as u};

@@ -1,1 +1,0 @@
-import{c as r,j as t}from"./index-EhwUJips.js";const m=r(t.jsx("path",{d:"M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2m0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2m0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2"}),"MoreVert"),n=e=>/^\d{9}$/.test(e)?`${e.slice(0,3)} ${e.slice(3,6)} ${e.slice(6)}`:e;export{m as M,n as f};

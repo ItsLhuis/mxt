@@ -1,1 +1,0 @@
-import{p as e,i as o}from"./isPossiblePhoneNumber-C2Df4Gz7.js";const i=r=>{if(typeof r!="string")return r;const n=e(r);return n&&n.isValid()&&o(String(n.number))?n.formatInternational():r};export{i as f};

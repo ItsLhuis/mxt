@@ -1,0 +1,2 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/AddClientForm-B3Eoh1y1.js","assets/index-_NktdslD.js","assets/index-DOidGzGz.css","assets/index-8QsUXVhp.js","assets/client-BHMlStuD.js","assets/isPossiblePhoneNumber-DES16dOz.js","assets/useClient-B8aLe1Fc.js","assets/EditClient-BOtLtNK_.js"])))=>i.map(i=>d[i]);
+import{r as t,_}from"./index-_NktdslD.js";const r=t.lazy(()=>_(()=>import("./AddClientForm-B3Eoh1y1.js"),__vite__mapDeps([0,1,2,3,4,5,6]))),i=t.lazy(()=>_(()=>import("./EditClient-BOtLtNK_.js"),__vite__mapDeps([7,1,2,6])));export{r as A,i as E};

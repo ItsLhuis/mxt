@@ -1,1 +1,0 @@
-import{j as a,o as i,B as o,i as s}from"./index-EhwUJips.js";const e=()=>a.jsx(i,{elevation:1,children:a.jsx(o,{sx:{padding:3},children:a.jsx(s,{variant:"h5",component:"h5",children:"Notificações"})})});export{e as default};

@@ -1,1 +1,0 @@
-import{a7 as e}from"./index-D-gKbxy2.js";const o=async()=>(await e.get("/smses/summary")).data,m=async()=>(await e.get("/smses")).data,c=async({smsId:s})=>(await e.get(`/smses/${s}`)).data,p=async({clientId:s,contactId:a,message:t})=>(await e.post("/smses",{clientId:s,contactId:a,message:t})).data;export{m as a,c as b,o as g,p as s};
