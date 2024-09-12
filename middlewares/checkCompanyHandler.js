@@ -20,7 +20,16 @@ const checkCompany = tryCatch(async (req, res, next) => {
   const { name, address, locality, city, country, postal_code, phone_number, email, website } =
     company[0]
 
-  if (!name || !address || !city || !country || !postal_code || !phone_number || !email) {
+  if (
+    !name ||
+    !address ||
+    !locality ||
+    !city ||
+    !country ||
+    !postal_code ||
+    !phone_number ||
+    !email
+  ) {
     throw new AppError(
       400,
       NON_INITIALIZED_COMPANY,
