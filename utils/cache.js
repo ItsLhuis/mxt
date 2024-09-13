@@ -12,6 +12,12 @@ const withCache = (cacheKey, fetchDataFunction, cacheInstance = multiCache) => {
     const transformedKey = transformCacheKey(cacheKey)
 
     if (CACHE_ENABLED) {
+      if (Array.isArray(cacheKey)) {
+        if (cacheInstance !== memoryOnlyCache) {
+          throw new Error("Memory cache instance is required when using array cache keys.")
+        }
+      }
+
       try {
         const cachedData = await cacheInstance.get(transformedKey)
 
@@ -41,14 +47,53 @@ const revalidateCache = async (
       cacheKeys = [cacheKeys]
     }
 
-    const invalidationPromises = cacheInstances.map(async (cacheInstance) => {
-      const removalPromises = cacheKeys.map(async (cacheKey) => {
-        const transformedKey = transformCacheKey(cacheKey)
-        await cacheInstance.del(transformedKey)
+    if (
+      cacheKeys.some((cacheKey) => Array.isArray(cacheKey)) &&
+      !cacheInstances.includes(memoryOnlyCache)
+    ) {
+      throw new Error("Memory cache instance is required when using array cache keys.")
+    }
+
+    const nonArrayCacheKeys = cacheKeys.filter((key) => !Array.isArray(key))
+
+    if (nonArrayCacheKeys.length > 0) {
+      const invalidationPromises = cacheInstances.map(async (cacheInstance) => {
+        const removalPromises = nonArrayCacheKeys.map(async (cacheKey) => {
+          const transformedKey = transformCacheKey(cacheKey)
+          await cacheInstance.del(transformedKey)
+        })
+        await Promise.all(removalPromises)
       })
-      await Promise.all(removalPromises)
-    })
-    await Promise.all(invalidationPromises)
+      await Promise.all(invalidationPromises)
+    }
+
+    if (cacheInstances.includes(memoryOnlyCache)) {
+      const memoryKeys = memoryOnlyCache.memoryCache.keys()
+      const arrayCacheKeys = cacheKeys.filter((cacheKey) => Array.isArray(cacheKey))
+
+      if (arrayCacheKeys.length > 0) {
+        const memoryKeySet = new Set(memoryKeys)
+
+        const matchingKeys = arrayCacheKeys.flatMap((arrayKey) => {
+          return Array.from(memoryKeySet).filter((cacheKey) => {
+            try {
+              const parsedKey = JSON.parse(cacheKey)
+              return arrayKey.every((element) => parsedKey.includes(element))
+            } catch {
+              return false
+            }
+          })
+        })
+
+        const invalidationPromises = cacheInstances.map(async (cacheInstance) => {
+          const removalPromises = matchingKeys.map(async (key) => {
+            await cacheInstance.del(key)
+          })
+          await Promise.all(removalPromises)
+        })
+        await Promise.all(invalidationPromises)
+      }
+    }
   }
 }
 

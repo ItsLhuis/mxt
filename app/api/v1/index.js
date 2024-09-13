@@ -18,7 +18,7 @@ router.delete(
   checkPermissionHandler("cache", permissions.DELETE),
   (req, res) => {
     clearAllCaches([multiCache, memoryOnlyCache, diskOnlyCache])
-      .then(() => res.send({ message: "Cache removed" }))
+      .then(() => res.send({ message: "Cache cleared successfully" }))
       .catch(() => {
         res.status(500).send({ message: "An error occurred while clearing the cache" })
       })
