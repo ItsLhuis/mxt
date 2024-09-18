@@ -74,7 +74,7 @@ const Sms = {
           }, {})
 
         const filterConditions = Object.keys(filteredFilterBy)
-          .map((key) => `AND ${validFields.filter[key]} = ?`)
+          .map((key) => `AND ${validFields.filter[key]} LIKE ?`)
           .join(" ")
 
         const sortByKey = Object.keys(validFields.sort).includes(sortBy)
@@ -102,7 +102,7 @@ const Sms = {
 
         const params = [
           ...(searchTerm ? Object.keys(validFields.search).map(() => `%${searchTerm}%`) : []),
-          ...Object.values(filteredFilterBy),
+          ...Object.values(filteredFilterBy).map((value) => `%${value}%`),
           limit,
           offset
         ]
