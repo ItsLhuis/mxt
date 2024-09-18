@@ -20,34 +20,140 @@ const mapUser = require("@utils/mapUser")
 const isProduction = process.env.NODE_ENV === "production"
 
 const Sms = {
-  findAll: withCache("smses", async () => {
-    const smsesQuery = "SELECT * FROM smses ORDER BY created_at_datetime DESC"
-    const smses = await dbQueryExecutor.execute(smsesQuery)
+  findAll: async (
+    page = 1,
+    limit = 10,
+    searchTerm = "",
+    filterBy = {},
+    sortBy = "created_at_datetime",
+    sortOrder = "DESC"
+  ) =>
+    withCache(
+      ["smses", page, limit, searchTerm, JSON.stringify(filterBy), sortBy, sortOrder],
+      async () => {
+        const offset = (page - 1) * limit
 
-    const smsesWithDetails = await Promise.all(
-      smses.map(async (sms) => {
-        const [client, sentByUser] = await Promise.all([
-          Client.findByClientId(sms.client_id),
-          User.findByUserId(sms.sent_by_user_id)
-        ])
+        const validFields = {
+          search: {
+            client_name: "client.name",
+            to: "sms.contact",
+            message: "sms.message",
+            user_name: "user.username",
+            user_role: "user.role"
+          },
+          filter: {
+            client_name: "client.name",
+            to: "sms.contact",
+            message: "sms.message",
+            user_name: "user.username",
+            user_role: "user.role"
+          },
+          sort: {
+            client_name: "client.name",
+            to: "sms.contact",
+            message: "sms.message",
+            created_at_datetime: "sms.created_at_datetime"
+          }
+        }
+
+        const searchCondition = searchTerm
+          ? `
+            AND (
+              ${Object.keys(validFields.search)
+                .map((key) => `${validFields.search[key]} LIKE ?`)
+                .join(" OR ")}
+            )
+          `
+          : ""
+
+        const filteredFilterBy = Object.keys(filterBy)
+          .filter((key) => validFields.filter[key])
+          .reduce((obj, key) => {
+            obj[key] = filterBy[key]
+            return obj
+          }, {})
+
+        const filterConditions = Object.keys(filteredFilterBy)
+          .map((key) => `AND ${validFields.filter[key]} = ?`)
+          .join(" ")
+
+        const sortByKey = Object.keys(validFields.sort).includes(sortBy)
+          ? sortBy
+          : "created_at_datetime"
+        const sortByColumn = validFields.sort[sortByKey]
+
+        const smsesCountQuery = `
+          SELECT COUNT(*) AS total
+          FROM smses sms
+          LEFT JOIN clients client ON sms.client_id = client.id
+          LEFT JOIN users user ON sms.sent_by_user_id = user.id
+          WHERE 1 = 1 ${searchCondition} ${filterConditions}
+        `
+
+        const smsesQuery = `
+          SELECT sms.*
+          FROM smses sms
+          LEFT JOIN clients client ON sms.client_id = client.id
+          LEFT JOIN users user ON sms.sent_by_user_id = user.id
+          WHERE 1 = 1 ${searchCondition} ${filterConditions}
+          ORDER BY ${sortByColumn} ${sortOrder}
+          LIMIT ? OFFSET ?
+        `
+
+        const params = [
+          ...(searchTerm ? Object.keys(validFields.search).map(() => `%${searchTerm}%`) : []),
+          ...Object.values(filteredFilterBy),
+          limit,
+          offset
+        ]
+
+        const [{ total }] = await dbQueryExecutor.execute(smsesCountQuery, params)
+        const smses = await dbQueryExecutor.execute(smsesQuery, params)
+
+        const smsesWithDetails = await Promise.all(
+          smses.map(async (sms) => {
+            const [client, sentByUser] = await Promise.all([
+              Client.findByClientId(sms.client_id),
+              User.findByUserId(sms.sent_by_user_id)
+            ])
+
+            return {
+              id: sms.id,
+              api_id: sms.api_id,
+              client:
+                client.length > 0
+                  ? {
+                      id: client[0].id,
+                      name: client[0].name,
+                      description: client[0].description
+                    }
+                  : null,
+              to: sms.contact,
+              message: sms.message,
+              sent_by_user: sentByUser.length > 0 ? mapUser(sentByUser[0]) : null,
+              created_at_datetime: sms.created_at_datetime
+            }
+          })
+        )
 
         return {
-          id: sms.id,
-          api_id: sms.api_id,
-          client:
-            client.length > 0
-              ? { id: client[0].id, name: client[0].name, description: client[0].description }
-              : null,
-          to: sms.contact,
-          message: sms.message,
-          sent_by_user: sentByUser.length > 0 ? mapUser(sentByUser[0]) : null,
-          created_at_datetime: sms.created_at_datetime
+          total,
+          data: smsesWithDetails,
+          page,
+          limit,
+          search_term: searchTerm,
+          filter_by: filteredFilterBy,
+          sort_by: sortByKey,
+          sort_order: sortOrder,
+          request_info: {
+            valid_search_terms: Object.keys(validFields.search),
+            valid_filters: Object.keys(validFields.filter),
+            valid_sort_by: Object.keys(validFields.sort)
+          }
         }
-      })
-    )
-
-    return smsesWithDetails
-  }),
+      },
+      memoryOnlyCache
+    )(),
   findBySmsId: (smsId) =>
     withCache(
       `sms:${smsId}`,
@@ -116,7 +222,11 @@ const Sms = {
           from: smsReleansData.from,
           client:
             client || client.length > 0
-              ? { id: client[0].id, name: client[0].name, description: client[0].description }
+              ? {
+                  id: client[0].id,
+                  name: client[0].name,
+                  description: client[0].description
+                }
               : null,
           to: sms[0].contact,
           message: sms[0].message,
@@ -197,13 +307,16 @@ const Sms = {
       `
 
       const result = await dbQueryExecutor.execute(query)
-      const { latest_total, previous_total } = result[0] || { latest_total: 0, previous_total: 0 }
-
-      if (previous_total === 0) {
-        return latest_total === 0 ? 0 : 100 // Se o total anterior for 0 e o total atual for diferente de 0, retorno 100%, senão 0%
+      const { latest_total, previous_total } = result[0] || {
+        latest_total: 0,
+        previous_total: 0
       }
 
-      return ((latest_total - previous_total) / previous_total) * 100 // Calcula a mudança percentual
+      if (previous_total === 0) {
+        return latest_total === 0 ? 0 : 100
+      }
+
+      return ((latest_total - previous_total) / previous_total) * 100
     },
     getTotalsByMonthForYear: async (year) => {
       const query = `
@@ -241,7 +354,7 @@ const Sms = {
           return dbQueryExecutor.execute(query, [data.id, clientId, contact, message, sentByUserId])
         })
         .then((result) => {
-          return revalidateCache("smses").then(() => resolve(result))
+          return revalidateCache([["smses"]]).then(() => resolve(result))
         })
         .catch((error) => {
           reject(

@@ -5,6 +5,8 @@ const { SMS_NOT_FOUND } = require("@constants/errors/shared/sms")
 const { CLIENT_NOT_FOUND, CONTACT_NOT_FOUND, INVALID_CONTACT } = require("@constants/errors/client")
 const { ACTIVITY_YEAR_NOT_PROVIDED } = require("@constants/errors/shared/analytics")
 
+const adjustPaginationParams = require("@utils/adjustPaginationParams")
+
 const Sms = require("@models/sms")
 const { smsSchema } = require("@schemas/sms")
 
@@ -12,7 +14,11 @@ const Client = require("@models/client")
 
 const smsController = {
   findAll: tryCatch(async (req, res) => {
-    const smses = await Sms.findAll()
+    adjustPaginationParams(req)
+
+    const { page, limit, searchTerm, filterBy, sortBy, sortOrder } = req.query
+
+    const smses = await Sms.findAll(page, limit, searchTerm, filterBy, sortBy, sortOrder)
     res.status(200).json(smses)
   }),
   findBySmsId: tryCatch(async (req, res) => {
