@@ -252,7 +252,7 @@ const RepairAttachmentsTable = ({ repair, isLoading, isError }) => {
 
   return (
     <Stack>
-      <HeaderSection title="Anexos" description="Anexos do equipamento" icon={<Attachment />} />
+      <HeaderSection title="Anexos" description="Anexos da reparação" icon={<Attachment />} />
       <Loadable
         isLoading={!isRepairFinished}
         LoadingComponent={<TableSkeleton mode="datatable" />}

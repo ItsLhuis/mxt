@@ -30,9 +30,7 @@ const SmsTable = () => {
         renderComponent: ({ row }) => (
           <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
             <Link to={`/client/${row?.client?.id}`}>{row?.client?.name}</Link>
-            {row?.client?.description && (
-              <Caption title={row?.client?.description} />
-            )}
+            {row?.client?.description && <Caption title={row?.client?.description} />}
           </Stack>
         )
       },

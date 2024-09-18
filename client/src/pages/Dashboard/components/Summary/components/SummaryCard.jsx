@@ -2,15 +2,7 @@ import PropTypes from "prop-types"
 
 import React from "react"
 
-import {
-  Grid,
-  Paper,
-  Typography,
-  Chip,
-  Stack,
-  CircularProgress,
-  Skeleton
-} from "@mui/material"
+import { Grid, Paper, Typography, Chip, Stack, CircularProgress, Skeleton } from "@mui/material"
 
 import { Loadable, Caption } from "@components/ui"
 

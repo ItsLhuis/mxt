@@ -244,9 +244,7 @@ const SendEmailForm = () => {
                       >
                         {contact.contact}
                       </Typography>
-                      {contact.description && (
-                        <Caption title={contact.description} />
-                      )}
+                      {contact.description && <Caption title={contact.description} />}
                     </Stack>
                   </Button>
                 ))}

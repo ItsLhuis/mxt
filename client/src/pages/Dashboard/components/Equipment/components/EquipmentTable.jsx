@@ -105,9 +105,7 @@ const EquipmentTable = () => {
         renderComponent: ({ row }) => (
           <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1, whiteSpace: "pre" }}>
             <Link to={`/client/${row?.client?.id}`}>{row?.client?.name}</Link>
-            {row?.client?.description && (
-              <Caption title={row?.client?.description} />
-            )}
+            {row?.client?.description && <Caption title={row?.client?.description} />}
           </Stack>
         )
       },
@@ -1024,9 +1022,7 @@ const EquipmentTable = () => {
                           return (
                             <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
                               {row?.after.name}
-                              {row?.after.description && (
-                                <Caption title={row?.after.description} />
-                              )}
+                              {row?.after.description && <Caption title={row?.after.description} />}
                             </Stack>
                           )
                         }

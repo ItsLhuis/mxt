@@ -99,9 +99,7 @@ const GetSms = () => {
                                 <span>{field.value}</span>
                               )}
                             </Typography>
-                            {field.description && (
-                              <Caption title={field.description} />
-                            )}
+                            {field.description && <Caption title={field.description} />}
                           </Stack>
                         ) : (
                           <Typography variant="p" component="p" sx={{ color: "var(--outline)" }}>
