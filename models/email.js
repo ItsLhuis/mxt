@@ -17,34 +17,136 @@ const mapUser = require("@utils/mapUser")
 const isProduction = process.env.NODE_ENV === "production"
 
 const Email = {
-  findAll: withCache("emails", async () => {
-    const emailsQuery = "SELECT * FROM emails ORDER BY created_at_datetime DESC"
-    const emails = await dbQueryExecutor.execute(emailsQuery)
+  findAll: async (
+    page = 1,
+    limit = 10,
+    searchTerm = "",
+    filterBy = {},
+    sortBy = "created_at_datetime",
+    sortOrder = "DESC"
+  ) =>
+    withCache(
+      ["emails", page, limit, searchTerm, JSON.stringify(filterBy), sortBy, sortOrder],
+      async () => {
+        const offset = (page - 1) * limit
 
-    const emailsWithDetails = await Promise.all(
-      emails.map(async (email) => {
-        const [client, sentByUser] = await Promise.all([
-          Client.findByClientId(email.client_id),
-          User.findByUserId(email.sent_by_user_id)
-        ])
+        const validFields = {
+          search: {
+            client_name: "client.name",
+            to: "email.contact",
+            subject: "email.subject",
+            user_name: "user.username",
+            user_role: "user.role"
+          },
+          filter: {
+            client_name: "client.name",
+            to: "email.contact",
+            subject: "email.subject",
+            user_name: "user.username",
+            user_role: "user.role"
+          },
+          sort: {
+            client_name: "client.name",
+            to: "email.contact",
+            subject: "email.subject",
+            created_at_datetime: "email.created_at_datetime"
+          }
+        }
+
+        const searchCondition = searchTerm
+          ? `
+            AND (
+              ${Object.keys(validFields.search)
+                .map((key) => `${validFields.search[key]} LIKE ?`)
+                .join(" OR ")}
+            )
+          `
+          : ""
+
+        const filteredFilterBy = Object.keys(filterBy)
+          .filter((key) => validFields.filter[key])
+          .reduce((obj, key) => {
+            obj[key] = filterBy[key]
+            return obj
+          }, {})
+
+        const filterConditions = Object.keys(filteredFilterBy)
+          .map((key) => `AND ${validFields.filter[key]} LIKE ?`)
+          .join(" ")
+
+        const sortByKey = Object.keys(validFields.sort).includes(sortBy)
+          ? sortBy
+          : "created_at_datetime"
+        const sortByColumn = validFields.sort[sortByKey]
+
+        const emailsCountQuery = `
+          SELECT COUNT(*) AS total
+          FROM emails email
+          LEFT JOIN clients client ON email.client_id = client.id
+          LEFT JOIN users user ON email.sent_by_user_id = user.id
+          WHERE 1 = 1 ${searchCondition} ${filterConditions}
+        `
+
+        const emailsQuery = `
+          SELECT email.*
+          FROM emails email
+          LEFT JOIN clients client ON email.client_id = client.id
+          LEFT JOIN users user ON email.sent_by_user_id = user.id
+          WHERE 1 = 1 ${searchCondition} ${filterConditions}
+          ORDER BY ${sortByColumn} ${sortOrder}
+          LIMIT ? OFFSET ?
+        `
+
+        const params = [
+          ...(searchTerm ? Object.keys(validFields.search).map(() => `%${searchTerm}%`) : []),
+          ...Object.values(filteredFilterBy).map((value) => `%${value}%`),
+          limit,
+          offset
+        ]
+
+        const [{ total }] = await dbQueryExecutor.execute(emailsCountQuery, params)
+        const emails = await dbQueryExecutor.execute(emailsQuery, params)
+
+        const emailsWithDetails = await Promise.all(
+          emails.map(async (email) => {
+            const [client, sentByUser] = await Promise.all([
+              Client.findByClientId(email.client_id),
+              User.findByUserId(email.sent_by_user_id)
+            ])
+
+            return {
+              id: email.id,
+              api_id: email.api_id,
+              client:
+                client.length > 0
+                  ? { id: client[0].id, name: client[0].name, description: client[0].description }
+                  : null,
+              to: email.contact,
+              subject: email.subject,
+              sent_by_user: sentByUser.length > 0 ? mapUser(sentByUser[0]) : null,
+              created_at_datetime: email.created_at_datetime
+            }
+          })
+        )
 
         return {
-          id: email.id,
-          api_id: email.api_id,
-          client:
-            client.length > 0
-              ? { id: client[0].id, name: client[0].name, description: client[0].description }
-              : null,
-          to: email.contact,
-          subject: email.subject,
-          sent_by_user: sentByUser.length > 0 ? mapUser(sentByUser[0]) : null,
-          created_at_datetime: email.created_at_datetime
+          total,
+          data: emailsWithDetails,
+          page,
+          limit,
+          search_term: searchTerm,
+          filter_by: filteredFilterBy,
+          sort_by: sortByKey,
+          sort_order: sortOrder,
+          request_info: {
+            valid_search_terms: Object.keys(validFields.search),
+            valid_filters: Object.keys(validFields.filter),
+            valid_sort_by: Object.keys(validFields.sort)
+          }
         }
-      })
-    )
-
-    return emailsWithDetails
-  }),
+      },
+      memoryOnlyCache
+    )(),
   findByEmailId: (emailId) =>
     withCache(
       `email:${emailId}`,
@@ -273,7 +375,7 @@ const Email = {
           return dbQueryExecutor.execute(query, [data.id, clientId, contact, subject, sentByUserId])
         })
         .then((result) => {
-          return revalidateCache("emails").then(() => resolve(result))
+          return revalidateCache([["emails"]]).then(() => resolve(result))
         })
         .catch((error) => {
           reject(

@@ -7,6 +7,8 @@ const { EMAIL_NOT_FOUND } = require("@constants/errors/shared/email")
 const { CLIENT_NOT_FOUND, CONTACT_NOT_FOUND, INVALID_CONTACT } = require("@constants/errors/client")
 const { ACTIVITY_YEAR_NOT_PROVIDED } = require("@constants/errors/shared/analytics")
 
+const adjustPaginationParams = require("@utils/adjustPaginationParams")
+
 const Email = require("@models/email")
 const { emailSchema } = require("@schemas/email")
 
@@ -20,7 +22,11 @@ const emailController = {
     checkTotalFileSize(20 * 1024 * 1024)
   ],
   findAll: tryCatch(async (req, res) => {
-    const emails = await Email.findAll()
+    adjustPaginationParams(req)
+
+    const { page, limit, searchTerm, filterBy, sortBy, sortOrder } = req.query
+
+    const emails = await Email.findAll(page, limit, searchTerm, filterBy, sortBy, sortOrder)
     res.status(200).json(emails)
   }),
   findByEmailId: tryCatch(async (req, res) => {
