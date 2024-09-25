@@ -101,7 +101,7 @@ const authController = {
       }
     )
 
-    res.status(200).json({ message: "Authentication successful" })
+    res.status(200).json({ message: "Authentication successful", token: accessToken })
   }),
   refreshToken: tryCatch(async (req, res) => {
     const refreshToken =

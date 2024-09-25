@@ -54,10 +54,10 @@ const Company = {
         return revalidateCache("company").then(() => result)
       })
   },
-  updateLogo: (logo, mimitype, fileSize) => {
+  updateLogo: (logo, mimetype, fileSize) => {
     const query =
       "UPDATE company SET logo = ?, logo_mime_type = ?, logo_file_size = ? WHERE enforce_one_row = 'only'"
-    return dbQueryExecutor.execute(query, [logo, mimitype, fileSize]).then((result) => {
+    return dbQueryExecutor.execute(query, [logo, mimetype, fileSize]).then((result) => {
       return revalidateCache("company:logo").then(() => result)
     })
   }

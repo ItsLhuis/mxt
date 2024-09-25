@@ -38,15 +38,15 @@ const Sms = {
             client_name: "client.name",
             to: "sms.contact",
             message: "sms.message",
-            user_name: "user.username",
-            user_role: "user.role"
+            sent_by_user_username: "user.username",
+            sent_by_user_role: "user.role"
           },
           filter: {
             client_name: "client.name",
             to: "sms.contact",
             message: "sms.message",
-            user_name: "user.username",
-            user_role: "user.role"
+            sent_by_user_username: "user.username",
+            sent_by_user_role: "user.role"
           },
           sort: {
             client_name: "client.name",

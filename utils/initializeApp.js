@@ -14,16 +14,15 @@ const initializeApp = async () => {
       await Company.initialize()
     }
 
-    const users = await User.findAll()
-    const bossUser = users.find((user) => user.role === BOSS)
-    if (!bossUser) {
+    const hasBossRole = await User.hasBossRole()
+    if (!hasBossRole) {
       const hashedPassword = await bcrypt.hash("adminboss", SALT_ROUNDS)
 
       const bossUser = await User.create("Admin", hashedPassword, null, BOSS, 1)
       await Employee.create(bossUser.insertId)
     }
   } catch (error) {
-    console.error('Error initializing the app')
+    console.error("Error initializing the app")
     throw error
   }
 }

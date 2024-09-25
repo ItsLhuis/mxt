@@ -1,15 +1,9 @@
-const { produce } = require("immer")
-
 const bcrypt = require("bcrypt")
 
 const { PassThrough } = require("stream")
 
 const AppError = require("@classes/app/error")
 const { tryCatch } = require("@utils/tryCatch")
-
-const mailer = require("@utils/mailer")
-const processImage = require("@utils/processImage")
-const formatPhoneNumber = require("@utils/formatPhoneNumber")
 
 const { PERMISSION_DENIED } = require("@constants/errors/permission")
 const { IMAGE_STREAMING_ERROR } = require("@constants/errors/shared/image")
@@ -26,6 +20,11 @@ const { IMAGE_ERROR_TYPE, PERMISSION_DENIED_ERROR_TYPE } = require("@constants/e
 const { SALT_ROUNDS } = require("@constants/bcrypt")
 
 const roles = require("@constants/roles")
+
+const mailer = require("@utils/mailer")
+const processImage = require("@utils/processImage")
+const formatPhoneNumber = require("@utils/formatPhoneNumber")
+const adjustPaginationParams = require("@utils/adjustPaginationParams")
 
 const User = require("@models/user")
 const {
@@ -53,15 +52,12 @@ const userController = {
       )
     }
 
-    const users = await User.findAll()
+    adjustPaginationParams(req)
 
-    const usersWithoutPassword = produce(users, (draft) => {
-      draft.forEach((user) => {
-        delete user.password
-      })
-    })
+    const { page, limit, searchTerm, filterBy, sortBy, sortOrder } = req.query
 
-    res.status(200).json(usersWithoutPassword)
+    const users = await User.findAll(page, limit, searchTerm, filterBy, sortBy, sortOrder)
+    res.status(200).json(users)
   }),
   findProfile: tryCatch(async (req, res) => {
     const userId = req.user.id
@@ -71,11 +67,7 @@ const userController = {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
 
-    const userWithoutPassword = produce(existingUser[0], (draft) => {
-      delete draft.password
-    })
-
-    res.status(200).json([userWithoutPassword])
+    res.status(200).json(existingUser)
   }),
   findByUserId: tryCatch(async (req, res) => {
     const { userId } = req.params
@@ -95,11 +87,7 @@ const userController = {
       throw new AppError(404, USER_NOT_FOUND, "User not found", true)
     }
 
-    const userWithoutPassword = produce(existingUser[0], (draft) => {
-      delete draft.password
-    })
-
-    res.status(200).json([userWithoutPassword])
+    res.status(200).json(existingUser)
   }),
   findAvatarByUserId: tryCatch(async (req, res) => {
     const { userId } = req.params

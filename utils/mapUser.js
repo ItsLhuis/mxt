@@ -4,7 +4,7 @@ const mapUser = (user) => {
     username: user.username,
     role: user.role,
     email: user.email,
-    is_active: user.is_active
+    is_active: Boolean(user.is_active)
   }
 }
 
