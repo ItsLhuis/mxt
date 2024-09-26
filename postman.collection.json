@@ -382,33 +382,43 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/users",
+							"raw": "{{base_url}}/users?page=1&limit=10&filterBy=%7B%22created_by_user_username%22%3A%22Admin%22%7D&searchTerm=Admin",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "sortOrder",
+									"value": "DESC",
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": "username",
+									"disabled": true
+								},
+								{
+									"key": "filterBy",
+									"value": "%7B%22created_by_user_username%22%3A%22Admin%22%7D"
+								},
+								{
+									"key": "searchTerm",
+									"value": "Admin"
+								}
 							]
 						},
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
-					},
-					"response": []
-				},
-				{
-					"name": "FindById",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/users/2",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"users",
-								"2"
-							]
-						}
 					},
 					"response": []
 				},
@@ -425,6 +435,24 @@
 							"path": [
 								"users",
 								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"1"
 							]
 						}
 					},
@@ -940,12 +968,34 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/emails",
+							"raw": "{{base_url}}/emails?page=1&limit=10&sortOrder=DESC&filterBy=%7B%22client_name%22%3A%22Luis%22%7D&searchTerm=Fatura",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"emails"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "sortOrder",
+									"value": "DESC"
+								},
+								{
+									"key": "filterBy",
+									"value": "%7B%22client_name%22%3A%22Luis%22%7D"
+								},
+								{
+									"key": "searchTerm",
+									"value": "Fatura"
+								}
 							]
 						}
 					},
@@ -1084,12 +1134,34 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/smses",
+							"raw": "{{base_url}}/smses?sortOrder=DESC&page=4&limit=10&filterBy=%7B%22client_name%22%3A%22Luis%22%7D&searchTerm=example",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"smses"
+							],
+							"query": [
+								{
+									"key": "sortOrder",
+									"value": "DESC"
+								},
+								{
+									"key": "page",
+									"value": "4"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "filterBy",
+									"value": "%7B%22client_name%22%3A%22Luis%22%7D"
+								},
+								{
+									"key": "searchTerm",
+									"value": "example"
+								}
 							]
 						}
 					},
@@ -3126,7 +3198,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "http://localhost:8080/api/v1"
+			"value": "http://localhost:8081/api/v1"
 		}
 	]
 }
