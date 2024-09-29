@@ -18,6 +18,7 @@ const ImagePicker = ({
   size = 120,
   circular = true,
   loading = false,
+  disabled = false,
   sx
 }) => {
   const inputRef = useRef(null)
@@ -48,7 +49,7 @@ const ImagePicker = ({
   }
 
   const handleClick = () => {
-    if (inputRef.current) {
+    if (!disabled && inputRef.current) {
       inputRef.current.click()
     }
   }
@@ -73,6 +74,7 @@ const ImagePicker = ({
         accept="image/*"
         style={{ display: "none" }}
         onChange={handleChange}
+        disabled={disabled}
       />
       <ButtonBase
         onClick={handleClick}
@@ -80,8 +82,9 @@ const ImagePicker = ({
           position: "relative",
           display: "inline-block",
           borderRadius: circular ? "50%" : "8px",
-          "&:hover > .hover-upload-image": { opacity: 1 }
+          "&:hover > .hover-upload-image": { opacity: !disabled && 1 }
         }}
+        disabled={disabled}
       >
         <Stack
           sx={{
@@ -113,7 +116,7 @@ const ImagePicker = ({
                 size={size}
                 loading={loading}
                 sx={{
-                  cursor: "pointer",
+                  cursor: disabled ? "not-allowed" : "pointer",
                   ...sx
                 }}
               />
@@ -139,7 +142,8 @@ const ImagePicker = ({
             borderRadius: circular ? "50%" : "8px",
             cursor: "pointer",
             margin: 1,
-            transition: "opacity 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms"
+            transition: "opacity 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+            cursor: disabled ? "not-allowed" : "pointer"
           }}
         >
           <PhotoCamera fontSize="large" sx={{ color: "rgb(228, 225, 230)" }} />
@@ -163,7 +167,7 @@ const ImagePicker = ({
             borderRadius: "50%",
             padding: "8px",
             userSelect: "none",
-            cursor: "pointer"
+            cursor: disabled ? "not-allowed" : "pointer"
           }}
         >
           <PhotoCamera fontSize="small" sx={{ color: "rgb(228, 225, 230)" }} />
@@ -199,6 +203,7 @@ ImagePicker.propTypes = {
   size: PropTypes.number,
   circular: PropTypes.bool,
   loading: PropTypes.bool,
+  disabled: PropTypes.bool,
   sx: PropTypes.object
 }
 

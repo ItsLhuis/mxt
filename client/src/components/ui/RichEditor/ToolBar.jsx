@@ -67,7 +67,7 @@ const LinkForm = ({ insertLink, linkUrl, handleLinkUrlChange, onClose }) => {
   )
 }
 
-const ToolBar = ({ editor, fullscreen, toggleFullscreen }) => {
+const ToolBar = ({ editor, fullscreen, toggleFullscreen, disabled }) => {
   const textModes = [
     {
       label: "Muito grande",
@@ -157,7 +157,7 @@ const ToolBar = ({ editor, fullscreen, toggleFullscreen }) => {
                   padding: "0 !important",
                   backgroundColor: "transparent !important"
                 }}
-                disabled={!canUndo}
+                disabled={!canUndo || disabled}
               >
                 <Undo
                   sx={{ color: !canUndo && "var(--outline) !important", opacity: !canUndo && 0.5 }}
@@ -178,7 +178,7 @@ const ToolBar = ({ editor, fullscreen, toggleFullscreen }) => {
                   padding: "0 !important",
                   backgroundColor: "transparent !important"
                 }}
-                disabled={!canRedo}
+                disabled={!canRedo || disabled}
               >
                 <Redo
                   sx={{ color: !canRedo && "var(--outline) !important", opacity: !canRedo && 0.5 }}
@@ -197,7 +197,7 @@ const ToolBar = ({ editor, fullscreen, toggleFullscreen }) => {
           }}
         />
         <Box>
-          <ButtonDropDownSelect title={currentTextMode}>
+          <ButtonDropDownSelect title={currentTextMode} disabled={disabled}>
             <ListButton
               buttons={textModes.map(({ label, command }) => ({
                 label,
@@ -220,68 +220,80 @@ const ToolBar = ({ editor, fullscreen, toggleFullscreen }) => {
         />
         <Stack sx={{ flexDirection: "row", gap: 0.5 }}>
           <Tooltip title="Negrito">
-            <Button
-              variant="contained"
-              color={editor.isActive("bold") ? "primary" : "secondary"}
-              aria-label="Negrito"
-              onClick={() => editor.chain().focus().toggleBold().run()}
-              sx={{
-                minHeight: "40px !important",
-                minWidth: "40px !important",
-                padding: "0 !important",
-                backgroundColor: !editor.isActive("bold") && "transparent !important"
-              }}
-            >
-              <FormatBold />
-            </Button>
+            <span>
+              <Button
+                variant="contained"
+                color={editor.isActive("bold") ? "primary" : "secondary"}
+                aria-label="Negrito"
+                onClick={() => editor.chain().focus().toggleBold().run()}
+                sx={{
+                  minHeight: "40px !important",
+                  minWidth: "40px !important",
+                  padding: "0 !important",
+                  backgroundColor: !editor.isActive("bold") && "transparent !important"
+                }}
+                disabled={disabled}
+              >
+                <FormatBold />
+              </Button>
+            </span>
           </Tooltip>
           <Tooltip title="Itálico">
-            <Button
-              variant="contained"
-              color={editor.isActive("italic") ? "primary" : "secondary"}
-              aria-label="Itálico"
-              onClick={() => editor.chain().focus().toggleItalic().run()}
-              sx={{
-                minHeight: "40px !important",
-                minWidth: "40px !important",
-                padding: "0 !important",
-                backgroundColor: !editor.isActive("italic") && "transparent !important"
-              }}
-            >
-              <FormatItalic />
-            </Button>
+            <span>
+              <Button
+                variant="contained"
+                color={editor.isActive("italic") ? "primary" : "secondary"}
+                aria-label="Itálico"
+                onClick={() => editor.chain().focus().toggleItalic().run()}
+                sx={{
+                  minHeight: "40px !important",
+                  minWidth: "40px !important",
+                  padding: "0 !important",
+                  backgroundColor: !editor.isActive("italic") && "transparent !important"
+                }}
+                disabled={disabled}
+              >
+                <FormatItalic />
+              </Button>
+            </span>
           </Tooltip>
           <Tooltip title="Sublinhado">
-            <Button
-              variant="contained"
-              color={editor.isActive("underline") ? "primary" : "secondary"}
-              aria-label="Sublinhado"
-              onClick={() => editor.chain().focus().toggleUnderline().run()}
-              sx={{
-                minHeight: "40px !important",
-                minWidth: "40px !important",
-                padding: "0 !important",
-                backgroundColor: !editor.isActive("underline") && "transparent !important"
-              }}
-            >
-              <FormatUnderlined />
-            </Button>
+            <span>
+              <Button
+                variant="contained"
+                color={editor.isActive("underline") ? "primary" : "secondary"}
+                aria-label="Sublinhado"
+                onClick={() => editor.chain().focus().toggleUnderline().run()}
+                sx={{
+                  minHeight: "40px !important",
+                  minWidth: "40px !important",
+                  padding: "0 !important",
+                  backgroundColor: !editor.isActive("underline") && "transparent !important"
+                }}
+                disabled={disabled}
+              >
+                <FormatUnderlined />
+              </Button>
+            </span>
           </Tooltip>
           <Tooltip title="Riscado">
-            <Button
-              variant="contained"
-              color={editor.isActive("strike") ? "primary" : "secondary"}
-              aria-label="Riscado"
-              onClick={() => editor.chain().focus().toggleStrike().run()}
-              sx={{
-                minHeight: "40px !important",
-                minWidth: "40px !important",
-                padding: "0 !important",
-                backgroundColor: !editor.isActive("strike") && "transparent !important"
-              }}
-            >
-              <StrikethroughS />
-            </Button>
+            <span>
+              <Button
+                variant="contained"
+                color={editor.isActive("strike") ? "primary" : "secondary"}
+                aria-label="Riscado"
+                onClick={() => editor.chain().focus().toggleStrike().run()}
+                sx={{
+                  minHeight: "40px !important",
+                  minWidth: "40px !important",
+                  padding: "0 !important",
+                  backgroundColor: !editor.isActive("strike") && "transparent !important"
+                }}
+                disabled={disabled}
+              >
+                <StrikethroughS />
+              </Button>
+            </span>
           </Tooltip>
         </Stack>
         <Divider
@@ -295,36 +307,42 @@ const ToolBar = ({ editor, fullscreen, toggleFullscreen }) => {
         />
         <Stack sx={{ flexDirection: "row", gap: 0.5 }}>
           <Tooltip title="Lista com marcadores">
-            <Button
-              variant="contained"
-              color={editor.isActive("bulletList") ? "primary" : "secondary"}
-              aria-label="Lista com marcadores"
-              onClick={() => editor.chain().focus().toggleBulletList().run()}
-              sx={{
-                minHeight: "40px !important",
-                minWidth: "40px !important",
-                padding: "0 !important",
-                backgroundColor: !editor.isActive("bulletList") && "transparent !important"
-              }}
-            >
-              <FormatListBulleted />
-            </Button>
+            <span>
+              <Button
+                variant="contained"
+                color={editor.isActive("bulletList") ? "primary" : "secondary"}
+                aria-label="Lista com marcadores"
+                onClick={() => editor.chain().focus().toggleBulletList().run()}
+                sx={{
+                  minHeight: "40px !important",
+                  minWidth: "40px !important",
+                  padding: "0 !important",
+                  backgroundColor: !editor.isActive("bulletList") && "transparent !important"
+                }}
+                disabled={disabled}
+              >
+                <FormatListBulleted />
+              </Button>
+            </span>
           </Tooltip>
           <Tooltip title="Lista numerada">
-            <Button
-              variant="contained"
-              color={editor.isActive("orderedList") ? "primary" : "secondary"}
-              aria-label="Lista numerada"
-              onClick={() => editor.chain().focus().toggleOrderedList().run()}
-              sx={{
-                minHeight: "40px !important",
-                minWidth: "40px !important",
-                padding: "0 !important",
-                backgroundColor: !editor.isActive("orderedList") && "transparent !important"
-              }}
-            >
-              <FormatListNumbered />
-            </Button>
+            <span>
+              <Button
+                variant="contained"
+                color={editor.isActive("orderedList") ? "primary" : "secondary"}
+                aria-label="Lista numerada"
+                onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                sx={{
+                  minHeight: "40px !important",
+                  minWidth: "40px !important",
+                  padding: "0 !important",
+                  backgroundColor: !editor.isActive("orderedList") && "transparent !important"
+                }}
+                disabled={disabled}
+              >
+                <FormatListNumbered />
+              </Button>
+            </span>
           </Tooltip>
         </Stack>
         <Divider
@@ -338,71 +356,84 @@ const ToolBar = ({ editor, fullscreen, toggleFullscreen }) => {
         />
         <Stack sx={{ flexDirection: "row", gap: 0.5 }}>
           <Tooltip title="Alinhamento à esquerda">
-            <Button
-              variant="contained"
-              color={editor.isActive({ textAlign: "left" }) ? "primary" : "secondary"}
-              aria-label="Alinhamento à esquerda"
-              onClick={() => editor.chain().focus().setTextAlign("left").run()}
-              sx={{
-                minHeight: "40px !important",
-                minWidth: "40px !important",
-                padding: "0 !important",
-                backgroundColor: !editor.isActive({ textAlign: "left" }) && "transparent !important"
-              }}
-            >
-              <FormatAlignLeft />
-            </Button>
+            <span>
+              <Button
+                variant="contained"
+                color={editor.isActive({ textAlign: "left" }) ? "primary" : "secondary"}
+                aria-label="Alinhamento à esquerda"
+                onClick={() => editor.chain().focus().setTextAlign("left").run()}
+                sx={{
+                  minHeight: "40px !important",
+                  minWidth: "40px !important",
+                  padding: "0 !important",
+                  backgroundColor:
+                    !editor.isActive({ textAlign: "left" }) && "transparent !important"
+                }}
+                disabled={disabled}
+              >
+                <FormatAlignLeft />
+              </Button>
+            </span>
           </Tooltip>
           <Tooltip title="Alinhamento ao centro">
-            <Button
-              variant="contained"
-              color={editor.isActive({ textAlign: "center" }) ? "primary" : "secondary"}
-              aria-label="Alinhamento ao centro"
-              onClick={() => editor.chain().focus().setTextAlign("center").run()}
-              sx={{
-                minHeight: "40px !important",
-                minWidth: "40px !important",
-                padding: "0 !important",
-                backgroundColor:
-                  !editor.isActive({ textAlign: "center" }) && "transparent !important"
-              }}
-            >
-              <FormatAlignCenter />
-            </Button>
+            <span>
+              <Button
+                variant="contained"
+                color={editor.isActive({ textAlign: "center" }) ? "primary" : "secondary"}
+                aria-label="Alinhamento ao centro"
+                onClick={() => editor.chain().focus().setTextAlign("center").run()}
+                sx={{
+                  minHeight: "40px !important",
+                  minWidth: "40px !important",
+                  padding: "0 !important",
+                  backgroundColor:
+                    !editor.isActive({ textAlign: "center" }) && "transparent !important"
+                }}
+                disabled={disabled}
+              >
+                <FormatAlignCenter />
+              </Button>
+            </span>
           </Tooltip>
           <Tooltip title="Alinhamento à direita">
-            <Button
-              variant="contained"
-              color={editor.isActive({ textAlign: "right" }) ? "primary" : "secondary"}
-              aria-label="Alinhamento à direita"
-              onClick={() => editor.chain().focus().setTextAlign("right").run()}
-              sx={{
-                minHeight: "40px !important",
-                minWidth: "40px !important",
-                padding: "0 !important",
-                backgroundColor:
-                  !editor.isActive({ textAlign: "right" }) && "transparent !important"
-              }}
-            >
-              <FormatAlignRight />
-            </Button>
+            <span>
+              <Button
+                variant="contained"
+                color={editor.isActive({ textAlign: "right" }) ? "primary" : "secondary"}
+                aria-label="Alinhamento à direita"
+                onClick={() => editor.chain().focus().setTextAlign("right").run()}
+                sx={{
+                  minHeight: "40px !important",
+                  minWidth: "40px !important",
+                  padding: "0 !important",
+                  backgroundColor:
+                    !editor.isActive({ textAlign: "right" }) && "transparent !important"
+                }}
+                disabled={disabled}
+              >
+                <FormatAlignRight />
+              </Button>
+            </span>
           </Tooltip>
           <Tooltip title="Justificar">
-            <Button
-              variant="contained"
-              color={editor.isActive({ textAlign: "justify" }) ? "primary" : "secondary"}
-              aria-label="Justificar"
-              onClick={() => editor.chain().focus().setTextAlign("justify").run()}
-              sx={{
-                minHeight: "40px !important",
-                minWidth: "40px !important",
-                padding: "0 !important",
-                backgroundColor:
-                  !editor.isActive({ textAlign: "justify" }) && "transparent !important"
-              }}
-            >
-              <FormatAlignJustify />
-            </Button>
+            <span>
+              <Button
+                variant="contained"
+                color={editor.isActive({ textAlign: "justify" }) ? "primary" : "secondary"}
+                aria-label="Justificar"
+                onClick={() => editor.chain().focus().setTextAlign("justify").run()}
+                sx={{
+                  minHeight: "40px !important",
+                  minWidth: "40px !important",
+                  padding: "0 !important",
+                  backgroundColor:
+                    !editor.isActive({ textAlign: "justify" }) && "transparent !important"
+                }}
+                disabled={disabled}
+              >
+                <FormatAlignJustify />
+              </Button>
+            </span>
           </Tooltip>
         </Stack>
         <Divider
@@ -416,36 +447,42 @@ const ToolBar = ({ editor, fullscreen, toggleFullscreen }) => {
         />
         <Stack sx={{ flexDirection: "row", gap: 0.5 }}>
           <Tooltip title="Citação">
-            <Button
-              variant="contained"
-              color={editor.isActive("blockquote") ? "primary" : "secondary"}
-              aria-label="Citação"
-              onClick={() => editor.chain().focus().toggleBlockquote().run()}
-              sx={{
-                minHeight: "40px !important",
-                minWidth: "40px !important",
-                padding: "0 !important",
-                backgroundColor: !editor.isActive("blockquote") && "transparent !important"
-              }}
-            >
-              <FormatQuote />
-            </Button>
+            <span>
+              <Button
+                variant="contained"
+                color={editor.isActive("blockquote") ? "primary" : "secondary"}
+                aria-label="Citação"
+                onClick={() => editor.chain().focus().toggleBlockquote().run()}
+                sx={{
+                  minHeight: "40px !important",
+                  minWidth: "40px !important",
+                  padding: "0 !important",
+                  backgroundColor: !editor.isActive("blockquote") && "transparent !important"
+                }}
+                disabled={disabled}
+              >
+                <FormatQuote />
+              </Button>
+            </span>
           </Tooltip>
           <Tooltip title="Separador">
-            <Button
-              variant="contained"
-              color="secondary"
-              aria-label="Separador"
-              onClick={() => editor.chain().focus().setHorizontalRule().run()}
-              sx={{
-                minHeight: "40px !important",
-                minWidth: "40px !important",
-                padding: "0 !important",
-                backgroundColor: "transparent !important"
-              }}
-            >
-              <HorizontalRule />
-            </Button>
+            <span>
+              <Button
+                variant="contained"
+                color="secondary"
+                aria-label="Separador"
+                onClick={() => editor.chain().focus().setHorizontalRule().run()}
+                sx={{
+                  minHeight: "40px !important",
+                  minWidth: "40px !important",
+                  padding: "0 !important",
+                  backgroundColor: "transparent !important"
+                }}
+                disabled={disabled}
+              >
+                <HorizontalRule />
+              </Button>
+            </span>
           </Tooltip>
         </Stack>
         <Divider
@@ -459,36 +496,42 @@ const ToolBar = ({ editor, fullscreen, toggleFullscreen }) => {
         />
         <Stack sx={{ flexDirection: "row", gap: 0.5 }}>
           <Tooltip title="Quebra de texto">
-            <Button
-              variant="contained"
-              color="secondary"
-              aria-label="Quebra de texto"
-              onClick={() => editor.chain().focus().setHardBreak().run()}
-              sx={{
-                minHeight: "40px !important",
-                minWidth: "40px !important",
-                padding: "0 !important",
-                backgroundColor: "transparent !important"
-              }}
-            >
-              <WrapText />
-            </Button>
+            <span>
+              <Button
+                variant="contained"
+                color="secondary"
+                aria-label="Quebra de texto"
+                onClick={() => editor.chain().focus().setHardBreak().run()}
+                sx={{
+                  minHeight: "40px !important",
+                  minWidth: "40px !important",
+                  padding: "0 !important",
+                  backgroundColor: "transparent !important"
+                }}
+                disabled={disabled}
+              >
+                <WrapText />
+              </Button>
+            </span>
           </Tooltip>
           <Tooltip title="Limpar formatação">
-            <Button
-              variant="contained"
-              color="secondary"
-              aria-label="Limpar formatação"
-              onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
-              sx={{
-                minHeight: "40px !important",
-                minWidth: "40px !important",
-                padding: "0 !important",
-                backgroundColor: "transparent !important"
-              }}
-            >
-              <FormatClear />
-            </Button>
+            <span>
+              <Button
+                variant="contained"
+                color="secondary"
+                aria-label="Limpar formatação"
+                onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
+                sx={{
+                  minHeight: "40px !important",
+                  minWidth: "40px !important",
+                  padding: "0 !important",
+                  backgroundColor: "transparent !important"
+                }}
+                disabled={disabled}
+              >
+                <FormatClear />
+              </Button>
+            </span>
           </Tooltip>
         </Stack>
         <Divider
@@ -505,19 +548,22 @@ const ToolBar = ({ editor, fullscreen, toggleFullscreen }) => {
             mode="custom"
             customButton={
               <Tooltip title="Inserir link">
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  aria-label="Inserir link"
-                  sx={{
-                    minHeight: "40px !important",
-                    minWidth: "40px !important",
-                    padding: "0 !important",
-                    backgroundColor: "transparent !important"
-                  }}
-                >
-                  <Link />
-                </Button>
+                <span>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    aria-label="Inserir link"
+                    sx={{
+                      minHeight: "40px !important",
+                      minWidth: "40px !important",
+                      padding: "0 !important",
+                      backgroundColor: "transparent !important"
+                    }}
+                    disabled={disabled}
+                  >
+                    <Link />
+                  </Button>
+                </span>
               </Tooltip>
             }
           >
@@ -540,7 +586,7 @@ const ToolBar = ({ editor, fullscreen, toggleFullscreen }) => {
                   padding: "0 !important",
                   backgroundColor: "transparent !important"
                 }}
-                disabled={!canUnlink}
+                disabled={!canUnlink || disabled}
               >
                 <LinkOff
                   sx={{

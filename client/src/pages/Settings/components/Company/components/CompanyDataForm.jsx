@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 
-import { useForm, useFormState, Controller } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { companySchema } from "@schemas/company"
 
@@ -24,16 +24,15 @@ import { HeaderSection, Loadable } from "@components/ui"
 import { showErrorToast, showSuccessToast } from "@config/toast"
 
 const CompanyDataForm = ({ company, isLoading, isError }) => {
-  const isCompanyFinished = !isLoading && !isError
+  const isCompanyFinished = !isLoading && !isError && company
 
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"))
 
   const {
     control,
-    register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset
   } = useForm({
     resolver: zodResolver(companySchema)
@@ -51,21 +50,20 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
     postalCode: company?.postal_code || ""
   }
 
-  const { isDirty } = useFormState({ control })
   const isFormUnchanged = () => {
     return !isDirty
   }
 
   useEffect(() => {
-    if (isCompanyFinished && company) {
+    if (isCompanyFinished) {
       reset(initialValues)
     }
-  }, [isCompanyFinished, company])
+  }, [isCompanyFinished])
 
   const { updateCompany } = useCompany()
 
   const onSubmit = async (data) => {
-    if (!isCompanyFinished || isFormUnchanged()) return
+    if (!isCompanyFinished || isFormUnchanged() || updateCompany.isPending) return
 
     await updateCompany
       .mutateAsync(data)
@@ -93,12 +91,20 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                     LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                     LoadedComponent={
                       <FormControl fullWidth>
-                        <TextField
-                          {...register("name")}
-                          label="Nome"
-                          error={!!errors.name}
-                          helperText={errors.name?.message}
-                          autoComplete="off"
+                        <Controller
+                          name="name"
+                          control={control}
+                          defaultValue=""
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              label="Nome"
+                              error={!!errors.name}
+                              helperText={errors.name?.message}
+                              autoComplete="off"
+                              disabled={updateCompany.isPending}
+                            />
+                          )}
                         />
                       </FormControl>
                     }
@@ -108,12 +114,20 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                     LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                     LoadedComponent={
                       <FormControl fullWidth>
-                        <TextField
-                          {...register("email")}
-                          label="E-mail"
-                          error={!!errors.email}
-                          helperText={errors.email?.message}
-                          autoComplete="off"
+                        <Controller
+                          name="email"
+                          control={control}
+                          defaultValue=""
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              label="E-mail"
+                              error={!!errors.email}
+                              helperText={errors.email?.message}
+                              autoComplete="off"
+                              disabled={updateCompany.isPending}
+                            />
+                          )}
                         />
                       </FormControl>
                     }
@@ -141,6 +155,7 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                               error={!!errors.phoneNumber}
                               helperText={errors.phoneNumber?.message}
                               autoComplete="off"
+                              disabled={updateCompany.isPending}
                               disableDropdown
                             />
                           )}
@@ -157,23 +172,18 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                 LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                 LoadedComponent={
                   <FormControl fullWidth>
-                    <TextField {...register("website")} label="Site" autoComplete="off" />
-                  </FormControl>
-                }
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Loadable
-                isLoading={!isCompanyFinished}
-                LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
-                LoadedComponent={
-                  <FormControl fullWidth>
-                    <TextField
-                      {...register("country")}
-                      label="País"
-                      error={!!errors.country}
-                      helperText={errors.country?.message}
-                      autoComplete="off"
+                    <Controller
+                      name="website"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Site"
+                          autoComplete="off"
+                          disabled={updateCompany.isPending}
+                        />
+                      )}
                     />
                   </FormControl>
                 }
@@ -185,12 +195,20 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                 LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                 LoadedComponent={
                   <FormControl fullWidth>
-                    <TextField
-                      {...register("city")}
-                      label="Cidade"
-                      error={!!errors.city}
-                      helperText={errors.city?.message}
-                      autoComplete="off"
+                    <Controller
+                      name="country"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="País"
+                          error={!!errors.country}
+                          helperText={errors.country?.message}
+                          autoComplete="off"
+                          disabled={updateCompany.isPending}
+                        />
+                      )}
                     />
                   </FormControl>
                 }
@@ -202,12 +220,45 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                 LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                 LoadedComponent={
                   <FormControl fullWidth>
-                    <TextField
-                      {...register("locality")}
-                      label="Localidade"
-                      error={!!errors.locality}
-                      helperText={errors.locality?.message}
-                      autoComplete="off"
+                    <Controller
+                      name="city"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Cidade"
+                          error={!!errors.city}
+                          helperText={errors.city?.message}
+                          autoComplete="off"
+                          disabled={updateCompany.isPending}
+                        />
+                      )}
+                    />
+                  </FormControl>
+                }
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Loadable
+                isLoading={!isCompanyFinished}
+                LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
+                LoadedComponent={
+                  <FormControl fullWidth>
+                    <Controller
+                      name="locality"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Localidade"
+                          error={!!errors.locality}
+                          helperText={errors.locality?.message}
+                          autoComplete="off"
+                          disabled={updateCompany.isPending}
+                        />
+                      )}
                     />
                   </FormControl>
                 }
@@ -221,12 +272,20 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                     LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                     LoadedComponent={
                       <FormControl fullWidth>
-                        <TextField
-                          {...register("address")}
-                          label="Morada"
-                          error={!!errors.address}
-                          helperText={errors.address?.message}
-                          autoComplete="off"
+                        <Controller
+                          name="address"
+                          control={control}
+                          defaultValue=""
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              label="Morada"
+                              error={!!errors.address}
+                              helperText={errors.address?.message}
+                              autoComplete="off"
+                              disabled={updateCompany.isPending}
+                            />
+                          )}
                         />
                       </FormControl>
                     }
@@ -238,12 +297,20 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
                     LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                     LoadedComponent={
                       <FormControl fullWidth>
-                        <TextField
-                          {...register("postalCode")}
-                          label="Código Postal"
-                          error={!!errors.postalCode}
-                          helperText={errors.postalCode?.message}
-                          autoComplete="off"
+                        <Controller
+                          name="postalCode"
+                          control={control}
+                          defaultValue=""
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              label="Código Postal"
+                              error={!!errors.postalCode}
+                              helperText={errors.postalCode?.message}
+                              autoComplete="off"
+                              disabled={updateCompany.isPending}
+                            />
+                          )}
                         />
                       </FormControl>
                     }
@@ -258,7 +325,7 @@ const CompanyDataForm = ({ company, isLoading, isError }) => {
               type="submit"
               variant="contained"
               sx={{ marginLeft: "auto" }}
-              disabled={!isCompanyFinished || isFormUnchanged()}
+              disabled={!isCompanyFinished || isFormUnchanged() || updateCompany.isPending}
             >
               Atualizar Empresa
             </LoadingButton>

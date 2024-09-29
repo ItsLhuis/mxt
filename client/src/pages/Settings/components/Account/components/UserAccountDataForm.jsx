@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 
-import { useForm, useFormState } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateUserAccountSchema } from "@schemas/user"
 
@@ -14,14 +14,12 @@ import { HeaderSection, Loadable } from "@components/ui"
 import { showErrorToast, showSuccessToast } from "@config/toast"
 
 const UserAccountDataForm = ({ user, isLoading, isError }) => {
-  const isUserFinished = !isLoading && !isError
+  const isUserFinished = !isLoading && !isError && user
 
   const {
     control,
-    register,
     handleSubmit,
-    getValues,
-    formState: { errors },
+    formState: { errors, isDirty },
     setError,
     reset
   } = useForm({
@@ -33,21 +31,20 @@ const UserAccountDataForm = ({ user, isLoading, isError }) => {
     email: user?.email || ""
   }
 
-  const { isDirty } = useFormState({ control })
   const isFormUnchanged = () => {
     return !isDirty
   }
 
   useEffect(() => {
-    if (isUserFinished && user) {
+    if (isUserFinished) {
       reset(initialValues)
     }
-  }, [isUserFinished, user])
+  }, [isUserFinished])
 
   const { updateUserProfile } = useUser()
 
   const onSubmit = async (data) => {
-    if (!isUserFinished || isFormUnchanged()) return
+    if (!isUserFinished || isFormUnchanged() || updateUserProfile.isPending) return
 
     await updateUserProfile
       .mutateAsync(data)
@@ -81,13 +78,20 @@ const UserAccountDataForm = ({ user, isLoading, isError }) => {
                 LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                 LoadedComponent={
                   <FormControl fullWidth>
-                    <TextField
-                      {...register("username")}
-                      label="Nome de utilizador"
-                      error={!!errors.username}
-                      helperText={errors.username?.message}
-                      autoComplete="off"
-                      InputLabelProps={{ shrink: getValues("username")?.length > 0 }}
+                    <Controller
+                      name="username"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Nome de utilizador"
+                          error={!!errors.username}
+                          helperText={errors.username?.message}
+                          autoComplete="off"
+                          disabled={updateUserProfile.isPending}
+                        />
+                      )}
                     />
                   </FormControl>
                 }
@@ -99,13 +103,20 @@ const UserAccountDataForm = ({ user, isLoading, isError }) => {
                 LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                 LoadedComponent={
                   <FormControl fullWidth>
-                    <TextField
-                      {...register("email")}
-                      label="E-mail"
-                      error={!!errors.email}
-                      helperText={errors.email?.message}
-                      autoComplete="off"
-                      InputLabelProps={{ shrink: getValues("email")?.length > 0 }}
+                    <Controller
+                      name="email"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="E-mail"
+                          error={!!errors.email}
+                          helperText={errors.email?.message}
+                          autoComplete="off"
+                          disabled={updateUserProfile.isPending}
+                        />
+                      )}
                     />
                   </FormControl>
                 }
@@ -118,7 +129,7 @@ const UserAccountDataForm = ({ user, isLoading, isError }) => {
               type="submit"
               variant="contained"
               sx={{ marginLeft: "auto" }}
-              disabled={!isUserFinished || isFormUnchanged()}
+              disabled={!isUserFinished || isFormUnchanged() || updateUserProfile.isPending}
             >
               Atualizar Conta
             </LoadingButton>

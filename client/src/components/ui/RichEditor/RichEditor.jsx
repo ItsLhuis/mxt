@@ -29,6 +29,7 @@ const RichEditor = ({
   error,
   helperText,
   isLoading = false,
+  disabled = false,
   shouldImmediatelyRender = false
 }) => {
   const [isFinished, setIsFinished] = useState(false)
@@ -42,6 +43,7 @@ const RichEditor = ({
   }
 
   const editor = useEditor({
+    editable: !disabled,
     immediatelyRender: shouldImmediatelyRender,
     shouldRerenderOnTransaction: false,
     extensions: [
@@ -78,22 +80,7 @@ const RichEditor = ({
       }),
       Underline,
       Link.configure({ openOnClick: true, defaultProtocol: "https" }),
-      HardBreak.extend({
-        addKeyboardShortcuts() {
-          return {
-            Enter: () => {
-              if (
-                this.editor.isActive("orderedList") ||
-                this.editor.isActive("bulletList") ||
-                this.editor.isActive("blockquote")
-              ) {
-                return this.editor.chain().createParagraphNear().run()
-              }
-              return this.editor.commands.setHardBreak()
-            }
-          }
-        }
-      })
+      HardBreak
     ],
     content: value,
     onUpdate: debounce(({ editor }) => {
@@ -186,7 +173,7 @@ const RichEditor = ({
             />
           </Stack>
         )}
-        {!fullscreen && <EditorContent editor={editor} />}
+        {!fullscreen && <EditorContent editor={editor} contentEditable={!disabled} />}
         {error && (
           <FormHelperText error={error} sx={{ marginLeft: 2, marginTop: 0.5 }}>
             {helperText}
@@ -212,7 +199,12 @@ const RichEditor = ({
               {label}
             </InputLabel>
           )}
-          <ToolBar editor={editor} fullscreen={fullscreen} toggleFullscreen={toggleFullscreen} />
+          <ToolBar
+            editor={editor}
+            fullscreen={fullscreen}
+            toggleFullscreen={toggleFullscreen}
+            disabled={disabled}
+          />
           {fullscreen && (
             <Stack
               className="tiptap-fullscreen"
@@ -230,6 +222,7 @@ const RichEditor = ({
                 editor={editor}
                 fullscreen={fullscreen}
                 toggleFullscreen={toggleFullscreen}
+                disabled={disabled}
               />
               <EditorContent
                 className={`tiptap-editor ${fullscreen && "fullscreen"}`}
@@ -256,6 +249,7 @@ RichEditor.propTypes = {
   error: PropTypes.bool,
   helperText: PropTypes.string,
   isLoading: PropTypes.bool,
+  disabled: PropTypes.bool,
   shouldImmediatelyRender: PropTypes.bool
 }
 

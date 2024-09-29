@@ -11,11 +11,13 @@ const ButtonDropDownSelect = ({
   description,
   mode = "normal",
   customButton,
+  disabled,
   children
 }) => {
   const [anchorEl, setAnchorEl] = useState(null)
 
   const handleClick = (event) => {
+    if (disabled) return
     setAnchorEl(event.currentTarget)
   }
 
@@ -44,6 +46,7 @@ const ButtonDropDownSelect = ({
             color: "var(--onSurface)"
           }}
           onClick={handleClick}
+          disabled={disabled}
         >
           <Stack
             sx={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}
@@ -174,6 +177,7 @@ ButtonDropDownSelect.propTypes = {
     }
     return null
   },
+  disabled: PropTypes.bool,
   children: PropTypes.node.isRequired
 }
 

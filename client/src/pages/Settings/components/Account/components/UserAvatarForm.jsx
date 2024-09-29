@@ -85,6 +85,7 @@ const UserAvatarForm = ({ user, isLoading, isError }) => {
                   loading={!isUserFinished}
                   error={!!errors.logo}
                   helperText={errors.logo?.message}
+                  disabled={updateUserProfileAvatar.isPending}
                 />
               )}
             />

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 
-import { useForm, useFormState, Controller } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateUserPersonalDataSchema } from "@schemas/user"
 
@@ -29,10 +29,8 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
 
   const {
     control,
-    register,
     handleSubmit,
-    getValues,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset
   } = useForm({
     resolver: zodResolver(updateUserPersonalDataSchema)
@@ -58,19 +56,21 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
     description: userPersonalData?.description || ""
   }
 
-  const { isDirty } = useFormState({ control })
+  const isAllUserDataFinished =
+    isUserFinished && user && isUserPersonalDataFinished && userPersonalData
+
   const isFormUnchanged = () => {
     return !isDirty
   }
 
   useEffect(() => {
-    if (isUserFinished && isUserPersonalDataFinished && userPersonalData && user) {
+    if (isAllUserDataFinished) {
       reset(initialValues)
     }
-  }, [isUserFinished, isUserPersonalDataFinished, userPersonalData, user])
+  }, [isAllUserDataFinished])
 
   const onSubmit = async (data) => {
-    if (!isUserFinished || !isUserPersonalDataFinished || isFormUnchanged()) return
+    if (!isAllUserDataFinished || isFormUnchanged() || updateUserPersonalData.isPending) return
 
     await updateUserPersonalData.mutateAsync({
       userId: user.id,
@@ -87,17 +87,24 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
           <Grid container spacing={2} sx={{ paddingInline: 3 }}>
             <Grid item xs={12}>
               <Loadable
-                isLoading={!isUserFinished}
+                isLoading={!isAllUserDataFinished}
                 LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                 LoadedComponent={
                   <FormControl fullWidth>
-                    <TextField
-                      {...register("name")}
-                      label="Nome"
-                      error={!!errors.name}
-                      helperText={errors.name?.message}
-                      autoComplete="off"
-                      InputLabelProps={{ shrink: getValues("name")?.length > 0 }}
+                    <Controller
+                      name="name"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Nome"
+                          error={!!errors.name}
+                          helperText={errors.name?.message}
+                          autoComplete="off"
+                          disabled={updateUserPersonalData.isPending}
+                        />
+                      )}
                     />
                   </FormControl>
                 }
@@ -105,13 +112,14 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
             </Grid>
             <Grid item xs={12}>
               <Loadable
-                isLoading={!isUserFinished}
+                isLoading={!isAllUserDataFinished}
                 LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                 LoadedComponent={
                   <FormControl fullWidth>
                     <Controller
                       name="phoneNumber"
                       control={control}
+                      defaultValue="+351"
                       render={({ field }) => (
                         <MuiTelInput
                           {...field}
@@ -126,6 +134,7 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                           error={!!errors.phoneNumber}
                           helperText={errors.phoneNumber?.message}
                           autoComplete="off"
+                          disabled={updateUserPersonalData.isPending}
                           disableDropdown
                         />
                       )}
@@ -136,17 +145,24 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
             </Grid>
             <Grid item xs={12}>
               <Loadable
-                isLoading={!isUserFinished}
+                isLoading={!isAllUserDataFinished}
                 LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                 LoadedComponent={
                   <FormControl fullWidth>
-                    <TextField
-                      {...register("country")}
-                      label="País"
-                      error={!!errors.country}
-                      helperText={errors.country?.message}
-                      autoComplete="off"
-                      InputLabelProps={{ shrink: getValues("country")?.length > 0 }}
+                    <Controller
+                      name="country"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="País"
+                          error={!!errors.country}
+                          helperText={errors.country?.message}
+                          autoComplete="off"
+                          disabled={updateUserPersonalData.isPending}
+                        />
+                      )}
                     />
                   </FormControl>
                 }
@@ -154,17 +170,24 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
             </Grid>
             <Grid item xs={12}>
               <Loadable
-                isLoading={!isUserFinished}
+                isLoading={!isAllUserDataFinished}
                 LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                 LoadedComponent={
                   <FormControl fullWidth>
-                    <TextField
-                      {...register("city")}
-                      label="Cidade"
-                      error={!!errors.city}
-                      helperText={errors.city?.message}
-                      autoComplete="off"
-                      InputLabelProps={{ shrink: getValues("city")?.length > 0 }}
+                    <Controller
+                      name="city"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Cidade"
+                          error={!!errors.city}
+                          helperText={errors.city?.message}
+                          autoComplete="off"
+                          disabled={updateUserPersonalData.isPending}
+                        />
+                      )}
                     />
                   </FormControl>
                 }
@@ -172,17 +195,24 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
             </Grid>
             <Grid item xs={12}>
               <Loadable
-                isLoading={!isUserFinished}
+                isLoading={!isAllUserDataFinished}
                 LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                 LoadedComponent={
                   <FormControl fullWidth>
-                    <TextField
-                      {...register("locality")}
-                      label="Localidade"
-                      error={!!errors.locality}
-                      helperText={errors.locality?.message}
-                      autoComplete="off"
-                      InputLabelProps={{ shrink: getValues("locality")?.length > 0 }}
+                    <Controller
+                      name="locality"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label="Localidade"
+                          error={!!errors.locality}
+                          helperText={errors.locality?.message}
+                          autoComplete="off"
+                          disabled={updateUserPersonalData.isPending}
+                        />
+                      )}
                     />
                   </FormControl>
                 }
@@ -192,17 +222,24 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
               <Stack sx={{ flexDirection: isSmallScreen ? "column" : "row", gap: 2 }}>
                 <Box sx={{ width: "100%" }}>
                   <Loadable
-                    isLoading={!isUserFinished}
+                    isLoading={!isAllUserDataFinished}
                     LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                     LoadedComponent={
                       <FormControl fullWidth>
-                        <TextField
-                          {...register("address")}
-                          label="Morada"
-                          error={!!errors.address}
-                          helperText={errors.address?.message}
-                          autoComplete="off"
-                          InputLabelProps={{ shrink: getValues("address")?.length > 0 }}
+                        <Controller
+                          name="address"
+                          control={control}
+                          defaultValue=""
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              label="Morada"
+                              error={!!errors.address}
+                              helperText={errors.address?.message}
+                              autoComplete="off"
+                              disabled={updateUserPersonalData.isPending}
+                            />
+                          )}
                         />
                       </FormControl>
                     }
@@ -210,17 +247,24 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
                 </Box>
                 <Box sx={{ width: !isSmallScreen ? "60%" : "100%" }}>
                   <Loadable
-                    isLoading={!isUserFinished}
+                    isLoading={!isAllUserDataFinished}
                     LoadingComponent={<Skeleton variant="rounded" width="100%" height={52} />}
                     LoadedComponent={
                       <FormControl fullWidth>
-                        <TextField
-                          {...register("postalCode")}
-                          label="Código Postal"
-                          error={!!errors.postalCode}
-                          helperText={errors.postalCode?.message}
-                          autoComplete="off"
-                          InputLabelProps={{ shrink: getValues("postalCode")?.length > 0 }}
+                        <Controller
+                          name="postalCode"
+                          control={control}
+                          defaultValue=""
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              label="Código Postal"
+                              error={!!errors.postalCode}
+                              helperText={errors.postalCode?.message}
+                              autoComplete="off"
+                              disabled={updateUserPersonalData.isPending}
+                            />
+                          )}
                         />
                       </FormControl>
                     }
@@ -232,11 +276,13 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
               <Controller
                 name="description"
                 control={control}
+                defaultValue=""
                 render={({ field }) => (
                   <RichEditor
                     value={field.value}
                     onChange={field.onChange}
-                    isLoading={!isUserFinished}
+                    isLoading={!isAllUserDataFinished}
+                    disabled={updateUserPersonalData.isPending}
                   />
                 )}
               />
@@ -248,7 +294,9 @@ const UserPersonalDataForm = ({ user, isLoading, isError }) => {
               type="submit"
               variant="contained"
               sx={{ marginLeft: "auto" }}
-              disabled={!isUserFinished || !isUserPersonalDataFinished || isFormUnchanged()}
+              disabled={
+                !isAllUserDataFinished || isFormUnchanged() || updateUserPersonalData.isPending
+              }
             >
               Atualizar Dados Pessoais
             </LoadingButton>
