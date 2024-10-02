@@ -140,7 +140,6 @@ const ImagePicker = ({
             textAlign: "center",
             color: "rgb(228, 225, 230)",
             borderRadius: circular ? "50%" : "8px",
-            cursor: "pointer",
             margin: 1,
             transition: "opacity 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
             cursor: disabled ? "not-allowed" : "pointer"
