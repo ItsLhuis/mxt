@@ -124,7 +124,7 @@ p {
 }
 
 .MuiButton-textError .MuiLoadingButton-loadingIndicator {
-  color: rgba(211, 47, 47) !important;
+  color: rgb(211, 47, 47) !important;
 }
 
 .MuiButton-containedSecondary:hover {
@@ -142,7 +142,7 @@ p {
 
 .MuiButton-containedError.MuiLoadingButton-loading {
   color: transparent !important;
-  background-color: rgba(211, 47, 47) !important;
+  background-color: rgb(211, 47, 47) !important;
 }
 
 .MuiButton-containedError .MuiLoadingButton-loadingIndicator {

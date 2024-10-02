@@ -12,6 +12,8 @@ export { default as CommandDialog } from "./CommandDialog/CommandDialog"
 
 export { default as DatePicker } from "./DatePicker/DatePicker"
 
+export { default as ErrorBoundary } from "./ErrorBoundary/ErrorBoundary"
+
 export { default as FileUpload } from "./FileUpload/FileUpload"
 
 export { default as FileViewer } from "./FileViewer/FileViewer"
@@ -23,6 +25,8 @@ export { default as HeaderSection } from "./HeaderSection/HeaderSection"
 export { default as Image } from "./Image/Image"
 
 export { default as ImagePicker } from "./ImagePicker/ImagePicker"
+
+export { default as Linkify } from "./Linkify/Linkify"
 
 export { default as ListButton } from "./ListButton/ListButton"
 

@@ -10,6 +10,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles"
 
 import { Toaster } from "react-hot-toast"
 
+import { ErrorBoundary } from "@components/ui"
+
 import { NotFound } from "@components/ui"
 import { Body } from "@components"
 import { Auth, Company } from "@pages"
@@ -146,32 +148,34 @@ function App() {
   return (
     <AnimatePresence>
       <ThemeProvider theme={theme}>
-        <Loader visible={loader} />
-        {!isLoading && <> {renderApp()} </>}
-        <Toaster
-          position="top-right"
-          containerStyle={{
-            zIndex: 1000,
-            inset: "24px"
-          }}
-          toastOptions={{
-            duration: 4000,
-            style: {
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-              background: "var(--elevation-level3)",
-              color: "var(--onSurface)",
-              fontWeight: 600,
-              fontSize: ".875rem",
-              padding: 0,
-              paddingLeft: 16,
-              paddingBlock: 16,
-              maxWidth: 450,
-              lineHeight: 1.5
-            }
-          }}
-        />
+        <ErrorBoundary>
+          <Loader visible={loader} />
+          {!isLoading && <> {renderApp()} </>}
+          <Toaster
+            position="top-right"
+            containerStyle={{
+              zIndex: 1000,
+              inset: "24px"
+            }}
+            toastOptions={{
+              duration: 4000,
+              style: {
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+                background: "var(--elevation-level3)",
+                color: "var(--onSurface)",
+                fontWeight: 600,
+                fontSize: ".875rem",
+                padding: 0,
+                paddingLeft: 16,
+                paddingBlock: 16,
+                maxWidth: 450,
+                lineHeight: 1.5
+              }
+            }}
+          />
+        </ErrorBoundary>
       </ThemeProvider>
     </AnimatePresence>
   )
