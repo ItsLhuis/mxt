@@ -76,14 +76,14 @@ class ErrorBoundary extends React.Component {
                   {this.state.error && this.state.error.toString()}
                 </Typography>
                 <Linkify
-                  text={this.state.error && this.state.error.stack}
+                  text={this.state.error ? this.state.error.stack : ""}
                   sx={{
                     lineHeight: 1.8,
                     whiteSpace: "pre-wrap"
                   }}
                 />
                 <Accordion
-                  elevation={3}
+                  elevation={2}
                   sx={{
                     "&.Mui-expanded": { margin: 0 },
                     "& .MuiButtonBase-root .MuiTypography-root": { fontSize: 14 },
@@ -96,8 +96,9 @@ class ErrorBoundary extends React.Component {
                   <AccordionDetails>
                     <Linkify
                       text={
-                        this.state.errorInfo &&
-                        this.formatStackTrace(this.state.errorInfo.componentStack)
+                        this.state.errorInfo
+                          ? this.formatStackTrace(this.state.errorInfo.componentStack)
+                          : ""
                       }
                       sx={{
                         fontSize: 12,
