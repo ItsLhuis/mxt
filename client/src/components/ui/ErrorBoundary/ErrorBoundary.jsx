@@ -2,7 +2,6 @@ import React from "react"
 
 import {
   Box,
-  Button,
   Paper,
   Stack,
   Typography,
@@ -109,11 +108,6 @@ class ErrorBoundary extends React.Component {
                     />
                   </AccordionDetails>
                 </Accordion>
-                <Box sx={{ marginLeft: "auto" }}>
-                  <Button variant="contained" onClick={() => this.setState({ hasError: false })}>
-                    Reload
-                  </Button>
-                </Box>
               </Paper>
             </Stack>
           ) : (
