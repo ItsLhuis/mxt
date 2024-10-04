@@ -50,13 +50,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/auth/resetPassword/request",
+									"raw": "{{base_url}}/auth/reset-password/request",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"auth",
-										"resetPassword",
+										"reset-password",
 										"request"
 									]
 								}
@@ -78,13 +78,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/auth/resetPassword/verify/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Iml0c2xodWlzLmRldkBnbWFpbC5jb20iLCJpYXQiOjE3MTgwMjM4NTUsImV4cCI6MTcxODAyNDE1NX0.QxytH429oHTtqRG6peeNhCGcLU1Ohozm1_zlT-lOkr8",
+									"raw": "{{base_url}}/auth/reset-password/verify/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Iml0c2xodWlzLmRldkBnbWFpbC5jb20iLCJpYXQiOjE3MTgwMjM4NTUsImV4cCI6MTcxODAyNDE1NX0.QxytH429oHTtqRG6peeNhCGcLU1Ohozm1_zlT-lOkr8",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"auth",
-										"resetPassword",
+										"reset-password",
 										"verify",
 										"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Iml0c2xodWlzLmRldkBnbWFpbC5jb20iLCJpYXQiOjE3MTgwMjM4NTUsImV4cCI6MTcxODAyNDE1NX0.QxytH429oHTtqRG6peeNhCGcLU1Ohozm1_zlT-lOkr8"
 									]
@@ -107,13 +107,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/auth/resetPassword/confirm/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwib3RwIjoiQlVxTk1LIiwiaWF0IjoxNzE4MDIzODkxLCJleHAiOjE3MTgwMjQxOTF9.T26vsF8-qFtruYOHUC64PFVaZNrWoFDah-N6Z6SRpr4",
+									"raw": "{{base_url}}/auth/reset-password/confirm/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwib3RwIjoiQlVxTk1LIiwiaWF0IjoxNzE4MDIzODkxLCJleHAiOjE3MTgwMjQxOTF9.T26vsF8-qFtruYOHUC64PFVaZNrWoFDah-N6Z6SRpr4",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"auth",
-										"resetPassword",
+										"reset-password",
 										"confirm",
 										"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwib3RwIjoiQlVxTk1LIiwiaWF0IjoxNzE4MDIzODkxLCJleHAiOjE3MTgwMjQxOTF9.T26vsF8-qFtruYOHUC64PFVaZNrWoFDah-N6Z6SRpr4"
 									]
