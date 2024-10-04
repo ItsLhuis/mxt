@@ -7,7 +7,12 @@ const mapUser = require("@utils/mapUser")
 
 const Employee = {
   findAll: withCache("employees", async () => {
-    const employeesQuery = "SELECT * FROM employees"
+    const employeesQuery = `
+      SELECT e.*
+      FROM employees e
+      INNER JOIN users u ON e.user_id = u.id
+      ORDER BY u.created_at_datetime DESC
+    `
     const employees = await dbQueryExecutor.execute(employeesQuery)
 
     const employeesWithDetails = await Promise.all(
