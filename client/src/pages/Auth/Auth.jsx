@@ -87,13 +87,13 @@ const Auth = () => {
 
                   <Route path="/auth/login" element={<Login />} />
 
-                  <Route path="/auth/resetPassword/request" element={<ResetPasswordRequest />} />
+                  <Route path="/auth/reset-password/request" element={<ResetPasswordRequest />} />
                   <Route
-                    path="/auth/resetPassword/verify/:token"
+                    path="/auth/reset-password/verify/:token"
                     element={<ResetPasswordVerify />}
                   />
                   <Route
-                    path="/auth/resetPassword/confirm/:token"
+                    path="/auth/reset-password/confirm/:token"
                     element={<ResetPasswordConfirm />}
                   />
 
