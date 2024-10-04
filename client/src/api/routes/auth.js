@@ -6,17 +6,17 @@ export const login = async ({ username, password }) => {
 }
 
 export const requestResetPassword = async ({ email }) => {
-  const response = await api.post("/auth/resetPassword/request", { email })
+  const response = await api.post("/auth/reset-password/request", { email })
   return response.data
 }
 
 export const verifyResetPassword = async ({ token, otp }) => {
-  const response = await api.post(`/auth/resetPassword/verify/${token}`, { otp })
+  const response = await api.post(`/auth/reset-password/verify/${token}`, { otp })
   return response.data
 }
 
 export const confirmResetPassword = async ({ token, newPassword, confirmPassword }) => {
-  const response = await api.post(`/auth/resetPassword/confirm/${token}`, {
+  const response = await api.post(`/auth/reset-password/confirm/${token}`, {
     newPassword,
     confirmPassword
   })
