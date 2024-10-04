@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { authResetPasswordConfirm } from "@schemas/user"
 
@@ -20,18 +20,28 @@ const Confirm = () => {
   const navigate = useNavigate()
 
   const {
-    register,
+    control,
     handleSubmit,
-    formState: { errors }
+    formState: { errors, isDirty }
   } = useForm({
-    resolver: zodResolver(authResetPasswordConfirm)
+    resolver: zodResolver(authResetPasswordConfirm),
+    defaultValues: {
+      newPassword: "",
+      confirmPassword: ""
+    }
   })
+
+  const isFormUnchanged = () => {
+    return !isDirty
+  }
 
   const [confirmResetPasswordError, setConfirmResetPasswordError] = useState("")
 
   const { confirmResetPassword } = useAuth()
 
   const onSubmit = async (data) => {
+    if (isFormUnchanged() || confirmResetPassword.isPending) return
+
     await confirmResetPassword
       .mutateAsync({ token, ...data })
       .then(() => {
@@ -89,29 +99,50 @@ const Confirm = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack sx={{ gap: 2 }}>
           <FormControl fullWidth>
-            <TextField
-              {...register("newPassword")}
-              type="password"
-              label="Senha"
-              error={!!errors.newPassword}
-              helperText={errors.newPassword?.message}
-              autoComplete="new-password"
+            <Controller
+              name="newPassword"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  type="password"
+                  label="Senha"
+                  error={!!errors.newPassword}
+                  helperText={errors.newPassword?.message}
+                  autoComplete="new-password"
+                  disabled={confirmResetPassword.isPending}
+                />
+              )}
             />
           </FormControl>
           <FormControl fullWidth>
-            <TextField
-              {...register("confirmPassword")}
-              type="password"
-              label="Confirmar senha"
-              error={!!errors.confirmPassword}
-              helperText={errors.confirmPassword?.message}
-              autoComplete="confirm-new-password"
+            <Controller
+              name="confirmPassword"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  type="password"
+                  label="Confirmar senha"
+                  error={!!errors.confirmPassword}
+                  helperText={errors.confirmPassword?.message}
+                  autoComplete="confirm-new-password"
+                  disabled={confirmResetPassword.isPending}
+                />
+              )}
             />
           </FormControl>
           <Link to="/auth/login" style={{ alignSelf: "flex-end", fontSize: "13px" }}>
             Iniciar sessão
           </Link>
-          <LoadingButton loading={confirmResetPassword.isPending} type="submit" variant="contained">
+          <LoadingButton
+            loading={confirmResetPassword.isPending}
+            type="submit"
+            variant="contained"
+            disabled={isFormUnchanged() || confirmResetPassword.isPending}
+          >
             Atualizar Senha
           </LoadingButton>
         </Stack>

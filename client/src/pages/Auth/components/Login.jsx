@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { authSchema } from "@schemas/user"
 
@@ -14,19 +14,29 @@ import { motion } from "framer-motion"
 
 const Login = () => {
   const {
-    register,
+    control,
     handleSubmit,
     setFocus,
-    formState: { errors }
+    formState: { errors, isDirty }
   } = useForm({
-    resolver: zodResolver(authSchema)
+    resolver: zodResolver(authSchema),
+    defaultValues: {
+      username: "",
+      password: ""
+    }
   })
+
+  const isFormUnchanged = () => {
+    return !isDirty
+  }
 
   const [loginError, setLoginError] = useState("")
 
   const { login } = useAuth()
 
   const onSubmit = async (data) => {
+    if (isFormUnchanged() || login.isPending) return
+
     await login.mutateAsync(data).catch((error) => {
       if (error.error.code === "USR-004") {
         setLoginError("Esta conta foi desativada. Por favor, entre em contacto com o suporte!")
@@ -79,31 +89,52 @@ const Login = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack sx={{ gap: 2 }}>
           <FormControl fullWidth>
-            <TextField
-              {...register("username")}
-              label="Nome de utilizador"
-              error={!!errors.username}
-              helperText={errors.username?.message}
-              autoComplete="username"
+            <Controller
+              name="username"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Nome de utilizador"
+                  error={!!errors.username}
+                  helperText={errors.username?.message}
+                  autoComplete="username"
+                  disabled={login.isPending}
+                />
+              )}
             />
           </FormControl>
           <FormControl fullWidth>
-            <TextField
-              {...register("password")}
-              type="password"
-              label="Senha"
-              error={!!errors.password}
-              helperText={errors.password?.message}
-              autoComplete="current-password"
+            <Controller
+              name="password"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  type="password"
+                  label="Senha"
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
+                  autoComplete="current-password"
+                  disabled={login.isPending}
+                />
+              )}
             />
           </FormControl>
           <Link
-            to="/auth/resetPassword/request"
+            to="/auth/reset-password/request"
             style={{ alignSelf: "flex-end", fontSize: "13px" }}
           >
             Esqueceu a sua senha?
           </Link>
-          <LoadingButton loading={login.isPending} type="submit" variant="contained">
+          <LoadingButton
+            loading={login.isPending}
+            type="submit"
+            variant="contained"
+            disabled={isFormUnchanged() || login.isPending}
+          >
             Iniciar Sessão
           </LoadingButton>
         </Stack>

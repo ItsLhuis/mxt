@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 
 import { useAuth } from "@contexts/auth"
 
-import { useForm, useFormState, Controller } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateUserRoleSchema } from "@schemas/user"
 
@@ -22,7 +22,7 @@ const EmployeeRoleForm = ({ user, isUserFinished }) => {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset
   } = useForm({
     resolver: zodResolver(updateUserRoleSchema)
@@ -32,7 +32,6 @@ const EmployeeRoleForm = ({ user, isUserFinished }) => {
     role: user?.user?.role || ""
   }
 
-  const { isDirty } = useFormState({ control })
   const isFormUnchanged = () => {
     return !isDirty
   }
@@ -46,15 +45,15 @@ const EmployeeRoleForm = ({ user, isUserFinished }) => {
   const { updateUserRole } = useUser()
 
   const onSubmit = async (data) => {
-    if (!isFormUnchanged()) {
-      updateUserRole
-        .mutateAsync({
-          userId: user?.user?.id,
-          ...data
-        })
-        .then(() => showSuccessToast("Cargo atualizado com sucesso!"))
-        .catch(() => showErrorToast("Erro ao atualizar cargo!"))
-    }
+    if (isFormUnchanged() || updateUserRole.isPending) return
+
+    await updateUserRole
+      .mutateAsync({
+        userId: user?.user?.id,
+        ...data
+      })
+      .then(() => showSuccessToast("Cargo atualizado com sucesso!"))
+      .catch(() => showErrorToast("Erro ao atualizar cargo!"))
   }
 
   return (
@@ -90,6 +89,7 @@ const EmployeeRoleForm = ({ user, isUserFinished }) => {
                           onChange={field.onChange}
                           error={!!errors.role}
                           helperText={errors.role?.message}
+                          disabled={updateUserRole.isPending}
                         />
                       )}
                     />
@@ -102,7 +102,7 @@ const EmployeeRoleForm = ({ user, isUserFinished }) => {
                 loading={updateUserRole.isPending}
                 type="submit"
                 variant="contained"
-                disabled={!isUserFinished || isFormUnchanged()}
+                disabled={!isUserFinished || isFormUnchanged() || updateUserRole.isPending}
               >
                 Atualizar Cargo
               </LoadingButton>

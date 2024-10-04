@@ -1,6 +1,6 @@
 import React from "react"
 
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { authResetPasswordRequest } from "@schemas/user"
 
@@ -16,20 +16,29 @@ const Login = () => {
   const navigate = useNavigate()
 
   const {
-    register,
+    control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     setError
   } = useForm({
-    resolver: zodResolver(authResetPasswordRequest)
+    resolver: zodResolver(authResetPasswordRequest),
+    defaultValues: {
+      email: ""
+    }
   })
+
+  const isFormUnchanged = () => {
+    return !isDirty
+  }
 
   const { requestResetPassword } = useAuth()
 
   const onSubmit = async (data) => {
+    if (isFormUnchanged() || requestResetPassword.isPending) return
+
     await requestResetPassword
       .mutateAsync(data)
-      .then((data) => navigate(`/auth/resetPassword/verify/${data.token}`))
+      .then((data) => navigate(`/auth/reset-password/verify/${data.token}`))
       .catch((error) => {
         if (error.error.code === "USR-003") {
           setError("email", {
@@ -71,18 +80,31 @@ const Login = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack sx={{ gap: 2 }}>
           <FormControl fullWidth>
-            <TextField
-              {...register("email")}
-              label="E-mail"
-              error={!!errors.email}
-              helperText={errors.email?.message}
-              autoComplete="off"
+            <Controller
+              name="email"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="E-mail"
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
+                  autoComplete="off"
+                  disabled={requestResetPassword.isPending}
+                />
+              )}
             />
           </FormControl>
           <Link to="/auth/login" style={{ alignSelf: "flex-end", fontSize: "13px" }}>
             Iniciar sessão
           </Link>
-          <LoadingButton loading={requestResetPassword.isPending} type="submit" variant="contained">
+          <LoadingButton
+            loading={requestResetPassword.isPending}
+            type="submit"
+            variant="contained"
+            disabled={isFormUnchanged() || requestResetPassword.isPending}
+          >
             Enviar Código
           </LoadingButton>
         </Stack>

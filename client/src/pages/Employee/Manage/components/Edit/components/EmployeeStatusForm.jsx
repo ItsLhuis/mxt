@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 
-import { useForm, useFormState, useWatch, Controller } from "react-hook-form"
+import { useForm, useWatch, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { updateUserStatusSchema } from "@schemas/user"
 
@@ -15,7 +15,12 @@ import { Loadable, HeaderSection } from "@components/ui"
 import { showSuccessToast, showErrorToast } from "@config/toast"
 
 const EmployeeStatusForm = ({ user, isUserFinished }) => {
-  const { control, handleSubmit, watch, reset } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { isDirty },
+    reset
+  } = useForm({
     resolver: zodResolver(updateUserStatusSchema)
   })
 
@@ -23,7 +28,6 @@ const EmployeeStatusForm = ({ user, isUserFinished }) => {
     isActive: isUserFinished ? Boolean(user?.user?.is_active) : true
   }
 
-  const { isDirty } = useFormState({ control })
   const isFormUnchanged = () => {
     return !isDirty
   }
@@ -37,15 +41,15 @@ const EmployeeStatusForm = ({ user, isUserFinished }) => {
   const { updateUserStatus } = useUser()
 
   const onSubmit = async (data) => {
-    if (!isFormUnchanged()) {
-      updateUserStatus
-        .mutateAsync({
-          userId: user?.user?.id,
-          ...data
-        })
-        .then(() => showSuccessToast("Estado da conta atualizado com sucesso!"))
-        .catch(() => showErrorToast("Erro ao atualizar estado da conta!"))
-    }
+    if (isFormUnchanged() || updateUserStatus.isPending) return
+
+    await updateUserStatus
+      .mutateAsync({
+        userId: user?.user?.id,
+        ...data
+      })
+      .then(() => showSuccessToast("Estado da conta atualizado com sucesso!"))
+      .catch(() => showErrorToast("Erro ao atualizar estado da conta!"))
   }
 
   const watchStatus = useWatch({ control, name: "isActive" })
@@ -90,6 +94,7 @@ const EmployeeStatusForm = ({ user, isUserFinished }) => {
                           value={field.value}
                           onChange={field.onChange}
                           defaultChecked={Boolean(user?.user.is_active)}
+                          disabled={updateUserStatus.isPending}
                         />
                       )}
                     />
@@ -110,7 +115,7 @@ const EmployeeStatusForm = ({ user, isUserFinished }) => {
                 loading={updateUserStatus.isPending}
                 type="submit"
                 variant="contained"
-                disabled={!isUserFinished || isFormUnchanged()}
+                disabled={!isUserFinished || isFormUnchanged() || updateUserStatus.isPending}
               >
                 Atualizar Estado
               </LoadingButton>

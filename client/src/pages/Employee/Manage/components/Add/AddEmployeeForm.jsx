@@ -41,15 +41,23 @@ const AddEmployeeForm = () => {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: { errors, isDirty },
     setError,
     watch
   } = useForm({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
+      username: "",
+      password: "",
+      email: "",
+      role: "",
       isActive: true
     }
   })
+
+  const isFormUnchanged = () => {
+    return !isDirty
+  }
 
   const handleGeneratePassword = () => {
     const randomPassword = generateRandomPassword()
@@ -59,6 +67,8 @@ const AddEmployeeForm = () => {
   const { createNewUser } = useUser()
 
   const onSubmit = async (data) => {
+    if (isFormUnchanged() || createNewUser.isPending) return
+
     await createNewUser
       .mutateAsync(data)
       .then(() => {
@@ -93,42 +103,66 @@ const AddEmployeeForm = () => {
           />
           <Stack sx={{ padding: 3, gap: 2 }}>
             <FormControl fullWidth>
-              <TextField
-                {...register("username")}
-                label="Nome de utilizador"
-                error={!!errors.username}
-                helperText={errors.username?.message}
-                autoComplete="off"
+              <Controller
+                name="username"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Nome de utilizador"
+                    error={!!errors.username}
+                    helperText={errors.username?.message}
+                    autoComplete="off"
+                    disabled={createNewUser.isPending}
+                  />
+                )}
               />
             </FormControl>
             <FormControl fullWidth>
-              <TextField
-                {...register("email")}
-                label="E-mail"
-                error={!!errors.email}
-                helperText={errors.email?.message}
-                autoComplete="off"
+              <Controller
+                name="email"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="E-mail"
+                    error={!!errors.email}
+                    helperText={errors.email?.message}
+                    autoComplete="off"
+                    disabled={createNewUser.isPending}
+                  />
+                )}
               />
             </FormControl>
             <FormControl fullWidth>
-              <TextField
-                {...register("password")}
-                label="Senha"
-                error={!!errors.password}
-                helperText={errors.password?.message}
-                autoComplete="off"
-                InputLabelProps={{ shrink: watch("password")?.length > 0 }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Tooltip title="Gerar senha">
-                        <IconButton edge="end" onClick={handleGeneratePassword}>
-                          <Refresh />
-                        </IconButton>
-                      </Tooltip>
-                    </InputAdornment>
-                  )
-                }}
+              <Controller
+                name="password"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Senha"
+                    error={!!errors.password}
+                    helperText={errors.password?.message}
+                    autoComplete="off"
+                    disabled={createNewUser.isPending}
+                    InputLabelProps={{ shrink: watch("password")?.length > 0 }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Tooltip title="Gerar senha">
+                            <IconButton edge="end" onClick={handleGeneratePassword}>
+                              <Refresh />
+                            </IconButton>
+                          </Tooltip>
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                )}
               />
             </FormControl>
             <FormControl fullWidth>
@@ -149,13 +183,18 @@ const AddEmployeeForm = () => {
                     onChange={field.onChange}
                     error={!!errors.role}
                     helperText={errors.role?.message}
+                    disabled={createNewUser.isPending}
                   />
                 )}
               />
             </FormControl>
             <FormControl fullWidth>
               <Stack sx={{ flexDirection: "row", alignItems: "center" }}>
-                <Switch {...register("isActive")} defaultChecked />
+                <Switch
+                  {...register("isActive")}
+                  defaultChecked
+                  disabled={createNewUser.isPending}
+                />
                 <Stack>
                   <Typography variant="p" component="p">
                     Estado da conta
@@ -167,7 +206,12 @@ const AddEmployeeForm = () => {
               </Stack>
             </FormControl>
             <Box sx={{ marginLeft: "auto", marginTop: 1 }}>
-              <LoadingButton loading={createNewUser.isPending} type="submit" variant="contained">
+              <LoadingButton
+                loading={createNewUser.isPending}
+                type="submit"
+                variant="contained"
+                disabled={isFormUnchanged() || createNewUser.isPending}
+              >
                 Adicionar Funcionário
               </LoadingButton>
             </Box>

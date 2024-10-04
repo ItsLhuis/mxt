@@ -21,18 +21,27 @@ const Verify = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     setError
   } = useForm({
-    resolver: zodResolver(authResetPasswordVerify)
+    resolver: zodResolver(authResetPasswordVerify),
+    defaultValues: {
+      otp: ""
+    }
   })
+
+  const isFormUnchanged = () => {
+    return !isDirty
+  }
 
   const { verifyResetPassword } = useAuth()
 
   const onSubmit = async (data) => {
+    if (isFormUnchanged() || verifyResetPassword.isPending) return
+
     await verifyResetPassword
       .mutateAsync({ token, ...data })
-      .then((data) => navigate(`/auth/resetPassword/confirm/${data.token}`))
+      .then((data) => navigate(`/auth/reset-password/confirm/${data.token}`))
       .catch((error) => {
         if (error.error.code === "USR-013" || error.error.code === "USR-014") {
           setError("otp", {
@@ -82,7 +91,12 @@ const Verify = () => {
               control={control}
               render={({ field }) => (
                 <Box>
-                  <MuiOtpInput sx={{ gap: 1 }} {...field} length={6} />
+                  <MuiOtpInput
+                    sx={{ gap: 1 }}
+                    {...field}
+                    length={6}
+                    TextFieldsProps={{ disabled: verifyResetPassword.isPending }}
+                  />
                   {!!errors.otp && <FormHelperText error>{errors.otp.message}</FormHelperText>}
                 </Box>
               )}
@@ -91,7 +105,12 @@ const Verify = () => {
           <Link to="/auth/login" style={{ alignSelf: "flex-end", fontSize: "13px" }}>
             Iniciar sessão
           </Link>
-          <LoadingButton loading={verifyResetPassword.isPending} type="submit" variant="contained">
+          <LoadingButton
+            loading={verifyResetPassword.isPending}
+            type="submit"
+            variant="contained"
+            disabled={isFormUnchanged() || verifyResetPassword.isPending}
+          >
             Enviar Código
           </LoadingButton>
         </Stack>
