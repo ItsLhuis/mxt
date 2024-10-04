@@ -24,6 +24,11 @@ const PORT = Number(process.env.PORT) || 8080
 const isProduction = process.env.NODE_ENV === "production"
 const initialPort = PORT
 
+const clearCache = () => {
+  if (fs.existsSync(path.join(__dirname, "tmp")))
+    fs.rmSync(path.join(__dirname, "tmp"), { recursive: true, force: true })
+}
+
 if (!isProduction) {
   const isPortInUse = (port) => {
     return new Promise((resolve) => {
@@ -51,9 +56,7 @@ if (!isProduction) {
     }
 
     try {
-      if (port === initialPort && fs.existsSync(path.join(__dirname, "tmp"))) {
-        fs.rmSync(path.join(__dirname, "tmp"), { recursive: true, force: true })
-      }
+      if (port === initialPort) clearCache()
     } catch (error) {}
 
     return new Promise((resolve, reject) => {
@@ -76,9 +79,7 @@ if (!isProduction) {
       throw new Error(error)
     })
 } else {
-  if (fs.existsSync(path.join(__dirname, "tmp"))) {
-    fs.rmSync(path.join(__dirname, "tmp"), { recursive: true, force: true })
-  }
+  clearCache()
 
   server.listen(PORT, () => {
     console.log("Server is running...")
