@@ -139,7 +139,7 @@ const RichEditor = ({
     }
   }, [fullscreen])
 
-  if (shouldImmediatelyRender) {
+  const renderEditor = () => {
     return (
       <Box>
         {label && (
@@ -152,8 +152,13 @@ const RichEditor = ({
             {label}
           </InputLabel>
         )}
-        <ToolBar editor={editor} fullscreen={fullscreen} toggleFullscreen={toggleFullscreen} />
-        {fullscreen && (
+        <ToolBar
+          editor={editor}
+          fullscreen={fullscreen}
+          toggleFullscreen={toggleFullscreen}
+          disabled={disabled}
+        />
+        {fullscreen ? (
           <Stack
             className="tiptap-fullscreen"
             sx={{
@@ -166,14 +171,20 @@ const RichEditor = ({
               overflow: "hidden"
             }}
           >
-            <ToolBar editor={editor} fullscreen={fullscreen} toggleFullscreen={toggleFullscreen} />
+            <ToolBar
+              editor={editor}
+              fullscreen={fullscreen}
+              toggleFullscreen={toggleFullscreen}
+              disabled={disabled}
+            />
             <EditorContent
               className={`tiptap-editor ${fullscreen && "fullscreen"}`}
               editor={editor}
             />
           </Stack>
+        ) : (
+          <EditorContent editor={editor} />
         )}
-        {!fullscreen && <EditorContent editor={editor} contentEditable={!disabled} />}
         {error && (
           <FormHelperText error={error} sx={{ marginLeft: 2, marginTop: 0.5 }}>
             {helperText}
@@ -183,61 +194,13 @@ const RichEditor = ({
     )
   }
 
+  if (shouldImmediatelyRender) return renderEditor()
+
   return (
     <Loadable
       isLoading={!isFinished}
       LoadingComponent={<Skeleton variant="rounded" width="100%" height={420} />}
-      LoadedComponent={
-        <Box>
-          {label && (
-            <InputLabel
-              sx={{
-                marginBottom: 1,
-                color: error ? "rgb(211, 47, 47) !important" : "var(--onSurface)"
-              }}
-            >
-              {label}
-            </InputLabel>
-          )}
-          <ToolBar
-            editor={editor}
-            fullscreen={fullscreen}
-            toggleFullscreen={toggleFullscreen}
-            disabled={disabled}
-          />
-          {fullscreen && (
-            <Stack
-              className="tiptap-fullscreen"
-              sx={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                zIndex: 900,
-                height: "100%",
-                width: "100%",
-                overflow: "hidden"
-              }}
-            >
-              <ToolBar
-                editor={editor}
-                fullscreen={fullscreen}
-                toggleFullscreen={toggleFullscreen}
-                disabled={disabled}
-              />
-              <EditorContent
-                className={`tiptap-editor ${fullscreen && "fullscreen"}`}
-                editor={editor}
-              />
-            </Stack>
-          )}
-          {!fullscreen && <EditorContent editor={editor} />}
-          {error && (
-            <FormHelperText error={error} sx={{ marginLeft: 2, marginTop: 0.5 }}>
-              {helperText}
-            </FormHelperText>
-          )}
-        </Box>
-      }
+      LoadedComponent={renderEditor()}
     />
   )
 }
