@@ -61,7 +61,7 @@ const AddEmployeeForm = () => {
 
   const handleGeneratePassword = () => {
     const randomPassword = generateRandomPassword()
-    setValue("password", randomPassword)
+    setValue("password", randomPassword, { shouldDirty: true })
   }
 
   const { createNewUser } = useUser()
