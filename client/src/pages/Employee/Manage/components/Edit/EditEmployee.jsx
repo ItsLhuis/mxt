@@ -30,7 +30,7 @@ const EditEmployee = () => {
     error: userError
   } = findEmployeeByUserId(employeeId)
 
-  const isUserFinished = !isUserLoading && !isUserError
+  const isUserFinished = !isUserLoading && !isUserError && user
 
   const canEdit =
     (role === "Chefe" || (role === "Administrador" && user?.user.role === "Funcionário")) &&
