@@ -144,4 +144,7 @@ dist
 # Temporary folder
 tmp/
 
+# Notes file
+NOTES.md
+
 # End of https://www.toptal.com/developers/gitignore/api/node
