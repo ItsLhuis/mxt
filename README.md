@@ -1,4 +1,4 @@
-﻿# mxt Application
+﻿# mxt
 
 ## Overview
 
